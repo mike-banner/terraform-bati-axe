@@ -23,7 +23,7 @@ useHead({
       </div>
       <div class="flex items-center gap-4">
         <NuxtLink to="/simulateur" class="text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg shadow-md shadow-indigo-500/20 transition-all">
-          Estimer mes travaux
+          Simulation
         </NuxtLink>
       </div>
     </header>
@@ -56,7 +56,7 @@ useHead({
           to="/simulateur"
           class="w-full sm:w-auto inline-flex h-12 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-8 text-sm font-semibold text-white shadow-lg shadow-purple-500/25 transition-all hover:opacity-90 duration-200 gap-2 group"
         >
-          Lancer le simulateur
+          Simulation de travaux
           <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </NuxtLink>
         
