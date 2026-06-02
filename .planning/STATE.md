@@ -5,16 +5,15 @@
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 1: Foundations & Compliance
+**Current focus**: Phase 2: Data Foundation & Capture mono-ville
 
 ## Current Position
 
-Phase: 1 of 5 (Foundations & Compliance)
+Phase: 2 of 5 (Data Foundation & Capture mono-ville)
 Plan: 0 of ? in current phase
 Status: Ready to plan
-Last activity: 2026-06-02 — Restructuration roadmap (5 phases) + ADR-009 URL routing
-
-Progress: [░░░░░░░░░░] 0%
+Last activity: 2026-06-03 — Initialisation Nuxt 4, Tailwind v4, sécu, légal et Supabase local validés.
+Progress: [▓░░░░░░░░░] 20%
 
 ## Performance Metrics
 

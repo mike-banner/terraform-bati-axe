@@ -5,7 +5,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 
 ## Phases
 
-- [ ] **Phase 1: Foundations & Compliance** - Nuxt 3, Supabase CLI local, Cloudflare Pages, pages légales, middleware sécurité.
+- [x] **Phase 1: Foundations & Compliance** - Nuxt 3, Supabase CLI local, Cloudflare Pages, pages légales, middleware sécurité.
 - [ ] **Phase 2: Data Foundation & Capture mono-ville** - Schéma DB, seed zone pilote, vitrine landing SEO, simulateur de capture 6 étapes.
 - [ ] **Phase 3: Onboarding Pro & Vérification manuelle** - Auth Supabase, flux Claim, upload R2, console admin validation docs, consents RGPD/LCEN.
 - [ ] **Phase 4: Le Verrou & Stripe Billing** - API floutage serveur, abonnement Stripe, webhook, déblocage auto 24h.
@@ -22,7 +22,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
   2. Un push sur `development` déclenche un déploiement Cloudflare Pages Preview fonctionnel.
   3. Les pages mentions légales, politique de confidentialité et CGU sont accessibles sur `/legal/*`.
   4. Le middleware Nitro injecte les security headers et le healthcheck `/api/v1/health` répond 200.
-**Plans**: TBD
+**Plans**: Completed
 **UI hint**: yes
 
 ### Phase 2: Data Foundation & Capture mono-ville
@@ -31,7 +31,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 **Requirements**: CPTR-01, CPTR-02, CPTR-03, CPTR-04, CPTR-05
 **Success Criteria** (what must be TRUE):
   1. Les tables `zones`, `prospects`, `professionals`, `consents`, `projects`, `leads`, `verifications` existent avec RLS actif.
-  2. La zone Carrières-sous-Poissy est seedée et active.
+  2. La zone Carrières-sous-Poissy is seedée et active.
   3. Le simulateur Nuxt en 6 étapes permet à un particulier de déposer un projet sans créer de compte.
   4. Le projet est enregistré en DB via l'API Nitro `/api/v1/projects` avec validation Zod.
 **Plans**: TBD
@@ -76,7 +76,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 
 | Phase | Plans Complete | Status | Completed |
 |---|---|---|---|
-| 1. Foundations & Compliance | 0/? | Not started | - |
+| 1. Foundations & Compliance | 1/1 | Completed | 2026-06-03 |
 | 2. Data Foundation & Capture mono-ville | 0/? | Not started | - |
 | 3. Onboarding Pro & Vérification manuelle | 0/? | Not started | - |
 | 4. Le Verrou & Stripe Billing | 0/? | Not started | - |
