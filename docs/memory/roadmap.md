@@ -5,17 +5,9 @@
 
 ---
 
-## Phase 0 — Foundations & Compliance (3-5j)
-*Objectif : socle technique et juridique avant toute ligne de code produit.*
-
-- [x] Initialisation projet Nuxt 3/4 + `@nuxtjs/supabase` + Tailwind + (Pinia reporté).
-- [x] Setup de la structure des dossiers (pages, components, layouts, server, composables).
-- [x] Setup Supabase CLI + Docker local + migrations versionnées.
-- [x] Setup Cloudflare Pages (preset Nitro `cloudflare-pages`) + variables d'env staging/prod (ADR-006).
-- [x] Setup healthcheck `/api/v1/health` et headers de sécurité.
-- [x] Rédaction mentions légales + politique confidentialité + CGU v1.
-- [x] Mise en place du registre des traitements (`docs/legal/REGISTRE_RGPD.md`).
-- [ ] ADR-007 publié et appliqué dans le schéma DB initial.
+## Phase 0 — Foundations & Compliance
+- **Statut** : Complété le 2026-06-03
+- **Archive** : [20260603_PHASE_0_FOUNDATIONS.md](file:///home/mike/projects/bati-axe/docs/memory/history/20260603_PHASE_0_FOUNDATIONS.md)
 
 ---
 
