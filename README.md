@@ -9,7 +9,7 @@ Filtre de qualité entre particuliers porteurs de projets et experts vérifiés 
 Toute l'intelligence architecturale est centralisée dans le dossier `/docs`.
 
 ## Stack
-- **Framework** : Next.js 15+
+- **Framework** : Nuxt 3 (Vue 3)
 - **Base de données** : PostgreSQL (Supabase)
 - **Monétisation** : Stripe
 - **Validation** : Zod
