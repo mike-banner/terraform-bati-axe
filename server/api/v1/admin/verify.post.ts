@@ -18,16 +18,12 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Non autorisé.'
       })
     }
+    const userId = (user as any).id ?? (user as any).sub
 
-    // 2. Authorize admin (ends with @bati-axe.fr or defined in ADMIN_EMAILS env)
-    const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',') : []
-    const isAdmin = user.email.endsWith('@bati-axe.fr') || adminEmails.includes(user.email)
-    
+    // 2. Authorize admin — role stored in app_metadata (JWT claim, set via service_role only)
+    const isAdmin = (user as any).app_metadata?.role === 'admin'
     if (!isAdmin) {
-      throw createError({
-        statusCode: 403,
-        statusMessage: 'Accès refusé. Vous devez être administrateur.'
-      })
+      throw createError({ statusCode: 403, statusMessage: 'Accès réservé aux administrateurs.' })
     }
 
     // 3. Validate body
@@ -64,7 +60,7 @@ export default defineEventHandler(async (event) => {
         .update({
           status: verificationStatus,
           expiry_date: expiry_date || null,
-          reviewed_by: user.id,
+          reviewed_by: userId,
           reviewed_at: new Date().toISOString()
         })
         .eq('id', latestVerification.id)
@@ -78,7 +74,7 @@ export default defineEventHandler(async (event) => {
           file_key: `manual_entry_by_admin`,
           status: verificationStatus,
           expiry_date: expiry_date || null,
-          reviewed_by: user.id,
+          reviewed_by: userId,
           reviewed_at: new Date().toISOString()
         })
     }
@@ -119,7 +115,7 @@ export default defineEventHandler(async (event) => {
 
     // 6. Log audit trail
     await supabase.from('audit_logs').insert({
-      actor_id: user.id,
+      actor_id: userId,
       action: 'doc_validated',
       target_table: 'professionals',
       target_id: pro_id,
