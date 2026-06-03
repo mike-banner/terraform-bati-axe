@@ -1,24 +1,10 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
-import { 
-  Building2, 
-  User, 
-  Phone, 
-  MapPin, 
-  UploadCloud, 
-  FileText, 
-  CheckCircle, 
-  AlertCircle, 
-  Loader2, 
-  Lock, 
-  ArrowRight,
-  Sparkles
-} from 'lucide-vue-next'
 
 useHead({
   title: 'Espace Artisan — Rejoindre BÂTI-AXE',
   meta: [
-    { name: 'description', content: 'Inscrivez-vous, revendiquez votre entreprise et qualifiez vos assurances décennales.' }
+    { name: 'description', content: 'Inscrivez-vous ou connectez-vous pour revendiquer votre profil artisan.' }
   ]
 })
 
@@ -26,18 +12,24 @@ const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const route = useRoute()
 
-// Navigation & Tab State
-const authMode = ref<'register' | 'login'>('register')
-const activeStep = ref(1) // 1: Auth, 2: Info Entreprise, 3: Documents, 4: Succès
+// ─── Regex ────────────────────────────────────────────────────────────────────
+const RE_EMAIL    = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+const RE_PHONE_FR = /^(?:(?:\+|00)33|0)[1-9](?:[\s.-]?\d{2}){4}$/
+const RE_SIRET    = /^\d{14}$/
+const RE_CP       = /^\d{5}$/
+const RE_PASSWORD = /^.{8,}$/
+const RE_NAME     = /^.{2,}$/
 
-// Form fields
-const authForm = reactive({
-  email: '',
-  password: '',
-  full_name: ''
-})
+// ─── State ────────────────────────────────────────────────────────────────────
+const authMode  = ref<'register' | 'login'>('register')
+const activeStep = ref(1)
+const isLoading  = ref(false)
+const globalError = ref<string | null>(null)
+const showPassword = ref(false)
+const claimSlug = ref('')
 
-const proForm = reactive({
+const authForm = reactive({ email: '', password: '', full_name: '' })
+const proForm  = reactive({
   company_name: '',
   siret: '',
   full_name: '',
@@ -47,95 +39,130 @@ const proForm = reactive({
   cgu_accepted: false
 })
 
-// Extract prospect_id from query params
+// touched: only show errors after the field has been blurred
+const authTouched = reactive({ email: false, password: false, full_name: false })
+const proTouched  = reactive({
+  company_name: false,
+  siret: false,
+  full_name: false,
+  phone: false,
+  postal_code: false,
+  cgu_accepted: false
+})
+
+// ─── Inline errors ────────────────────────────────────────────────────────────
+const authErrors = computed(() => ({
+  full_name: authTouched.full_name && authMode.value === 'register' && !RE_NAME.test(authForm.full_name)
+    ? 'Nom requis (2 caractères minimum).' : '',
+  email: authTouched.email && !RE_EMAIL.test(authForm.email)
+    ? 'Adresse e-mail invalide.' : '',
+  password: authTouched.password && !RE_PASSWORD.test(authForm.password)
+    ? 'Mot de passe : 8 caractères minimum.' : '',
+}))
+
+const proErrors = computed(() => ({
+  company_name: proTouched.company_name && !RE_NAME.test(proForm.company_name)
+    ? 'Raison sociale requise.' : '',
+  siret: proTouched.siret && !RE_SIRET.test(proForm.siret)
+    ? 'SIRET invalide : 14 chiffres sans espace.' : '',
+  full_name: proTouched.full_name && !RE_NAME.test(proForm.full_name)
+    ? 'Nom du gérant requis.' : '',
+  phone: proTouched.phone && !RE_PHONE_FR.test(proForm.phone)
+    ? 'Numéro de téléphone français invalide.' : '',
+  postal_code: proTouched.postal_code && !RE_CP.test(proForm.postal_code)
+    ? 'Code postal : 5 chiffres.' : '',
+  cgu_accepted: proTouched.cgu_accepted && !proForm.cgu_accepted
+    ? 'Vous devez accepter les CGU pour continuer.' : '',
+}))
+
+// ─── Auth validity ────────────────────────────────────────────────────────────
+const isAuthValid = computed(() => {
+  if (authMode.value === 'login') {
+    return RE_EMAIL.test(authForm.email) && RE_PASSWORD.test(authForm.password)
+  }
+  return RE_EMAIL.test(authForm.email) && RE_PASSWORD.test(authForm.password) && RE_NAME.test(authForm.full_name)
+})
+
+const isProFormValid = computed(() =>
+  RE_NAME.test(proForm.company_name) &&
+  RE_SIRET.test(proForm.siret) &&
+  RE_NAME.test(proForm.full_name) &&
+  RE_PHONE_FR.test(proForm.phone) &&
+  RE_CP.test(proForm.postal_code) &&
+  proForm.cgu_accepted
+)
+
+// ─── Error translation ────────────────────────────────────────────────────────
+function translateAuthError(msg: string): string {
+  if (msg.includes('Invalid login credentials'))   return 'E-mail ou mot de passe incorrect.'
+  if (msg.includes('Email not confirmed'))          return 'Confirmez votre e-mail avant de vous connecter.'
+  if (msg.includes('User already registered'))      return 'Un compte existe déjà avec cet e-mail. Connectez-vous.'
+  if (msg.includes('Password should be'))           return 'Mot de passe trop faible (8 caractères minimum).'
+  if (msg.includes('rate limit'))                   return 'Trop de tentatives. Réessayez dans quelques minutes.'
+  if (msg.includes('Email rate limit'))             return 'Trop d\'e-mails envoyés. Patientez quelques minutes.'
+  return 'Une erreur est survenue. Veuillez réessayer.'
+}
+
+// ─── Prospect pre-fill ────────────────────────────────────────────────────────
 const prospectId = computed(() => route.query.prospect_id as string || '')
 
-// Fetch prospect details if prospect_id is present
 onMounted(async () => {
   if (prospectId.value) {
     try {
-      const { data, error } = await useFetch(`/api/v1/prospects/${prospectId.value}`)
-      if (error.value) {
-        console.error('Failed to pre-fill prospect details:', error.value)
-        return
-      }
-      if (data.value && data.value.status === 'SUCCESS') {
+      const { data } = await useFetch(`/api/v1/prospects/${prospectId.value}`)
+      if (data.value?.status === 'SUCCESS') {
         proForm.company_name = data.value.company_name || ''
-        proForm.siret = data.value.siret || ''
-        proForm.postal_code = data.value.postal_code || ''
+        proForm.siret        = data.value.siret        || ''
+        proForm.postal_code  = data.value.postal_code  || ''
       }
-    } catch (err) {
-      console.error('Error fetching prospect info:', err)
-    }
+    } catch { /* silent */ }
   }
 })
 
-// Upload states
-const files = reactive({
-  kbis: null as File | null,
-  decennale: null as File | null
-})
-
+// ─── Upload state ─────────────────────────────────────────────────────────────
+const files = reactive({ kbis: null as File | null, decennale: null as File | null })
 const uploads = reactive({
-  kbis: { progress: 0, status: 'idle' as 'idle' | 'uploading' | 'success' | 'error', error: '' },
-  decennale: { progress: 0, status: 'idle' as 'idle' | 'uploading' | 'success' | 'error', error: '' }
+  kbis:      { status: 'idle' as 'idle' | 'uploading' | 'success' | 'error', error: '' },
+  decennale: { status: 'idle' as 'idle' | 'uploading' | 'success' | 'error', error: '' }
 })
 
-// General feedback
-const errorMessage = ref<string | null>(null)
-const isLoading = ref(false)
-const claimSlug = ref('')
+// ─── Handlers ─────────────────────────────────────────────────────────────────
+const touchAllAuth = () => {
+  authTouched.email = true
+  authTouched.password = true
+  if (authMode.value === 'register') authTouched.full_name = true
+}
 
-// Compute validation
-const isAuthValid = computed(() => {
-  if (authMode.value === 'login') {
-    return authForm.email.includes('@') && authForm.password.length >= 6
-  }
-  return authForm.email.includes('@') && authForm.password.length >= 6 && authForm.full_name.trim().length >= 2
-})
+const touchAllPro = () => {
+  proTouched.company_name = true
+  proTouched.siret        = true
+  proTouched.full_name    = true
+  proTouched.phone        = true
+  proTouched.postal_code  = true
+  proTouched.cgu_accepted = true
+}
 
-const isProFormValid = computed(() => {
-  return (
-    proForm.company_name.trim().length >= 2 &&
-    /^\d{14}$/.test(proForm.siret) &&
-    proForm.full_name.trim().length >= 2 &&
-    /^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/.test(proForm.phone) &&
-    /^\d{5}$/.test(proForm.postal_code) &&
-    proForm.cgu_accepted
-  )
-})
-
-// Actions
 const handleAuth = async () => {
+  touchAllAuth()
+  if (!isAuthValid.value) return
   isLoading.value = true
-  errorMessage.value = null
-  
+  globalError.value = null
+
   try {
     if (authMode.value === 'login') {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: authForm.email,
-        password: authForm.password
-      })
+      const { error } = await supabase.auth.signInWithPassword({ email: authForm.email, password: authForm.password })
       if (error) throw error
     } else {
       const { error } = await supabase.auth.signUp({
         email: authForm.email,
         password: authForm.password,
-        options: {
-          data: {
-            full_name: authForm.full_name
-          }
-        }
+        options: { data: { full_name: authForm.full_name } }
       })
       if (error) throw error
     }
-    
-    // Auto-fill manager name if registered
-    if (authForm.full_name) {
-      proForm.full_name = authForm.full_name
-    }
-    
-    // Check if professional record already exists for this user
+
+    if (authForm.full_name) proForm.full_name = authForm.full_name
+
     if (user.value) {
       const { data: existingPro } = await supabase
         .from('professionals')
@@ -145,47 +172,47 @@ const handleAuth = async () => {
 
       if (existingPro) {
         claimSlug.value = existingPro.canonical_slug
-        activeStep.value = 3 // Go directly to document upload if already registered
+        activeStep.value = 3
       } else {
-        activeStep.value = 2 // Fill company info
+        activeStep.value = 2
       }
+    } else {
+      activeStep.value = 2
     }
   } catch (err: any) {
-    errorMessage.value = err.message || 'Une erreur d\'authentification est survenue.'
+    globalError.value = translateAuthError(err.message || '')
   } finally {
     isLoading.value = false
   }
 }
 
 const handleRegisterCompany = async () => {
+  touchAllPro()
   if (!isProFormValid.value) return
   isLoading.value = true
-  errorMessage.value = null
+  globalError.value = null
 
   try {
     const { data, error } = await useFetch('/api/v1/pro/claim', {
       method: 'POST',
       body: {
-        prospect_id: prospectId.value || undefined,
+        prospect_id:  prospectId.value || undefined,
         company_name: proForm.company_name,
-        siret: proForm.siret,
-        full_name: proForm.full_name,
-        phone: proForm.phone,
-        postal_code: proForm.postal_code,
-        sms_opt_in: proForm.sms_opt_in
+        siret:        proForm.siret,
+        full_name:    proForm.full_name,
+        phone:        proForm.phone,
+        postal_code:  proForm.postal_code,
+        sms_opt_in:   proForm.sms_opt_in
       }
     })
 
-    if (error.value) {
-      throw new Error(error.value.data?.statusMessage || 'Impossible d\'enregistrer votre entreprise.')
-    }
-
-    if (data.value && data.value.status === 'SUCCESS') {
+    if (error.value) throw new Error(error.value.data?.statusMessage || 'Impossible d\'enregistrer votre entreprise.')
+    if (data.value?.status === 'SUCCESS') {
       claimSlug.value = data.value.slug
-      activeStep.value = 3 // Go to document uploads
+      activeStep.value = 3
     }
   } catch (err: any) {
-    errorMessage.value = err.message
+    globalError.value = err.message
   } finally {
     isLoading.value = false
   }
@@ -193,10 +220,10 @@ const handleRegisterCompany = async () => {
 
 const handleFileSelect = (event: Event, type: 'kbis' | 'decennale') => {
   const target = event.target as HTMLInputElement
-  if (target.files && target.files.length > 0) {
+  if (target.files?.[0]) {
     files[type] = target.files[0]
     uploads[type].status = 'idle'
-    uploads[type].error = ''
+    uploads[type].error  = ''
   }
 }
 
@@ -205,349 +232,463 @@ const uploadDocument = async (type: 'kbis' | 'decennale') => {
   if (!file) return
 
   uploads[type].status = 'uploading'
-  uploads[type].progress = 10
-  
+  uploads[type].error  = ''
+
   try {
-    // 1. Get presigned upload URL from Nitro API
     const { data: presignData, error: presignError } = await useFetch('/api/v1/pro/documents/presign', {
       method: 'POST',
-      body: {
-        document_type: type,
-        filename: file.name
-      }
+      body: { document_type: type, filename: file.name }
     })
 
-    if (presignError.value || !presignData.value || presignData.value.status !== 'SUCCESS') {
+    if (presignError.value || presignData.value?.status !== 'SUCCESS') {
       throw new Error(presignError.value?.data?.statusMessage || 'Erreur lors de la génération de la signature.')
     }
 
     const { signedUrl, path } = presignData.value
-    uploads[type].progress = 50
+    const uploadRes = await fetch(signedUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file })
+    if (!uploadRes.ok) throw new Error('Échec du transfert. Vérifiez votre connexion et réessayez.')
 
-    // 2. PUT directly to signed URL
-    const uploadRes = await fetch(signedUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': file.type
-      },
-      body: file
-    })
+    await supabase.from('verifications').insert({ pro_id: user.value?.id, document_type: type, file_key: path, status: 'pending' })
 
-    if (!uploadRes.ok) {
-      throw new Error('Échec du transfert vers le serveur de stockage.')
-    }
-    
-    uploads[type].progress = 80
-
-    // 3. Log pending verification in database using Supabase Client
-    const { error: dbError } = await supabase
-      .from('verifications')
-      .insert({
-        pro_id: user.value?.id,
-        document_type: type,
-        file_key: path,
-        status: 'pending'
-      })
-
-    if (dbError) {
-      console.error('Error inserting verification row:', dbError)
-    }
-
-    uploads[type].progress = 100
     uploads[type].status = 'success'
   } catch (err: any) {
     uploads[type].status = 'error'
-    uploads[type].error = err.message || 'Erreur de transfert'
+    uploads[type].error  = err.message || 'Erreur de transfert.'
   }
 }
 
-const finishOnboarding = () => {
-  activeStep.value = 4
+const finishOnboarding = () => { activeStep.value = 4 }
+
+const switchMode = (mode: 'register' | 'login') => {
+  authMode.value = mode
+  // reset touched state when switching tabs
+  authTouched.email     = false
+  authTouched.password  = false
+  authTouched.full_name = false
+  globalError.value     = null
 }
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-    <!-- Glow BG -->
-    <div class="absolute top-1/4 left-1/3 w-[450px] h-[450px] bg-purple-500/10 rounded-full blur-3xl -z-10 animate-pulse"></div>
+  <div class="min-h-[calc(100vh-3.5rem)] bg-background flex items-start justify-center px-4 py-16">
+    <div class="w-full max-w-md">
 
-    <div class="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-4">
-      <NuxtLink to="/" class="text-xs font-bold px-3 py-1 rounded-full border border-indigo-500/20 bg-indigo-500/5 text-indigo-400 inline-flex items-center gap-1.5">
-        <Sparkles class="w-3.5 h-3.5" /> BÂTI-AXE Pro
-      </NuxtLink>
-      <h2 class="text-3xl font-extrabold text-white tracking-tight">Espace Professionnels</h2>
-      
-      <!-- Steps Indicator -->
-      <div class="flex items-center justify-center gap-4 text-xs font-semibold text-zinc-500 pt-2" v-if="activeStep < 4">
-        <span :class="activeStep >= 1 ? 'text-indigo-400' : ''">1. Connexion</span>
-        <span class="w-4 h-px bg-zinc-800"></span>
-        <span :class="activeStep >= 2 ? 'text-indigo-400' : ''">2. Profil</span>
-        <span class="w-4 h-px bg-zinc-800"></span>
-        <span :class="activeStep >= 3 ? 'text-indigo-400' : ''">3. Validation</span>
+      <!-- Page title -->
+      <div class="mb-10">
+        <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-3">Espace artisan</p>
+        <h1 class="text-3xl font-black tracking-tight text-foreground" style="text-wrap: balance">
+          {{ activeStep === 1 ? (authMode === 'register' ? 'Créer votre compte' : 'Se connecter') : activeStep === 2 ? 'Votre entreprise' : activeStep === 3 ? 'Vos documents' : 'Demande envoyée' }}
+        </h1>
       </div>
-    </div>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
-      <div class="bg-zinc-900/60 backdrop-blur-md py-8 px-4 border border-zinc-800/80 shadow-2xl rounded-2xl sm:px-10">
-        
-        <!-- Step 1: Authentication -->
-        <div v-if="activeStep === 1" class="space-y-6">
-          <div class="flex justify-center border-b border-zinc-800 pb-4">
-            <button 
-              @click="authMode = 'register'"
-              class="flex-1 text-center py-2 text-sm font-semibold transition-colors"
-              :class="authMode === 'register' ? 'text-indigo-400 border-b-2 border-indigo-400' : 'text-zinc-400 hover:text-white'"
-            >
-              Créer un compte
-            </button>
-            <button 
-              @click="authMode = 'login'"
-              class="flex-1 text-center py-2 text-sm font-semibold transition-colors"
-              :class="authMode === 'login' ? 'text-indigo-400 border-b-2 border-indigo-400' : 'text-zinc-400 hover:text-white'"
-            >
-              Se connecter
-            </button>
+      <!-- Step indicator -->
+      <div v-if="activeStep < 4" class="flex items-center gap-0 mb-10">
+        <template v-for="n in 3" :key="n">
+          <div class="flex items-center gap-2">
+            <div
+              class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors"
+              :class="activeStep === n ? 'bg-foreground text-background' : activeStep > n ? 'bg-foreground text-background opacity-40' : 'border border-border text-muted-foreground'"
+            >{{ n }}</div>
+            <span class="text-xs font-medium" :class="activeStep === n ? 'text-foreground' : 'text-muted-foreground'">
+              {{ n === 1 ? 'Connexion' : n === 2 ? 'Profil' : 'Documents' }}
+            </span>
           </div>
+          <div v-if="n < 3" class="flex-1 h-px bg-border mx-3" />
+        </template>
+      </div>
 
-          <form @submit.prevent="handleAuth" class="space-y-4">
+      <!-- ─── STEP 1: Auth ─────────────────────────────────────────────────── -->
+      <div v-if="activeStep === 1">
+
+        <!-- Tabs -->
+        <div class="flex border-b border-border mb-8">
+          <button
+            class="flex-1 pb-3 text-sm font-semibold transition-colors"
+            :class="authMode === 'register' ? 'text-foreground border-b-2 border-foreground -mb-px' : 'text-muted-foreground hover:text-foreground'"
+            @click="switchMode('register')"
+          >Créer un compte</button>
+          <button
+            class="flex-1 pb-3 text-sm font-semibold transition-colors"
+            :class="authMode === 'login' ? 'text-foreground border-b-2 border-foreground -mb-px' : 'text-muted-foreground hover:text-foreground'"
+            @click="switchMode('login')"
+          >Se connecter</button>
+        </div>
+
+        <form @submit.prevent="handleAuth" novalidate class="space-y-5">
+
+          <!-- Full name (register only) -->
+          <Transition name="field">
             <div v-if="authMode === 'register'">
-              <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Nom Complet du Gérant</label>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-zinc-500"><User class="w-4 h-4" /></span>
-                <input 
-                  type="text" 
-                  v-model="authForm.full_name" 
-                  placeholder="Jean Dupont"
-                  class="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-3 py-2.5 text-white focus:outline-none focus:border-indigo-500 transition-colors"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Adresse E-mail Professionnelle</label>
-              <input 
-                type="email" 
-                v-model="authForm.email" 
-                placeholder="contact@dupont-plomberie.fr"
-                class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-indigo-500 transition-colors"
+              <label for="auth-name" class="block text-sm font-medium text-foreground mb-1.5">Nom complet</label>
+              <input
+                id="auth-name"
+                type="text"
+                v-model="authForm.full_name"
+                autocomplete="name"
+                placeholder="Jean Dupont"
+                @blur="authTouched.full_name = true"
+                class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                :class="authErrors.full_name ? 'border-red-500' : 'border-border'"
+                :aria-invalid="!!authErrors.full_name"
+                :aria-describedby="authErrors.full_name ? 'err-name' : undefined"
               />
+              <p v-if="authErrors.full_name" id="err-name" class="mt-1.5 text-xs text-red-600">{{ authErrors.full_name }}</p>
             </div>
+          </Transition>
 
-            <div>
-              <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Mot de passe</label>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-zinc-500"><Lock class="w-4 h-4" /></span>
-                <input 
-                  type="password" 
-                  v-model="authForm.password" 
-                  placeholder="••••••••"
-                  class="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-3 py-2.5 text-white focus:outline-none focus:border-indigo-500 transition-colors"
-                />
-              </div>
-            </div>
-
-            <!-- Error Banner -->
-            <div v-if="errorMessage" class="p-3 bg-red-950/40 border border-red-900 rounded-xl text-red-300 text-xs flex gap-2">
-              <AlertCircle class="w-4 h-4 shrink-0" />
-              <span>{{ errorMessage }}</span>
-            </div>
-
-            <button 
-              type="submit" 
-              class="w-full h-11 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25 transition-all"
-              :disabled="isLoading || !isAuthValid"
-            >
-              <Loader2 class="w-4 h-4 animate-spin" v-if="isLoading" />
-              <span>{{ authMode === 'register' ? 'S\'enregistrer' : 'Connexion' }}</span>
-            </button>
-          </form>
-        </div>
-
-        <!-- Step 2: Company Claim / Registration -->
-        <div v-if="activeStep === 2" class="space-y-6">
-          <div class="text-center">
-            <h3 class="text-lg font-bold text-white">Profil de l'entreprise</h3>
-            <p class="text-xs text-zinc-400 mt-1">Fournissez les détails officiels pour revendiquer ou créer votre profil.</p>
-          </div>
-
-          <form @submit.prevent="handleRegisterCompany" class="space-y-4">
-            <div>
-              <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Nom de l'entreprise (Raison Sociale)</label>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-zinc-500"><Building2 class="w-4 h-4" /></span>
-                <input 
-                  type="text" 
-                  v-model="proForm.company_name" 
-                  placeholder="DUPONT PLOMBERIE"
-                  class="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-3 py-2.5 text-white focus:outline-none focus:border-indigo-500 transition-colors"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Numéro SIRET (14 chiffres)</label>
-              <input 
-                type="text" 
-                v-model="proForm.siret" 
-                placeholder="12345678900012"
-                maxlength="14"
-                class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-indigo-500 transition-colors"
-              />
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Nom Complet du Gérant</label>
-              <input 
-                type="text" 
-                v-model="proForm.full_name" 
-                class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-indigo-500 transition-colors"
-              />
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Téléphone</label>
-                <div class="relative">
-                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-zinc-500"><Phone class="w-4 h-4" /></span>
-                  <input 
-                    type="tel" 
-                    v-model="proForm.phone" 
-                    placeholder="0611223344"
-                    class="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-3 py-2.5 text-white focus:outline-none focus:border-indigo-500 transition-colors"
-                  />
-                </div>
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Code Postal</label>
-                <div class="relative">
-                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-zinc-500"><MapPin class="w-4 h-4" /></span>
-                  <input 
-                    type="text" 
-                    v-model="proForm.postal_code" 
-                    placeholder="78955"
-                    maxlength="5"
-                    class="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-3 py-2.5 text-white focus:outline-none focus:border-indigo-500 transition-colors"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <!-- Consent box -->
-            <div class="space-y-3 border-t border-zinc-800 pt-4">
-              <label class="flex items-start gap-2.5 cursor-pointer">
-                <input type="checkbox" v-model="proForm.cgu_accepted" class="mt-1 w-4 h-4 rounded border-zinc-700 bg-zinc-950 text-indigo-600" />
-                <span class="text-xs text-zinc-400">J'accepte les conditions générales de vente et d'utilisation Pro de BÂTI-AXE. *</span>
-              </label>
-
-              <label class="flex items-start gap-2.5 cursor-pointer">
-                <input type="checkbox" v-model="proForm.sms_opt_in" class="mt-1 w-4 h-4 rounded border-zinc-700 bg-zinc-950 text-indigo-600" />
-                <span class="text-xs text-zinc-400">J'accepte d'être alerté instantanément par SMS lors du dépôt d'un nouveau projet éligible dans ma zone.</span>
-              </label>
-            </div>
-
-            <!-- Error Banner -->
-            <div v-if="errorMessage" class="p-3 bg-red-950/40 border border-red-900 rounded-xl text-red-300 text-xs flex gap-2">
-              <AlertCircle class="w-4 h-4 shrink-0" />
-              <span>{{ errorMessage }}</span>
-            </div>
-
-            <button 
-              type="submit" 
-              class="w-full h-11 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25 transition-all"
-              :disabled="isLoading || !isProFormValid"
-            >
-              <Loader2 class="w-4 h-4 animate-spin" v-if="isLoading" />
-              <span>Valider mon profil</span>
-            </button>
-          </form>
-        </div>
-
-        <!-- Step 3: Document Uploads -->
-        <div v-if="activeStep === 3" class="space-y-6">
-          <div class="text-center">
-            <h3 class="text-lg font-bold text-white">Vérification de compte</h3>
-            <p class="text-xs text-zinc-400 mt-1">Téléversez vos justificatifs pour activer l'affichage public et accéder aux leads.</p>
-          </div>
-
-          <div class="space-y-6">
-            <!-- KBIS Upload Box -->
-            <div class="p-4 rounded-xl border bg-zinc-950/40" :class="uploads.kbis.status === 'success' ? 'border-emerald-500/50' : 'border-zinc-800'">
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2">
-                  <FileText class="w-5 h-5 text-indigo-400" />
-                  <span class="font-semibold text-sm">Extrait KBIS (Moins de 3 mois)</span>
-                </div>
-                <span class="text-[10px] uppercase font-bold text-zinc-500">PDF, JPG, PNG</span>
-              </div>
-              <div v-if="uploads.kbis.status !== 'success'" class="space-y-3">
-                <input type="file" @change="handleFileSelect($event, 'kbis')" accept=".pdf,image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-white hover:file:bg-zinc-700 cursor-pointer" />
-                <button v-if="files.kbis" @click="uploadDocument('kbis')" class="w-full py-2 bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 rounded-lg text-xs font-semibold flex items-center justify-center gap-2" :disabled="uploads.kbis.status === 'uploading'">
-                  <Loader2 class="w-3.5 h-3.5 animate-spin" v-if="uploads.kbis.status === 'uploading'" />
-                  <UploadCloud class="w-3.5 h-3.5" v-else />
-                  Téléverser le KBIS
-                </button>
-              </div>
-              <div v-else class="text-xs text-emerald-400 flex items-center gap-1.5 py-1">
-                <CheckCircle class="w-4 h-4" /> Justificatif KBIS envoyé avec succès.
-              </div>
-            </div>
-
-            <!-- Decennale Upload Box -->
-            <div class="p-4 rounded-xl border bg-zinc-950/40" :class="uploads.decennale.status === 'success' ? 'border-emerald-500/50' : 'border-zinc-800'">
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2">
-                  <FileText class="w-5 h-5 text-indigo-400" />
-                  <span class="font-semibold text-sm">Attestation Assurance Décennale</span>
-                </div>
-                <span class="text-[10px] uppercase font-bold text-zinc-500">PDF, JPG, PNG</span>
-              </div>
-              <div v-if="uploads.decennale.status !== 'success'" class="space-y-3">
-                <input type="file" @change="handleFileSelect($event, 'decennale')" accept=".pdf,image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-white hover:file:bg-zinc-700 cursor-pointer" />
-                <button v-if="files.decennale" @click="uploadDocument('decennale')" class="w-full py-2 bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 rounded-lg text-xs font-semibold flex items-center justify-center gap-2" :disabled="uploads.decennale.status === 'uploading'">
-                  <Loader2 class="w-3.5 h-3.5 animate-spin" v-if="uploads.decennale.status === 'uploading'" />
-                  <UploadCloud class="w-3.5 h-3.5" v-else />
-                  Téléverser l'Attestation
-                </button>
-              </div>
-              <div v-else class="text-xs text-emerald-400 flex items-center gap-1.5 py-1">
-                <CheckCircle class="w-4 h-4" /> Justificatif Décennale envoyé avec succès.
-              </div>
-            </div>
-          </div>
-
-          <!-- Bottom Finish Action -->
-          <button 
-            @click="finishOnboarding"
-            class="w-full h-11 bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-90 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25 transition-all mt-4"
-          >
-            <span>Finaliser mon inscription</span>
-            <ArrowRight class="w-4 h-4" />
-          </button>
-        </div>
-
-        <!-- Step 4: Success Screen -->
-        <div v-if="activeStep === 4" class="text-center py-6 space-y-6">
-          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 animate-bounce">
-            <CheckCircle class="w-10 h-10" />
-          </div>
+          <!-- Email -->
           <div>
-            <h3 class="text-2xl font-bold text-white tracking-tight">Inscription Envoyée !</h3>
-            <p class="text-xs text-zinc-400 mt-2 max-w-sm mx-auto">
-              Vos documents administratifs sont en cours de modération. Nos équipes valideront votre compte sous 24 heures ouvrées.
-            </p>
+            <label for="auth-email" class="block text-sm font-medium text-foreground mb-1.5">Adresse e-mail</label>
+            <input
+              id="auth-email"
+              type="email"
+              v-model="authForm.email"
+              autocomplete="email"
+              placeholder="contact@dupont-plomberie.fr"
+              @blur="authTouched.email = true"
+              class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              :class="authErrors.email ? 'border-red-500' : 'border-border'"
+              :aria-invalid="!!authErrors.email"
+              :aria-describedby="authErrors.email ? 'err-email' : undefined"
+            />
+            <p v-if="authErrors.email" id="err-email" class="mt-1.5 text-xs text-red-600">{{ authErrors.email }}</p>
           </div>
-          <div class="p-4 bg-zinc-950 border border-zinc-800/80 rounded-xl max-w-sm mx-auto text-xs text-zinc-400 space-y-1">
-            <p>Votre slug de profil unique :</p>
-            <code class="font-mono text-indigo-400 select-all block mt-1">{{ claimSlug }}</code>
+
+          <!-- Password -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="auth-password" class="text-sm font-medium text-foreground">Mot de passe</label>
+              <button v-if="authMode === 'login'" type="button" class="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                Mot de passe oublié ?
+              </button>
+            </div>
+            <div class="relative">
+              <input
+                id="auth-password"
+                :type="showPassword ? 'text' : 'password'"
+                v-model="authForm.password"
+                autocomplete="current-password"
+                placeholder="••••••••"
+                @blur="authTouched.password = true"
+                class="w-full h-11 px-3 pr-10 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                :class="authErrors.password ? 'border-red-500' : 'border-border'"
+                :aria-invalid="!!authErrors.password"
+                :aria-describedby="authErrors.password ? 'err-password' : undefined"
+              />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
+                :aria-label="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+              >
+                <svg v-if="showPassword" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+                </svg>
+                <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+              </button>
+            </div>
+            <p v-if="authErrors.password" id="err-password" class="mt-1.5 text-xs text-red-600">{{ authErrors.password }}</p>
+            <p v-if="authMode === 'register' && !authErrors.password" class="mt-1.5 text-xs text-muted-foreground">8 caractères minimum.</p>
           </div>
-          <div class="pt-4 flex gap-4">
-            <NuxtLink to="/" class="flex-1 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-semibold rounded-xl transition-colors">
-              Retour Accueil
-            </NuxtLink>
+
+          <!-- Global error -->
+          <div v-if="globalError" role="alert" class="flex items-start gap-2.5 p-3 border border-red-200 bg-red-50 rounded-md text-sm text-red-700">
+            <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+            <span>{{ globalError }}</span>
+          </div>
+
+          <button
+            type="submit"
+            :disabled="isLoading"
+            class="w-full h-11 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            <svg v-if="isLoading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+            <span>{{ authMode === 'register' ? 'Créer mon compte' : 'Se connecter' }}</span>
+          </button>
+
+          <p class="text-center text-xs text-muted-foreground">
+            <template v-if="authMode === 'register'">
+              Déjà un compte ?
+              <button type="button" @click="switchMode('login')" class="font-semibold text-foreground underline underline-offset-2">Se connecter</button>
+            </template>
+            <template v-else>
+              Pas encore de compte ?
+              <button type="button" @click="switchMode('register')" class="font-semibold text-foreground underline underline-offset-2">Créer un compte</button>
+            </template>
+          </p>
+
+        </form>
+      </div>
+
+      <!-- ─── STEP 2: Company ──────────────────────────────────────────────── -->
+      <div v-if="activeStep === 2">
+        <p class="text-sm text-muted-foreground mb-8">Renseignez les informations officielles de votre entreprise. Elles seront vérifiées par notre équipe.</p>
+
+        <form @submit.prevent="handleRegisterCompany" novalidate class="space-y-5">
+
+          <!-- Company name -->
+          <div>
+            <label for="pro-company" class="block text-sm font-medium text-foreground mb-1.5">Raison sociale</label>
+            <input
+              id="pro-company"
+              type="text"
+              v-model="proForm.company_name"
+              placeholder="DUPONT PLOMBERIE SARL"
+              @blur="proTouched.company_name = true"
+              class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              :class="proErrors.company_name ? 'border-red-500' : 'border-border'"
+              :aria-invalid="!!proErrors.company_name"
+            />
+            <p v-if="proErrors.company_name" class="mt-1.5 text-xs text-red-600">{{ proErrors.company_name }}</p>
+          </div>
+
+          <!-- SIRET -->
+          <div>
+            <label for="pro-siret" class="block text-sm font-medium text-foreground mb-1.5">Numéro SIRET</label>
+            <input
+              id="pro-siret"
+              type="text"
+              v-model="proForm.siret"
+              placeholder="12345678900012"
+              maxlength="14"
+              inputmode="numeric"
+              @blur="proTouched.siret = true"
+              class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground font-mono tracking-wider transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              :class="proErrors.siret ? 'border-red-500' : 'border-border'"
+              :aria-invalid="!!proErrors.siret"
+            />
+            <p v-if="proErrors.siret" class="mt-1.5 text-xs text-red-600">{{ proErrors.siret }}</p>
+            <p v-else class="mt-1.5 text-xs text-muted-foreground">14 chiffres, sans espace.</p>
+          </div>
+
+          <!-- Manager name -->
+          <div>
+            <label for="pro-name" class="block text-sm font-medium text-foreground mb-1.5">Nom du gérant</label>
+            <input
+              id="pro-name"
+              type="text"
+              v-model="proForm.full_name"
+              @blur="proTouched.full_name = true"
+              class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              :class="proErrors.full_name ? 'border-red-500' : 'border-border'"
+              :aria-invalid="!!proErrors.full_name"
+            />
+            <p v-if="proErrors.full_name" class="mt-1.5 text-xs text-red-600">{{ proErrors.full_name }}</p>
+          </div>
+
+          <!-- Phone + Postal code -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="pro-phone" class="block text-sm font-medium text-foreground mb-1.5">Téléphone</label>
+              <input
+                id="pro-phone"
+                type="tel"
+                v-model="proForm.phone"
+                placeholder="06 11 22 33 44"
+                autocomplete="tel"
+                @blur="proTouched.phone = true"
+                class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                :class="proErrors.phone ? 'border-red-500' : 'border-border'"
+                :aria-invalid="!!proErrors.phone"
+              />
+              <p v-if="proErrors.phone" class="mt-1.5 text-xs text-red-600">{{ proErrors.phone }}</p>
+            </div>
+            <div>
+              <label for="pro-cp" class="block text-sm font-medium text-foreground mb-1.5">Code postal</label>
+              <input
+                id="pro-cp"
+                type="text"
+                v-model="proForm.postal_code"
+                placeholder="78955"
+                maxlength="5"
+                inputmode="numeric"
+                @blur="proTouched.postal_code = true"
+                class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                :class="proErrors.postal_code ? 'border-red-500' : 'border-border'"
+                :aria-invalid="!!proErrors.postal_code"
+              />
+              <p v-if="proErrors.postal_code" class="mt-1.5 text-xs text-red-600">{{ proErrors.postal_code }}</p>
+            </div>
+          </div>
+
+          <!-- Consents -->
+          <div class="pt-2 space-y-3 border-t border-border">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                v-model="proForm.cgu_accepted"
+                @change="proTouched.cgu_accepted = true"
+                class="mt-0.5 w-4 h-4 rounded border-border text-foreground"
+              />
+              <span class="text-sm text-foreground leading-snug">
+                J'accepte les <NuxtLink to="/legal/cgu" class="underline underline-offset-2 hover:opacity-70">conditions générales d'utilisation</NuxtLink> Pro. <span class="text-red-600">*</span>
+              </span>
+            </label>
+            <p v-if="proErrors.cgu_accepted" role="alert" class="ml-7 text-xs text-red-600">{{ proErrors.cgu_accepted }}</p>
+
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                v-model="proForm.sms_opt_in"
+                class="mt-0.5 w-4 h-4 rounded border-border text-foreground"
+              />
+              <span class="text-sm text-muted-foreground leading-snug">
+                J'accepte de recevoir des alertes SMS lors du dépôt d'un projet dans ma zone. Désabonnement possible à tout moment par retour SMS STOP.
+              </span>
+            </label>
+          </div>
+
+          <!-- Global error -->
+          <div v-if="globalError" role="alert" class="flex items-start gap-2.5 p-3 border border-red-200 bg-red-50 rounded-md text-sm text-red-700">
+            <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+            <span>{{ globalError }}</span>
+          </div>
+
+          <button
+            type="submit"
+            :disabled="isLoading"
+            class="w-full h-11 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            <svg v-if="isLoading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+            <span>Valider mon profil</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- ─── STEP 3: Documents ─────────────────────────────────────────────── -->
+      <div v-if="activeStep === 3" class="space-y-6">
+        <p class="text-sm text-muted-foreground">Téléversez vos justificatifs pour activer votre profil et accéder aux leads. Chaque document est contrôlé manuellement par notre équipe.</p>
+
+        <!-- KBIS -->
+        <div class="border border-border rounded-lg p-5" :class="uploads.kbis.status === 'success' ? 'border-foreground/30' : ''">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <p class="text-sm font-semibold text-foreground">Extrait KBIS</p>
+              <p class="text-xs text-muted-foreground mt-0.5">Moins de 3 mois · PDF, JPG ou PNG</p>
+            </div>
+            <div v-if="uploads.kbis.status === 'success'" class="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              Envoyé
+            </div>
+          </div>
+
+          <div v-if="uploads.kbis.status !== 'success'" class="space-y-3">
+            <label class="flex items-center gap-3 cursor-pointer text-sm">
+              <input type="file" @change="handleFileSelect($event, 'kbis')" accept=".pdf,image/*" class="sr-only" />
+              <span class="h-9 px-4 border border-border rounded-md text-xs font-medium hover:bg-muted transition-colors flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
+                Choisir un fichier
+              </span>
+              <span class="text-xs text-muted-foreground truncate max-w-[180px]">{{ files.kbis ? files.kbis.name : 'Aucun fichier sélectionné' }}</span>
+            </label>
+            <div v-if="uploads.kbis.status === 'error'" role="alert" class="text-xs text-red-600">{{ uploads.kbis.error }}</div>
+            <button
+              v-if="files.kbis"
+              @click="uploadDocument('kbis')"
+              :disabled="uploads.kbis.status === 'uploading'"
+              class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
+            >
+              <svg v-if="uploads.kbis.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+              {{ uploads.kbis.status === 'uploading' ? 'Envoi en cours…' : 'Envoyer le KBIS' }}
+            </button>
           </div>
         </div>
 
+        <!-- Décennale -->
+        <div class="border border-border rounded-lg p-5" :class="uploads.decennale.status === 'success' ? 'border-foreground/30' : ''">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <p class="text-sm font-semibold text-foreground">Attestation décennale</p>
+              <p class="text-xs text-muted-foreground mt-0.5">Date d'expiration vérifiée · PDF, JPG ou PNG</p>
+            </div>
+            <div v-if="uploads.decennale.status === 'success'" class="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              Envoyée
+            </div>
+          </div>
+
+          <div v-if="uploads.decennale.status !== 'success'" class="space-y-3">
+            <label class="flex items-center gap-3 cursor-pointer text-sm">
+              <input type="file" @change="handleFileSelect($event, 'decennale')" accept=".pdf,image/*" class="sr-only" />
+              <span class="h-9 px-4 border border-border rounded-md text-xs font-medium hover:bg-muted transition-colors flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
+                Choisir un fichier
+              </span>
+              <span class="text-xs text-muted-foreground truncate max-w-[180px]">{{ files.decennale ? files.decennale.name : 'Aucun fichier sélectionné' }}</span>
+            </label>
+            <div v-if="uploads.decennale.status === 'error'" role="alert" class="text-xs text-red-600">{{ uploads.decennale.error }}</div>
+            <button
+              v-if="files.decennale"
+              @click="uploadDocument('decennale')"
+              :disabled="uploads.decennale.status === 'uploading'"
+              class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
+            >
+              <svg v-if="uploads.decennale.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+              {{ uploads.decennale.status === 'uploading' ? 'Envoi en cours…' : 'Envoyer la décennale' }}
+            </button>
+          </div>
+        </div>
+
+        <button
+          @click="finishOnboarding"
+          class="w-full h-11 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center justify-center gap-2"
+        >
+          <span>Finaliser mon inscription</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+
+        <p class="text-xs text-center text-muted-foreground">Vous pouvez envoyer vos documents plus tard depuis votre espace.</p>
       </div>
+
+      <!-- ─── STEP 4: Success ──────────────────────────────────────────────── -->
+      <div v-if="activeStep === 4" class="py-4">
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-foreground text-background mb-8">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+        </div>
+
+        <h2 class="text-2xl font-black tracking-tight text-foreground mb-3">Demande envoyée.</h2>
+        <p class="text-sm text-muted-foreground leading-relaxed mb-8">
+          Vos documents sont en cours d'examen. Notre équipe valide chaque dossier sous 24 heures ouvrées. Vous recevrez un e-mail de confirmation à l'issue de la vérification.
+        </p>
+
+        <div v-if="claimSlug" class="p-4 border border-border rounded-lg mb-8">
+          <p class="text-xs text-muted-foreground mb-1">Identifiant de votre profil</p>
+          <code class="font-mono text-sm text-foreground select-all">{{ claimSlug }}</code>
+        </div>
+
+        <NuxtLink
+          to="/"
+          class="inline-flex items-center justify-center h-11 px-6 border border-border text-foreground text-sm font-medium rounded-md hover:bg-muted transition-colors"
+        >
+          Retour à l'accueil
+        </NuxtLink>
+      </div>
+
     </div>
   </div>
 </template>
+
+<style scoped>
+.field-enter-active,
+.field-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.field-enter-from,
+.field-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field-enter-active,
+  .field-leave-active {
+    transition: opacity 0.15s ease;
+  }
+  .field-enter-from,
+  .field-leave-to {
+    transform: none;
+  }
+}
+</style>
