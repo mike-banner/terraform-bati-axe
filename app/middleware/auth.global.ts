@@ -30,11 +30,16 @@ export default defineNuxtRouteMiddleware((to) => {
     return // logged in — allow
   }
 
+  // ── /pro/claim — redirect away if already authenticated ──────────────────
+  if (path === '/pro/claim') {
+    if (isAdmin.value)    return navigateTo('/admin')
+    if (isLoggedIn.value) return navigateTo('/app/dashboard')
+    return // anonymous — show the form
+  }
+
   // ── Public routes — redirect logged-in pro to dashboard ──────────────────
-  // Admin can browse freely; only non-admin logged-in users are redirected.
   if (isPro.value) {
-    // Allow only the claim page (needed for sign-out flow) and legal pages
-    const allowed = ['/pro/claim', '/legal/']
+    const allowed = ['/legal/']
     const isAllowed = allowed.some(prefix => path.startsWith(prefix))
     if (!isAllowed) return navigateTo('/app/dashboard')
   }

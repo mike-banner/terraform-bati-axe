@@ -21,7 +21,7 @@ const RE_PASSWORD = /^.{8,}$/
 const RE_NAME     = /^.{2,}$/
 
 // ─── State ────────────────────────────────────────────────────────────────────
-const authMode  = ref<'register' | 'login'>('register')
+const authMode  = ref<'register' | 'login'>('login')
 const activeStep = ref(1)
 const isLoading  = ref(false)
 const globalError = ref<string | null>(null)
@@ -163,11 +163,20 @@ const handleAuth = async () => {
 
     if (authForm.full_name) proForm.full_name = authForm.full_name
 
-    if (user.value) {
+    // Wait for user reactive to populate after auth
+    await nextTick()
+    const currentUser = useSupabaseUser().value
+
+    // Admin → redirect to console immediately
+    if ((currentUser as any)?.app_metadata?.role === 'admin') {
+      return await navigateTo('/admin')
+    }
+
+    if (currentUser) {
       const { data: existingPro } = await supabase
         .from('professionals')
         .select('id, canonical_slug')
-        .eq('id', user.value.id)
+        .eq('id', currentUser.id)
         .maybeSingle()
 
       if (existingPro) {
@@ -281,8 +290,8 @@ const switchMode = (mode: 'register' | 'login') => {
         </h1>
       </div>
 
-      <!-- Step indicator -->
-      <div v-if="activeStep < 4" class="flex items-center gap-0 mb-10">
+      <!-- Step indicator — inscription only, not login -->
+      <div v-if="activeStep < 4 && !(activeStep === 1 && authMode === 'login')" class="flex items-center gap-0 mb-10">
         <template v-for="n in 3" :key="n">
           <div class="flex items-center gap-2">
             <div
@@ -300,18 +309,18 @@ const switchMode = (mode: 'register' | 'login') => {
       <!-- ─── STEP 1: Auth ─────────────────────────────────────────────────── -->
       <div v-if="activeStep === 1">
 
-        <!-- Tabs -->
+        <!-- Tabs — Se connecter LEFT, Créer un compte RIGHT -->
         <div class="flex border-b border-border mb-8">
-          <button
-            class="flex-1 pb-3 text-sm font-semibold transition-colors"
-            :class="authMode === 'register' ? 'text-foreground border-b-2 border-foreground -mb-px' : 'text-muted-foreground hover:text-foreground'"
-            @click="switchMode('register')"
-          >Créer un compte</button>
           <button
             class="flex-1 pb-3 text-sm font-semibold transition-colors"
             :class="authMode === 'login' ? 'text-foreground border-b-2 border-foreground -mb-px' : 'text-muted-foreground hover:text-foreground'"
             @click="switchMode('login')"
           >Se connecter</button>
+          <button
+            class="flex-1 pb-3 text-sm font-semibold transition-colors"
+            :class="authMode === 'register' ? 'text-foreground border-b-2 border-foreground -mb-px' : 'text-muted-foreground hover:text-foreground'"
+            @click="switchMode('register')"
+          >Créer un compte</button>
         </div>
 
         <form @submit.prevent="handleAuth" novalidate class="space-y-5">
