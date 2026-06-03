@@ -6,21 +6,21 @@
 ## v1 Requirements
 
 ### Infrastructure & Setup
-- [ ] **INFRA-01**: Projet Nuxt 3 initialisé avec `@nuxtjs/supabase`, Pinia, Zod
-- [ ] **INFRA-02**: Supabase CLI + Docker configuré pour le développement local
-- [ ] **INFRA-03**: Cloudflare Pages configuré avec preset Nitro `cloudflare-pages` (Staging = Preview, Prod = main)
-- [ ] **INFRA-04**: Middleware Nitro de sécurité (headers, rate limiting, Sentry, healthcheck `/api/v1/health`)
+- [x] **INFRA-01**: Projet Nuxt 3 initialisé avec `@nuxtjs/supabase`, Pinia, Zod
+- [x] **INFRA-02**: Supabase CLI + Docker configuré pour le développement local
+- [x] **INFRA-03**: Cloudflare Pages configuré avec preset Nitro `cloudflare-pages` (Staging = Preview, Prod = main)
+- [x] **INFRA-04**: Middleware Nitro de sécurité (headers, rate limiting, Sentry, healthcheck `/api/v1/health`)
 
 ### Compliance & Légal
-- [ ] **LEGAL-01**: Mentions légales, politique de confidentialité, politique cookies et CGU v1 publiées sur `/legal/*`
-- [ ] **LEGAL-02**: Registre des traitements RGPD maintenu dans `docs/legal/`
+- [x] **LEGAL-01**: Mentions légales, politique de confidentialité, politique cookies et CGU v1 publiées sur `/legal/*`
+- [x] **LEGAL-02**: Registre des traitements RGPD maintenu dans `docs/legal/`
 
 ### Capture (Simulateur Nuxt)
-- [ ] **CPTR-01**: Sélection dynamique par nature de projet (icônes)
-- [ ] **CPTR-02**: Localisation avec code postal (Focus 78)
-- [ ] **CPTR-03**: Saisie du budget estimé et délai souhaité
-- [ ] **CPTR-04**: Saisie des coordonnées de contact (nom, email, téléphone)
-- [ ] **CPTR-05**: Enregistrement sécurisé du projet anonyme sans compte requis
+- [x] **CPTR-01**: Sélection dynamique par nature de projet (icônes)
+- [x] **CPTR-02**: Localisation avec code postal (Focus 78)
+- [x] **CPTR-03**: Saisie du budget estimé et délai souhaité
+- [x] **CPTR-04**: Saisie des coordonnées de contact (nom, email, téléphone)
+- [x] **CPTR-05**: Enregistrement sécurisé du projet anonyme sans compte requis
 
 ### Le Verrou (Logique de Floutage)
 - [ ] **LCK-01**: Floutage serveur (Nitro API) des coordonnées des prospects (`customer_full_name`, `customer_phone`, `customer_email`, `exact_address`)
@@ -60,17 +60,17 @@
 
 | Requirement | Phase | Status |
 |---|---|---|
-| INFRA-01 | Phase 1 | Pending |
-| INFRA-02 | Phase 1 | Pending |
-| INFRA-03 | Phase 1 | Pending |
-| INFRA-04 | Phase 1 | Pending |
-| LEGAL-01 | Phase 1 | Pending |
-| LEGAL-02 | Phase 1 | Pending |
-| CPTR-01 | Phase 2 | Pending |
-| CPTR-02 | Phase 2 | Pending |
-| CPTR-03 | Phase 2 | Pending |
-| CPTR-04 | Phase 2 | Pending |
-| CPTR-05 | Phase 2 | Pending |
+| INFRA-01 | Phase 1 | Completed |
+| INFRA-02 | Phase 1 | Completed |
+| INFRA-03 | Phase 1 | Completed |
+| INFRA-04 | Phase 1 | Completed |
+| LEGAL-01 | Phase 1 | Completed |
+| LEGAL-02 | Phase 1 | Completed |
+| CPTR-01 | Phase 2 | Completed |
+| CPTR-02 | Phase 2 | Completed |
+| CPTR-03 | Phase 2 | Completed |
+| CPTR-04 | Phase 2 | Completed |
+| CPTR-05 | Phase 2 | Completed |
 | CLM-01 | Phase 3 | Pending |
 | CLM-02 | Phase 3 | Pending |
 | CLM-03 | Phase 3 | Pending |
@@ -92,4 +92,4 @@
 
 ---
 *Requirements defined: 2026-06-02*
-*Last updated: 2026-06-02 after roadmap restructuration (5 phases)*
+*Last updated: 2026-06-03 after Phase 2 completion*
