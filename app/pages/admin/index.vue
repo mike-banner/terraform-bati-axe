@@ -1,30 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { 
-  ShieldAlert, 
-  CheckCircle2, 
-  XCircle, 
-  ExternalLink, 
-  FileText, 
-  Calendar, 
-  UserCheck, 
-  Building2, 
-  Loader2, 
-  AlertCircle 
-} from 'lucide-vue-next'
 
-useHead({
-  title: 'Modération — BÂTI-AXE Admin'
-})
+useHead({ title: 'Modération — BÂTI-AXE Admin' })
 
 const supabase = useSupabaseClient()
-const user = useSupabaseUser()
+const user     = useSupabaseUser()
 
-// State
-const isLoading = ref(true)
-const actionLoading = ref<string | null>(null) // Contains proId-docType when loading
-const errorMessage = ref<string | null>(null)
-
+// ─── Types ────────────────────────────────────────────────────────────────────
 interface Verification {
   id: string
   pro_id: string
@@ -42,52 +24,41 @@ interface Professional {
   full_name: string
   email: string
   phone: string
+  postal_code: string
   is_verified: boolean
   decennal_status: 'pending' | 'valid' | 'expired' | 'none'
   verifications?: Verification[]
 }
 
+// ─── State ────────────────────────────────────────────────────────────────────
+const isLoading     = ref(true)
+const actionLoading = ref<string | null>(null)
+const errorMessage  = ref<string | null>(null)
 const professionals = ref<Professional[]>([])
-const activeTab = ref<'pending' | 'all'>('pending')
-const expiryDates = ref<Record<string, string>>({}) // Map of proId-docType to expiry string
+const activeTab     = ref<'pending' | 'all'>('pending')
+const expiryDates   = ref<Record<string, string>>({})
 
-// Access check
-const adminEmails = ['mike@bati-axe.fr'] // local fallback
+// ─── Access ───────────────────────────────────────────────────────────────────
 const isAdmin = computed(() => {
-  if (!user.value || !user.value.email) return false
+  if (!user.value?.email) return false
+  const adminEmails = ['mick.ban@gmail.com']
   return user.value.email.endsWith('@bati-axe.fr') || adminEmails.includes(user.value.email)
 })
 
-// Fetch pros and their verification documents
-const fetchVerificationQueue = async () => {
-  isLoading.value = true
+// ─── Data fetching ────────────────────────────────────────────────────────────
+const fetchQueue = async () => {
+  isLoading.value   = true
   errorMessage.value = null
-  
   try {
-    // 1. Fetch professionals
-    const { data: prosData, error: prosError } = await supabase
-      .from('professionals')
-      .select('*')
-      .order('created_at', { ascending: false })
+    const { data: pros, error: e1 } = await supabase.from('professionals').select('*').order('created_at', { ascending: false })
+    if (e1) throw e1
+    const { data: verifs, error: e2 } = await supabase.from('verifications').select('*').order('created_at', { ascending: false })
+    if (e2) throw e2
 
-    if (prosError) throw prosError
-
-    // 2. Fetch all verifications
-    const { data: verifData, error: verifError } = await supabase
-      .from('verifications')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (verifError) throw verifError
-
-    // 3. Map verifications to professionals
-    professionals.value = (prosData || []).map((pro: any) => {
-      const verifs = (verifData || []).filter((v: any) => v.pro_id === pro.id)
-      return {
-        ...pro,
-        verifications: verifs
-      }
-    })
+    professionals.value = (pros || []).map((p: any) => ({
+      ...p,
+      verifications: (verifs || []).filter((v: any) => v.pro_id === p.id)
+    }))
   } catch (err: any) {
     errorMessage.value = err.message || 'Impossible de charger la file de modération.'
   } finally {
@@ -95,56 +66,33 @@ const fetchVerificationQueue = async () => {
   }
 }
 
-onMounted(() => {
-  if (isAdmin.value) {
-    fetchVerificationQueue()
-  }
-})
+onMounted(() => { if (isAdmin.value) fetchQueue() })
 
-// Generate secure link to preview uploaded doc
+// ─── Actions ──────────────────────────────────────────────────────────────────
 const viewDocument = async (fileKey: string) => {
   try {
-    const { data, error } = await supabase.storage
-      .from('documents')
-      .createSignedUrl(fileKey, 300) // 5 minutes validity
-
-    if (error) throw error
-    if (data?.signedUrl) {
-      window.open(data.signedUrl, '_blank')
-    }
+    const { data, error } = await useFetch('/api/v1/pro/documents/view', {
+      method: 'POST',
+      body: { file_key: fileKey }
+    })
+    if (error.value || !data.value?.signedUrl) throw new Error('Impossible de générer le lien.')
+    window.open(data.value.signedUrl, '_blank')
   } catch (err: any) {
-    alert(`Impossible d'ouvrir le document: ${err.message}`)
+    errorMessage.value = err.message
   }
 }
 
-// Moderation Action (Approve / Reject)
 const moderateDocument = async (proId: string, docType: 'kbis' | 'decennale', status: 'approved' | 'rejected') => {
-  const loadingKey = `${proId}-${docType}`
-  actionLoading.value = loadingKey
-  errorMessage.value = null
-
-  const expiryKey = `${proId}-${docType}`
-  const expiryDate = expiryDates.value[expiryKey] || undefined
-
+  const key = `${proId}-${docType}`
+  actionLoading.value = key
+  errorMessage.value  = null
   try {
     const { data, error } = await useFetch('/api/v1/admin/verify', {
       method: 'POST',
-      body: {
-        pro_id: proId,
-        document_type: docType,
-        status,
-        expiry_date: expiryDate
-      }
+      body: { pro_id: proId, document_type: docType, status, expiry_date: expiryDates.value[key] || undefined }
     })
-
-    if (error.value) {
-      throw new Error(error.value.data?.statusMessage || 'Erreur lors du traitement.')
-    }
-
-    if (data.value && data.value.status === 'SUCCESS') {
-      // Refresh list
-      await fetchVerificationQueue()
-    }
+    if (error.value) throw new Error(error.value.data?.statusMessage || 'Erreur.')
+    if (data.value?.status === 'SUCCESS') await fetchQueue()
   } catch (err: any) {
     errorMessage.value = err.message
   } finally {
@@ -152,192 +100,205 @@ const moderateDocument = async (proId: string, docType: 'kbis' | 'decennale', st
   }
 }
 
-const filteredProfessionals = computed(() => {
-  if (activeTab.value === 'all') {
-    return professionals.value
-  }
-  // Show pros with pending documents or unverified pros who uploaded documents
-  return professionals.value.filter(pro => {
-    const hasPendingDocs = pro.verifications?.some(v => v.status === 'pending')
-    return hasPendingDocs || (!pro.is_verified && (pro.verifications?.length || 0) > 0)
-  })
+// ─── Filtered list ────────────────────────────────────────────────────────────
+const filtered = computed(() => {
+  if (activeTab.value === 'all') return professionals.value
+  return professionals.value.filter(p =>
+    p.verifications?.some(v => v.status === 'pending') ||
+    (!p.is_verified && (p.verifications?.length || 0) > 0)
+  )
 })
+
+const pendingCount = computed(() =>
+  professionals.value.filter(p => p.verifications?.some(v => v.status === 'pending')).length
+)
+
+const statusLabel: Record<string, string> = {
+  pending:  'En attente',
+  approved: 'Validé',
+  rejected: 'Rejeté',
+}
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-950 text-slate-100 py-10 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto space-y-8">
-      
+  <div class="min-h-[calc(100vh-3.5rem)] bg-background">
+    <div class="max-w-6xl mx-auto px-6 py-10 space-y-8">
+
       <!-- Header -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800 pb-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border">
         <div>
-          <h1 class="text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
-            <ShieldAlert class="w-8 h-8 text-indigo-400" /> Console de Modération
-          </h1>
-          <p class="text-xs text-zinc-400 mt-1">Validation des attestations d'assurances décennales et extraits KBIS.</p>
+          <h1 class="text-2xl font-black tracking-tight text-foreground">Console de modération</h1>
+          <p class="text-sm text-muted-foreground mt-1">Validation des Kbis et attestations décennales.</p>
         </div>
-        <div class="flex items-center gap-3" v-if="isAdmin">
-          <button 
+        <div v-if="isAdmin" class="flex items-center gap-2">
+          <button
             @click="activeTab = 'pending'"
-            class="px-4 py-2 rounded-xl text-xs font-semibold border transition-all"
-            :class="activeTab === 'pending' ? 'bg-indigo-600/10 border-indigo-500/30 text-indigo-400' : 'border-zinc-800 text-zinc-400 hover:text-white'"
+            class="h-9 px-4 text-sm font-medium rounded-md border transition-colors"
+            :class="activeTab === 'pending' ? 'bg-foreground text-background border-foreground' : 'border-border text-muted-foreground hover:text-foreground hover:bg-muted'"
           >
             En attente
+            <span v-if="pendingCount" class="ml-1.5 text-xs font-bold">({{ pendingCount }})</span>
           </button>
-          <button 
+          <button
             @click="activeTab = 'all'"
-            class="px-4 py-2 rounded-xl text-xs font-semibold border transition-all"
-            :class="activeTab === 'all' ? 'bg-indigo-600/10 border-indigo-500/30 text-indigo-400' : 'border-zinc-800 text-zinc-400 hover:text-white'"
+            class="h-9 px-4 text-sm font-medium rounded-md border transition-colors"
+            :class="activeTab === 'all' ? 'bg-foreground text-background border-foreground' : 'border-border text-muted-foreground hover:text-foreground hover:bg-muted'"
           >
             Tous les pros
           </button>
         </div>
       </div>
 
-      <!-- Access Denied Screen -->
-      <div v-if="!isAdmin" class="bg-red-950/20 border border-red-900/60 rounded-2xl p-6 text-center max-w-md mx-auto space-y-4">
-        <AlertCircle class="w-12 h-12 text-red-400 mx-auto" />
-        <h3 class="text-lg font-bold text-white">Accès Réservé</h3>
-        <p class="text-xs text-zinc-400">
-          Votre compte ({{ user?.email || 'non connecté' }}) ne dispose pas des droits d'administration. Connectez-vous avec un compte administrateur `@bati-axe.fr`.
+      <!-- Access denied -->
+      <div v-if="!isAdmin" class="max-w-sm mx-auto py-16 text-center space-y-4">
+        <div class="w-12 h-12 rounded-full border border-border flex items-center justify-center mx-auto">
+          <svg class="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+        </div>
+        <p class="text-sm font-semibold text-foreground">Accès réservé</p>
+        <p class="text-xs text-muted-foreground">
+          {{ user?.email || 'Non connecté' }} — ce compte n'a pas les droits d'administration.
         </p>
-        <NuxtLink to="/pro/claim" class="inline-block px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold rounded-xl transition-colors">
-          Se connecter / S'enregistrer
+        <NuxtLink to="/pro/claim" class="inline-flex items-center h-9 px-4 border border-border text-sm font-medium rounded-md hover:bg-muted transition-colors">
+          Se connecter
         </NuxtLink>
       </div>
 
-      <!-- Main Moderation Panel -->
+      <!-- Admin panel -->
       <div v-else class="space-y-6">
-        <!-- Error message banner -->
-        <div v-if="errorMessage" class="p-4 bg-red-950/40 border border-red-900 rounded-xl text-red-300 text-xs flex gap-2">
-          <AlertCircle class="w-4 h-4 shrink-0" />
+
+        <!-- Error -->
+        <div v-if="errorMessage" role="alert" class="flex items-start gap-2.5 p-3 border border-red-200 bg-red-50 rounded-md text-sm text-red-700">
+          <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
           <span>{{ errorMessage }}</span>
         </div>
 
-        <!-- Loading spinner -->
-        <div v-if="isLoading" class="flex justify-center py-12">
-          <Loader2 class="w-8 h-8 text-indigo-400 animate-spin" />
+        <!-- Loading -->
+        <div v-if="isLoading" class="flex justify-center py-16">
+          <svg class="w-6 h-6 animate-spin text-muted-foreground" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
         </div>
 
-        <!-- Empty Queue State -->
-        <div v-else-if="filteredProfessionals.length === 0" class="text-center py-16 border border-dashed border-zinc-800 rounded-2xl">
-          <UserCheck class="w-12 h-12 text-zinc-600 mx-auto mb-3" />
-          <p class="text-sm font-semibold text-zinc-400">Aucun dossier en attente de validation.</p>
+        <!-- Empty -->
+        <div v-else-if="filtered.length === 0" class="py-16 text-center border border-dashed border-border rounded-lg">
+          <p class="text-sm text-muted-foreground">Aucun dossier {{ activeTab === 'pending' ? 'en attente' : '' }}.</p>
         </div>
 
-        <!-- Queue Cards List -->
-        <div v-else class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div 
-            v-for="pro in filteredProfessionals" 
-            :key="pro.id" 
-            class="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-5 flex flex-col justify-between hover:border-zinc-700/80 transition-colors"
+        <!-- Pro cards -->
+        <div v-else class="space-y-4">
+          <div
+            v-for="pro in filtered"
+            :key="pro.id"
+            class="border border-border rounded-lg overflow-hidden"
           >
-            <div class="space-y-4">
-              <!-- Pro header -->
-              <div class="flex items-start justify-between">
-                <div class="space-y-1">
-                  <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" v-if="pro.is_verified">
-                    Vérifié BÂTI-AXE
+            <!-- Pro header row -->
+            <div class="flex items-start justify-between gap-4 px-5 py-4 bg-muted/50">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-bold text-foreground">{{ pro.company_name }}</span>
+                  <span
+                    class="text-xs font-medium px-2 py-0.5 rounded-full border"
+                    :class="pro.is_verified ? 'border-foreground/30 text-foreground' : 'border-border text-muted-foreground'"
+                  >
+                    {{ pro.is_verified ? 'Vérifié' : 'En attente' }}
                   </span>
-                  <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20" v-else>
-                    Modération requise
-                  </span>
-                  <h3 class="font-bold text-white text-base mt-1 flex items-center gap-1.5">
-                    <Building2 class="w-4 h-4 text-zinc-400" /> {{ pro.company_name }}
-                  </h3>
+                </div>
+                <div class="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-muted-foreground">
+                  <span>{{ pro.full_name }}</span>
+                  <span>{{ pro.siret }}</span>
+                  <span>{{ pro.email }}</span>
+                  <span>{{ pro.phone }}</span>
+                  <span>CP {{ pro.postal_code }}</span>
                 </div>
               </div>
+              <NuxtLink
+                v-if="pro.is_verified"
+                :to="`/pro/78/${pro.canonical_slug ?? pro.id}`"
+                target="_blank"
+                class="shrink-0 text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+              >
+                Voir profil
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+              </NuxtLink>
+            </div>
 
-              <!-- Contact & Identity Details -->
-              <div class="space-y-1.5 text-xs text-zinc-400 border-t border-zinc-800/80 pt-3">
-                <p><span class="text-zinc-500">Gérant :</span> {{ pro.full_name }}</p>
-                <p><span class="text-zinc-500">SIRET :</span> {{ pro.siret }}</p>
-                <p><span class="text-zinc-500">Email :</span> {{ pro.email }}</p>
-                <p><span class="text-zinc-500">Téléphone :</span> {{ pro.phone }}</p>
-              </div>
-
-              <!-- Uploaded Documents Moderation Area -->
-              <div class="space-y-3 pt-2 border-t border-zinc-800/80">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-500">Justificatifs</h4>
-
-                <div 
-                  v-for="docType in (['kbis', 'decennale'] as const)" 
-                  :key="docType"
-                  class="p-3 bg-zinc-950/60 rounded-xl border border-zinc-800/80 space-y-2.5"
-                >
-                  <!-- Doc header -->
-                  <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold capitalize flex items-center gap-1.5">
-                      <FileText class="w-3.5 h-3.5 text-indigo-400" /> {{ docType }}
-                    </span>
-                    
-                    <!-- Status Badge -->
-                    <span 
-                      class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded"
-                      :class="{
-                        'bg-zinc-800 text-zinc-400': !pro.verifications?.find(v => v.document_type === docType),
-                        'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20': pro.verifications?.find(v => v.document_type === docType && v.status === 'pending'),
-                        'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20': pro.verifications?.find(v => v.document_type === docType && v.status === 'approved'),
-                        'bg-red-500/10 text-red-400 border border-red-500/20': pro.verifications?.find(v => v.document_type === docType && v.status === 'rejected')
-                      }"
-                    >
-                      {{ pro.verifications?.find(v => v.document_type === docType)?.status || 'Absent' }}
-                    </span>
+            <!-- Documents -->
+            <div class="divide-y divide-border">
+              <div
+                v-for="docType in (['kbis', 'decennale'] as const)"
+                :key="docType"
+                class="px-5 py-4"
+              >
+                <div class="flex items-start justify-between gap-4">
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-semibold text-foreground capitalize">{{ docType === 'decennale' ? 'Décennale' : 'KBIS' }}</span>
+                      <span
+                        class="text-xs px-2 py-0.5 rounded-full border font-medium"
+                        :class="{
+                          'border-border text-muted-foreground': !pro.verifications?.find(v => v.document_type === docType),
+                          'border-amber-300 text-amber-700 bg-amber-50': pro.verifications?.find(v => v.document_type === docType)?.status === 'pending',
+                          'border-foreground/30 text-foreground': pro.verifications?.find(v => v.document_type === docType)?.status === 'approved',
+                          'border-red-200 text-red-700': pro.verifications?.find(v => v.document_type === docType)?.status === 'rejected',
+                        }"
+                      >
+                        {{ statusLabel[pro.verifications?.find(v => v.document_type === docType)?.status || ''] || 'Non envoyé' }}
+                      </span>
+                    </div>
+                    <p v-if="pro.verifications?.find(v => v.document_type === docType)?.expiry_date" class="text-xs text-muted-foreground">
+                      Expire le {{ new Date(pro.verifications!.find(v => v.document_type === docType)!.expiry_date!).toLocaleDateString('fr-FR') }}
+                    </p>
                   </div>
 
-                  <!-- Actions for doc -->
-                  <div class="space-y-2" v-if="pro.verifications?.find(v => v.document_type === docType)">
-                    <button 
+                  <div class="flex items-center gap-2 shrink-0">
+                    <!-- View doc -->
+                    <button
+                      v-if="pro.verifications?.find(v => v.document_type === docType)?.file_key"
                       @click="viewDocument(pro.verifications!.find(v => v.document_type === docType)!.file_key)"
-                      class="w-full py-1.5 bg-zinc-900 hover:bg-zinc-800 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-colors border border-zinc-800"
+                      class="h-8 px-3 border border-border text-xs font-medium rounded-md hover:bg-muted transition-colors flex items-center gap-1.5"
                     >
-                      <span>Visualiser la pièce</span>
-                      <ExternalLink class="w-3 h-3" />
+                      Ouvrir
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
                     </button>
 
-                    <!-- Mod controls (If pending) -->
-                    <div 
-                      class="space-y-2 pt-1 border-t border-zinc-900/60"
-                      v-if="pro.verifications!.find(v => v.document_type === docType)!.status === 'pending'"
-                    >
-                      <!-- Expiry date picker for insurance docs -->
-                      <div v-if="docType === 'decennale'" class="space-y-1">
-                        <label class="text-[10px] text-zinc-500 flex items-center gap-1"><Calendar class="w-3 h-3" /> Date d'expiration décennale</label>
-                        <input 
-                          type="date" 
-                          v-model="expiryDates[`${pro.id}-${docType}`]"
-                          class="w-full bg-zinc-950 border border-zinc-800 text-xs rounded-md px-2 py-1 focus:outline-none focus:border-indigo-500"
-                        />
-                      </div>
-
-                      <div class="flex gap-2">
-                        <button 
-                          @click="moderateDocument(pro.id, docType, 'approved')"
-                          class="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg flex items-center justify-center gap-1"
-                          :disabled="actionLoading === `${pro.id}-${docType}`"
-                        >
-                          <Loader2 class="w-3 h-3 animate-spin" v-if="actionLoading === `${pro.id}-${docType}`" />
-                          <CheckCircle2 class="w-3 h-3" v-else />
-                          Valider
-                        </button>
-                        <button 
-                          @click="moderateDocument(pro.id, docType, 'rejected')"
-                          class="flex-1 py-1.5 bg-red-900/40 hover:bg-red-900/60 text-red-300 text-xs font-semibold rounded-lg flex items-center justify-center gap-1 border border-red-800/50"
-                          :disabled="actionLoading === `${pro.id}-${docType}`"
-                        >
-                          <XCircle class="w-3 h-3" />
-                          Rejeter
-                        </button>
-                      </div>
-                    </div>
+                    <!-- Approve / reject (pending only) -->
+                    <template v-if="pro.verifications?.find(v => v.document_type === docType)?.status === 'pending'">
+                      <button
+                        @click="moderateDocument(pro.id, docType, 'approved')"
+                        :disabled="actionLoading === `${pro.id}-${docType}`"
+                        class="h-8 px-3 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity disabled:opacity-40 flex items-center gap-1.5"
+                      >
+                        <svg v-if="actionLoading === `${pro.id}-${docType}`" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                        <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        Valider
+                      </button>
+                      <button
+                        @click="moderateDocument(pro.id, docType, 'rejected')"
+                        :disabled="actionLoading === `${pro.id}-${docType}`"
+                        class="h-8 px-3 border border-red-200 text-red-700 text-xs font-semibold rounded-md hover:bg-red-50 transition-colors disabled:opacity-40"
+                      >
+                        Rejeter
+                      </button>
+                    </template>
                   </div>
+                </div>
+
+                <!-- Expiry date input for decennale (pending) -->
+                <div
+                  v-if="docType === 'decennale' && pro.verifications?.find(v => v.document_type === 'decennale')?.status === 'pending'"
+                  class="mt-3"
+                >
+                  <label class="block text-xs text-muted-foreground mb-1">Date d'expiration de la décennale</label>
+                  <input
+                    type="date"
+                    v-model="expiryDates[`${pro.id}-decennale`]"
+                    class="h-9 px-3 border border-border rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       </div>
-      
     </div>
   </div>
 </template>
