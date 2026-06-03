@@ -56,15 +56,9 @@ const fetchQueue = async () => {
   isLoading.value   = true
   errorMessage.value = null
   try {
-    const { data: pros, error: e1 } = await supabase.from('professionals').select('id, company_name, siret, full_name, email, phone, canonical_slug, category, is_verified, is_claimed, decennal_status, created_at').order('created_at', { ascending: false })
-    if (e1) throw e1
-    const { data: verifs, error: e2 } = await supabase.from('verifications').select('*').order('created_at', { ascending: false })
-    if (e2) throw e2
-
-    professionals.value = (pros || []).map((p: any) => ({
-      ...p,
-      verifications: (verifs || []).filter((v: any) => v.pro_id === p.id)
-    }))
+    const { data, error } = await useFetch('/api/v1/admin/queue')
+    if (error.value) throw new Error(error.value.data?.statusMessage || 'Impossible de charger la file de modération.')
+    professionals.value = data.value?.professionals || []
   } catch (err: any) {
     errorMessage.value = err.message || 'Impossible de charger la file de modération.'
   } finally {
