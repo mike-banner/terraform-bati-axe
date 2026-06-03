@@ -11,3 +11,18 @@ VALUES (
     true
 )
 ON CONFLICT (id) DO NOTHING;
+
+-- Insert a pilot prospect in Carrières-sous-Poissy (78955) for testing the Claim flow
+INSERT INTO prospects (id, source, company_name, siret, email, phone, zip_code, zone_id, optin_status)
+VALUES (
+    '5a900143-8236-4dff-8716-cc3e445a7ec0',
+    'import',
+    'DUPONT PLOMBERIE',
+    '12345678900012',
+    'dupont.plomberie@example.com',
+    '0611223344',
+    '78955',
+    '8c900143-8236-4dff-8716-cc3e445a7ec0',
+    'accepted'
+)
+ON CONFLICT (id) DO NOTHING;

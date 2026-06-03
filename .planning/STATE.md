@@ -5,38 +5,38 @@
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 2: Data Foundation & Capture mono-ville
+**Current focus**: Phase 3: Onboarding Pro & Vérification manuelle
 
 ## Current Position
 
-Phase: 2 of 5 (Data Foundation & Capture mono-ville)
-Plan: 0 of ? in current phase
+Phase: 3 of 5 (Onboarding Pro & Vérification manuelle)
+Plan: 0 of 1 in current phase
 Status: Ready to plan
-Last activity: 2026-06-03 — Initialisation Nuxt 4, Tailwind v4, sécu, légal et Supabase local validés.
-Progress: [▓░░░░░░░░░] 20%
+Last activity: 2026-06-03 — Phase 2 Complétée (Schéma initial, Seeding, API de Capture Zod et Page Simulateur 6 étapes fonctionnels).
+Progress: [▓▓▓░░░░░░░] 40%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: 0 min
-- Total execution time: 0.0 hours
+- Total phases completed: 2
+- Average duration: N/A
+- Total execution time: N/A
 
 ## Accumulated Context
 
 ### Decisions
 - [Pre-Phase]: Pivot Nuxt 3 unique (ADR-008).
 - [Pre-Phase]: URL hybride slug + nanoid(8) pour les profils pro (ADR-009).
-- [Pre-Phase]: Roadmap restructurée en 5 phases alignées sur docs/memory/roadmap.md.
+- [Phase 2]: Intégration de Zod et client Service Role pour contourner le RLS client sur l'API publique `/api/v1/projects`.
 
 ### Pending Todos
-None yet.
+None.
 
 ### Blockers/Concerns
-None yet.
+- **Browser tests block** : L'environnement de navigation Chromium local a des soucis d'initialisation dans le sandbox, mais les tests d'API et compilations sont OK.
 
 ## Session Continuity
 
-Last session: 2026-06-02 23:00
-Stopped at: Restructuration roadmap + ADR-009 validé. Prêt à planifier Phase 1.
+Last session: 2026-06-03 01:20
+Stopped at: Fin de l'implémentation de la Phase 2. Passage à la planification de la Phase 3.
 Resume file: None
