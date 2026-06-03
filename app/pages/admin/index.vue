@@ -88,6 +88,12 @@ const viewDocument = async (fileKey: string) => {
   }
 }
 
+const canApprove = (pro: Professional) => {
+  const kbis = pro.verifications?.find(v => v.document_type === 'kbis' && v.status === 'approved')
+  const decennale = pro.verifications?.find(v => v.document_type === 'decennale' && v.status === 'approved')
+  return !!kbis && !!decennale
+}
+
 const approvePro = async (proId: string, approved: boolean) => {
   actionLoading.value = `${proId}-approve`
   errorMessage.value  = null
@@ -245,16 +251,19 @@ const statusLabel: Record<string, string> = {
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
                 </NuxtLink>
                 <!-- Manual approval button -->
-                <button
-                  v-if="!pro.is_verified"
-                  @click="approvePro(pro.id, true)"
-                  :disabled="actionLoading === `${pro.id}-approve`"
-                  class="h-8 px-3 bg-emerald-600 text-white text-xs font-semibold rounded-md hover:bg-emerald-700 transition-colors disabled:opacity-40 flex items-center gap-1.5"
-                >
-                  <svg v-if="actionLoading === `${pro.id}-approve`" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-                  <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                  Approuver le dossier
-                </button>
+                <div v-if="!pro.is_verified" class="flex flex-col items-end gap-1">
+                  <button
+                    @click="approvePro(pro.id, true)"
+                    :disabled="actionLoading === `${pro.id}-approve` || !canApprove(pro)"
+                    :title="!canApprove(pro) ? 'KBIS et décennale doivent être validés avant approbation' : ''"
+                    class="h-8 px-3 bg-emerald-600 text-white text-xs font-semibold rounded-md hover:bg-emerald-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
+                  >
+                    <svg v-if="actionLoading === `${pro.id}-approve`" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                    <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                    Approuver le dossier
+                  </button>
+                  <span v-if="!canApprove(pro)" class="text-xs text-muted-foreground">KBIS + décennale requis</span>
+                </div>
                 <button
                   v-if="pro.is_verified"
                   @click="approvePro(pro.id, false)"

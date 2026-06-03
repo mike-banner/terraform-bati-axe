@@ -20,6 +20,25 @@ export default defineEventHandler(async (event) => {
   const { pro_id, approved } = parsed.data
   const supabase = await serverSupabaseServiceRole(event) as any
 
+  // When approving, require both KBIS and décennale to be approved first
+  if (approved) {
+    const { data: verifs } = await supabase
+      .from('verifications')
+      .select('document_type, status')
+      .eq('pro_id', pro_id)
+      .eq('status', 'approved')
+
+    const hasKbis = verifs?.some((v: any) => v.document_type === 'kbis')
+    const hasDecennale = verifs?.some((v: any) => v.document_type === 'decennale')
+
+    if (!hasKbis || !hasDecennale) {
+      throw createError({
+        statusCode: 422,
+        statusMessage: 'KBIS et attestation décennale doivent être validés avant d\'approuver le dossier.'
+      })
+    }
+  }
+
   await supabase
     .from('professionals')
     .update({ is_verified: approved })
