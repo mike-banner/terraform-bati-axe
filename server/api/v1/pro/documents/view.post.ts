@@ -20,8 +20,7 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event)
   if (!user?.email) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
 
-  const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',') : []
-  if (!user.email.endsWith('@bati-axe.fr') && !adminEmails.includes(user.email)) {
+  if ((user as any).app_metadata?.role !== 'admin') {
     throw createError({ statusCode: 403, statusMessage: 'Accès réservé aux administrateurs.' })
   }
 

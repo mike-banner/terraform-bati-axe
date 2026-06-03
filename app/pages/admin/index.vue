@@ -39,11 +39,7 @@ const activeTab     = ref<'pending' | 'all'>('pending')
 const expiryDates   = ref<Record<string, string>>({})
 
 // ─── Access ───────────────────────────────────────────────────────────────────
-const isAdmin = computed(() => {
-  if (!user.value?.email) return false
-  const adminEmails = ['mick.ban@gmail.com']
-  return user.value.email.endsWith('@bati-axe.fr') || adminEmails.includes(user.value.email)
-})
+const isAdmin = computed(() => (user.value as any)?.app_metadata?.role === 'admin')
 
 // ─── Data fetching ────────────────────────────────────────────────────────────
 const fetchQueue = async () => {
