@@ -33,7 +33,6 @@ interface Professional {
   full_name: string
   email: string
   phone: string
-  postal_code: string
   category: string | null
   canonical_slug?: string
   is_verified: boolean
@@ -57,7 +56,7 @@ const fetchQueue = async () => {
   isLoading.value   = true
   errorMessage.value = null
   try {
-    const { data: pros, error: e1 } = await supabase.from('professionals').select('id, company_name, siret, full_name, email, phone, postal_code, canonical_slug, category, is_verified, is_claimed, decennal_status, created_at').order('created_at', { ascending: false })
+    const { data: pros, error: e1 } = await supabase.from('professionals').select('id, company_name, siret, full_name, email, phone, canonical_slug, category, is_verified, is_claimed, decennal_status, created_at').order('created_at', { ascending: false })
     if (e1) throw e1
     const { data: verifs, error: e2 } = await supabase.from('verifications').select('*').order('created_at', { ascending: false })
     if (e2) throw e2
