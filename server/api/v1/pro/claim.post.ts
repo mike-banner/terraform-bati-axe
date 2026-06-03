@@ -1,6 +1,9 @@
 import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 import crypto from 'node:crypto'
+import fs from 'node:fs'
+
+const VALID_CATEGORIES = ['maconnerie', 'toiture', 'electricite', 'plomberie', 'peinture', 'isolation'] as const
 
 const claimSchema = z.object({
   prospect_id: z.string().uuid().optional(),
@@ -9,6 +12,7 @@ const claimSchema = z.object({
   full_name: z.string().min(2, 'Le nom du gérant est requis.'),
   phone: z.string().regex(/^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone invalide.'),
   postal_code: z.string().regex(/^\d{5}$/, 'Code postal invalide.'),
+  category: z.enum(VALID_CATEGORIES, { errorMap: () => ({ message: 'Corps de métier invalide.' }) }),
   sms_opt_in: z.boolean().default(false)
 })
 
@@ -47,6 +51,7 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Non autorisé. Veuillez vous connecter.'
       })
     }
+    const userId = (user as any).id ?? (user as any).sub
 
     // 2. Validate payload
     const body = await readBody(event)
@@ -66,7 +71,7 @@ export default defineEventHandler(async (event) => {
     const { data: existingPro } = await supabase
       .from('professionals')
       .select('id')
-      .eq('id', user.id)
+      .eq('id', userId)
       .maybeSingle()
 
     if (existingPro) {
@@ -151,7 +156,7 @@ export default defineEventHandler(async (event) => {
     const { data: newPro, error: proError } = await supabase
       .from('professionals')
       .insert({
-        id: user.id,
+        id: userId,
         short_id: shortId,
         canonical_slug: canonicalSlug,
         email: user.email!,
@@ -160,6 +165,7 @@ export default defineEventHandler(async (event) => {
         full_name: data.full_name,
         phone: data.phone,
         zone_id: zoneId,
+        category: data.category,
         is_verified: false,
         is_claimed: true,
         decennal_status: 'none',
@@ -187,7 +193,7 @@ export default defineEventHandler(async (event) => {
       await supabase
         .from('prospects')
         .update({
-          converted_professional_id: user.id,
+          converted_professional_id: userId,
           optin_status: 'accepted'
         })
         .eq('id', prospectId)
@@ -200,7 +206,7 @@ export default defineEventHandler(async (event) => {
     const consentsToInsert: any[] = [
       {
         subject_type: 'professional',
-        subject_id: user.id,
+        subject_id: userId,
         channel: 'cgu',
         status: 'granted',
         source: 'claim',
@@ -213,7 +219,7 @@ export default defineEventHandler(async (event) => {
     if (data.sms_opt_in) {
       consentsToInsert.push({
         subject_type: 'professional',
-        subject_id: user.id,
+        subject_id: userId,
         channel: 'sms',
         status: 'granted',
         source: 'claim',
@@ -227,10 +233,10 @@ export default defineEventHandler(async (event) => {
 
     // 9. Log Audit Entry
     await supabase.from('audit_logs').insert({
-      actor_id: user.id,
+      actor_id: userId,
       action: 'prospect_converted',
       target_table: 'professionals',
-      target_id: user.id,
+      target_id: userId,
       metadata: {
         prospect_id: prospectId,
         siret: data.siret,
@@ -240,7 +246,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       status: 'SUCCESS',
-      professionalId: user.id,
+      professionalId: userId,
       slug: canonicalSlug
     }
   } catch (error: any) {

@@ -29,12 +29,22 @@ const showPassword = ref(false)
 const claimSlug = ref('')
 
 const authForm = reactive({ email: '', password: '', full_name: '' })
+const CATEGORIES = [
+  { id: 'maconnerie',  label: 'Maçonnerie & Gros Œuvre' },
+  { id: 'toiture',    label: 'Charpente & Toiture' },
+  { id: 'electricite',label: 'Électricité' },
+  { id: 'plomberie',  label: 'Plomberie & Chauffage' },
+  { id: 'peinture',   label: 'Peinture & Finitions' },
+  { id: 'isolation',  label: 'Isolation & Cloisons' },
+]
+
 const proForm  = reactive({
   company_name: '',
   siret: '',
   full_name: '',
   phone: '',
   postal_code: '',
+  category: '',
   sms_opt_in: false,
   cgu_accepted: false
 })
@@ -89,6 +99,7 @@ const isProFormValid = computed(() =>
   RE_NAME.test(proForm.full_name) &&
   RE_PHONE_FR.test(proForm.phone) &&
   RE_CP.test(proForm.postal_code) &&
+  !!proForm.category &&
   proForm.cgu_accepted
 )
 
@@ -163,9 +174,9 @@ const handleAuth = async () => {
 
     if (authForm.full_name) proForm.full_name = authForm.full_name
 
-    // Wait for user reactive to populate after auth
-    await nextTick()
-    const currentUser = useSupabaseUser().value
+    // Fetch fresh session to get populated app_metadata (nextTick is not enough)
+    const { data: { session } } = await supabase.auth.getSession()
+    const currentUser = session?.user ?? useSupabaseUser().value
 
     // Admin → redirect to console immediately
     if ((currentUser as any)?.app_metadata?.role === 'admin') {
@@ -211,6 +222,7 @@ const handleRegisterCompany = async () => {
         full_name:    proForm.full_name,
         phone:        proForm.phone,
         postal_code:  proForm.postal_code,
+        category:     proForm.category,
         sms_opt_in:   proForm.sms_opt_in
       }
     })
@@ -520,6 +532,26 @@ const switchMode = (mode: 'register' | 'login') => {
               />
               <p v-if="proErrors.postal_code" class="mt-1.5 text-xs text-red-600">{{ proErrors.postal_code }}</p>
             </div>
+          </div>
+
+          <!-- Category -->
+          <div>
+            <label class="block text-sm font-medium text-foreground mb-2">Corps de métier principal <span class="text-red-600">*</span></label>
+            <div class="grid grid-cols-2 gap-2">
+              <button
+                v-for="cat in CATEGORIES"
+                :key="cat.id"
+                type="button"
+                @click="proForm.category = cat.id"
+                class="h-10 px-3 rounded-md border text-sm font-medium text-left transition-colors"
+                :class="proForm.category === cat.id
+                  ? 'bg-foreground text-background border-foreground'
+                  : 'border-border text-foreground hover:bg-muted'"
+              >
+                {{ cat.label }}
+              </button>
+            </div>
+            <p v-if="!proForm.category && proTouched.cgu_accepted" class="mt-1.5 text-xs text-red-600">Sélectionnez votre corps de métier.</p>
           </div>
 
           <!-- Consents -->

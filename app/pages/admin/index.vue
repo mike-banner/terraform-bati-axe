@@ -17,6 +17,15 @@ interface Verification {
   created_at: string
 }
 
+const CATEGORY_LABELS: Record<string, string> = {
+  maconnerie:  'Maçonnerie & Gros Œuvre',
+  toiture:     'Charpente & Toiture',
+  electricite: 'Électricité',
+  plomberie:   'Plomberie & Chauffage',
+  peinture:    'Peinture & Finitions',
+  isolation:   'Isolation & Cloisons',
+}
+
 interface Professional {
   id: string
   company_name: string
@@ -25,6 +34,8 @@ interface Professional {
   email: string
   phone: string
   postal_code: string
+  category: string | null
+  canonical_slug?: string
   is_verified: boolean
   decennal_status: 'pending' | 'valid' | 'expired' | 'none'
   verifications?: Verification[]
@@ -46,7 +57,7 @@ const fetchQueue = async () => {
   isLoading.value   = true
   errorMessage.value = null
   try {
-    const { data: pros, error: e1 } = await supabase.from('professionals').select('*').order('created_at', { ascending: false })
+    const { data: pros, error: e1 } = await supabase.from('professionals').select('id, company_name, siret, full_name, email, phone, postal_code, canonical_slug, category, is_verified, is_claimed, decennal_status, created_at').order('created_at', { ascending: false })
     if (e1) throw e1
     const { data: verifs, error: e2 } = await supabase.from('verifications').select('*').order('created_at', { ascending: false })
     if (e2) throw e2
@@ -75,6 +86,23 @@ const viewDocument = async (fileKey: string) => {
     window.open(data.value.signedUrl, '_blank')
   } catch (err: any) {
     errorMessage.value = err.message
+  }
+}
+
+const approvePro = async (proId: string, approved: boolean) => {
+  actionLoading.value = `${proId}-approve`
+  errorMessage.value  = null
+  try {
+    const { data, error } = await useFetch('/api/v1/admin/approve-pro', {
+      method: 'POST',
+      body: { pro_id: proId, approved }
+    })
+    if (error.value) throw new Error(error.value.data?.statusMessage || 'Erreur.')
+    if (data.value?.status === 'SUCCESS') await fetchQueue()
+  } catch (err: any) {
+    errorMessage.value = err.message
+  } finally {
+    actionLoading.value = null
   }
 }
 
@@ -187,14 +215,17 @@ const statusLabel: Record<string, string> = {
           >
             <!-- Pro header row -->
             <div class="flex items-start justify-between gap-4 px-5 py-4 bg-muted/50">
-              <div class="space-y-1">
-                <div class="flex items-center gap-2">
+              <div class="space-y-1 flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
                   <span class="text-sm font-bold text-foreground">{{ pro.company_name }}</span>
                   <span
                     class="text-xs font-medium px-2 py-0.5 rounded-full border"
-                    :class="pro.is_verified ? 'border-foreground/30 text-foreground' : 'border-border text-muted-foreground'"
+                    :class="pro.is_verified ? 'border-emerald-400 text-emerald-700 bg-emerald-50' : 'border-amber-300 text-amber-700 bg-amber-50'"
                   >
-                    {{ pro.is_verified ? 'Vérifié' : 'En attente' }}
+                    {{ pro.is_verified ? 'Approuvé' : 'En attente' }}
+                  </span>
+                  <span v-if="pro.category" class="text-xs px-2 py-0.5 rounded-full border border-border text-muted-foreground">
+                    {{ CATEGORY_LABELS[pro.category] ?? pro.category }}
                   </span>
                 </div>
                 <div class="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-muted-foreground">
@@ -202,18 +233,38 @@ const statusLabel: Record<string, string> = {
                   <span>{{ pro.siret }}</span>
                   <span>{{ pro.email }}</span>
                   <span>{{ pro.phone }}</span>
-                  <span>CP {{ pro.postal_code }}</span>
                 </div>
               </div>
-              <NuxtLink
-                v-if="pro.is_verified"
-                :to="`/pro/78/${pro.canonical_slug ?? pro.id}`"
-                target="_blank"
-                class="shrink-0 text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-              >
-                Voir profil
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
-              </NuxtLink>
+              <div class="flex items-center gap-2 shrink-0">
+                <NuxtLink
+                  v-if="pro.is_verified"
+                  :to="`/pro/78/${pro.canonical_slug ?? pro.id}`"
+                  target="_blank"
+                  class="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                >
+                  Voir profil
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                </NuxtLink>
+                <!-- Manual approval button -->
+                <button
+                  v-if="!pro.is_verified"
+                  @click="approvePro(pro.id, true)"
+                  :disabled="actionLoading === `${pro.id}-approve`"
+                  class="h-8 px-3 bg-emerald-600 text-white text-xs font-semibold rounded-md hover:bg-emerald-700 transition-colors disabled:opacity-40 flex items-center gap-1.5"
+                >
+                  <svg v-if="actionLoading === `${pro.id}-approve`" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                  <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                  Approuver le dossier
+                </button>
+                <button
+                  v-if="pro.is_verified"
+                  @click="approvePro(pro.id, false)"
+                  :disabled="actionLoading === `${pro.id}-approve`"
+                  class="h-8 px-3 border border-red-200 text-red-700 text-xs font-semibold rounded-md hover:bg-red-50 transition-colors disabled:opacity-40"
+                >
+                  Suspendre
+                </button>
+              </div>
             </div>
 
             <!-- Documents -->
