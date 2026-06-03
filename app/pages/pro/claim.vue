@@ -118,6 +118,22 @@ function translateAuthError(msg: string): string {
 const prospectId = computed(() => route.query.prospect_id as string || '')
 
 onMounted(async () => {
+  const currentUser = useSupabaseUser().value
+
+  if (currentUser) {
+    // Admin → console
+    if ((currentUser as any).app_metadata?.role === 'admin') {
+      return navigateTo('/admin')
+    }
+    // Pro with existing profile → dashboard
+    const { data: existingPro } = await supabase
+      .from('professionals')
+      .select('id')
+      .eq('id', currentUser.id)
+      .maybeSingle()
+    if (existingPro) return navigateTo('/app/dashboard')
+  }
+
   if (prospectId.value) {
     try {
       const { data } = await useFetch(`/api/v1/prospects/${prospectId.value}`)

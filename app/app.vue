@@ -10,6 +10,9 @@ async function signOut() {
 const userInitial = computed(() =>
   user.value?.email?.charAt(0).toUpperCase() ?? ''
 )
+
+const isAdmin = computed(() => (user.value as any)?.app_metadata?.role === 'admin')
+const espaceLink = computed(() => isAdmin.value ? '/admin' : '/app/dashboard')
 </script>
 
 <template>
@@ -27,7 +30,7 @@ const userInitial = computed(() =>
         <nav class="flex items-center gap-2">
           <template v-if="user">
             <NuxtLink
-              to="/app/dashboard"
+              :to="espaceLink"
               class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
             >
               Mon espace

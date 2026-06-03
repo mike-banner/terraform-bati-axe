@@ -56,9 +56,8 @@ const fetchQueue = async () => {
   isLoading.value   = true
   errorMessage.value = null
   try {
-    const { data, error } = await useFetch('/api/v1/admin/queue')
-    if (error.value) throw new Error(error.value.data?.statusMessage || 'Impossible de charger la file de modération.')
-    professionals.value = data.value?.professionals || []
+    const data = await $fetch('/api/v1/admin/queue')
+    professionals.value = (data as any)?.professionals || []
   } catch (err: any) {
     errorMessage.value = err.message || 'Impossible de charger la file de modération.'
   } finally {
@@ -92,14 +91,10 @@ const approvePro = async (proId: string, approved: boolean) => {
   actionLoading.value = `${proId}-approve`
   errorMessage.value  = null
   try {
-    const { data, error } = await useFetch('/api/v1/admin/approve-pro', {
-      method: 'POST',
-      body: { pro_id: proId, approved }
-    })
-    if (error.value) throw new Error(error.value.data?.statusMessage || 'Erreur.')
-    if (data.value?.status === 'SUCCESS') await fetchQueue()
+    await $fetch('/api/v1/admin/approve-pro', { method: 'POST', body: { pro_id: proId, approved } })
+    await fetchQueue()
   } catch (err: any) {
-    errorMessage.value = err.message
+    errorMessage.value = err.data?.statusMessage || err.message
   } finally {
     actionLoading.value = null
   }
@@ -110,14 +105,13 @@ const moderateDocument = async (proId: string, docType: 'kbis' | 'decennale', st
   actionLoading.value = key
   errorMessage.value  = null
   try {
-    const { data, error } = await useFetch('/api/v1/admin/verify', {
+    await $fetch('/api/v1/admin/verify', {
       method: 'POST',
       body: { pro_id: proId, document_type: docType, status, expiry_date: expiryDates.value[key] || undefined }
     })
-    if (error.value) throw new Error(error.value.data?.statusMessage || 'Erreur.')
-    if (data.value?.status === 'SUCCESS') await fetchQueue()
+    await fetchQueue()
   } catch (err: any) {
-    errorMessage.value = err.message
+    errorMessage.value = err.data?.statusMessage || err.message
   } finally {
     actionLoading.value = null
   }
