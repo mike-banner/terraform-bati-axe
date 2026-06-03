@@ -1,0 +1,6 @@
+-- Migration: Storage Setup
+-- Date: 2026-06-03
+-- SUPERSEDED: Documents are stored on Cloudflare R2, not Supabase Storage (ADR-003).
+-- This migration is intentionally empty. No Supabase Storage bucket is created.
+-- Upload flow: Nitro API generates R2 presigned PUT URLs → client uploads directly to R2.
+-- Reference: server/api/v1/pro/documents/presign.post.ts
