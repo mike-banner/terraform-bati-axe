@@ -1,117 +1,143 @@
 <script setup lang="ts">
-import { ArrowRight, ShieldCheck, Zap, Users, Lock } from 'lucide-vue-next'
-
 useHead({
-  title: 'BÂTI-AXE — Mise en relation bâtiment & travaux qualifiés',
+  title: 'BÂTI-AXE — Artisans certifiés, projets sécurisés',
   meta: [
-    { name: 'description', content: 'Plateforme de mise en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.' }
+    { name: 'description', content: 'Mise en relation entre particuliers et artisans vérifiés (décennale + Kbis). Zone pilote Carrières-sous-Poissy (78).' }
   ]
 })
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-950 text-slate-100 flex flex-col relative overflow-hidden">
-    <!-- Glow effects in background -->
-    <div class="absolute top-0 right-1/4 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-3xl -z-10"></div>
-    <div class="absolute bottom-10 left-1/4 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl -z-10"></div>
+  <div>
+    <!-- Hero -->
+    <section class="max-w-6xl mx-auto px-6 pt-20 pb-24 md:pt-28 md:pb-32">
+      <div class="max-w-3xl">
+        <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-6">
+          Zone pilote · Carrières-sous-Poissy (78)
+        </p>
+        <h1
+          class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.05] text-foreground mb-6"
+          style="text-wrap: balance"
+        >
+          Trouvez l'artisan certifié pour vos travaux.
+        </h1>
+        <p class="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10" style="text-wrap: pretty">
+          Chaque professionnel partenaire est vérifié manuellement : décennale en cours de validité, Kbis à jour. Vos coordonnées restent masquées jusqu'au moment du contact.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <NuxtLink
+            to="/simulateur"
+            class="inline-flex items-center justify-center gap-2 h-12 px-7 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity"
+          >
+            Décrire mon projet
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </NuxtLink>
+          <NuxtLink
+            to="/pro/claim"
+            class="inline-flex items-center justify-center h-12 px-7 border border-border text-foreground text-sm font-medium rounded-md hover:bg-muted transition-colors"
+          >
+            Je suis artisan
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
 
-    <!-- Navigation Header -->
-    <header class="border-b border-zinc-900 bg-zinc-950/40 backdrop-blur-md px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-xl font-black tracking-wider bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">BÂTI-AXE</span>
-        <span class="text-[9px] font-bold px-2 py-0.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-400">PILOTE</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <NuxtLink to="/simulateur" class="text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg shadow-md shadow-indigo-500/20 transition-all">
-          Simulation
-        </NuxtLink>
-      </div>
-    </header>
+    <!-- Divider -->
+    <div class="border-t border-border" />
 
-    <!-- Hero Section -->
-    <main class="flex-1 flex flex-col items-center justify-center max-w-5xl mx-auto px-6 py-20 text-center space-y-12 relative">
-      <!-- Active Phase Badge -->
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/20 bg-indigo-500/5 text-indigo-400 text-xs font-medium">
-        <span class="relative flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-        </span>
-        <span>Phase 2 active : Data Foundation & Capture</span>
+    <!-- How it works -->
+    <section class="max-w-6xl mx-auto px-6 py-20 md:py-24">
+      <h2 class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-12">
+        Comment ça marche
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-0 md:divide-x divide-border">
+        <div class="md:pr-10 pb-10 md:pb-0">
+          <span class="text-4xl font-black text-border select-none">01</span>
+          <h3 class="text-lg font-bold text-foreground mt-4 mb-2">Décrivez votre projet</h3>
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            Simulateur en 6 étapes : type de travaux, localisation, budget estimé, délai. Moins de 3 minutes.
+          </p>
+        </div>
+        <div class="md:px-10 pb-10 md:pb-0">
+          <span class="text-4xl font-black text-border select-none">02</span>
+          <h3 class="text-lg font-bold text-foreground mt-4 mb-2">Mise en relation sous 2 min</h3>
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            Les artisans partenaires de votre zone reçoivent une alerte SMS avec le budget et le type de chantier. Pas vos coordonnées.
+          </p>
+        </div>
+        <div class="md:pl-10">
+          <span class="text-4xl font-black text-border select-none">03</span>
+          <h3 class="text-lg font-bold text-foreground mt-4 mb-2">Contact débloqué</h3>
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            Le premier artisan abonné peut vous appeler immédiatement. Pour les autres, vos coordonnées sont accessibles après 24h.
+          </p>
+        </div>
       </div>
-      
-      <!-- Headline -->
-      <h1 class="text-5xl font-black tracking-tight sm:text-6xl max-w-4xl mx-auto text-white leading-tight">
-        Trouvez l'artisan idéal pour vos travaux, <br class="hidden sm:inline" />
-        <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">en toute confiance.</span>
-      </h1>
-      
-      <!-- Subheadline -->
-      <p class="text-lg md:text-xl text-zinc-400 max-w-3xl mx-auto font-light leading-relaxed">
-        BÂTI-AXE valide manuellement les assurances décennales et Kbis de ses professionnels partenaires. Vos données personnelles restent floutées et protégées.
+    </section>
+
+    <!-- Divider -->
+    <div class="border-t border-border" />
+
+    <!-- Trust anchor -->
+    <section class="max-w-6xl mx-auto px-6 py-20 md:py-24">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-6">Vérification</p>
+          <h2 class="text-3xl md:text-4xl font-black tracking-tight text-foreground mb-4" style="text-wrap: balance">
+            Chaque professionnel est vérifié à la main.
+          </h2>
+          <p class="text-base text-muted-foreground leading-relaxed">
+            Aucun algorithme. Un membre de notre équipe contrôle la décennale, le Kbis et la zone d'intervention avant toute activation. Un artisan non conforme ne peut pas accéder aux leads.
+          </p>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-start gap-4 p-5 border border-border rounded-lg">
+            <div class="w-8 h-8 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-foreground">Assurance décennale valide</p>
+              <p class="text-xs text-muted-foreground mt-0.5">Attestation contrôlée avec date d'expiration vérifiée.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 p-5 border border-border rounded-lg">
+            <div class="w-8 h-8 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-foreground">Kbis de moins de 3 mois</p>
+              <p class="text-xs text-muted-foreground mt-0.5">Extrait officiel attestant de l'activité en cours.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 p-5 border border-border rounded-lg">
+            <div class="w-8 h-8 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-foreground">Zone d'intervention confirmée</p>
+              <p class="text-xs text-muted-foreground mt-0.5">L'artisan intervient bien dans votre secteur géographique.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA bottom -->
+    <div class="border-t border-border" />
+    <section class="max-w-6xl mx-auto px-6 py-20 text-center">
+      <h2 class="text-3xl md:text-4xl font-black tracking-tight text-foreground mb-4" style="text-wrap: balance">
+        Prêt à démarrer votre projet ?
+      </h2>
+      <p class="text-base text-muted-foreground mb-8">
+        Décrivez votre besoin en 3 minutes. Nous nous occupons du reste.
       </p>
-
-      <!-- CTAs -->
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 w-full max-w-md mx-auto">
-        <NuxtLink 
-          to="/simulateur"
-          class="w-full sm:w-auto inline-flex h-12 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-8 text-sm font-semibold text-white shadow-lg shadow-purple-500/25 transition-all hover:opacity-90 duration-200 gap-2 group"
-        >
-          Simulation de travaux
-          <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-        </NuxtLink>
-        
-        <NuxtLink 
-          to="/legal/mentions-legales"
-          class="w-full sm:w-auto inline-flex h-12 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 px-8 text-sm font-medium text-zinc-300 transition-colors duration-200"
-        >
-          Mentions Légales
-        </NuxtLink>
-      </div>
-
-      <!-- Features grid -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 pt-16 w-full text-left">
-        <div class="p-6 rounded-2xl border border-zinc-900 bg-zinc-900/30 backdrop-blur-sm space-y-3">
-          <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-lg inline-block">
-            <ShieldCheck class="w-5 h-5" />
-          </div>
-          <h3 class="font-bold text-white text-base">Assurances Validées</h3>
-          <p class="text-xs text-zinc-400 leading-relaxed">Attestations décennales et KBIS contrôlés individuellement pour chaque professionnel partenaire.</p>
-        </div>
-
-        <div class="p-6 rounded-2xl border border-zinc-900 bg-zinc-900/30 backdrop-blur-sm space-y-3">
-          <div class="p-3 bg-purple-500/10 text-purple-400 rounded-lg inline-block">
-            <Lock class="w-5 h-5" />
-          </div>
-          <h3 class="font-bold text-white text-base">Données Floutées</h3>
-          <p class="text-xs text-zinc-400 leading-relaxed">Vos coordonnées de contact restent masquées et sécurisées jusqu'au matching validé.</p>
-        </div>
-
-        <div class="p-6 rounded-2xl border border-zinc-900 bg-zinc-900/30 backdrop-blur-sm space-y-3">
-          <div class="p-3 bg-pink-500/10 text-pink-400 rounded-lg inline-block">
-            <Zap class="w-5 h-5" />
-          </div>
-          <h3 class="font-bold text-white text-base">Mise en Relation</h3>
-          <p class="text-xs text-zinc-400 leading-relaxed">Simulateur en 6 étapes optimisé pour qualifier précisément votre projet et son budget.</p>
-        </div>
-
-        <div class="p-6 rounded-2xl border border-zinc-900 bg-zinc-900/30 backdrop-blur-sm space-y-3">
-          <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-lg inline-block">
-            <Users class="w-5 h-5" />
-          </div>
-          <h3 class="font-bold text-white text-base">Zone Pilote</h3>
-          <p class="text-xs text-zinc-400 leading-relaxed">Lancement pilote ciblé sur la commune de Carrières-sous-Poissy (78955) pour un service de proximité.</p>
-        </div>
-      </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-zinc-900 bg-zinc-950/80 px-6 py-6 text-center text-xs text-zinc-500">
-      <div class="flex justify-center gap-6 mb-4">
-        <NuxtLink to="/legal/mentions-legales" class="hover:text-zinc-300">Mentions Légales</NuxtLink>
-        <NuxtLink to="/legal/confidentialite" class="hover:text-zinc-300">Politique de Confidentialité</NuxtLink>
-        <NuxtLink to="/legal/cgu" class="hover:text-zinc-300">Conditions Générales d'Utilisation</NuxtLink>
-      </div>
-      <p>&copy; 2026 BÂTI-AXE. Tous droits réservés. Plateforme pilote conforme RGPD.</p>
-    </footer>
+      <NuxtLink
+        to="/simulateur"
+        class="inline-flex items-center gap-2 h-12 px-8 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity"
+      >
+        Commencer la simulation
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </NuxtLink>
+    </section>
   </div>
 </template>
