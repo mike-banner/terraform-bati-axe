@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 3: Onboarding Pro & Vérification manuelle
+**Current focus**: Phase 4: Le Verrou & Stripe Billing
 
 ## Current Position
 
-Phase: 3 of 5 (Onboarding Pro & Vérification manuelle)
+Phase: 4 of 5 (Le Verrou & Stripe Billing)
 Plan: 0 of 1 in current phase
 Status: Ready to plan
-Last activity: 2026-06-03 — Phase 2 Complétée (Schéma initial, Seeding, API de Capture Zod et Page Simulateur 6 étapes fonctionnels).
+Last activity: 2026-06-03 — Phase 3 Complétée (tunnel auth claim, upload R2, profil public ADR-009, console admin R2, thème blanc/noir aligné).
 Progress: [▓▓▓░░░░░░░] 40%
 
 ## Performance Metrics
