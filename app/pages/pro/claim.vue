@@ -136,7 +136,7 @@ onMounted(async () => {
 
   if (prospectId.value) {
     try {
-      const { data } = await useFetch(`/api/v1/prospects/${prospectId.value}`)
+      const { data } = await useFetch<{ status: string; company_name?: string; siret?: string; postal_code?: string }>(`/api/v1/prospects/${prospectId.value}`)
       if (data.value?.status === 'SUCCESS') {
         proForm.company_name = data.value.company_name || ''
         proForm.siret        = data.value.siret        || ''
@@ -204,7 +204,7 @@ const handleAuth = async () => {
         .from('professionals')
         .select('id, canonical_slug')
         .eq('id', currentUser.id)
-        .maybeSingle()
+        .maybeSingle() as { data: { id: string; canonical_slug: string } | null }
 
       if (existingPro) {
         claimSlug.value = existingPro.canonical_slug
@@ -229,7 +229,7 @@ const handleRegisterCompany = async () => {
   globalError.value = null
 
   try {
-    const { data, error } = await useFetch('/api/v1/pro/claim', {
+    const { data, error } = await useFetch<{ status: string; slug: string; professionalId: string }>('/api/v1/pro/claim', {
       method: 'POST',
       body: {
         prospect_id:  prospectId.value || undefined,
@@ -272,7 +272,7 @@ const uploadDocument = async (type: 'kbis' | 'decennale') => {
   uploads[type].error  = ''
 
   try {
-    const { data: presignData, error: presignError } = await useFetch('/api/v1/pro/documents/presign', {
+    const { data: presignData, error: presignError } = await useFetch<{ status: string; signedUrl: string; fileKey: string }>('/api/v1/pro/documents/presign', {
       method: 'POST',
       body: { document_type: type, filename: file.name }
     })
@@ -281,11 +281,11 @@ const uploadDocument = async (type: 'kbis' | 'decennale') => {
       throw new Error(presignError.value?.data?.statusMessage || 'Erreur lors de la génération de la signature.')
     }
 
-    const { signedUrl, path } = presignData.value
+    const { signedUrl, fileKey } = presignData.value
     const uploadRes = await fetch(signedUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file })
     if (!uploadRes.ok) throw new Error('Échec du transfert. Vérifiez votre connexion et réessayez.')
 
-    await supabase.from('verifications').insert({ pro_id: user.value?.id, document_type: type, file_key: path, status: 'pending' })
+    await (supabase as any).from('verifications').insert({ pro_id: user.value?.id, document_type: type, file_key: fileKey, status: 'pending' })
 
     uploads[type].status = 'success'
   } catch (err: any) {

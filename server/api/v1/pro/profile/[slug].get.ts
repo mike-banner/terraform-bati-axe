@@ -3,7 +3,6 @@ import { serverSupabaseServiceRole } from '#supabase/server'
 export default defineEventHandler(async (event) => {
   const slug = getRouterParam(event, 'slug') || ''
 
-  // Extract short_id — last segment after the final '-'
   const parts = slug.split('-')
   const shortId = parts[parts.length - 1]
 
@@ -15,13 +14,11 @@ export default defineEventHandler(async (event) => {
 
   const { data: pro, error } = await supabase
     .from('professionals')
-    .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, decennal_status, created_at')
+    .select('id, company_name, full_name, canonical_slug, short_id, category, is_verified, is_claimed, decennal_status, created_at')
     .eq('short_id', shortId)
     .maybeSingle()
 
   if (error) throw createError({ statusCode: 500, statusMessage: 'Erreur serveur.' })
-  if (!pro) throw createError({ statusCode: 404, statusMessage: 'Profil introuvable.' })
-
   if (!pro) throw createError({ statusCode: 404, statusMessage: 'Profil introuvable.' })
 
   const needsRedirect = slug !== pro.canonical_slug
@@ -29,16 +26,16 @@ export default defineEventHandler(async (event) => {
   return {
     status: 'SUCCESS',
     needsRedirect,
-    canonicalSlug: pro.canonical_slug,
+    canonicalSlug: pro.canonical_slug as string,
     pro: {
-      id: pro.id,
-      company_name: pro.company_name,
-      full_name: pro.full_name,
-      postal_code: pro.postal_code,
-      is_verified: pro.is_verified,
-      is_claimed: pro.is_claimed,
-      decennal_status: pro.decennal_status,
-      member_since: pro.created_at,
+      id: pro.id as string,
+      company_name: pro.company_name as string,
+      full_name: pro.full_name as string,
+      category: pro.category as string | null,
+      is_verified: pro.is_verified as boolean,
+      is_claimed: pro.is_claimed as boolean,
+      decennal_status: pro.decennal_status as string,
+      member_since: pro.created_at as string,
     }
   }
 })
