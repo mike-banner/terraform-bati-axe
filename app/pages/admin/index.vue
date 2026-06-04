@@ -45,8 +45,9 @@ const isLoading     = ref(true)
 const actionLoading = ref<string | null>(null)
 const errorMessage  = ref<string | null>(null)
 const professionals = ref<Professional[]>([])
-const activeTab     = ref<'pending' | 'all'>('pending')
-const expiryDates   = ref<Record<string, string>>({})
+const activeTab       = ref<'pending' | 'all'>('pending')
+const categoryFilter  = ref<string>('')
+const expiryDates     = ref<Record<string, string>>({})
 
 // ─── Access ───────────────────────────────────────────────────────────────────
 const isAdmin = computed(() => (user.value as any)?.app_metadata?.role === 'admin')
@@ -119,8 +120,16 @@ const moderateDocument = async (proId: string, docType: 'kbis' | 'decennale', st
 
 // ─── Filtered list ────────────────────────────────────────────────────────────
 const filtered = computed(() => {
-  if (activeTab.value === 'all') return professionals.value
-  return professionals.value.filter(p => !p.is_verified)
+  let list = activeTab.value === 'all'
+    ? professionals.value
+    : professionals.value.filter(p => !p.is_verified)
+  if (categoryFilter.value) list = list.filter(p => p.category === categoryFilter.value)
+  return list
+})
+
+const availableCategories = computed(() => {
+  const cats = new Set(professionals.value.map(p => p.category).filter(Boolean))
+  return [...cats] as string[]
 })
 
 const pendingCount = computed(() =>
@@ -144,9 +153,9 @@ const statusLabel: Record<string, string> = {
           <h1 class="text-2xl font-black tracking-tight text-foreground">Console de modération</h1>
           <p class="text-sm text-muted-foreground mt-1">Validation des Kbis et attestations décennales.</p>
         </div>
-        <div v-if="isAdmin" class="flex items-center gap-2">
+        <div v-if="isAdmin" class="flex items-center gap-2 flex-wrap justify-end">
           <button
-            @click="activeTab = 'pending'"
+            @click="activeTab = 'pending'; categoryFilter = ''"
             class="h-9 px-4 text-sm font-medium rounded-md border transition-colors"
             :class="activeTab === 'pending' ? 'bg-foreground text-background border-foreground' : 'border-border text-muted-foreground hover:text-foreground hover:bg-muted'"
           >
@@ -160,6 +169,16 @@ const statusLabel: Record<string, string> = {
           >
             Tous les pros
           </button>
+          <select
+            v-if="activeTab === 'all'"
+            v-model="categoryFilter"
+            class="h-9 px-3 pr-8 border border-border rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
+          >
+            <option value="">Toutes catégories</option>
+            <option v-for="cat in availableCategories" :key="cat" :value="cat">
+              {{ CATEGORY_LABELS[cat] ?? cat }}
+            </option>
+          </select>
         </div>
       </div>
 
