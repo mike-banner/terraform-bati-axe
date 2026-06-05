@@ -47,6 +47,15 @@ export default defineNuxtConfig({
     componentDir: './app/components/ui'
   },
 
+  runtimeConfig: {
+    stripeSecretKey: process.env.STRIPE_SECRET_KEY,
+    stripePriceId: process.env.STRIPE_PRICE_ID,
+    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+    public: {
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    }
+  },
+
   future: {
     compatibilityVersion: 4
   }
