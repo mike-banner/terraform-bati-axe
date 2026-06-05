@@ -1,440 +1,499 @@
 # UI-SPEC — Phase 4: Le Verrou & Stripe Billing
 
-**Generated:** 2026-06-05
-**Skill:** ui-ux-pro-max
-**Stack:** Nuxt 3 / Vue 3 (Composition API) / shadcn-vue / Tailwind CSS
+**Generated:** 2026-06-05 (v2 — corrigé après audit du code existant)
+**Stack:** Nuxt 3 / Vue 3 / shadcn-vue / Tailwind CSS v4
+**Référence codebase:** `app/pages/app/dashboard.vue`, `app/pages/index.vue`
 **Status:** Ready for planning
 
 ---
 
-## Design System
+## Design System — Tokens existants (ne pas inventer de couleurs)
 
-### Style
-**Minimalism & Swiss Style** — Clean, fonctionnel, haute lisibilité, espacement généreux, grille stricte.
-Adapté aux outils SaaS BtoB, dashboards professionnels, espace pro bâtiment.
+Le site est **monochrome pur**. Tous les tokens sont des niveaux de gris OKLCH sans chroma.
+Utiliser **uniquement** les variables CSS shadcn déjà définies dans `app/assets/css/tailwind.css`.
 
-### Palette
+| Usage | Token Tailwind | CSS var | Exemple existant |
+|-------|---------------|---------|-----------------|
+| Fond de page | `bg-background` | `--background` oklch(1 0 0) | body, pages |
+| Fond card | `bg-card` | `--card` oklch(1 0 0) | identique background |
+| Fond muted | `bg-muted` | `--muted` oklch(0.97 0 0) | sections secondaires |
+| Texte principal | `text-foreground` | `--foreground` oklch(0.145 0 0) | titres, labels |
+| Texte secondaire | `text-muted-foreground` | `--muted-foreground` oklch(0.556 0 0) | descriptions, meta |
+| Bordure | `border-border` | `--border` oklch(0.922 0 0) | toutes les cards |
+| Bouton primaire | `bg-foreground text-background` | — | CTA principal, submit |
+| Bouton ghost | `border border-border text-foreground hover:bg-muted` | — | actions secondaires |
+| Destructive | `text-destructive` | `--destructive` oklch(0.577 0.245 27.325) | erreurs |
 
-| Rôle | Token Tailwind | Hex | Usage |
-|------|---------------|-----|-------|
-| Primary | `slate-900` | `#0F172A` | Titres, nav, headers |
-| Secondary | `slate-600` | `#334155` | Texte corps, labels |
-| Muted | `slate-400` | `#94A3B8` | Texte désactivé, placeholders |
-| Background | `slate-50` | `#F8FAFC` | Fond de page |
-| Surface | `white` | `#FFFFFF` | Cards, panneaux |
-| CTA | `sky-700` | `#0369A1` | Boutons primaires, liens |
-| CTA Hover | `sky-800` | `#075985` | Hover état bouton |
-| Premium Gold | `amber-500` | `#F59E0B` | Badge Premium, accents upsell |
-| Premium Bg | `amber-50` | `#FFFBEB` | Fond CTA "Passer Premium" |
-| Locked | `slate-200` | `#E2E8F0` | Card floutée background |
-| Unlocked | `emerald-50` | `#ECFDF5` | Card débloquée background |
-| Claimed | `slate-100` | `#F1F5F9` | Card prise (neutre, no CTA) |
-| Danger | `red-600` | `#DC2626` | Erreurs |
-| Border | `slate-200` | `#E2E8F0` | Bordures cards |
+### Accent amber — uniquement pour Premium et états warning
+Déjà établi dans `dashboard.vue` pour l'état "En attente" des documents :
+```
+text-amber-700 border-amber-300 bg-amber-50
+```
+Réutiliser **exactement** ce triplet pour l'état Premium / flouté. Pas d'autres teintes.
 
-### Typographie
-**Plus Jakarta Sans** (Google Fonts) — moderne, SaaS-ready, lisible à toutes tailles.
+### Ce qu'il ne faut PAS utiliser
+- ❌ Pas de `text-sky-*`, `text-emerald-*`, `text-slate-*` (inexistants dans le design system)
+- ❌ Pas de `bg-emerald-50`, `bg-slate-100` pour les cards (ça casse la cohérence monochrome)
+- ❌ Pas d'import de police — Geist est déjà chargé via `--font-sans` dans `tailwind.css`
+- ❌ Pas de librairie d'icônes — SVG inline uniquement (voir section Icônes ci-dessous)
 
-```css
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-font-family: 'Plus Jakarta Sans', sans-serif;
+---
+
+## Typographie
+
+**Geist Variable** — déjà appliqué globalement via `font-sans` dans `tailwind.css`. Aucun import à faire.
+
+| Élément | Classes | Exemple dans le code |
+|---------|---------|---------------------|
+| Titre de page | `text-3xl font-black tracking-tight text-foreground` | `dashboard.vue` ligne 107 |
+| Section header | `text-xs font-medium text-muted-foreground tracking-widest uppercase` | `dashboard.vue` ligne 141 |
+| Label card | `text-sm font-semibold text-foreground` | `dashboard.vue` ligne 125 |
+| Texte corps | `text-sm text-muted-foreground` | partout |
+| Meta / date | `text-xs text-muted-foreground` | `dashboard.vue` ligne 108 |
+
+---
+
+## Icônes — SVG inline uniquement
+
+**Aucune librairie.** Tous les icônes existants sont des SVG écrits à la main dans les templates.
+Pattern à respecter : `class="w-4 h-4"` (ou `w-3.5 h-3.5` pour les icônes dans les badges), `fill="none"`, `stroke="currentColor"`, `stroke-width="2"`, `viewBox="0 0 24 24"`.
+
+### Référentiel SVG Phase 4 (HeroIcons outline, cohérent avec l'existant)
+
+```html
+<!-- Verrou fermé (lead flouté) -->
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+</svg>
+
+<!-- Verrou ouvert (lead débloqué) -->
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+</svg>
+
+<!-- Coche (lead vérifié / débloqué) — même path que dashboard.vue -->
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+</svg>
+
+<!-- Horloge (countdown / délai) — même path que dashboard.vue -->
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+</svg>
+
+<!-- Flèche droite (CTA) — même path que index.vue et dashboard.vue -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+</svg>
+
+<!-- Étoile (Premium) -->
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
+</svg>
+
+<!-- Téléphone -->
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
+</svg>
+
+<!-- Email -->
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+</svg>
 ```
 
-| Élément | Taille | Poids | Classe Tailwind |
-|---------|--------|-------|----------------|
-| Page title | 24px | 700 | `text-2xl font-bold` |
-| Section title | 18px | 600 | `text-lg font-semibold` |
-| Card title | 15px | 600 | `text-[15px] font-semibold` |
-| Body | 14px | 400 | `text-sm` |
-| Label / Meta | 12px | 500 | `text-xs font-medium` |
-| Countdown | 13px | 600 | `text-[13px] font-semibold` |
+---
 
-Line-height corps : `leading-relaxed` (1.625). Longueur max colonne : 65 caractères.
+## Composants shadcn-vue existants
 
-### Icônes
-**Lucide Vue** uniquement — aucun emoji. Taille standard `w-4 h-4` (inline) / `w-5 h-5` (standalone).
-Icônes clés : `LockKeyholeIcon`, `UnlockIcon`, `CheckCircle2Icon`, `ClockIcon`, `StarIcon`, `PhoneIcon`, `MailIcon`, `MapPinIcon`, `BuildingIcon`, `EuroIcon`.
-
-### Spacing & Layout
-- Conteneur max : `max-w-5xl mx-auto px-4 sm:px-6`
-- Gap cards grid : `gap-4`
-- Padding card : `p-5` (desktop) / `p-4` (mobile)
-- Radius : `rounded-xl` (cards) / `rounded-lg` (boutons/badges)
-
-### Transitions
-- Hover cards : `transition-shadow duration-200`
-- Boutons : `transition-colors duration-150`
-- Respect `prefers-reduced-motion` : désactiver transitions si activé
+Réutiliser tels quels — ne pas recréer :
+- `Badge` — avec `variant="outline"` et classes custom pour les états (voir section Badges)
+- `Button` — variant `default` (bg-foreground) et `outline` (border-border)
+- `Card` / `CardHeader` / `CardContent` — compound pattern
+- Accordion shadcn-vue pour la FAQ Premium
 
 ---
 
 ## Page 1 — `/espace/leads` (Dashboard Leads)
 
-### Objectif UX
-Permettre au pro de scanner rapidement son pipeline de leads et d'identifier les actions prioritaires (débloquer via Premium ou attendre 72h).
-
-### Layout
-
+### Layout global
 ```
-┌─────────────────────────────────────────────────┐
-│  Navbar espace pro (existante)                  │
-├─────────────────────────────────────────────────┤
-│  [Titre] Mes leads        [Badge] N leads       │
-│  [Sous-titre] Leads qualifiés pour votre métier │
-├─────────────────────────────────────────────────┤
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐        │
-│  │ Card     │ │ Card     │ │ Card     │        │
-│  │ Flouté   │ │ Débloqué │ │ Pris     │        │
-│  └──────────┘ └──────────┘ └──────────┘        │
-│  ┌──────────┐ ┌──────────┐                     │
-│  │ Card     │ │ Card     │                     │
-│  │ Flouté   │ │ Flouté   │                     │
-│  └──────────┘ └──────────┘                     │
-└─────────────────────────────────────────────────┘
+max-w-2xl mx-auto px-6 py-16
+```
+(même conteneur que `dashboard.vue` — cohérence totale)
+
+### En-tête de page
+```html
+<div class="mb-10">
+  <h1 class="text-3xl font-black tracking-tight text-foreground">Mes leads</h1>
+  <p class="text-sm text-muted-foreground mt-1">Leads qualifiés pour votre métier</p>
+</div>
 ```
 
-Grid : `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4`
-
-### Composant LeadCard — 3 variantes
-
-#### Variante A : Lead flouté (BASIC, <72h, non pris)
-
-```
-┌─────────────────────────────────────────┐  bg-white border border-slate-200
-│  🏗 Rénovation intérieure   [🔒 Flouté] │  Badge: bg-slate-100 text-slate-500
-│                                         │  rounded-xl shadow-sm
-│  💰 10 000 – 20 000 €                  │
-│  ⏱  1 à 3 mois                         │
-│  📍 *** *** (commune masquée)           │  text-slate-300 select-none
-│  👤 *** *** ***                         │  text-slate-300 select-none
-│  📞 *** *** ***                         │  text-slate-300 select-none
-│                                         │
-│  ⏳ Disponible dans 47h 23min           │  text-amber-600 text-xs font-semibold
-│                                         │
-│  [★ Passer Premium]  (plein, amber)    │  bg-amber-500 hover:bg-amber-600
-└─────────────────────────────────────────┘  text-white rounded-lg py-2 w-full
+### Banner Premium (BASIC avec leads floutés)
+Même pattern que le badge "Vérification en cours" dans `dashboard.vue` :
+```html
+<div class="flex items-center gap-3 p-4 border border-amber-300 bg-amber-50 rounded-lg mb-8">
+  <!-- étoile SVG -->
+  <p class="text-sm text-amber-700 flex-1">
+    <span class="font-semibold">Passez Premium</span> pour voir les coordonnées immédiatement — 39€/mois, sans engagement.
+  </p>
+  <NuxtLink to="/espace/premium"
+    class="shrink-0 text-xs font-semibold text-amber-700 underline underline-offset-2 hover:opacity-70 transition-opacity">
+    Voir l'offre
+  </NuxtLink>
+</div>
 ```
 
-**Règles visuelles :**
-- Les champs masqués (`*** *** ***`) : `text-slate-300 font-mono select-none blur-[2px]` — flou CSS *léger* sur le texte (pas sur la card entière) pour effet teasing visuel
-- Le flou CSS est decoratif uniquement — les vraies données ne sont jamais envoyées (ADR-004)
-- Compte à rebours : calculé depuis `unlocked_at - now()`, format `Xh Ymin`
-- Border card : `border-slate-200` (pas de couleur d'accent)
-- Cursor : `cursor-default` (la card entière n'est pas cliquable)
-
-#### Variante B : Lead débloqué (Premium actif OU BASIC + 72h passées)
-
+### Grid leads
 ```
-┌─────────────────────────────────────────┐  bg-emerald-50 border border-emerald-200
-│  🏗 Rénovation intérieure  [✓ Débloqué]│  Badge: bg-emerald-100 text-emerald-700
-│                                         │  rounded-xl
-│  💰 10 000 – 20 000 €                  │
-│  ⏱  1 à 3 mois                         │
-│  📍 Carrières-sous-Poissy               │  text visible, text-slate-700
-│  👤 Jean Dupont                         │  text-slate-900 font-medium
-│  📞 06 12 34 56 78                      │  text-sky-700 font-medium
-│                                         │
-│  [→ Voir le contact]  (outline sky)    │  border border-sky-600 text-sky-700
-└─────────────────────────────────────────┘  hover:bg-sky-50 rounded-lg py-2 w-full
+grid grid-cols-1 sm:grid-cols-2 gap-4
 ```
 
-**Règles visuelles :**
-- Background `emerald-50` signale visuellement que c'est actionnable
-- Téléphone en `text-sky-700` (couleur lien) pour affordance "cliquable"
-- CTA `→ Voir le contact` navigue vers `/espace/leads/[id]`
-
-#### Variante C : Lead pris (Premium a pris le lead)
-
+### Card Lead — structure commune
+```html
+<div class="border border-border rounded-lg divide-y divide-border">
+  <!-- En-tête card : catégorie + badge statut -->
+  <div class="flex items-center justify-between px-5 py-4">
+    <p class="text-sm font-semibold text-foreground">{{ catégorie }}</p>
+    <!-- badge statut -->
+  </div>
+  <!-- Corps : infos visibles + champs masqués -->
+  <div class="px-5 py-4 space-y-2">...</div>
+  <!-- Footer : CTA -->
+  <div class="px-5 py-4">...</div>
+</div>
 ```
-┌─────────────────────────────────────────┐  bg-slate-100 border border-slate-200
-│  🏗 Rénovation intérieure  [Attribué]   │  Badge: bg-slate-200 text-slate-500
-│                                         │  opacity-75 rounded-xl
-│  💰 10 000 – 20 000 €                  │  text-slate-400
-│  ⏱  1 à 3 mois                         │  text-slate-400
-│  📍 *** *** ***                         │  text-slate-300 (toujours masqué)
-│  👤 *** *** ***                         │  text-slate-300
-│  📞 *** *** ***                         │  text-slate-300
-│                                         │
-│  [Ce lead a déjà été attribué]          │  text-slate-400 text-xs text-center py-2
-└─────────────────────────────────────────┘  no CTA button
+Pattern `border border-border rounded-lg divide-y divide-border` — identique à la checklist dans `dashboard.vue`.
+
+### Badges statut — reprendre exactement les classes de `dashboard.vue`
+
+```html
+<!-- Flouté (même style que "En attente" document) -->
+<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-amber-300 text-amber-700 bg-amber-50">
+  <!-- svg verrou fermé -->
+  Flouté
+</span>
+
+<!-- Débloqué (même style que "Validé" document) -->
+<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-foreground/30 text-foreground">
+  <!-- svg coche -->
+  Débloqué
+</span>
+
+<!-- Attribué (même style que "Non envoyé" document) -->
+<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-border text-muted-foreground">
+  Déjà attribué
+</span>
 ```
 
-**Règles visuelles :**
-- Opacity réduite (`opacity-75`) pour dé-prioriser visuellement
-- Aucun CTA — message informatif uniquement
-- Pas de flou CSS (le masquage des données suffit)
+### Champs masqués
+Le masquage est serveur — le client reçoit `*** *** ***` directement dans la réponse.
+Afficher avec `text-muted-foreground font-mono` (pas de `blur` CSS qui rendrait le texte illisible sur mobile) :
+```html
+<span class="text-muted-foreground font-mono select-none">*** *** ***</span>
+```
+
+### Ligne d'info dans la card
+```html
+<!-- Ligne d'information (budget, délai, champ masqué) -->
+<div class="flex items-center gap-2 text-sm">
+  <!-- svg icône w-3.5 h-3.5 text-muted-foreground -->
+  <span class="text-muted-foreground">{{ label }}</span>
+  <span class="text-foreground font-medium">{{ valeur }}</span>
+</div>
+```
+
+### Countdown (lead flouté BASIC)
+```html
+<div class="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+  <!-- svg horloge -->
+  <span>Disponible dans <span class="font-semibold text-foreground">{{ hours }}h {{ minutes }}min</span></span>
+</div>
+```
+
+### CTAs par statut
+
+```html
+<!-- Flouté → Passer Premium -->
+<NuxtLink to="/espace/premium"
+  class="inline-flex items-center justify-center gap-2 w-full h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity">
+  <!-- svg étoile -->
+  Passer Premium
+</NuxtLink>
+
+<!-- Débloqué → Voir le contact -->
+<NuxtLink :to="`/espace/leads/${lead.id}`"
+  class="inline-flex items-center justify-center gap-2 w-full h-9 px-4 border border-border text-foreground text-xs font-medium rounded-md hover:bg-muted transition-colors">
+  Voir le contact
+  <!-- svg flèche -->
+</NuxtLink>
+
+<!-- Attribué → aucun CTA, texte informatif -->
+<p class="text-xs text-muted-foreground text-center py-1">Ce lead a déjà été attribué</p>
+```
 
 ### État vide (0 leads)
-```
-┌─────────────────────────────────────────────┐
-│          [Icône BuildingIcon w-12 h-12]     │
-│      Aucun lead pour l'instant              │  text-slate-500
-│  Les leads qualifiés apparaîtront ici       │  text-slate-400 text-sm
-│  dès que l'équipe BÂTI-AXE les valide.      │
-└─────────────────────────────────────────────┘
+```html
+<div class="py-16 text-center">
+  <p class="text-sm font-semibold text-foreground mb-1">Aucun lead pour l'instant</p>
+  <p class="text-xs text-muted-foreground">Les leads qualifiés apparaîtront ici dès que l'équipe BÂTI-AXE les valide.</p>
+</div>
 ```
 
-### Banner Premium contextuel (BASIC avec leads floutés)
-Si l'utilisateur est BASIC et a ≥1 lead flouté → afficher banner en haut de page :
-
-```
-┌──────────────────────────────────────────────────────────┐
-│ ★  Passez Premium pour voir les coordonnées immédiatement │  bg-amber-50 border border-amber-200
-│    39€/mois · Sans engagement · Annulable à tout moment  │  text-amber-800 rounded-xl p-4
-│                          [Voir l'offre Premium →]        │  CTA: text-amber-700 font-semibold underline
-└──────────────────────────────────────────────────────────┘
+### Skeleton loading
+```html
+<div v-for="i in 3" :key="i" class="border border-border rounded-lg h-[160px] bg-muted animate-pulse" />
 ```
 
 ---
 
 ## Page 2 — `/espace/leads/[id]` (Détail Lead)
 
-### Objectif UX
-Afficher toutes les informations du projet + coordonnées complètes du prospect (si débloqué), dans une mise en page claire et orientée action.
-
 ### Layout
-
 ```
-┌──────────────────────────────────────────────┐
-│  ← Retour à mes leads                       │  text-sm text-sky-700 cursor-pointer
-├──────────────────────────────────────────────┤
-│  [Badge statut]  Rénovation intérieure       │  text-2xl font-bold text-slate-900
-│  Reçu le JJ/MM/AAAA                         │  text-sm text-slate-400
-├──────────────────────────────────────────────┤
-│  ┌─────────────────┐  ┌───────────────────┐  │
-│  │ Infos projet    │  │ Contact prospect  │  │
-│  │ (toujours vis.) │  │ (conditionnel)    │  │
-│  └─────────────────┘  └───────────────────┘  │
-└──────────────────────────────────────────────┘
+max-w-2xl mx-auto px-6 py-16
 ```
 
-### Card "Infos projet" (toujours visible)
-
-```
-┌─────────────────────────────────────┐  bg-white border border-slate-200 rounded-xl p-5
-│ Détails du projet                   │  text-sm font-semibold text-slate-600 mb-3
-│                                     │
-│ Catégorie    Rénovation intérieure  │  grid grid-cols-2 gap-y-3
-│ Budget       10 000 – 20 000 €      │
-│ Délai        1 à 3 mois             │
-│ Description  [texte du besoin]      │  text-slate-700 (si débloqué)
-│              *** *** ***            │  text-slate-300 blur-[2px] (si flouté)
-└─────────────────────────────────────┘
+### Lien retour
+```html
+<NuxtLink to="/espace/leads"
+  class="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground underline underline-offset-2 hover:opacity-70 transition-opacity mb-8">
+  <!-- svg flèche gauche (inverser la flèche droite) -->
+  Retour à mes leads
+</NuxtLink>
 ```
 
-### Card "Contact prospect" — 2 variantes
+### En-tête
+```html
+<div class="flex items-center gap-2 mb-3">
+  <!-- badge statut (même composant que la liste) -->
+</div>
+<h1 class="text-3xl font-black tracking-tight text-foreground">{{ catégorie }}</h1>
+<p class="text-xs text-muted-foreground mt-1">Reçu le {{ date }}</p>
+```
+
+### Section infos projet (toujours visible)
+```html
+<div class="border-t border-border pt-8 mb-8">
+  <h2 class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-4">Détails du projet</h2>
+  <div class="border border-border rounded-lg divide-y divide-border">
+    <div class="flex justify-between items-center px-5 py-3">
+      <span class="text-sm text-muted-foreground">Budget</span>
+      <span class="text-sm font-semibold text-foreground">{{ budget_range }}</span>
+    </div>
+    <div class="flex justify-between items-center px-5 py-3">
+      <span class="text-sm text-muted-foreground">Délai</span>
+      <span class="text-sm font-semibold text-foreground">{{ timeline_range }}</span>
+    </div>
+    <div class="px-5 py-3">
+      <span class="text-sm text-muted-foreground block mb-1">Description</span>
+      <!-- Débloqué : texte visible | Flouté : *** -->
+      <span :class="isUnlocked ? 'text-sm text-foreground' : 'text-sm text-muted-foreground font-mono select-none'">
+        {{ isUnlocked ? description : '*** *** ***' }}
+      </span>
+    </div>
+  </div>
+</div>
+```
+
+### Section contact (conditionnelle)
 
 **Si débloqué :**
-```
-┌─────────────────────────────────────┐  bg-emerald-50 border border-emerald-200 rounded-xl p-5
-│ ✓ Coordonnées disponibles           │  text-sm font-semibold text-emerald-700 mb-3
-│                                     │
-│ 👤 Jean Dupont                      │  text-slate-900 font-medium
-│ 📞 06 12 34 56 78                   │  text-sky-700 (cliquable tel:)
-│ ✉  jean.dupont@email.com            │  text-sky-700 (cliquable mailto:)
-│                                     │
-│ [📞 Appeler]  [✉ Envoyer un email]  │  boutons outline sm, côte à côte
-└─────────────────────────────────────┘
+```html
+<div class="border-t border-border pt-8">
+  <h2 class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-4">Contact prospect</h2>
+  <div class="border border-border rounded-lg divide-y divide-border">
+    <div class="flex items-center gap-3 px-5 py-3">
+      <!-- svg téléphone text-muted-foreground -->
+      <span class="text-sm font-semibold text-foreground">{{ customer_phone }}</span>
+    </div>
+    <div class="flex items-center gap-3 px-5 py-3">
+      <!-- svg email text-muted-foreground -->
+      <span class="text-sm font-semibold text-foreground">{{ customer_email }}</span>
+    </div>
+    <div class="flex items-center gap-3 px-5 py-3">
+      <!-- svg localisation text-muted-foreground -->
+      <span class="text-sm text-foreground">{{ postal_code }}</span>
+    </div>
+  </div>
+  <div class="flex gap-3 mt-4">
+    <a :href="`tel:${customer_phone}`"
+      class="flex-1 inline-flex items-center justify-center gap-2 h-10 border border-border text-foreground text-sm font-medium rounded-md hover:bg-muted transition-colors">
+      <!-- svg téléphone -->
+      Appeler
+    </a>
+    <a :href="`mailto:${customer_email}`"
+      class="flex-1 inline-flex items-center justify-center gap-2 h-10 border border-border text-foreground text-sm font-medium rounded-md hover:bg-muted transition-colors">
+      <!-- svg email -->
+      Envoyer un email
+    </a>
+  </div>
+</div>
 ```
 
-**Si flouté (BASIC, <72h) :**
-```
-┌─────────────────────────────────────┐  bg-amber-50 border border-amber-200 rounded-xl p-5
-│ 🔒 Coordonnées non disponibles      │  text-sm font-semibold text-amber-700 mb-3
-│                                     │
-│ 👤 *** *** ***                      │  text-slate-300 blur-[2px]
-│ 📞 *** *** ***                      │  text-slate-300 blur-[2px]
-│ ✉  contact@***.fr                   │  text-slate-300 blur-[2px]
-│                                     │
-│ ⏳ Disponible dans 47h 23min        │  text-amber-600 text-sm font-semibold
-│                                     │
-│ [★ Passer Premium pour voir maint.] │  bg-amber-500 text-white w-full
-└─────────────────────────────────────┘
+**Si flouté :**
+```html
+<div class="border-t border-border pt-8">
+  <h2 class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-4">Contact prospect</h2>
+  <div class="p-5 border border-amber-300 bg-amber-50 rounded-lg">
+    <p class="text-sm text-amber-700 font-semibold mb-1">Coordonnées non disponibles</p>
+    <p class="text-xs text-amber-700 mb-4">
+      Disponible dans <span class="font-semibold">{{ hours }}h {{ minutes }}min</span> — ou immédiatement avec Premium.
+    </p>
+    <NuxtLink to="/espace/premium"
+      class="inline-flex items-center gap-2 h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity">
+      <!-- svg étoile -->
+      Passer Premium
+    </NuxtLink>
+  </div>
+</div>
 ```
 
 ---
 
-## Page 3 — `/espace/premium` (Abonnement Premium)
+## Page 3 — `/espace/premium` (Abonnement)
 
-### Objectif UX
-Convaincre un pro BASIC de s'abonner. Pattern : Hero (problème) → Valeur → Prix → CTA Stripe → FAQ.
-
-### Layout complet
-
+### Layout
 ```
-┌─────────────────────────────────────────────────────┐
-│  Navbar espace pro                                  │
-├─────────────────────────────────────────────────────┤
-│  HERO                                               │
-│  ★ Débloquez tous vos leads instantanément         │  text-3xl font-bold text-slate-900
-│  Ne perdez plus de chantiers à cause du délai 72h. │  text-lg text-slate-500 mt-2
-│                                                     │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐           │
-│  │ +200     │ │ Immédiat │ │ 39€/mois │           │  3 stat blocks
-│  │ pros     │ │ accès    │ │ sans eng.│           │
-│  └──────────┘ └──────────┘ └──────────┘           │
-├─────────────────────────────────────────────────────┤
-│  COMPARAISON BASIC vs PREMIUM                       │
-│  ┌────────────────────┬──────────┬───────────────┐ │
-│  │                    │  BASIC   │  PREMIUM ★    │ │
-│  ├────────────────────┼──────────┼───────────────┤ │
-│  │ Voir les leads     │   ✓      │      ✓        │ │
-│  │ Coordonnées imméd. │   ✗      │      ✓        │ │
-│  │ Accès après 72h    │   ✓      │      ✓        │ │
-│  │ Priorité contacts  │   ✗      │      ✓        │ │
-│  └────────────────────┴──────────┴───────────────┘ │
-├─────────────────────────────────────────────────────┤
-│  PRIX                                               │
-│  ┌───────────────────────────────────────────────┐ │
-│  │  ★ PREMIUM                                    │ │  bg-amber-50 border-2 border-amber-400
-│  │  39 € / mois                                  │ │  text-4xl font-bold text-slate-900
-│  │  Sans engagement · Annulable à tout moment    │ │  text-sm text-slate-500
-│  │                                               │ │
-│  │  ✓ Accès immédiat à toutes les coordonnées    │ │
-│  │  ✓ Leads illimités dans votre catégorie       │ │
-│  │  ✓ Avant les pros BASIC (exclusivité 72h)     │ │
-│  │                                               │ │
-│  │  [Démarrer Premium — 39€/mois]                │ │  bg-amber-500 hover:bg-amber-600 text-white
-│  │                                               │ │  text-base font-semibold py-3 rounded-xl w-full
-│  │  🔒 Paiement sécurisé par Stripe              │ │  text-xs text-slate-400 mt-2
-│  └───────────────────────────────────────────────┘ │
-├─────────────────────────────────────────────────────┤
-│  FAQ                                                │
-│  Q: Puis-je annuler à tout moment ?                │  Accordion shadcn (collapsible)
-│  Q: Que se passe-t-il après annulation ?           │
-│  Q: Le paiement est-il sécurisé ?                  │
-└─────────────────────────────────────────────────────┘
+max-w-2xl mx-auto px-6 py-16
 ```
 
-### Card Prix — détail styling
+### Structure de page
+```html
+<!-- En-tête -->
+<div class="mb-10">
+  <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-6">Abonnement</p>
+  <h1 class="text-3xl font-black tracking-tight text-foreground" style="text-wrap: balance">
+    Débloquez vos leads instantanément.
+  </h1>
+  <p class="text-sm text-muted-foreground mt-2 leading-relaxed">
+    Les pros Premium voient les coordonnées du prospect dès la qualification du projet — 72h avant les autres.
+  </p>
+</div>
 
-```
-bg-amber-50 border-2 border-amber-400 rounded-2xl p-8
-max-w-md mx-auto
+<!-- Card prix — seul élément avec amber pour signaler l'importance -->
+<div class="border border-amber-300 bg-amber-50 rounded-lg p-6 mb-8">
+  <div class="flex items-center justify-between mb-4">
+    <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-amber-300 text-amber-700">
+      <!-- svg étoile -->
+      Premium
+    </span>
+  </div>
+  <p class="text-4xl font-black tracking-tight text-foreground mb-1">39 €<span class="text-lg font-medium text-muted-foreground">/mois</span></p>
+  <p class="text-xs text-muted-foreground mb-6">Sans engagement · Annulable à tout moment</p>
+
+  <!-- Features list -->
+  <div class="space-y-3 mb-6">
+    <div class="flex items-start gap-3">
+      <!-- svg coche -->
+      <span class="text-sm text-foreground">Accès immédiat aux coordonnées du prospect</span>
+    </div>
+    <div class="flex items-start gap-3">
+      <!-- svg coche -->
+      <span class="text-sm text-foreground">Exclusivité 72h avant les pros BASIC</span>
+    </div>
+    <div class="flex items-start gap-3">
+      <!-- svg coche -->
+      <span class="text-sm text-foreground">Leads illimités dans votre catégorie</span>
+    </div>
+  </div>
+
+  <button
+    @click="startCheckout"
+    :disabled="loading"
+    class="inline-flex items-center justify-center gap-2 w-full h-11 px-6 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity disabled:opacity-50"
+  >
+    <span v-if="!loading">Démarrer Premium — 39€/mois</span>
+    <span v-else class="flex items-center gap-2">
+      <!-- svg spinner (circle avec arc) ou simple texte -->
+      Redirection...
+    </span>
+  </button>
+  <p class="text-xs text-muted-foreground text-center mt-3">Paiement sécurisé par Stripe</p>
+</div>
+
+<!-- Comparatif BASIC vs Premium — même style que la checklist dashboard -->
+<div class="border-t border-border pt-8 mb-8">
+  <h2 class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-4">BASIC vs Premium</h2>
+  <div class="border border-border rounded-lg divide-y divide-border">
+    <div class="grid grid-cols-3 px-5 py-3 text-xs font-medium text-muted-foreground">
+      <span></span>
+      <span class="text-center">BASIC</span>
+      <span class="text-center">Premium</span>
+    </div>
+    <!-- Ligne : Voir les leads -->
+    <div class="grid grid-cols-3 items-center px-5 py-3">
+      <span class="text-sm text-foreground">Voir les leads</span>
+      <span class="text-center"><!-- svg coche --></span>
+      <span class="text-center"><!-- svg coche --></span>
+    </div>
+    <!-- Ligne : Coordonnées immédiates -->
+    <div class="grid grid-cols-3 items-center px-5 py-3">
+      <span class="text-sm text-foreground">Coordonnées immédiates</span>
+      <span class="text-center text-muted-foreground">—</span>
+      <span class="text-center"><!-- svg coche --></span>
+    </div>
+    <!-- Ligne : Accès après 72h -->
+    <div class="grid grid-cols-3 items-center px-5 py-3">
+      <span class="text-sm text-foreground">Accès après 72h</span>
+      <span class="text-center"><!-- svg coche --></span>
+      <span class="text-center"><!-- svg coche --></span>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ — Accordion shadcn-vue -->
+<div class="border-t border-border pt-8">
+  <h2 class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-4">Questions fréquentes</h2>
+  <!-- Accordion items : annulation, post-annulation, sécurité paiement -->
+</div>
 ```
 
-- Badge "Le plus populaire" si pertinent : `bg-amber-400 text-white text-xs px-3 py-1 rounded-full -mt-4 mx-auto`
-- Bouton CTA : `bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-6 rounded-xl w-full transition-colors duration-150`
-- État loading bouton : désactiver + spinner Lucide `Loader2Icon animate-spin` pendant redirect Stripe
+### Bannière succès post-abonnement (`?upgrade=success`)
+```html
+<div class="flex items-start gap-3 p-4 border border-foreground/30 rounded-lg mb-8">
+  <!-- svg coche -->
+  <div>
+    <p class="text-sm font-semibold text-foreground">Bienvenue dans BÂTI-AXE Premium !</p>
+    <p class="text-xs text-muted-foreground mt-0.5">Vos leads sont maintenant accessibles sans délai.</p>
+  </div>
+</div>
+```
+Auto-dismiss après 6s. Même style que le badge "Vérifié BÂTI-AXE" dans `dashboard.vue`.
 
 ---
 
-## Tokens & Classes Partagés
+## Règles de cohérence globales
 
-### Badges statut (réutilisables)
-
-```vue
-<!-- Badge Flouté -->
-<Badge variant="secondary" class="bg-slate-100 text-slate-500 border-0">
-  <LockKeyholeIcon class="w-3 h-3 mr-1" /> Flouté
-</Badge>
-
-<!-- Badge Débloqué -->
-<Badge class="bg-emerald-100 text-emerald-700 border-0">
-  <UnlockIcon class="w-3 h-3 mr-1" /> Débloqué
-</Badge>
-
-<!-- Badge Attribué -->
-<Badge variant="secondary" class="bg-slate-200 text-slate-500 border-0">
-  Déjà attribué
-</Badge>
-
-<!-- Badge Premium -->
-<Badge class="bg-amber-100 text-amber-700 border-0">
-  <StarIcon class="w-3 h-3 mr-1" /> Premium
-</Badge>
-```
-
-### Masquage texte (Le Verrou — effet teasing)
-
-```vue
-<!-- Champ masqué : flou CSS décoratif sur du texte placeholder -->
-<span class="text-slate-300 font-mono blur-[2px] select-none pointer-events-none">
-  *** *** ***
-</span>
-```
-
-Note : `blur-[2px]` est purement décoratif. Les vraies données ne transitent jamais vers le client (ADR-004). C'est le serveur qui envoie les `***`, pas du CSS qui masque un vrai texte.
-
-### Countdown composant
-
-```vue
-<!-- LeadCountdown.vue -->
-<template>
-  <span class="flex items-center gap-1 text-amber-600 text-xs font-semibold">
-    <ClockIcon class="w-3 h-3" />
-    Disponible dans {{ hours }}h {{ minutes }}min
-  </span>
-</template>
-```
-
-Calcul : `Math.max(0, new Date(unlocked_at).getTime() - Date.now())` → décomposer en heures/minutes. Pas de `setInterval` agressif — rafraîchir toutes les 60s.
+1. **Conteneur** : `max-w-2xl mx-auto px-6 py-16` — identique à `dashboard.vue`
+2. **Cards** : `border border-border rounded-lg divide-y divide-border` — identique à la checklist steps
+3. **Section headers** : `text-xs font-medium text-muted-foreground tracking-widest uppercase mb-4` — identique à "Documents", "Votre profil public"
+4. **Liens texte** : `text-xs font-semibold underline underline-offset-2 hover:opacity-70 transition-opacity` — identique aux actions dans la checklist
+5. **Bouton primaire** : `bg-foreground text-background font-semibold rounded-md hover:opacity-80 transition-opacity`
+6. **Bouton secondaire** : `border border-border text-foreground font-medium rounded-md hover:bg-muted transition-colors`
+7. **Amber** : uniquement pour l'état Premium/flouté (`border-amber-300 text-amber-700 bg-amber-50`) — déjà présent dans le design system
 
 ---
 
-## Accessibilité
-
-- Contrast ratio garanti ≥ 4.5:1 sur toute paire texte/fond (vérifié avec la palette ci-dessus)
-- Focus rings : tous les boutons et liens ont `focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2`
-- `aria-label` sur les icônes seules
-- Les champs masqués ont `aria-hidden="true"` — screen readers ne lisent pas `*** *** ***`
-- Bouton Stripe : `aria-busy="true"` pendant le loading
-- `prefers-reduced-motion` : désactiver `transition-*` si `@media (prefers-reduced-motion: reduce)`
-
----
-
-## States d'erreur & Loading
-
-### Skeleton loading (leads list)
-```vue
-<!-- 3 skeleton cards pendant useAsyncData -->
-<div v-for="i in 3" class="bg-slate-100 rounded-xl h-[180px] animate-pulse" />
+## Skeleton loading
+```html
+<div class="border border-border rounded-lg h-[160px] bg-muted animate-pulse" />
 ```
 
-### Erreur API
+## Gestion d'erreur API
+```html
+<div class="p-4 border border-border rounded-lg">
+  <p class="text-sm font-semibold text-foreground mb-1">Impossible de charger les leads</p>
+  <p class="text-xs text-muted-foreground mb-3">Réessayez dans quelques instants.</p>
+  <button @click="refresh" class="text-xs font-semibold underline underline-offset-2 hover:opacity-70 transition-opacity">
+    Réessayer
+  </button>
+</div>
 ```
-┌───────────────────────────────────────────┐  bg-red-50 border border-red-200 rounded-xl p-4
-│ ⚠ Impossible de charger vos leads        │  text-red-700 font-medium
-│ Réessayez dans quelques instants          │  text-red-500 text-sm
-│ [Réessayer]                               │  outline red button
-└───────────────────────────────────────────┘
-```
-
-### Succès post-abonnement (`?upgrade=success`)
-```
-┌───────────────────────────────────────────┐  bg-emerald-50 border border-emerald-200 p-4 rounded-xl
-│ ✓ Bienvenue dans BÂTI-AXE Premium !      │  text-emerald-700 font-semibold
-│ Vos leads sont maintenant débloqués.      │  text-emerald-600 text-sm
-└───────────────────────────────────────────┘
-```
-Afficher uniquement si `?upgrade=success` dans l'URL. Auto-dismiss après 6s.
-
----
-
-## Anti-Patterns à éviter
-
-- **Jamais** de flou CSS sur toute la card (seulement sur les champs texte masqués)
-- **Jamais** d'emoji comme icône (LockKeyhole, Star via Lucide uniquement)
-- **Pas** de `filter: blur()` côté client pour "cacher" des données réelles — le masquage est serveur
-- **Pas** de tableau pour les leads (D-17 verrouillé)
-- **Pas** de gradient AI violet/rose (anti-pattern design system)
-- **Pas** de `color` comme seul indicateur de statut → toujours icône + texte + couleur
-
----
-
-## Checklist pré-implémentation
-
-- [ ] Plus Jakarta Sans importé dans `nuxt.config.ts` via `@nuxtjs/google-fonts`
-- [ ] Tokens Tailwind (amber-500, emerald-50, sky-700, slate-900) disponibles sans config custom
-- [ ] shadcn-vue : `Card`, `CardHeader`, `CardContent`, `Badge`, `Button` installés
-- [ ] Lucide-vue : `LockKeyholeIcon`, `UnlockIcon`, `ClockIcon`, `StarIcon`, `PhoneIcon`, `MailIcon` importés
-- [ ] `blur-[2px]` : classe Tailwind arbitraire (disponible par défaut avec JIT)
-- [ ] `cursor-pointer` sur tous les éléments interactifs
-- [ ] Transitions 150-200ms sur boutons et cards hover
-- [ ] Focus rings sur tous les éléments interactifs
-- [ ] `aria-hidden="true"` sur les champs masqués
 
 ---
 
 *Phase: 04-le-verrou-stripe-billing*
-*UI-SPEC generated: 2026-06-05 via ui-ux-pro-max skill*
+*UI-SPEC v2 — corrigé pour respecter le design system existant (Geist, tokens shadcn monochrome, SVG inline)*
+*Generated: 2026-06-05*
