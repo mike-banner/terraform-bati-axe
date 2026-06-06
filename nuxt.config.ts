@@ -11,10 +11,7 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/tailwind.css'],
 
-  modules: [
-    'shadcn-nuxt',
-    '@nuxtjs/supabase'
-  ],
+  modules: ["nitro-cloudflare-dev"],
 
   vite: {
     plugins: [
@@ -23,7 +20,7 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: 'cloudflare-pages',
+    preset: "cloudflare_module",
     alias: {
       '#supabase/server': path.resolve(__dirname, 'node_modules/@nuxtjs/supabase/dist/runtime/server/services')
     },
@@ -31,7 +28,10 @@ export default defineNuxtConfig({
       pages: {
         compatibilityFlags: ['nodejs_compat'],
         compatibilityDate: '2024-09-23'
-      }
+      },
+
+      deployConfig: true,
+      nodeCompat: true
     }
   },
 

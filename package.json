@@ -6,9 +6,11 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
+    "preview": "npm run build && wrangler dev",
     "postinstall": "nuxt prepare",
-    "test": "vitest run"
+    "test": "vitest run",
+    "deploy": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1059.0",
@@ -30,12 +32,14 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^1.0.0",
+    "nitro-cloudflare-dev": "^0.2.2",
     "pinia": "^3.0.4",
     "radix-vue": "^1.9.17",
     "shadcn-nuxt": "^2.7.3",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.0",
     "vitest": "^4.1.8",
+    "wrangler": "^4.98.0",
     "ws": "^8.21.0",
     "zod": "^4.4.3"
   }
