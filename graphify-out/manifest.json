@@ -1,0 +1,667 @@
+{
+  ".claude/settings.local.json": {
+    "mtime": 1780760656.4140434,
+    "ast_hash": "4ac134f0373105ce4b2543e9ef10a629",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/adr-001-initial-stack-a53a9c1f.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "0ca772a7be7f377f3faf7ec642a3f810",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/adr-002-astro-next-split-1c7e6efd.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "9baad5ef42112b08b0eaac70fa5694d4",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/adr-003-cloudflare-r2-storage-4586740d.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "3781124ce2fbcc7dc7d087be425e4189",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/adr-004-blur-lock-mechanism-16c6bb42.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "55b1b301bc3b17ba0882dbc77bd20080",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/adr-005-supabase-exit-strategy-c8ddd675.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "b5f2f8ce41f543138056714c8f01f06d",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/adr-006-environments-69b08690.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "d561bae2a4c7274ab192190d94b2f2ff",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/adr-007-rgpd-lcen-43ac4a1c.json": {
+    "mtime": 1780433385.675219,
+    "ast_hash": "5014a016ed2c72d970c9f6834b5a375e",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/adr-008-nuxt-only-architecture-bc2c8580.json": {
+    "mtime": 1780433385.675219,
+    "ast_hash": "3a08e1d0d5d1dc78ad37394b5d8ecfb3",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/ai-rules-9ee61c22.json": {
+    "mtime": 1780433385.675219,
+    "ast_hash": "f39d55bc87fe84040fdeabb9c82cef85",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/api-rules-58322fdf.json": {
+    "mtime": 1780433385.675219,
+    "ast_hash": "22c1afa43e1b41aa20b3f13b75f123f2",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/architecture-rules-681f3326.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "8a4740a82713731ffc3985f7178ead1f",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/coding-rules-a5c6fe74.json": {
+    "mtime": 1780433385.675219,
+    "ast_hash": "4e7f3b0332c53747483ee2cee8e00d33",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/database-model-ffc614d7.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "fbe57a474dd7505ad7de47d51feef563",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/master-plan-a1d1bef6.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "7c3edba27eeea6893480a0c42a728ff7",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/non-goals-b86d51df.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "4707f62d4253399536cb4369c4377f7d",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/project-objectives-7c6c546a.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "84057c02721ebfacd089a36305c91a37",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/roadmap-79969846.json": {
+    "mtime": 1780433385.675219,
+    "ast_hash": "47789ecc03433058f6fca19b41e3151d",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/stack-fcc02bd4.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "b78237444147d82c643487bfc5a0fe52",
+    "semantic_hash": ""
+  },
+  ".planning/intel/classifications/technical-scope-77a2ffbd.json": {
+    "mtime": 1780433385.665219,
+    "ast_hash": "df36c5011dcbeca8ab00b7fe17705e7d",
+    "semantic_hash": ""
+  },
+  "app/app.vue": {
+    "mtime": 1780508517.2363079,
+    "ast_hash": "9ab73f32e6c6a73b889e6249763664bb",
+    "semantic_hash": ""
+  },
+  "app/components/ui/button/Button.vue": {
+    "mtime": 1780438040.0771887,
+    "ast_hash": "027eaebb50027eeaa2b3197a26abf9a8",
+    "semantic_hash": ""
+  },
+  "app/components/ui/button/index.ts": {
+    "mtime": 1780438040.147193,
+    "ast_hash": "123b08a3a12f284479be5650df8682f3",
+    "semantic_hash": ""
+  },
+  "app/lib/utils.ts": {
+    "mtime": 1780437370.6517868,
+    "ast_hash": "6f1aca3e36c16537f79a80245f6a75bc",
+    "semantic_hash": ""
+  },
+  "app/middleware/auth.global.ts": {
+    "mtime": 1780498722.4010928,
+    "ast_hash": "9c0320bf4814a3ffeabd88dc2e34d000",
+    "semantic_hash": ""
+  },
+  "app/pages/admin/index.vue": {
+    "mtime": 1780758942.7001443,
+    "ast_hash": "9a5f1d6523fa86eb9ae875070c8627f4",
+    "semantic_hash": ""
+  },
+  "app/pages/app/dashboard.vue": {
+    "mtime": 1780762757.6620414,
+    "ast_hash": "7003aadcec82fdff1221632ee9ad762b",
+    "semantic_hash": ""
+  },
+  "app/pages/index.vue": {
+    "mtime": 1780453922.4843435,
+    "ast_hash": "a85622ec2af887428e5a11561cd1895d",
+    "semantic_hash": ""
+  },
+  "app/pages/legal/cgu.vue": {
+    "mtime": 1780437612.791024,
+    "ast_hash": "967e87536282c45847fa49c1389a8aaa",
+    "semantic_hash": ""
+  },
+  "app/pages/legal/confidentialite.vue": {
+    "mtime": 1780437574.454455,
+    "ast_hash": "d75052873d40cccbe3dcd0f644e1cc85",
+    "semantic_hash": ""
+  },
+  "app/pages/legal/mentions-legales.vue": {
+    "mtime": 1780437545.6975307,
+    "ast_hash": "25875ccf0a8b072b3074d40733e7a042",
+    "semantic_hash": ""
+  },
+  "app/pages/pro/[dept]/[slug].vue": {
+    "mtime": 1780535916.414046,
+    "ast_hash": "d14aa0a3d0cd6321cb86efc452b4e099",
+    "semantic_hash": ""
+  },
+  "app/pages/pro/claim.vue": {
+    "mtime": 1780762909.2220142,
+    "ast_hash": "f227eeecef3c1104ef8a32c6672db494",
+    "semantic_hash": ""
+  },
+  "app/pages/simulateur.vue": {
+    "mtime": 1780755799.4941802,
+    "ast_hash": "979c457b59ed60c839161ab1a29d878f",
+    "semantic_hash": ""
+  },
+  "components.json": {
+    "mtime": 1780437350.4763527,
+    "ast_hash": "13aca949d504ee36939284f48ca2dc83",
+    "semantic_hash": ""
+  },
+  "nuxt.config.ts": {
+    "mtime": 1780694650.092926,
+    "ast_hash": "2bc70e5f8888d9d55fcb4f7bcd0b1361",
+    "semantic_hash": ""
+  },
+  "package.json": {
+    "mtime": 1780695032.7621522,
+    "ast_hash": "97a0e838e867bc9582ae3aa420cbb5b9",
+    "semantic_hash": ""
+  },
+  "server/api/debug-supabase.get.ts": {
+    "mtime": 1780445619.988027,
+    "ast_hash": "21ff82735cb050aa4f4a989da6942219",
+    "semantic_hash": ""
+  },
+  "server/api/v1/admin/approve-pro.post.ts": {
+    "mtime": 1780506634.5180235,
+    "ast_hash": "8961b48320bbfbe135e524c1e5866b03",
+    "semantic_hash": ""
+  },
+  "server/api/v1/admin/promote.post.ts": {
+    "mtime": 1780492490.1121104,
+    "ast_hash": "fbd0c3b1dc5b231ed16ba0c75cba99f5",
+    "semantic_hash": ""
+  },
+  "server/api/v1/admin/queue.get.ts": {
+    "mtime": 1780507145.669737,
+    "ast_hash": "acbd8265e6d97fe7c7bfbc87ac75c0c4",
+    "semantic_hash": ""
+  },
+  "server/api/v1/admin/verify.post.ts": {
+    "mtime": 1780492576.894478,
+    "ast_hash": "f2776bb864947c67d0c3a5e1c3c88fcb",
+    "semantic_hash": ""
+  },
+  "server/api/v1/health.get.ts": {
+    "mtime": 1780437498.7096725,
+    "ast_hash": "d014f6bceebfe9327307b79ac555cd1f",
+    "semantic_hash": ""
+  },
+  "server/api/v1/pro/claim.post.ts": {
+    "mtime": 1780504966.7652295,
+    "ast_hash": "16ae687a2da8d041a7fe002377d98783",
+    "semantic_hash": ""
+  },
+  "server/api/v1/pro/documents/presign.post.ts": {
+    "mtime": 1780450519.7452803,
+    "ast_hash": "cb2030803fbc3c075376f2dbc73c6241",
+    "semantic_hash": ""
+  },
+  "server/api/v1/pro/documents/view.post.ts": {
+    "mtime": 1780492598.389102,
+    "ast_hash": "be5e74df10d5a28926d02415239ff74e",
+    "semantic_hash": ""
+  },
+  "server/api/v1/pro/profile/[slug].get.ts": {
+    "mtime": 1780535709.9448905,
+    "ast_hash": "960c465085ad612d3cc67716ceba90d1",
+    "semantic_hash": ""
+  },
+  "server/api/v1/projects.post.ts": {
+    "mtime": 1780755099.4021838,
+    "ast_hash": "7332ef3724c6d1c9012b6da0ba6144c8",
+    "semantic_hash": ""
+  },
+  "server/api/v1/prospects/[id].get.ts": {
+    "mtime": 1780443801.990675,
+    "ast_hash": "82714f783459c4230a74348b03683e42",
+    "semantic_hash": ""
+  },
+  "server/middleware/security.ts": {
+    "mtime": 1780437514.3524184,
+    "ast_hash": "693dc0e7b47f69ab6e44d6e5aea3bed5",
+    "semantic_hash": ""
+  },
+  "server/plugins/websocket.ts": {
+    "mtime": 1780438486.5772202,
+    "ast_hash": "b857168bb478d01ea638f9659d46669f",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260603000000_schema_initial.sql": {
+    "mtime": 1780441018.8962555,
+    "ast_hash": "fd7f123bd26439f6b8f2a91b8a9c3fec",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260603000001_storage_setup.sql": {
+    "mtime": 1780447656.8025522,
+    "ast_hash": "55f07f13da91dbf07894f0ba1718e8de",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260603000002_admin_role.sql": {
+    "mtime": 1780492012.2744436,
+    "ast_hash": "d7f1ec93d1171a39e3f1cf0e8457783b",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260603010000_pro_category_rls_fix.sql": {
+    "mtime": 1780504374.0672915,
+    "ast_hash": "f9197a16b09f6590871c810e19dda1c1",
+    "semantic_hash": ""
+  },
+  "supabase/scripts/make-admin.sql": {
+    "mtime": 1780492057.0665169,
+    "ast_hash": "6fc68319b1b55e5b2024fc48c9842eb9",
+    "semantic_hash": ""
+  },
+  "supabase/seed.sql": {
+    "mtime": 1780443476.9918098,
+    "ast_hash": "38a200ce7f0b6cd0af15efc28033f2b9",
+    "semantic_hash": ""
+  },
+  "supabase/snippets/Untitled query 355.sql": {
+    "mtime": 1780496900.4177458,
+    "ast_hash": "345354fc80a389a441e501a388249403",
+    "semantic_hash": ""
+  },
+  "tsconfig.json": {
+    "mtime": 1779160069.0,
+    "ast_hash": "99d8d7543e8bac462160e11d33e5146e",
+    "semantic_hash": ""
+  },
+  ".planning/INGEST-CONFLICTS.md": {
+    "mtime": 1780433385.675219,
+    "ast_hash": "c0c72e9126149ef414e618c6e9de34a3",
+    "semantic_hash": ""
+  },
+  ".planning/PROJECT.md": {
+    "mtime": 1780434372.6664634,
+    "ast_hash": "2e267153d74471db885bf8c234184ed9",
+    "semantic_hash": ""
+  },
+  ".planning/REQUIREMENTS.md": {
+    "mtime": 1780442436.922776,
+    "ast_hash": "f14e5ce3cce9ae1269a9adb7daee357f",
+    "semantic_hash": ""
+  },
+  ".planning/ROADMAP.md": {
+    "mtime": 1780690149.8078015,
+    "ast_hash": "a9f79bcbad02f9babf092bc2f40bff58",
+    "semantic_hash": ""
+  },
+  ".planning/STATE.md": {
+    "mtime": 1780761299.2018025,
+    "ast_hash": "75b5841c3fd504a2489fc1b218b7f85b",
+    "semantic_hash": ""
+  },
+  ".planning/intel/SYNTHESIS.md": {
+    "mtime": 1780434425.996589,
+    "ast_hash": "708f13f36c19b5ba9eb902fd80e4ce65",
+    "semantic_hash": ""
+  },
+  ".planning/intel/constraints.md": {
+    "mtime": 1780433385.675219,
+    "ast_hash": "5bf1717f7c357ce5d2b63befad1c474b",
+    "semantic_hash": ""
+  },
+  ".planning/intel/context.md": {
+    "mtime": 1780433385.675219,
+    "ast_hash": "663acf7a73ed11c2ad21b3c4d2f6333f",
+    "semantic_hash": ""
+  },
+  ".planning/intel/decisions.md": {
+    "mtime": 1780433385.675219,
+    "ast_hash": "a9f89a085585db28e8a6926ef57acaee",
+    "semantic_hash": ""
+  },
+  ".planning/intel/requirements.md": {
+    "mtime": 1780433385.675219,
+    "ast_hash": "64ea515d5412f1b29d360c4c900088e8",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-01-PLAN.md": {
+    "mtime": 1780692767.7334454,
+    "ast_hash": "c470e81ee426e3a7d4817f79fe934e18",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-02-PLAN.md": {
+    "mtime": 1780692868.5155668,
+    "ast_hash": "12add0be7300595de435c7b47c65181c",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-03-PLAN.md": {
+    "mtime": 1780692901.9013164,
+    "ast_hash": "b23676b1380e90493b209be360e05cc0",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-04-PLAN.md": {
+    "mtime": 1780692946.877782,
+    "ast_hash": "77f2f50d8ad850b18745819653787bb3",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-05-PLAN.md": {
+    "mtime": 1780689845.9148524,
+    "ast_hash": "8f5e4cab89aeddb561adf671c3fe5f3d",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-06-PLAN.md": {
+    "mtime": 1780693141.836271,
+    "ast_hash": "21215b168bd3574f31501293e09372a5",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-07-PLAN.md": {
+    "mtime": 1780693315.9077227,
+    "ast_hash": "59db5ff0368b76bc7ded0f189288ce8b",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-CONTEXT.md": {
+    "mtime": 1780676453.0920072,
+    "ast_hash": "703da0cbf95493893ab7683c120b1af8",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-DISCUSSION-LOG.md": {
+    "mtime": 1780675882.1906152,
+    "ast_hash": "4970fbacfb5e9493639be93c3e10b4df",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-PATTERNS.md": {
+    "mtime": 1780689324.1109765,
+    "ast_hash": "cbddb75e66bec48ae9812f2e5c486092",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-RESEARCH.md": {
+    "mtime": 1780690933.7975821,
+    "ast_hash": "cc2e0884a8f11ba5f8c7149fc134b920",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-UI-SPEC.md": {
+    "mtime": 1780691925.4401996,
+    "ast_hash": "6ce22d568bcfe71f6b44fdb7b16cdcc6",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-VALIDATION.md": {
+    "mtime": 1780678255.9572916,
+    "ast_hash": "f9e9abc4406cc01b4be89fbcd4c8111f",
+    "semantic_hash": ""
+  },
+  "PRODUCT.md": {
+    "mtime": 1780453676.1961353,
+    "ast_hash": "93fb7ddb93ef2158cc2de91cb37860b4",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1779160069.0,
+    "ast_hash": "884261092c8d74ec62c5c0860a38bc9d",
+    "semantic_hash": ""
+  },
+  "docs/core/ARCHITECTURE_RULES.md": {
+    "mtime": 1780432276.2842164,
+    "ast_hash": "87a99193ec95f3ca1572a21b79b44562",
+    "semantic_hash": ""
+  },
+  "docs/core/DATABASE_MODEL.md": {
+    "mtime": 1780434194.2262661,
+    "ast_hash": "d35de8f7ebc9fa298788bec5e2090815",
+    "semantic_hash": ""
+  },
+  "docs/core/MASTER_PLAN.md": {
+    "mtime": 1780431284.4134376,
+    "ast_hash": "d1a9ad109b8deecbcb148818a3f970c4",
+    "semantic_hash": ""
+  },
+  "docs/core/NON_GOALS.md": {
+    "mtime": 1780431301.833452,
+    "ast_hash": "40fe7ead38f62e87992a5281a4bdcbeb",
+    "semantic_hash": ""
+  },
+  "docs/core/PROJECT_OBJECTIVES.md": {
+    "mtime": 1780432246.2641902,
+    "ast_hash": "61a239379ee07c4b7a9d691b68018499",
+    "semantic_hash": ""
+  },
+  "docs/core/STACK.md": {
+    "mtime": 1780432652.674432,
+    "ast_hash": "e7fbfd52b9f6ddf88c9aa241ba68bca2",
+    "semantic_hash": ""
+  },
+  "docs/core/TECHNICAL_SCOPE.md": {
+    "mtime": 1780432218.4041705,
+    "ast_hash": "cc266df76eb0b86d4f6b725ec515b89b",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-001-INITIAL-STACK.md": {
+    "mtime": 1780431151.0233104,
+    "ast_hash": "681f54e6d3ceb9238de686a248fe5ad6",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-002-ASTRO-NEXT-SPLIT.md": {
+    "mtime": 1780431164.043321,
+    "ast_hash": "ba3b93675e00303d335231f9f512b857",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-003-CLOUDFLARE-R2-STORAGE.md": {
+    "mtime": 1780432302.5642178,
+    "ast_hash": "c0a7ceb53e91a05f1edd91e8f8aa5379",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-004-BLUR-LOCK-MECHANISM.md": {
+    "mtime": 1780432339.814239,
+    "ast_hash": "294d49cf23d6f122477d95e3baa0d9c0",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-005-SUPABASE-EXIT-STRATEGY.md": {
+    "mtime": 1780432382.2442713,
+    "ast_hash": "954da754559cc185934a02ddb2726def",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-006-ENVIRONMENTS.md": {
+    "mtime": 1778166150.831701,
+    "ast_hash": "ef45198915bb7738f4284fbde7cee789",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-007-RGPD-LCEN.md": {
+    "mtime": 1780431188.6933398,
+    "ast_hash": "86571f26f881adc45e0d7096ae7531ad",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-008-NUXT-ONLY-ARCHITECTURE.md": {
+    "mtime": 1780431203.8133647,
+    "ast_hash": "70d135596e8ca4ab7b18b69004c549d7",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-009-URL-ROUTING-PRO.md": {
+    "mtime": 1780434227.5162947,
+    "ast_hash": "e2846848ea303b03bf03f09facddd1e3",
+    "semantic_hash": ""
+  },
+  "docs/legal/REGISTRE_RGPD.md": {
+    "mtime": 1780437629.257628,
+    "ast_hash": "7f4dd6c1a877cd730f64e795d3c99c82",
+    "semantic_hash": ""
+  },
+  "docs/rules/AI_RULES.md": {
+    "mtime": 1780432545.8943737,
+    "ast_hash": "2cff4ba8f8577ebcbc8d94af0e14b33d",
+    "semantic_hash": ""
+  },
+  "docs/rules/API_RULES.md": {
+    "mtime": 1780432516.7643585,
+    "ast_hash": "8b846b48cd9e926fb10dd7591ba6c601",
+    "semantic_hash": ""
+  },
+  "docs/rules/CODING_RULES.md": {
+    "mtime": 1780432419.484301,
+    "ast_hash": "a15c33dad348983e4616614b7b47f21b",
+    "semantic_hash": ""
+  },
+  "docs/rules/DATABASE_RULES.md": {
+    "mtime": 1778159594.4597034,
+    "ast_hash": "1303f3970d866018d615e9635bdfec9f",
+    "semantic_hash": ""
+  },
+  "docs/templates/ADR_TEMPLATE.md": {
+    "mtime": 1778159685.9885147,
+    "ast_hash": "c8785531241bd7fab894eff488ac5e29",
+    "semantic_hash": ""
+  },
+  "public/robots.txt": {
+    "mtime": 1779160069.0,
+    "ast_hash": "243b03ecba82dde9612cd5163145a86d",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-REVIEWS.md": {
+    "mtime": 1780692361.6550274,
+    "ast_hash": "ffc007f66899b0a8306154aa7ac5298d",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260606000000_phase4_schema_gaps.sql": {
+    "mtime": 1780694601.7972023,
+    "ast_hash": "abe729b63f2dfa042657903be98c4641",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260606000001_phase4_unlock_cron.sql": {
+    "mtime": 1780694613.2961273,
+    "ast_hash": "06a1e3c3bcc31e769559a7fb89d32dc5",
+    "semantic_hash": ""
+  },
+  "tests/unit/leads-masking.test.ts": {
+    "mtime": 1780754472.3682323,
+    "ast_hash": "26ced3489b19ecec7195fee8afcc6a34",
+    "semantic_hash": ""
+  },
+  "tests/unit/stripe-webhook.test.ts": {
+    "mtime": 1780754518.789098,
+    "ast_hash": "b8006eec6388a5fa88d8dfcd0f4dd7bf",
+    "semantic_hash": ""
+  },
+  "vitest.config.ts": {
+    "mtime": 1780695031.7916224,
+    "ast_hash": "a1061017e5de905dc9270015e15d2111",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-01-SUMMARY.md": {
+    "mtime": 1780694829.5314007,
+    "ast_hash": "463f8cdb197b34e12c65d213a4fd46a1",
+    "semantic_hash": ""
+  },
+  "server/api/v1/admin/qualify.post.ts": {
+    "mtime": 1780754965.2049797,
+    "ast_hash": "011b1aa02145b90e2d85211626362721",
+    "semantic_hash": ""
+  },
+  "server/api/v1/leads/[id].get.ts": {
+    "mtime": 1780757662.0327706,
+    "ast_hash": "310c00d1d4309ac4f12d7f90c78ee267",
+    "semantic_hash": ""
+  },
+  "server/api/v1/leads/index.get.ts": {
+    "mtime": 1780757851.7661667,
+    "ast_hash": "e1e7809aaf9b3ca463933fff2111b4d8",
+    "semantic_hash": ""
+  },
+  "server/utils/maskLead.ts": {
+    "mtime": 1780754862.0282273,
+    "ast_hash": "86be0378fb51fb368a8e63646ca55f46",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-02-SUMMARY.md": {
+    "mtime": 1780754616.2955074,
+    "ast_hash": "7b6a44aa52f4e636703a55c1be759e81",
+    "semantic_hash": ""
+  },
+  "server/api/v1/leads/[id]/claim.patch.ts": {
+    "mtime": 1780756472.91045,
+    "ast_hash": "c07280f65d4649fdb8121097e5d8c13b",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-03-SUMMARY.md": {
+    "mtime": 1780756154.7811444,
+    "ast_hash": "87f868bf21cbc6c5cec80895d28af1bb",
+    "semantic_hash": ""
+  },
+  "app/components/LeadCountdown.vue": {
+    "mtime": 1780757417.210981,
+    "ast_hash": "80708229ba3090f8df34280532edcb0c",
+    "semantic_hash": ""
+  },
+  "app/pages/espace/leads/[id].vue": {
+    "mtime": 1780757541.8186052,
+    "ast_hash": "fbf71457338630e2d1be2075ec20aad9",
+    "semantic_hash": ""
+  },
+  "app/pages/espace/leads/index.vue": {
+    "mtime": 1780757678.9463687,
+    "ast_hash": "7a06ada8dbdea389fa681194b715876e",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-04-SUMMARY.md": {
+    "mtime": 1780756652.881463,
+    "ast_hash": "f873a8c27297549dfa21b634d0405404",
+    "semantic_hash": ""
+  },
+  "server/api/v1/stripe/checkout.post.ts": {
+    "mtime": 1780758408.3426058,
+    "ast_hash": "7c82ad4c9997e2405f4a0c376ef6f946",
+    "semantic_hash": ""
+  },
+  "server/api/v1/stripe/webhook.post.ts": {
+    "mtime": 1780759782.23299,
+    "ast_hash": "ca76ebe77e7a1efe7d703bae8c6fb07d",
+    "semantic_hash": ""
+  },
+  "server/utils/handleStripeEvent.ts": {
+    "mtime": 1780758389.3857224,
+    "ast_hash": "8b88656dbd30a7468677a220027b1233",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-06-SUMMARY.md": {
+    "mtime": 1780758032.720786,
+    "ast_hash": "7d9b25a073ce7f586524745d681b3366",
+    "semantic_hash": ""
+  },
+  "app/pages/espace/premium.vue": {
+    "mtime": 1780758698.6539602,
+    "ast_hash": "dda09243d3064f556197eb081da396f3",
+    "semantic_hash": ""
+  },
+  "server/api/v1/admin/projects.get.ts": {
+    "mtime": 1780758632.1802902,
+    "ast_hash": "63aa076e101cf7ee7c025159fcc68870",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-05-SUMMARY.md": {
+    "mtime": 1780758499.6924412,
+    "ast_hash": "4f559aba9fa2e0ae96dcdb2066d500fc",
+    "semantic_hash": ""
+  },
+  ".planning/phases/04-le-verrou-stripe-billing/04-07-SUMMARY.md": {
+    "mtime": 1780759071.1778133,
+    "ast_hash": "4aafd6b5e521696c62411dccc0cd6b0d",
+    "semantic_hash": ""
+  }
+}

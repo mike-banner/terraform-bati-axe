@@ -10,14 +10,14 @@ watchEffect(() => {
 })
 
 const { data: pro } = await useAsyncData('pro-premium', async () => {
-  if (!user.value) return null
+  if (!user.value?.id) return null
   const { data } = await supabase
     .from('professionals')
     .select('id, subscription_status')
     .eq('id', user.value.id)
     .maybeSingle()
   return data
-})
+}, { server: false, watch: [user] })
 
 const isAlreadyPremium = computed(() => pro.value?.subscription_status === 'active')
 
