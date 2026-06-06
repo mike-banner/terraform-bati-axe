@@ -1,16 +1,16 @@
 # Graph Report - bati-axe  (2026-06-06)
 
 ## Corpus Check
-- 137 files · ~66,484 words
+- 142 files · ~66,789 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 407 nodes · 394 edges · 54 communities (34 shown, 20 thin omitted)
+- 412 nodes · 394 edges · 59 communities (39 shown, 20 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3c4fa4bf`
+- Built from commit: `37494ee7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -76,7 +76,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (54 total, 20 thin omitted)
+## Communities (59 total, 20 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.18
@@ -173,7 +173,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `Phase 4: Le Verrou & Stripe Billing — Research` connect `Community 1` to `Community 14`?**
   _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **Why does `search()` connect `Community 42` to `Community 12`?**
-  _High betweenness centrality (0.009) - this node is a cross-community bridge._
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
 - **Why does `UI-SPEC — Phase 4: Le Verrou & Stripe Billing` connect `Community 9` to `Community 15`?**
   _High betweenness centrality (0.007) - this node is a cross-community bridge._
 - **What connects `Prerequisites`, `Step 1: Analyze User Requirements`, `Step 2: Generate Design System (REQUIRED)` to the rest of the system?**

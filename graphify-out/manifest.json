@@ -100,8 +100,8 @@
     "semantic_hash": ""
   },
   "app/app.vue": {
-    "mtime": 1780508517.2363079,
-    "ast_hash": "9ab73f32e6c6a73b889e6249763664bb",
+    "mtime": 1780770443.843367,
+    "ast_hash": "3dcafb3fdecdb93a2be5b8d338bf407e",
     "semantic_hash": ""
   },
   "app/components/ui/button/Button.vue": {
@@ -130,8 +130,8 @@
     "semantic_hash": ""
   },
   "app/pages/app/dashboard.vue": {
-    "mtime": 1780769122.2243445,
-    "ast_hash": "648df540d713e72d9697c21a0a7ef5a8",
+    "mtime": 1780771020.8500724,
+    "ast_hash": "983b15427634b099ac32921433ead012",
     "semantic_hash": ""
   },
   "app/pages/index.vue": {
@@ -687,6 +687,31 @@
   ".agent/skills/ui-ux-pro-max/SKILL.md": {
     "mtime": 1780769363.6676157,
     "ast_hash": "b33a6a2bede0b68b6919ec33248476f8",
+    "semantic_hash": ""
+  },
+  "app/layouts/default.vue": {
+    "mtime": 1780770427.2247694,
+    "ast_hash": "09164892851439aa0615feac65f07d3d",
+    "semantic_hash": ""
+  },
+  "app/layouts/dynamic.vue": {
+    "mtime": 1780770686.0764642,
+    "ast_hash": "401a4a3dde55b8b6c7d37944c1d72bb4",
+    "semantic_hash": ""
+  },
+  "app/pages/app/leads.vue": {
+    "mtime": 1780770780.5368207,
+    "ast_hash": "ed34cdbbdab6da35e46bafa9f2887fb5",
+    "semantic_hash": ""
+  },
+  "app/pages/app/messages.vue": {
+    "mtime": 1780770798.2504134,
+    "ast_hash": "1972911fc9ab020493c33e1c6fa89429",
+    "semantic_hash": ""
+  },
+  "supabase/.temp/linked-project.json": {
+    "mtime": 1780772279.620382,
+    "ast_hash": "2926c5bdbf7132e82d68e136a02ed5e2",
     "semantic_hash": ""
   }
 }
