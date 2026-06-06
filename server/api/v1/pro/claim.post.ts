@@ -164,6 +164,7 @@ export default defineEventHandler(async (event) => {
         siret: data.siret,
         full_name: data.full_name,
         phone: data.phone,
+        postal_code: data.postal_code,
         zone_id: zoneId,
         category: data.category,
         is_verified: false,

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Fin de l'implémentation de la Phase 2. Passage à la planification de la Phase 3.
-last_updated: "2026-06-05T20:28:52.940Z"
-last_activity: 2026-06-05 -- Phase 04 planning complete
+stopped_at: context exhaustion at 78% (2026-06-05)
+last_updated: "2026-06-05T20:39:35.892Z"
+last_activity: 2026-06-05 -- Phase 04 Plan 01 complete (schema gaps + cron + Stripe config)
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 7
-  completed_plans: 0
-  percent: 0
+  completed_plans: 5
+  percent: 71
 ---
 
 # Project State
@@ -58,6 +58,13 @@ Progress: [▓▓▓▓░░░░░░] 60%
 
 **Variable d'env manquante** : documenter dans `.env.example` immédiatement après ajout dans le code. C'est le seul endroit committé qui liste toutes les vars requises.
 
+### Deferred Ideas (hors scope, à reconsidérer plus tard)
+
+**Upload photos/plans sur les projets** — Idée écartée à Phase 4.
+- Problème bloquant : une photo de façade ou de chantier contient des informations géolocalisables qui court-circuitent ADR-004 (masquage serveur). Un pro BASIC verrait la maison du prospect avant déverrouillage.
+- Décision : pertinent **uniquement** si on construit un suivi de relation client/pro directement sur le site (messagerie, fil de chantier, avancement). Dans ce contexte, les images seraient derrière le même accès conditionné que les coordonnées.
+- À reconsidérer en Phase 6+ si on ajoute une fonctionnalité de suivi de chantier (messagerie pro↔client, jalons de projet, photos d'avancement).
+
 ### Pending Todos
 
 None.
@@ -69,6 +76,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-03 01:20
-Stopped at: Fin de l'implémentation de la Phase 2. Passage à la planification de la Phase 3.
+Last session: 2026-06-05T20:39:35.886Z
+Stopped at: context exhaustion at 78% (2026-06-05)
 Resume file: None

@@ -118,7 +118,7 @@ function translateAuthError(msg: string): string {
 const prospectId = computed(() => route.query.prospect_id as string || '')
 
 watch(user, async (currentUser) => {
-  if (!currentUser) return
+  if (!currentUser?.id) return
 
   // Admin → console
   if ((currentUser as any).app_metadata?.role === 'admin') {
@@ -227,7 +227,7 @@ const handleRegisterCompany = async () => {
   globalError.value = null
 
   try {
-    const { data, error } = await useFetch<{ status: string; slug: string; professionalId: string }>('/api/v1/pro/claim', {
+    const result = await $fetch<{ status: string; slug: string; professionalId: string }>('/api/v1/pro/claim', {
       method: 'POST',
       body: {
         prospect_id:  prospectId.value || undefined,
@@ -241,9 +241,8 @@ const handleRegisterCompany = async () => {
       }
     })
 
-    if (error.value) throw new Error(error.value.data?.statusMessage || 'Impossible d\'enregistrer votre entreprise.')
-    if (data.value?.status === 'SUCCESS') {
-      claimSlug.value = data.value.slug
+    if (result?.status === 'SUCCESS') {
+      claimSlug.value = result.slug
       activeStep.value = 3
     }
   } catch (err: any) {
@@ -270,16 +269,16 @@ const uploadDocument = async (type: 'kbis' | 'decennale') => {
   uploads[type].error  = ''
 
   try {
-    const { data: presignData, error: presignError } = await useFetch<{ status: string; signedUrl: string; fileKey: string }>('/api/v1/pro/documents/presign', {
+    const presignData = await $fetch<{ status: string; signedUrl: string; fileKey: string }>('/api/v1/pro/documents/presign', {
       method: 'POST',
       body: { document_type: type, filename: file.name }
     })
 
-    if (presignError.value || presignData.value?.status !== 'SUCCESS') {
-      throw new Error(presignError.value?.data?.statusMessage || 'Erreur lors de la génération de la signature.')
+    if (presignData?.status !== 'SUCCESS') {
+      throw new Error('Erreur lors de la génération de la signature.')
     }
 
-    const { signedUrl, fileKey } = presignData.value
+    const { signedUrl, fileKey } = presignData
     const uploadRes = await fetch(signedUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file })
     if (!uploadRes.ok) throw new Error('Échec du transfert. Vérifiez votre connexion et réessayez.')
 

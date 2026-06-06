@@ -9,6 +9,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default defineNuxtRouteMiddleware((to) => {
+  // SSR: session is not reliably available before client hydration.
+  // Page components handle auth redirects themselves via watchEffect.
+  if (import.meta.server) return
+
   const user = useSupabaseUser()
 
   const isLoggedIn = computed(() => !!user.value)
@@ -21,26 +25,24 @@ export default defineNuxtRouteMiddleware((to) => {
   if (path.startsWith('/admin')) {
     if (!isLoggedIn.value) return navigateTo('/pro/claim')
     if (!isAdmin.value)    return navigateTo('/')
-    return // admin — allow
+    return
   }
 
-  // ── /app/* ────────────────────────────────────────────────────────────────
+  // ── /app/* — page watchEffect handles redirect if not logged in ───────────
   if (path.startsWith('/app')) {
-    if (!isLoggedIn.value) return navigateTo('/pro/claim')
-    return // logged in — allow
+    return
   }
 
-  // ── /pro/claim — redirect away if already authenticated ──────────────────
+  // ── /pro/claim — redirect away once session is confirmed ─────────────────
   if (path === '/pro/claim') {
     if (isAdmin.value)    return navigateTo('/admin')
     if (isLoggedIn.value) return navigateTo('/app/dashboard')
-    return // anonymous — show the form
+    return
   }
 
   // ── Public routes — redirect logged-in pro to dashboard ──────────────────
   if (isPro.value) {
     const allowed = ['/legal/']
-    const isAllowed = allowed.some(prefix => path.startsWith(prefix))
-    if (!isAllowed) return navigateTo('/app/dashboard')
+    if (!allowed.some(p => path.startsWith(p))) return navigateTo('/app/dashboard')
   }
 })
