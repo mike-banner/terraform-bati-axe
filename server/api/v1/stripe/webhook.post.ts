@@ -1,6 +1,5 @@
 import Stripe from 'stripe'
 import { serverSupabaseServiceRole } from '#supabase/server'
-import { handleStripeEvent } from '~/server/utils/handleStripeEvent'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
