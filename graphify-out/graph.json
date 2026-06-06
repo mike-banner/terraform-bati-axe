@@ -4,6 +4,1320 @@
   "graph": {},
   "nodes": [
     {
+      "label": "SKILL.md",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L1",
+      "id": "ui_ux_pro_max_skill",
+      "community": 17,
+      "norm_label": "skill.md"
+    },
+    {
+      "label": "ui-ux-pro-max",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L5",
+      "id": "ui_ux_pro_max_skill_ui_ux_pro_max",
+      "community": 17,
+      "norm_label": "ui-ux-pro-max"
+    },
+    {
+      "label": "Prerequisites",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L9",
+      "id": "ui_ux_pro_max_skill_prerequisites",
+      "community": 17,
+      "norm_label": "prerequisites"
+    },
+    {
+      "label": "How to Use This Skill",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L36",
+      "id": "ui_ux_pro_max_skill_how_to_use_this_skill",
+      "community": 17,
+      "norm_label": "how to use this skill"
+    },
+    {
+      "label": "Step 1: Analyze User Requirements",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L40",
+      "id": "ui_ux_pro_max_skill_step_1_analyze_user_requirements",
+      "community": 17,
+      "norm_label": "step 1: analyze user requirements"
+    },
+    {
+      "label": "Step 2: Generate Design System (REQUIRED)",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L48",
+      "id": "ui_ux_pro_max_skill_step_2_generate_design_system_required",
+      "community": 17,
+      "norm_label": "step 2: generate design system (required)"
+    },
+    {
+      "label": "Step 2b: Persist Design System (Master + Overrides Pattern)",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L67",
+      "id": "ui_ux_pro_max_skill_step_2b_persist_design_system_master_overrides_pattern",
+      "community": 17,
+      "norm_label": "step 2b: persist design system (master + overrides pattern)"
+    },
+    {
+      "label": "Step 3: Supplement with Detailed Searches (as needed)",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L92",
+      "id": "ui_ux_pro_max_skill_step_3_supplement_with_detailed_searches_as_needed",
+      "community": 17,
+      "norm_label": "step 3: supplement with detailed searches (as needed)"
+    },
+    {
+      "label": "Step 4: Stack Guidelines (Default: html-tailwind)",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L110",
+      "id": "ui_ux_pro_max_skill_step_4_stack_guidelines_default_html_tailwind",
+      "community": 17,
+      "norm_label": "step 4: stack guidelines (default: html-tailwind)"
+    },
+    {
+      "label": "Search Reference",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L122",
+      "id": "ui_ux_pro_max_skill_search_reference",
+      "community": 17,
+      "norm_label": "search reference"
+    },
+    {
+      "label": "Available Domains",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L124",
+      "id": "ui_ux_pro_max_skill_available_domains",
+      "community": 17,
+      "norm_label": "available domains"
+    },
+    {
+      "label": "Available Stacks",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L139",
+      "id": "ui_ux_pro_max_skill_available_stacks",
+      "community": 17,
+      "norm_label": "available stacks"
+    },
+    {
+      "label": "Example Workflow",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L156",
+      "id": "ui_ux_pro_max_skill_example_workflow",
+      "community": 17,
+      "norm_label": "example workflow"
+    },
+    {
+      "label": "Step 1: Analyze Requirements",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L160",
+      "id": "ui_ux_pro_max_skill_step_1_analyze_requirements",
+      "community": 17,
+      "norm_label": "step 1: analyze requirements"
+    },
+    {
+      "label": "Step 2: Generate Design System (REQUIRED)",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L166",
+      "id": "ui_ux_pro_max_skill_step_2_generate_design_system_required_166",
+      "community": 17,
+      "norm_label": "step 2: generate design system (required)"
+    },
+    {
+      "label": "Step 3: Supplement with Detailed Searches (as needed)",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L174",
+      "id": "ui_ux_pro_max_skill_step_3_supplement_with_detailed_searches_as_needed_174",
+      "community": 17,
+      "norm_label": "step 3: supplement with detailed searches (as needed)"
+    },
+    {
+      "label": "Step 4: Stack Guidelines",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L184",
+      "id": "ui_ux_pro_max_skill_step_4_stack_guidelines",
+      "community": 17,
+      "norm_label": "step 4: stack guidelines"
+    },
+    {
+      "label": "Output Formats",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L194",
+      "id": "ui_ux_pro_max_skill_output_formats",
+      "community": 17,
+      "norm_label": "output formats"
+    },
+    {
+      "label": "Tips for Better Results",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L208",
+      "id": "ui_ux_pro_max_skill_tips_for_better_results",
+      "community": 17,
+      "norm_label": "tips for better results"
+    },
+    {
+      "label": "Common Rules for Professional UI",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L219",
+      "id": "ui_ux_pro_max_skill_common_rules_for_professional_ui",
+      "community": 17,
+      "norm_label": "common rules for professional ui"
+    },
+    {
+      "label": "Icons & Visual Elements",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L223",
+      "id": "ui_ux_pro_max_skill_icons_visual_elements",
+      "community": 17,
+      "norm_label": "icons & visual elements"
+    },
+    {
+      "label": "Interaction & Cursor",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L232",
+      "id": "ui_ux_pro_max_skill_interaction_cursor",
+      "community": 17,
+      "norm_label": "interaction & cursor"
+    },
+    {
+      "label": "Light/Dark Mode Contrast",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L240",
+      "id": "ui_ux_pro_max_skill_light_dark_mode_contrast",
+      "community": 17,
+      "norm_label": "light/dark mode contrast"
+    },
+    {
+      "label": "Layout & Spacing",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L249",
+      "id": "ui_ux_pro_max_skill_layout_spacing",
+      "community": 17,
+      "norm_label": "layout & spacing"
+    },
+    {
+      "label": "Pre-Delivery Checklist",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L259",
+      "id": "ui_ux_pro_max_skill_pre_delivery_checklist",
+      "community": 17,
+      "norm_label": "pre-delivery checklist"
+    },
+    {
+      "label": "Visual Quality",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L263",
+      "id": "ui_ux_pro_max_skill_visual_quality",
+      "community": 17,
+      "norm_label": "visual quality"
+    },
+    {
+      "label": "Interaction",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L270",
+      "id": "ui_ux_pro_max_skill_interaction",
+      "community": 17,
+      "norm_label": "interaction"
+    },
+    {
+      "label": "Light/Dark Mode",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L276",
+      "id": "ui_ux_pro_max_skill_light_dark_mode",
+      "community": 17,
+      "norm_label": "light/dark mode"
+    },
+    {
+      "label": "Layout",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L282",
+      "id": "ui_ux_pro_max_skill_layout",
+      "community": 17,
+      "norm_label": "layout"
+    },
+    {
+      "label": "Accessibility",
+      "file_type": "document",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L288",
+      "id": "ui_ux_pro_max_skill_accessibility",
+      "community": 17,
+      "norm_label": "accessibility"
+    },
+    {
+      "label": "core.py",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L1",
+      "id": "scripts_core",
+      "community": 42,
+      "norm_label": "core.py"
+    },
+    {
+      "label": "BM25",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L96",
+      "id": "scripts_core_bm25",
+      "community": 42,
+      "norm_label": "bm25"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L99",
+      "id": "scripts_core_bm25_init",
+      "community": 42,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": ".tokenize()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L109",
+      "id": "scripts_core_bm25_tokenize",
+      "community": 42,
+      "norm_label": ".tokenize()"
+    },
+    {
+      "label": ".fit()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L114",
+      "id": "scripts_core_bm25_fit",
+      "community": 42,
+      "norm_label": ".fit()"
+    },
+    {
+      "label": ".score()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L133",
+      "id": "scripts_core_bm25_score",
+      "community": 42,
+      "norm_label": ".score()"
+    },
+    {
+      "label": "_load_csv()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L159",
+      "id": "scripts_core_load_csv",
+      "community": 42,
+      "norm_label": "_load_csv()"
+    },
+    {
+      "label": "_search_csv()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L165",
+      "id": "scripts_core_search_csv",
+      "community": 42,
+      "norm_label": "_search_csv()"
+    },
+    {
+      "label": "detect_domain()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L190",
+      "id": "scripts_core_detect_domain",
+      "community": 42,
+      "norm_label": "detect_domain()"
+    },
+    {
+      "label": "search()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L212",
+      "id": "scripts_core_search",
+      "community": 42,
+      "norm_label": "search()"
+    },
+    {
+      "label": "search_stack()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L234",
+      "id": "scripts_core_search_stack",
+      "community": 42,
+      "norm_label": "search_stack()"
+    },
+    {
+      "label": "BM25 ranking algorithm for text search",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L97",
+      "id": "scripts_core_rationale_97",
+      "community": 42,
+      "norm_label": "bm25 ranking algorithm for text search"
+    },
+    {
+      "label": "Lowercase, split, remove punctuation, filter short words",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L110",
+      "id": "scripts_core_rationale_110",
+      "community": 42,
+      "norm_label": "lowercase, split, remove punctuation, filter short words"
+    },
+    {
+      "label": "Build BM25 index from documents",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L115",
+      "id": "scripts_core_rationale_115",
+      "community": 42,
+      "norm_label": "build bm25 index from documents"
+    },
+    {
+      "label": "Score all documents against query",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L134",
+      "id": "scripts_core_rationale_134",
+      "community": 42,
+      "norm_label": "score all documents against query"
+    },
+    {
+      "label": "Load CSV and return list of dicts",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L160",
+      "id": "scripts_core_rationale_160",
+      "community": 42,
+      "norm_label": "load csv and return list of dicts"
+    },
+    {
+      "label": "Core search function using BM25",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L166",
+      "id": "scripts_core_rationale_166",
+      "community": 42,
+      "norm_label": "core search function using bm25"
+    },
+    {
+      "label": "Auto-detect the most relevant domain from query",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L191",
+      "id": "scripts_core_rationale_191",
+      "community": 42,
+      "norm_label": "auto-detect the most relevant domain from query"
+    },
+    {
+      "label": "Main search function with auto-domain detection",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L213",
+      "id": "scripts_core_rationale_213",
+      "community": 42,
+      "norm_label": "main search function with auto-domain detection"
+    },
+    {
+      "label": "Search stack-specific guidelines",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L235",
+      "id": "scripts_core_rationale_235",
+      "community": 42,
+      "norm_label": "search stack-specific guidelines"
+    },
+    {
+      "label": "design_system.py",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L1",
+      "id": "scripts_design_system",
+      "community": 12,
+      "norm_label": "design_system.py"
+    },
+    {
+      "label": "DesignSystemGenerator",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L37",
+      "id": "scripts_design_system_designsystemgenerator",
+      "community": 12,
+      "norm_label": "designsystemgenerator"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L40",
+      "id": "scripts_design_system_designsystemgenerator_init",
+      "community": 12,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": "._load_reasoning()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L43",
+      "id": "scripts_design_system_designsystemgenerator_load_reasoning",
+      "community": 12,
+      "norm_label": "._load_reasoning()"
+    },
+    {
+      "label": "._multi_domain_search()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L51",
+      "id": "scripts_design_system_designsystemgenerator_multi_domain_search",
+      "community": 12,
+      "norm_label": "._multi_domain_search()"
+    },
+    {
+      "label": "str",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L51",
+      "id": "str",
+      "community": 12,
+      "norm_label": "str"
+    },
+    {
+      "label": "._find_reasoning_rule()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L64",
+      "id": "scripts_design_system_designsystemgenerator_find_reasoning_rule",
+      "community": 12,
+      "norm_label": "._find_reasoning_rule()"
+    },
+    {
+      "label": "._apply_reasoning()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L88",
+      "id": "scripts_design_system_designsystemgenerator_apply_reasoning",
+      "community": 12,
+      "norm_label": "._apply_reasoning()"
+    },
+    {
+      "label": "._select_best_match()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L122",
+      "id": "scripts_design_system_designsystemgenerator_select_best_match",
+      "community": 12,
+      "norm_label": "._select_best_match()"
+    },
+    {
+      "label": "._extract_results()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L159",
+      "id": "scripts_design_system_designsystemgenerator_extract_results",
+      "community": 12,
+      "norm_label": "._extract_results()"
+    },
+    {
+      "label": ".generate()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L163",
+      "id": "scripts_design_system_designsystemgenerator_generate",
+      "community": 12,
+      "norm_label": ".generate()"
+    },
+    {
+      "label": "format_ascii_box()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L242",
+      "id": "scripts_design_system_format_ascii_box",
+      "community": 12,
+      "norm_label": "format_ascii_box()"
+    },
+    {
+      "label": "format_markdown()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L367",
+      "id": "scripts_design_system_format_markdown",
+      "community": 12,
+      "norm_label": "format_markdown()"
+    },
+    {
+      "label": "generate_design_system()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L462",
+      "id": "scripts_design_system_generate_design_system",
+      "community": 12,
+      "norm_label": "generate_design_system()"
+    },
+    {
+      "label": "bool",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L462",
+      "id": "bool",
+      "community": 12,
+      "norm_label": "bool"
+    },
+    {
+      "label": "persist_design_system()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L491",
+      "id": "scripts_design_system_persist_design_system",
+      "community": 12,
+      "norm_label": "persist_design_system()"
+    },
+    {
+      "label": "format_master_md()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L542",
+      "id": "scripts_design_system_format_master_md",
+      "community": 12,
+      "norm_label": "format_master_md()"
+    },
+    {
+      "label": "format_page_override_md()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L805",
+      "id": "scripts_design_system_format_page_override_md",
+      "community": 12,
+      "norm_label": "format_page_override_md()"
+    },
+    {
+      "label": "_generate_intelligent_overrides()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L914",
+      "id": "scripts_design_system_generate_intelligent_overrides",
+      "community": 12,
+      "norm_label": "_generate_intelligent_overrides()"
+    },
+    {
+      "label": "_detect_page_type()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L1020",
+      "id": "scripts_design_system_detect_page_type",
+      "community": 12,
+      "norm_label": "_detect_page_type()"
+    },
+    {
+      "label": "Generates design system recommendations from aggregated searches.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L38",
+      "id": "scripts_design_system_rationale_38",
+      "community": 12,
+      "norm_label": "generates design system recommendations from aggregated searches."
+    },
+    {
+      "label": "Load reasoning rules from CSV.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L44",
+      "id": "scripts_design_system_rationale_44",
+      "community": 12,
+      "norm_label": "load reasoning rules from csv."
+    },
+    {
+      "label": "Execute searches across multiple domains.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L52",
+      "id": "scripts_design_system_rationale_52",
+      "community": 12,
+      "norm_label": "execute searches across multiple domains."
+    },
+    {
+      "label": "Find matching reasoning rule for a category.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L65",
+      "id": "scripts_design_system_rationale_65",
+      "community": 12,
+      "norm_label": "find matching reasoning rule for a category."
+    },
+    {
+      "label": "Apply reasoning rules to search results.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L89",
+      "id": "scripts_design_system_rationale_89",
+      "community": 12,
+      "norm_label": "apply reasoning rules to search results."
+    },
+    {
+      "label": "Select best matching result based on priority keywords.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L123",
+      "id": "scripts_design_system_rationale_123",
+      "community": 12,
+      "norm_label": "select best matching result based on priority keywords."
+    },
+    {
+      "label": "Extract results list from search result dict.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L160",
+      "id": "scripts_design_system_rationale_160",
+      "community": 12,
+      "norm_label": "extract results list from search result dict."
+    },
+    {
+      "label": "Generate complete design system recommendation.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L164",
+      "id": "scripts_design_system_rationale_164",
+      "community": 12,
+      "norm_label": "generate complete design system recommendation."
+    },
+    {
+      "label": "Format design system as ASCII box with emojis (MCP-style).",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L243",
+      "id": "scripts_design_system_rationale_243",
+      "community": 12,
+      "norm_label": "format design system as ascii box with emojis (mcp-style)."
+    },
+    {
+      "label": "Format design system as markdown.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L368",
+      "id": "scripts_design_system_rationale_368",
+      "community": 12,
+      "norm_label": "format design system as markdown."
+    },
+    {
+      "label": "Main entry point for design system generation.      Args:         query: Search",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L464",
+      "id": "scripts_design_system_rationale_464",
+      "community": 12,
+      "norm_label": "main entry point for design system generation.      args:         query: search"
+    },
+    {
+      "label": "Persist design system to design-system/<project>/ folder using Master + Override",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L492",
+      "id": "scripts_design_system_rationale_492",
+      "community": 12,
+      "norm_label": "persist design system to design-system/<project>/ folder using master + override"
+    },
+    {
+      "label": "Format design system as MASTER.md with hierarchical override logic.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L543",
+      "id": "scripts_design_system_rationale_543",
+      "community": 12,
+      "norm_label": "format design system as master.md with hierarchical override logic."
+    },
+    {
+      "label": "Format a page-specific override file with intelligent AI-generated content.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L806",
+      "id": "scripts_design_system_rationale_806",
+      "community": 12,
+      "norm_label": "format a page-specific override file with intelligent ai-generated content."
+    },
+    {
+      "label": "Generate intelligent overrides based on page type using layered search.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L915",
+      "id": "scripts_design_system_rationale_915",
+      "community": 12,
+      "norm_label": "generate intelligent overrides based on page type using layered search."
+    },
+    {
+      "label": "Detect page type from context and search results.",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L1021",
+      "id": "scripts_design_system_rationale_1021",
+      "community": 12,
+      "norm_label": "detect page type from context and search results."
+    },
+    {
+      "label": "search.py",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/search.py",
+      "source_location": "L1",
+      "id": "scripts_search",
+      "community": 52,
+      "norm_label": "search.py"
+    },
+    {
+      "label": "format_output()",
+      "file_type": "code",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/search.py",
+      "source_location": "L30",
+      "id": "scripts_search_format_output",
+      "community": 52,
+      "norm_label": "format_output()"
+    },
+    {
+      "label": "Format results for Claude consumption (token-optimized)",
+      "file_type": "rationale",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/search.py",
+      "source_location": "L31",
+      "id": "scripts_search_rationale_31",
+      "community": 52,
+      "norm_label": "format results for claude consumption (token-optimized)"
+    },
+    {
+      "label": "STATE.md",
+      "file_type": "document",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L1",
+      "id": "planning_state",
+      "community": 13,
+      "norm_label": "state.md"
+    },
+    {
+      "label": "Project State",
+      "file_type": "document",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L17",
+      "id": "planning_state_project_state",
+      "community": 13,
+      "norm_label": "project state"
+    },
+    {
+      "label": "Project Reference",
+      "file_type": "document",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L19",
+      "id": "planning_state_project_reference",
+      "community": 13,
+      "norm_label": "project reference"
+    },
+    {
+      "label": "Current Position",
+      "file_type": "document",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L26",
+      "id": "planning_state_current_position",
+      "community": 13,
+      "norm_label": "current position"
+    },
+    {
+      "label": "Performance Metrics",
+      "file_type": "document",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L34",
+      "id": "planning_state_performance_metrics",
+      "community": 13,
+      "norm_label": "performance metrics"
+    },
+    {
+      "label": "Accumulated Context",
+      "file_type": "document",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L42",
+      "id": "planning_state_accumulated_context",
+      "community": 13,
+      "norm_label": "accumulated context"
+    },
+    {
+      "label": "Decisions",
+      "file_type": "document",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L44",
+      "id": "planning_state_decisions",
+      "community": 13,
+      "norm_label": "decisions"
+    },
+    {
+      "label": "Known Patterns (\u00e0 appliquer dans les prochaines phases)",
+      "file_type": "document",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L51",
+      "id": "planning_state_known_patterns_\u00e0_appliquer_dans_les_prochaines_phases",
+      "community": 13,
+      "norm_label": "known patterns (a appliquer dans les prochaines phases)"
+    },
+    {
+      "label": "Deferred Ideas (hors scope, \u00e0 reconsid\u00e9rer plus tard)",
+      "file_type": "document",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L61",
+      "id": "planning_state_deferred_ideas_hors_scope_\u00e0_reconsid\u00e9rer_plus_tard",
+      "community": 13,
+      "norm_label": "deferred ideas (hors scope, a reconsiderer plus tard)"
+    },
+    {
+      "label": "Pending Todos",
+      "file_type": "document",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L68",
+      "id": "planning_state_pending_todos",
+      "community": 13,
+      "norm_label": "pending todos"
+    },
+    {
+      "label": "Blockers/Concerns",
+      "file_type": "document",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L72",
+      "id": "planning_state_blockers_concerns",
+      "community": 13,
+      "norm_label": "blockers/concerns"
+    },
+    {
+      "label": "Session Continuity",
+      "file_type": "document",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L77",
+      "id": "planning_state_session_continuity",
+      "community": 13,
+      "norm_label": "session continuity"
+    },
+    {
+      "label": "04-01-PLAN.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-PLAN.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_01_plan",
+      "community": 2,
+      "norm_label": "04-01-plan.md"
+    },
+    {
+      "label": "Trust Boundaries",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-PLAN.md",
+      "source_location": "L185",
+      "id": "04_le_verrou_stripe_billing_04_01_plan_trust_boundaries",
+      "community": 2,
+      "norm_label": "trust boundaries"
+    },
+    {
+      "label": "STRIDE Threat Register",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-PLAN.md",
+      "source_location": "L191",
+      "id": "04_le_verrou_stripe_billing_04_01_plan_stride_threat_register",
+      "community": 2,
+      "norm_label": "stride threat register"
+    },
+    {
+      "label": "04-01-SUMMARY.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-SUMMARY.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_01_summary",
+      "community": 44,
+      "norm_label": "04-01-summary.md"
+    },
+    {
+      "label": "Plan 04-01 \u2014 Schema Gaps, Cron, Stripe Config",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-SUMMARY.md",
+      "source_location": "L9",
+      "id": "04_le_verrou_stripe_billing_04_01_summary_plan_04_01_schema_gaps_cron_stripe_config",
+      "community": 44,
+      "norm_label": "plan 04-01 \u2014 schema gaps, cron, stripe config"
+    },
+    {
+      "label": "What was done",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-SUMMARY.md",
+      "source_location": "L11",
+      "id": "04_le_verrou_stripe_billing_04_01_summary_what_was_done",
+      "community": 44,
+      "norm_label": "what was done"
+    },
+    {
+      "label": "Verification",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-SUMMARY.md",
+      "source_location": "L24",
+      "id": "04_le_verrou_stripe_billing_04_01_summary_verification",
+      "community": 44,
+      "norm_label": "verification"
+    },
+    {
+      "label": "04-02-PLAN.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-PLAN.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_02_plan",
+      "community": 3,
+      "norm_label": "04-02-plan.md"
+    },
+    {
+      "label": "Trust Boundaries",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-PLAN.md",
+      "source_location": "L202",
+      "id": "04_le_verrou_stripe_billing_04_02_plan_trust_boundaries",
+      "community": 3,
+      "norm_label": "trust boundaries"
+    },
+    {
+      "label": "STRIDE Threat Register",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-PLAN.md",
+      "source_location": "L208",
+      "id": "04_le_verrou_stripe_billing_04_02_plan_stride_threat_register",
+      "community": 3,
+      "norm_label": "stride threat register"
+    },
+    {
+      "label": "04-02-SUMMARY.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-SUMMARY.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_02_summary",
+      "community": 45,
+      "norm_label": "04-02-summary.md"
+    },
+    {
+      "label": "Plan 04-02 \u2014 Schema Push, vitest, RED Test Stubs",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-SUMMARY.md",
+      "source_location": "L9",
+      "id": "04_le_verrou_stripe_billing_04_02_summary_plan_04_02_schema_push_vitest_red_test_stubs",
+      "community": 45,
+      "norm_label": "plan 04-02 \u2014 schema push, vitest, red test stubs"
+    },
+    {
+      "label": "What was done",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-SUMMARY.md",
+      "source_location": "L11",
+      "id": "04_le_verrou_stripe_billing_04_02_summary_what_was_done",
+      "community": 45,
+      "norm_label": "what was done"
+    },
+    {
+      "label": "Verification",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-SUMMARY.md",
+      "source_location": "L28",
+      "id": "04_le_verrou_stripe_billing_04_02_summary_verification",
+      "community": 45,
+      "norm_label": "verification"
+    },
+    {
+      "label": "04-03-PLAN.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-PLAN.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_03_plan",
+      "community": 4,
+      "norm_label": "04-03-plan.md"
+    },
+    {
+      "label": "Trust Boundaries",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-PLAN.md",
+      "source_location": "L284",
+      "id": "04_le_verrou_stripe_billing_04_03_plan_trust_boundaries",
+      "community": 4,
+      "norm_label": "trust boundaries"
+    },
+    {
+      "label": "STRIDE Threat Register",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-PLAN.md",
+      "source_location": "L292",
+      "id": "04_le_verrou_stripe_billing_04_03_plan_stride_threat_register",
+      "community": 4,
+      "norm_label": "stride threat register"
+    },
+    {
+      "label": "04-03-SUMMARY.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-SUMMARY.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_03_summary",
+      "community": 46,
+      "norm_label": "04-03-summary.md"
+    },
+    {
+      "label": "Plan 04-03 \u2014 maskLead, qualify endpoint, leads API, timeline step",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-SUMMARY.md",
+      "source_location": "L9",
+      "id": "04_le_verrou_stripe_billing_04_03_summary_plan_04_03_masklead_qualify_endpoint_leads_api_timeline_step",
+      "community": 46,
+      "norm_label": "plan 04-03 \u2014 masklead, qualify endpoint, leads api, timeline step"
+    },
+    {
+      "label": "What was done",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-SUMMARY.md",
+      "source_location": "L11",
+      "id": "04_le_verrou_stripe_billing_04_03_summary_what_was_done",
+      "community": 46,
+      "norm_label": "what was done"
+    },
+    {
+      "label": "Verification",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-SUMMARY.md",
+      "source_location": "L27",
+      "id": "04_le_verrou_stripe_billing_04_03_summary_verification",
+      "community": 46,
+      "norm_label": "verification"
+    },
+    {
+      "label": "04-04-PLAN.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-PLAN.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_04_plan",
+      "community": 5,
+      "norm_label": "04-04-plan.md"
+    },
+    {
+      "label": "Trust Boundaries",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-PLAN.md",
+      "source_location": "L123",
+      "id": "04_le_verrou_stripe_billing_04_04_plan_trust_boundaries",
+      "community": 5,
+      "norm_label": "trust boundaries"
+    },
+    {
+      "label": "STRIDE Threat Register",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-PLAN.md",
+      "source_location": "L129",
+      "id": "04_le_verrou_stripe_billing_04_04_plan_stride_threat_register",
+      "community": 5,
+      "norm_label": "stride threat register"
+    },
+    {
+      "label": "04-04-SUMMARY.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-SUMMARY.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_04_summary",
+      "community": 47,
+      "norm_label": "04-04-summary.md"
+    },
+    {
+      "label": "Plan 04-04 \u2014 PATCH /api/v1/leads/[id]/claim",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-SUMMARY.md",
+      "source_location": "L9",
+      "id": "04_le_verrou_stripe_billing_04_04_summary_plan_04_04_patch_api_v1_leads_id_claim",
+      "community": 47,
+      "norm_label": "plan 04-04 \u2014 patch /api/v1/leads/[id]/claim"
+    },
+    {
+      "label": "What was done",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-SUMMARY.md",
+      "source_location": "L11",
+      "id": "04_le_verrou_stripe_billing_04_04_summary_what_was_done",
+      "community": 47,
+      "norm_label": "what was done"
+    },
+    {
+      "label": "Verification",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-SUMMARY.md",
+      "source_location": "L19",
+      "id": "04_le_verrou_stripe_billing_04_04_summary_verification",
+      "community": 47,
+      "norm_label": "verification"
+    },
+    {
+      "label": "04-05-SUMMARY.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-05-SUMMARY.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_05_summary",
+      "community": 49,
+      "norm_label": "04-05-summary.md"
+    },
+    {
+      "label": "What was built",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-05-SUMMARY.md",
+      "source_location": "L7",
+      "id": "04_le_verrou_stripe_billing_04_05_summary_what_was_built",
+      "community": 49,
+      "norm_label": "what was built"
+    },
+    {
+      "label": "Verification",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-05-SUMMARY.md",
+      "source_location": "L13",
+      "id": "04_le_verrou_stripe_billing_04_05_summary_verification",
+      "community": 49,
+      "norm_label": "verification"
+    },
+    {
+      "label": "04-06-PLAN.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-PLAN.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_06_plan",
+      "community": 7,
+      "norm_label": "04-06-plan.md"
+    },
+    {
+      "label": "Trust Boundaries",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-PLAN.md",
+      "source_location": "L257",
+      "id": "04_le_verrou_stripe_billing_04_06_plan_trust_boundaries",
+      "community": 7,
+      "norm_label": "trust boundaries"
+    },
+    {
+      "label": "STRIDE Threat Register",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-PLAN.md",
+      "source_location": "L263",
+      "id": "04_le_verrou_stripe_billing_04_06_plan_stride_threat_register",
+      "community": 7,
+      "norm_label": "stride threat register"
+    },
+    {
+      "label": "04-06-SUMMARY.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-SUMMARY.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_06_summary",
+      "community": 48,
+      "norm_label": "04-06-summary.md"
+    },
+    {
+      "label": "Plan 04-06 \u2014 Leads Dashboard + Detail Page",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-SUMMARY.md",
+      "source_location": "L9",
+      "id": "04_le_verrou_stripe_billing_04_06_summary_plan_04_06_leads_dashboard_detail_page",
+      "community": 48,
+      "norm_label": "plan 04-06 \u2014 leads dashboard + detail page"
+    },
+    {
+      "label": "What was done",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-SUMMARY.md",
+      "source_location": "L11",
+      "id": "04_le_verrou_stripe_billing_04_06_summary_what_was_done",
+      "community": 48,
+      "norm_label": "what was done"
+    },
+    {
+      "label": "Verification",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-SUMMARY.md",
+      "source_location": "L29",
+      "id": "04_le_verrou_stripe_billing_04_06_summary_verification",
+      "community": 48,
+      "norm_label": "verification"
+    },
+    {
+      "label": "04-07-PLAN.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-PLAN.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_07_plan",
+      "community": 8,
+      "norm_label": "04-07-plan.md"
+    },
+    {
+      "label": "Trust Boundaries",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-PLAN.md",
+      "source_location": "L327",
+      "id": "04_le_verrou_stripe_billing_04_07_plan_trust_boundaries",
+      "community": 8,
+      "norm_label": "trust boundaries"
+    },
+    {
+      "label": "STRIDE Threat Register",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-PLAN.md",
+      "source_location": "L334",
+      "id": "04_le_verrou_stripe_billing_04_07_plan_stride_threat_register",
+      "community": 8,
+      "norm_label": "stride threat register"
+    },
+    {
+      "label": "04-07-SUMMARY.md",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-SUMMARY.md",
+      "source_location": "L1",
+      "id": "04_le_verrou_stripe_billing_04_07_summary",
+      "community": 50,
+      "norm_label": "04-07-summary.md"
+    },
+    {
+      "label": "What was built",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-SUMMARY.md",
+      "source_location": "L7",
+      "id": "04_le_verrou_stripe_billing_04_07_summary_what_was_built",
+      "community": 50,
+      "norm_label": "what was built"
+    },
+    {
+      "label": "Verification",
+      "file_type": "document",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-SUMMARY.md",
+      "source_location": "L13",
+      "id": "04_le_verrou_stripe_billing_04_07_summary_verification",
+      "community": 50,
+      "norm_label": "verification"
+    },
+    {
+      "label": "auth.global.ts",
+      "file_type": "code",
+      "source_file": "app/middleware/auth.global.ts",
+      "source_location": "L1",
+      "id": "middleware_auth_global",
+      "community": 53,
+      "norm_label": "auth.global.ts"
+    },
+    {
       "label": "dashboard.vue",
       "file_type": "code",
       "source_file": "app/pages/app/dashboard.vue",
@@ -11,6 +1325,15 @@
       "id": "app_dashboard",
       "community": 40,
       "norm_label": "dashboard.vue"
+    },
+    {
+      "label": "premium.vue",
+      "file_type": "code",
+      "source_file": "app/pages/espace/premium.vue",
+      "source_location": "L1",
+      "id": "espace_premium",
+      "community": 39,
+      "norm_label": "premium.vue"
     },
     {
       "label": "claim.vue",
@@ -22,6 +1345,96 @@
       "norm_label": "claim.vue"
     },
     {
+      "label": "nuxt.config.ts",
+      "file_type": "code",
+      "source_file": "nuxt.config.ts",
+      "source_location": "L1",
+      "id": "nuxt_config",
+      "community": 22,
+      "norm_label": "nuxt.config.ts"
+    },
+    {
+      "label": "__dirname",
+      "file_type": "code",
+      "source_file": "nuxt.config.ts",
+      "source_location": "L5",
+      "id": "nuxt_config_dirname",
+      "community": 22,
+      "norm_label": "__dirname"
+    },
+    {
+      "label": "claim.post.ts",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L1",
+      "id": "pro_claim_post",
+      "community": 43,
+      "norm_label": "claim.post.ts"
+    },
+    {
+      "label": "VALID_CATEGORIES",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L6",
+      "id": "pro_claim_post_valid_categories",
+      "community": 43,
+      "norm_label": "valid_categories"
+    },
+    {
+      "label": "claimSchema",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L8",
+      "id": "pro_claim_post_claimschema",
+      "community": 43,
+      "norm_label": "claimschema"
+    },
+    {
+      "label": "generateShortId()",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L20",
+      "id": "pro_claim_post_generateshortid",
+      "community": 43,
+      "norm_label": "generateshortid()"
+    },
+    {
+      "label": "slugify()",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L32",
+      "id": "pro_claim_post_slugify",
+      "community": 43,
+      "norm_label": "slugify()"
+    },
+    {
+      "label": "presign.post.ts",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/documents/presign.post.ts",
+      "source_location": "L1",
+      "id": "documents_presign_post",
+      "community": 51,
+      "norm_label": "presign.post.ts"
+    },
+    {
+      "label": "presignSchema",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/documents/presign.post.ts",
+      "source_location": "L6",
+      "id": "documents_presign_post_presignschema",
+      "community": 51,
+      "norm_label": "presignschema"
+    },
+    {
+      "label": "getR2Client()",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/documents/presign.post.ts",
+      "source_location": "L11",
+      "id": "documents_presign_post_getr2client",
+      "community": 51,
+      "norm_label": "getr2client()"
+    },
+    {
       "label": "index.vue",
       "file_type": "code",
       "source_file": "app/pages/admin/index.vue",
@@ -29,15 +1442,6 @@
       "community": 37,
       "norm_label": "index.vue",
       "id": "admin_index"
-    },
-    {
-      "label": "premium.vue",
-      "file_type": "code",
-      "source_file": "app/pages/espace/premium.vue",
-      "source_location": "L1",
-      "community": 39,
-      "norm_label": "premium.vue",
-      "id": "espace_premium"
     },
     {
       "label": "projects.get.ts",
@@ -242,7 +1646,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L1",
-      "community": 20,
+      "community": 21,
       "norm_label": "package.json",
       "id": "package"
     },
@@ -251,7 +1655,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L2",
-      "community": 20,
+      "community": 21,
       "norm_label": "name",
       "id": "package_name"
     },
@@ -260,7 +1664,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L3",
-      "community": 20,
+      "community": 21,
       "norm_label": "type",
       "id": "package_type"
     },
@@ -269,7 +1673,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L4",
-      "community": 20,
+      "community": 21,
       "norm_label": "private",
       "id": "package_private"
     },
@@ -278,7 +1682,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L5",
-      "community": 20,
+      "community": 21,
       "norm_label": "scripts",
       "id": "package_scripts"
     },
@@ -287,7 +1691,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L6",
-      "community": 20,
+      "community": 21,
       "norm_label": "build",
       "id": "package_scripts_build"
     },
@@ -296,7 +1700,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L7",
-      "community": 20,
+      "community": 21,
       "norm_label": "dev",
       "id": "package_scripts_dev"
     },
@@ -305,7 +1709,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L8",
-      "community": 20,
+      "community": 21,
       "norm_label": "generate",
       "id": "package_scripts_generate"
     },
@@ -314,7 +1718,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L9",
-      "community": 20,
+      "community": 21,
       "norm_label": "preview",
       "id": "package_scripts_preview"
     },
@@ -323,7 +1727,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L10",
-      "community": 20,
+      "community": 21,
       "norm_label": "postinstall",
       "id": "package_scripts_postinstall"
     },
@@ -332,7 +1736,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L11",
-      "community": 20,
+      "community": 21,
       "norm_label": "test",
       "id": "package_scripts_test"
     },
@@ -634,24 +2038,6 @@
       "id": "vitest_config"
     },
     {
-      "label": "nuxt.config.ts",
-      "file_type": "code",
-      "source_file": "nuxt.config.ts",
-      "source_location": "L1",
-      "community": 22,
-      "norm_label": "nuxt.config.ts",
-      "id": "nuxt_config"
-    },
-    {
-      "label": "__dirname",
-      "file_type": "code",
-      "source_file": "nuxt.config.ts",
-      "source_location": "L5",
-      "community": 22,
-      "norm_label": "__dirname",
-      "id": "nuxt_config_dirname"
-    },
-    {
       "label": "04-REVIEWS.md",
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-REVIEWS.md",
@@ -767,213 +2153,6 @@
       "community": 19,
       "norm_label": "divergent views",
       "id": "04_le_verrou_stripe_billing_04_reviews_divergent_views"
-    },
-    {
-      "label": "STATE.md",
-      "file_type": "document",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L1",
-      "community": 13,
-      "norm_label": "state.md",
-      "id": "planning_state"
-    },
-    {
-      "label": "Project State",
-      "file_type": "document",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L17",
-      "community": 13,
-      "norm_label": "project state",
-      "id": "planning_state_project_state"
-    },
-    {
-      "label": "Project Reference",
-      "file_type": "document",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L19",
-      "community": 13,
-      "norm_label": "project reference",
-      "id": "planning_state_project_reference"
-    },
-    {
-      "label": "Current Position",
-      "file_type": "document",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L26",
-      "community": 13,
-      "norm_label": "current position",
-      "id": "planning_state_current_position"
-    },
-    {
-      "label": "Performance Metrics",
-      "file_type": "document",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L34",
-      "community": 13,
-      "norm_label": "performance metrics",
-      "id": "planning_state_performance_metrics"
-    },
-    {
-      "label": "Accumulated Context",
-      "file_type": "document",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L42",
-      "community": 13,
-      "norm_label": "accumulated context",
-      "id": "planning_state_accumulated_context"
-    },
-    {
-      "label": "Decisions",
-      "file_type": "document",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L44",
-      "community": 13,
-      "norm_label": "decisions",
-      "id": "planning_state_decisions"
-    },
-    {
-      "label": "Known Patterns (\u00e0 appliquer dans les prochaines phases)",
-      "file_type": "document",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L51",
-      "community": 13,
-      "norm_label": "known patterns (a appliquer dans les prochaines phases)",
-      "id": "planning_state_known_patterns_\u00e0_appliquer_dans_les_prochaines_phases"
-    },
-    {
-      "label": "Pending Todos",
-      "file_type": "document",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L61",
-      "community": 13,
-      "norm_label": "pending todos",
-      "id": "planning_state_pending_todos"
-    },
-    {
-      "label": "Blockers/Concerns",
-      "file_type": "document",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L65",
-      "community": 13,
-      "norm_label": "blockers/concerns",
-      "id": "planning_state_blockers_concerns"
-    },
-    {
-      "label": "Session Continuity",
-      "file_type": "document",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L70",
-      "community": 13,
-      "norm_label": "session continuity",
-      "id": "planning_state_session_continuity"
-    },
-    {
-      "label": "04-02-PLAN.md",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-PLAN.md",
-      "source_location": "L1",
-      "community": 3,
-      "norm_label": "04-02-plan.md",
-      "id": "04_le_verrou_stripe_billing_04_02_plan"
-    },
-    {
-      "label": "Trust Boundaries",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-PLAN.md",
-      "source_location": "L191",
-      "community": 3,
-      "norm_label": "trust boundaries",
-      "id": "04_le_verrou_stripe_billing_04_02_plan_trust_boundaries"
-    },
-    {
-      "label": "STRIDE Threat Register",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-PLAN.md",
-      "source_location": "L197",
-      "community": 3,
-      "norm_label": "stride threat register",
-      "id": "04_le_verrou_stripe_billing_04_02_plan_stride_threat_register"
-    },
-    {
-      "label": "04-03-PLAN.md",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-PLAN.md",
-      "source_location": "L1",
-      "community": 4,
-      "norm_label": "04-03-plan.md",
-      "id": "04_le_verrou_stripe_billing_04_03_plan"
-    },
-    {
-      "label": "Trust Boundaries",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-PLAN.md",
-      "source_location": "L283",
-      "community": 4,
-      "norm_label": "trust boundaries",
-      "id": "04_le_verrou_stripe_billing_04_03_plan_trust_boundaries"
-    },
-    {
-      "label": "STRIDE Threat Register",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-PLAN.md",
-      "source_location": "L291",
-      "community": 4,
-      "norm_label": "stride threat register",
-      "id": "04_le_verrou_stripe_billing_04_03_plan_stride_threat_register"
-    },
-    {
-      "label": "04-04-PLAN.md",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-PLAN.md",
-      "source_location": "L1",
-      "community": 5,
-      "norm_label": "04-04-plan.md",
-      "id": "04_le_verrou_stripe_billing_04_04_plan"
-    },
-    {
-      "label": "Trust Boundaries",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-PLAN.md",
-      "source_location": "L121",
-      "community": 5,
-      "norm_label": "trust boundaries",
-      "id": "04_le_verrou_stripe_billing_04_04_plan_trust_boundaries"
-    },
-    {
-      "label": "STRIDE Threat Register",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-PLAN.md",
-      "source_location": "L127",
-      "community": 5,
-      "norm_label": "stride threat register",
-      "id": "04_le_verrou_stripe_billing_04_04_plan_stride_threat_register"
-    },
-    {
-      "label": "04-07-PLAN.md",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-PLAN.md",
-      "source_location": "L1",
-      "community": 8,
-      "norm_label": "04-07-plan.md",
-      "id": "04_le_verrou_stripe_billing_04_07_plan"
-    },
-    {
-      "label": "Trust Boundaries",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-PLAN.md",
-      "source_location": "L326",
-      "community": 8,
-      "norm_label": "trust boundaries",
-      "id": "04_le_verrou_stripe_billing_04_07_plan_trust_boundaries"
-    },
-    {
-      "label": "STRIDE Threat Register",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-PLAN.md",
-      "source_location": "L333",
-      "community": 8,
-      "norm_label": "stride threat register",
-      "id": "04_le_verrou_stripe_billing_04_07_plan_stride_threat_register"
     },
     {
       "label": "04-CONTEXT.md",
@@ -1259,7 +2438,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-PATTERNS.md",
       "source_location": "L26",
-      "community": 12,
+      "community": 11,
       "norm_label": "pattern assignments",
       "id": "04_le_verrou_stripe_billing_04_patterns_pattern_assignments"
     },
@@ -1268,7 +2447,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-PATTERNS.md",
       "source_location": "L28",
-      "community": 12,
+      "community": 11,
       "norm_label": "`server/api/v1/admin/qualify.post.ts` (controller, request-response)",
       "id": "04_le_verrou_stripe_billing_04_patterns_server_api_v1_admin_qualify_post_ts_controller_request_response"
     },
@@ -1277,7 +2456,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-PATTERNS.md",
       "source_location": "L98",
-      "community": 12,
+      "community": 11,
       "norm_label": "`server/api/v1/leads/index.get.ts` (controller, request-response)",
       "id": "04_le_verrou_stripe_billing_04_patterns_server_api_v1_leads_index_get_ts_controller_request_response"
     },
@@ -1286,7 +2465,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-PATTERNS.md",
       "source_location": "L149",
-      "community": 12,
+      "community": 11,
       "norm_label": "`server/api/v1/leads/[id].get.ts` (controller, request-response)",
       "id": "04_le_verrou_stripe_billing_04_patterns_server_api_v1_leads_id_get_ts_controller_request_response"
     },
@@ -1295,7 +2474,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-PATTERNS.md",
       "source_location": "L175",
-      "community": 12,
+      "community": 11,
       "norm_label": "`server/api/v1/stripe/checkout.post.ts` (controller, request-response)",
       "id": "04_le_verrou_stripe_billing_04_patterns_server_api_v1_stripe_checkout_post_ts_controller_request_response"
     },
@@ -1304,7 +2483,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-PATTERNS.md",
       "source_location": "L236",
-      "community": 12,
+      "community": 11,
       "norm_label": "`server/api/v1/stripe/webhook.post.ts` (controller, event-driven)",
       "id": "04_le_verrou_stripe_billing_04_patterns_server_api_v1_stripe_webhook_post_ts_controller_event_driven"
     },
@@ -1313,7 +2492,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-PATTERNS.md",
       "source_location": "L268",
-      "community": 12,
+      "community": 11,
       "norm_label": "`app/pages/espace/leads/index.vue` (component, request-response)",
       "id": "04_le_verrou_stripe_billing_04_patterns_app_pages_espace_leads_index_vue_component_request_response"
     },
@@ -1322,7 +2501,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-PATTERNS.md",
       "source_location": "L321",
-      "community": 12,
+      "community": 11,
       "norm_label": "`app/pages/espace/leads/[id].vue` (component, request-response)",
       "id": "04_le_verrou_stripe_billing_04_patterns_app_pages_espace_leads_id_vue_component_request_response"
     },
@@ -1331,7 +2510,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-PATTERNS.md",
       "source_location": "L349",
-      "community": 12,
+      "community": 11,
       "norm_label": "`app/pages/espace/premium.vue` (component, request-response)",
       "id": "04_le_verrou_stripe_billing_04_patterns_app_pages_espace_premium_vue_component_request_response"
     },
@@ -1340,7 +2519,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-PATTERNS.md",
       "source_location": "L388",
-      "community": 12,
+      "community": 11,
       "norm_label": "`supabase/migrations/20260606000000_phase4_unlock_cron.sql` (migration, batch)",
       "id": "04_le_verrou_stripe_billing_04_patterns_supabase_migrations_20260606000000_phase4_unlock_cron_sql_migration_batch"
     },
@@ -1349,7 +2528,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-PATTERNS.md",
       "source_location": "L441",
-      "community": 12,
+      "community": 11,
       "norm_label": "`nuxt.config.ts` (config, modify)",
       "id": "04_le_verrou_stripe_billing_04_patterns_nuxt_config_ts_config_modify"
     },
@@ -1727,7 +2906,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-RESEARCH.md",
       "source_location": "L569",
-      "community": 17,
+      "community": 1,
       "norm_label": "common pitfalls",
       "id": "04_le_verrou_stripe_billing_04_research_common_pitfalls"
     },
@@ -1736,7 +2915,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-RESEARCH.md",
       "source_location": "L571",
-      "community": 17,
+      "community": 1,
       "norm_label": "pitfall 1 : `constructevent()` synchrone crash sur cloudflare workers",
       "id": "04_le_verrou_stripe_billing_04_research_pitfall_1_constructevent_synchrone_crash_sur_cloudflare_workers"
     },
@@ -1745,7 +2924,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-RESEARCH.md",
       "source_location": "L578",
-      "community": 17,
+      "community": 1,
       "norm_label": "pitfall 2 : `readbody()` invalide la signature webhook",
       "id": "04_le_verrou_stripe_billing_04_research_pitfall_2_readbody_invalide_la_signature_webhook"
     },
@@ -1754,7 +2933,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-RESEARCH.md",
       "source_location": "L585",
-      "community": 17,
+      "community": 1,
       "norm_label": "pitfall 3 : `stripe_customer_id` null sur `customer.subscription.deleted`",
       "id": "04_le_verrou_stripe_billing_04_research_pitfall_3_stripe_customer_id_null_sur_customer_subscription_deleted"
     },
@@ -1763,7 +2942,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-RESEARCH.md",
       "source_location": "L592",
-      "community": 17,
+      "community": 1,
       "norm_label": "pitfall 4 : pg_cron non disponible en local dev",
       "id": "04_le_verrou_stripe_billing_04_research_pitfall_4_pg_cron_non_disponible_en_local_dev"
     },
@@ -1772,7 +2951,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-RESEARCH.md",
       "source_location": "L599",
-      "community": 17,
+      "community": 1,
       "norm_label": "pitfall 5 : enum postgresql \u2014 pas de rollback de valeur",
       "id": "04_le_verrou_stripe_billing_04_research_pitfall_5_enum_postgresql_pas_de_rollback_de_valeur"
     },
@@ -1781,7 +2960,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-RESEARCH.md",
       "source_location": "L605",
-      "community": 17,
+      "community": 1,
       "norm_label": "pitfall 6 : stripe price id hardcode",
       "id": "04_le_verrou_stripe_billing_04_research_pitfall_6_stripe_price_id_hardcod\u00e9"
     },
@@ -1790,7 +2969,7 @@
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-RESEARCH.md",
       "source_location": "L611",
-      "community": 17,
+      "community": 1,
       "norm_label": "pitfall 7 : donnees sensibles dans les logs nitro",
       "id": "04_le_verrou_stripe_billing_04_research_pitfall_7_donn\u00e9es_sensibles_dans_les_logs_nitro"
     },
@@ -2461,33 +3640,6 @@
       "id": "planning_roadmap_progress"
     },
     {
-      "label": "04-01-PLAN.md",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-PLAN.md",
-      "source_location": "L1",
-      "community": 2,
-      "norm_label": "04-01-plan.md",
-      "id": "04_le_verrou_stripe_billing_04_01_plan"
-    },
-    {
-      "label": "Trust Boundaries",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-PLAN.md",
-      "source_location": "L165",
-      "community": 2,
-      "norm_label": "trust boundaries",
-      "id": "04_le_verrou_stripe_billing_04_01_plan_trust_boundaries"
-    },
-    {
-      "label": "STRIDE Threat Register",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-PLAN.md",
-      "source_location": "L171",
-      "community": 2,
-      "norm_label": "stride threat register",
-      "id": "04_le_verrou_stripe_billing_04_01_plan_stride_threat_register"
-    },
-    {
       "label": "04-05-PLAN.md",
       "file_type": "document",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-05-PLAN.md",
@@ -2513,36 +3665,1769 @@
       "community": 6,
       "norm_label": "stride threat register",
       "id": "04_le_verrou_stripe_billing_04_05_plan_stride_threat_register"
-    },
-    {
-      "label": "04-06-PLAN.md",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-PLAN.md",
-      "source_location": "L1",
-      "community": 7,
-      "norm_label": "04-06-plan.md",
-      "id": "04_le_verrou_stripe_billing_04_06_plan"
-    },
-    {
-      "label": "Trust Boundaries",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-PLAN.md",
-      "source_location": "L254",
-      "community": 7,
-      "norm_label": "trust boundaries",
-      "id": "04_le_verrou_stripe_billing_04_06_plan_trust_boundaries"
-    },
-    {
-      "label": "STRIDE Threat Register",
-      "file_type": "document",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-PLAN.md",
-      "source_location": "L260",
-      "community": 7,
-      "norm_label": "stride threat register",
-      "id": "04_le_verrou_stripe_billing_04_06_plan_stride_threat_register"
     }
   ],
   "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill",
+      "target": "ui_ux_pro_max_skill_ui_ux_pro_max",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L219",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_ui_ux_pro_max",
+      "target": "ui_ux_pro_max_skill_common_rules_for_professional_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L156",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_ui_ux_pro_max",
+      "target": "ui_ux_pro_max_skill_example_workflow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_ui_ux_pro_max",
+      "target": "ui_ux_pro_max_skill_how_to_use_this_skill",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L194",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_ui_ux_pro_max",
+      "target": "ui_ux_pro_max_skill_output_formats",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L259",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_ui_ux_pro_max",
+      "target": "ui_ux_pro_max_skill_pre_delivery_checklist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_ui_ux_pro_max",
+      "target": "ui_ux_pro_max_skill_prerequisites",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_ui_ux_pro_max",
+      "target": "ui_ux_pro_max_skill_search_reference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L208",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_ui_ux_pro_max",
+      "target": "ui_ux_pro_max_skill_tips_for_better_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_how_to_use_this_skill",
+      "target": "ui_ux_pro_max_skill_step_1_analyze_user_requirements",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_how_to_use_this_skill",
+      "target": "ui_ux_pro_max_skill_step_2_generate_design_system_required",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_how_to_use_this_skill",
+      "target": "ui_ux_pro_max_skill_step_2b_persist_design_system_master_overrides_pattern",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_how_to_use_this_skill",
+      "target": "ui_ux_pro_max_skill_step_3_supplement_with_detailed_searches_as_needed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_how_to_use_this_skill",
+      "target": "ui_ux_pro_max_skill_step_4_stack_guidelines_default_html_tailwind",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L124",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_search_reference",
+      "target": "ui_ux_pro_max_skill_available_domains",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L139",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_search_reference",
+      "target": "ui_ux_pro_max_skill_available_stacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L160",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_example_workflow",
+      "target": "ui_ux_pro_max_skill_step_1_analyze_requirements",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L166",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_example_workflow",
+      "target": "ui_ux_pro_max_skill_step_2_generate_design_system_required_166",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L174",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_example_workflow",
+      "target": "ui_ux_pro_max_skill_step_3_supplement_with_detailed_searches_as_needed_174",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L184",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_example_workflow",
+      "target": "ui_ux_pro_max_skill_step_4_stack_guidelines",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L223",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_common_rules_for_professional_ui",
+      "target": "ui_ux_pro_max_skill_icons_visual_elements",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L232",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_common_rules_for_professional_ui",
+      "target": "ui_ux_pro_max_skill_interaction_cursor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L249",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_common_rules_for_professional_ui",
+      "target": "ui_ux_pro_max_skill_layout_spacing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L240",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_common_rules_for_professional_ui",
+      "target": "ui_ux_pro_max_skill_light_dark_mode_contrast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L288",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_pre_delivery_checklist",
+      "target": "ui_ux_pro_max_skill_accessibility",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L270",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_pre_delivery_checklist",
+      "target": "ui_ux_pro_max_skill_interaction",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L282",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_pre_delivery_checklist",
+      "target": "ui_ux_pro_max_skill_layout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L276",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_pre_delivery_checklist",
+      "target": "ui_ux_pro_max_skill_light_dark_mode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
+      "source_location": "L263",
+      "weight": 1.0,
+      "source": "ui_ux_pro_max_skill_pre_delivery_checklist",
+      "target": "ui_ux_pro_max_skill_visual_quality",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "scripts_core",
+      "target": "scripts_core_bm25",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L190",
+      "weight": 1.0,
+      "source": "scripts_core",
+      "target": "scripts_core_detect_domain",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L159",
+      "weight": 1.0,
+      "source": "scripts_core",
+      "target": "scripts_core_load_csv",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L212",
+      "weight": 1.0,
+      "source": "scripts_core",
+      "target": "scripts_core_search",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L165",
+      "weight": 1.0,
+      "source": "scripts_core",
+      "target": "scripts_core_search_csv",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L234",
+      "weight": 1.0,
+      "source": "scripts_core",
+      "target": "scripts_core_search_stack",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "scripts_core_bm25",
+      "target": "scripts_core_bm25_fit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "scripts_core_bm25",
+      "target": "scripts_core_bm25_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L133",
+      "weight": 1.0,
+      "source": "scripts_core_bm25",
+      "target": "scripts_core_bm25_score",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "scripts_core_bm25",
+      "target": "scripts_core_bm25_tokenize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "scripts_core_rationale_97",
+      "target": "scripts_core_bm25",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L176",
+      "weight": 1.0,
+      "source": "scripts_core_search_csv",
+      "target": "scripts_core_bm25",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L116",
+      "weight": 1.0,
+      "source": "scripts_core_bm25_fit",
+      "target": "scripts_core_bm25_tokenize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "scripts_core_bm25_score",
+      "target": "scripts_core_bm25_tokenize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "scripts_core_rationale_110",
+      "target": "scripts_core_bm25_tokenize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L115",
+      "weight": 1.0,
+      "source": "scripts_core_rationale_115",
+      "target": "scripts_core_bm25_fit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L177",
+      "weight": 1.0,
+      "source": "scripts_core_search_csv",
+      "target": "scripts_core_bm25_fit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "scripts_core_rationale_134",
+      "target": "scripts_core_bm25_score",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L178",
+      "weight": 1.0,
+      "source": "scripts_core_search_csv",
+      "target": "scripts_core_bm25_score",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L160",
+      "weight": 1.0,
+      "source": "scripts_core_rationale_160",
+      "target": "scripts_core_load_csv",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L170",
+      "weight": 1.0,
+      "source": "scripts_core_search_csv",
+      "target": "scripts_core_load_csv",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L166",
+      "weight": 1.0,
+      "source": "scripts_core_rationale_166",
+      "target": "scripts_core_search_csv",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L223",
+      "weight": 1.0,
+      "source": "scripts_core_search",
+      "target": "scripts_core_search_csv",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L244",
+      "weight": 1.0,
+      "source": "scripts_core_search_stack",
+      "target": "scripts_core_search_csv",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L191",
+      "weight": 1.0,
+      "source": "scripts_core_rationale_191",
+      "target": "scripts_core_detect_domain",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L215",
+      "weight": 1.0,
+      "source": "scripts_core_search",
+      "target": "scripts_core_detect_domain",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L213",
+      "weight": 1.0,
+      "source": "scripts_core_rationale_213",
+      "target": "scripts_core_search",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L166",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator_generate",
+      "target": "scripts_core_search"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator_multi_domain_search",
+      "target": "scripts_core_search"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L928",
+      "weight": 1.0,
+      "source": "scripts_design_system_generate_intelligent_overrides",
+      "target": "scripts_core_search"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/core.py",
+      "source_location": "L235",
+      "weight": 1.0,
+      "source": "scripts_core_rationale_235",
+      "target": "scripts_core_search_stack",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "scripts_design_system",
+      "target": "scripts_design_system_designsystemgenerator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L1020",
+      "weight": 1.0,
+      "source": "scripts_design_system",
+      "target": "scripts_design_system_detect_page_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L242",
+      "weight": 1.0,
+      "source": "scripts_design_system",
+      "target": "scripts_design_system_format_ascii_box",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L367",
+      "weight": 1.0,
+      "source": "scripts_design_system",
+      "target": "scripts_design_system_format_markdown",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L542",
+      "weight": 1.0,
+      "source": "scripts_design_system",
+      "target": "scripts_design_system_format_master_md",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L805",
+      "weight": 1.0,
+      "source": "scripts_design_system",
+      "target": "scripts_design_system_format_page_override_md",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L462",
+      "weight": 1.0,
+      "source": "scripts_design_system",
+      "target": "scripts_design_system_generate_design_system",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L914",
+      "weight": 1.0,
+      "source": "scripts_design_system",
+      "target": "scripts_design_system_generate_intelligent_overrides",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L491",
+      "weight": 1.0,
+      "source": "scripts_design_system",
+      "target": "scripts_design_system_persist_design_system",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator",
+      "target": "scripts_design_system_designsystemgenerator_apply_reasoning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L159",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator",
+      "target": "scripts_design_system_designsystemgenerator_extract_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator",
+      "target": "scripts_design_system_designsystemgenerator_find_reasoning_rule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L163",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator",
+      "target": "scripts_design_system_designsystemgenerator_generate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator",
+      "target": "scripts_design_system_designsystemgenerator_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator",
+      "target": "scripts_design_system_designsystemgenerator_load_reasoning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator",
+      "target": "scripts_design_system_designsystemgenerator_multi_domain_search",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator",
+      "target": "scripts_design_system_designsystemgenerator_select_best_match",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L478",
+      "weight": 1.0,
+      "source": "scripts_design_system_generate_design_system",
+      "target": "scripts_design_system_designsystemgenerator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_38",
+      "target": "scripts_design_system_designsystemgenerator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator_init",
+      "target": "scripts_design_system_designsystemgenerator_load_reasoning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_44",
+      "target": "scripts_design_system_designsystemgenerator_load_reasoning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L177",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator_generate",
+      "target": "scripts_design_system_designsystemgenerator_multi_domain_search",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator_multi_domain_search",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_52",
+      "target": "scripts_design_system_designsystemgenerator_multi_domain_search",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator_apply_reasoning",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator_find_reasoning_rule",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L163",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator_generate",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L1020",
+      "weight": 1.0,
+      "source": "scripts_design_system_detect_page_type",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L242",
+      "weight": 1.0,
+      "source": "scripts_design_system_format_ascii_box",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L367",
+      "weight": 1.0,
+      "source": "scripts_design_system_format_markdown",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L542",
+      "weight": 1.0,
+      "source": "scripts_design_system_format_master_md",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L805",
+      "weight": 1.0,
+      "source": "scripts_design_system_format_page_override_md",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L462",
+      "weight": 1.0,
+      "source": "scripts_design_system_generate_design_system",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L914",
+      "weight": 1.0,
+      "source": "scripts_design_system_generate_intelligent_overrides",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L491",
+      "weight": 1.0,
+      "source": "scripts_design_system_persist_design_system",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L90",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator_apply_reasoning",
+      "target": "scripts_design_system_designsystemgenerator_find_reasoning_rule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_65",
+      "target": "scripts_design_system_designsystemgenerator_find_reasoning_rule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L173",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator_generate",
+      "target": "scripts_design_system_designsystemgenerator_apply_reasoning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_89",
+      "target": "scripts_design_system_designsystemgenerator_apply_reasoning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L186",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator_generate",
+      "target": "scripts_design_system_designsystemgenerator_select_best_match",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L123",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_123",
+      "target": "scripts_design_system_designsystemgenerator_select_best_match",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L181",
+      "weight": 1.0,
+      "source": "scripts_design_system_designsystemgenerator_generate",
+      "target": "scripts_design_system_designsystemgenerator_extract_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L160",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_160",
+      "target": "scripts_design_system_designsystemgenerator_extract_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L479",
+      "weight": 1.0,
+      "source": "scripts_design_system_generate_design_system",
+      "target": "scripts_design_system_designsystemgenerator_generate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L164",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_164",
+      "target": "scripts_design_system_designsystemgenerator_generate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L487",
+      "weight": 1.0,
+      "source": "scripts_design_system_generate_design_system",
+      "target": "scripts_design_system_format_ascii_box",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L243",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_243",
+      "target": "scripts_design_system_format_ascii_box",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L486",
+      "weight": 1.0,
+      "source": "scripts_design_system_generate_design_system",
+      "target": "scripts_design_system_format_markdown",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L368",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_368",
+      "target": "scripts_design_system_format_markdown",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L462",
+      "weight": 1.0,
+      "source": "scripts_design_system_generate_design_system",
+      "target": "bool",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L483",
+      "weight": 1.0,
+      "source": "scripts_design_system_generate_design_system",
+      "target": "scripts_design_system_persist_design_system",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L464",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_464",
+      "target": "scripts_design_system_generate_design_system",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L522",
+      "weight": 1.0,
+      "source": "scripts_design_system_persist_design_system",
+      "target": "scripts_design_system_format_master_md",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L530",
+      "weight": 1.0,
+      "source": "scripts_design_system_persist_design_system",
+      "target": "scripts_design_system_format_page_override_md",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L492",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_492",
+      "target": "scripts_design_system_persist_design_system",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L543",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_543",
+      "target": "scripts_design_system_format_master_md",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L812",
+      "weight": 1.0,
+      "source": "scripts_design_system_format_page_override_md",
+      "target": "scripts_design_system_generate_intelligent_overrides",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L806",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_806",
+      "target": "scripts_design_system_format_page_override_md",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L938",
+      "weight": 1.0,
+      "source": "scripts_design_system_generate_intelligent_overrides",
+      "target": "scripts_design_system_detect_page_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L915",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_915",
+      "target": "scripts_design_system_generate_intelligent_overrides",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/design_system.py",
+      "source_location": "L1021",
+      "weight": 1.0,
+      "source": "scripts_design_system_rationale_1021",
+      "target": "scripts_design_system_detect_page_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/search.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "scripts_search",
+      "target": "scripts_search_format_output",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".agent/skills/ui-ux-pro-max/scripts/search.py",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "scripts_search_rationale_31",
+      "target": "scripts_search_format_output",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "planning_state",
+      "target": "planning_state_project_state"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L42",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "planning_state_project_state",
+      "target": "planning_state_accumulated_context"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L26",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "planning_state_project_state",
+      "target": "planning_state_current_position"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L34",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "planning_state_project_state",
+      "target": "planning_state_performance_metrics"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "planning_state_project_state",
+      "target": "planning_state_project_reference"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L70",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "planning_state_project_state",
+      "target": "planning_state_session_continuity"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L65",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "planning_state_accumulated_context",
+      "target": "planning_state_blockers_concerns"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L44",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "planning_state_accumulated_context",
+      "target": "planning_state_decisions"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "planning_state_accumulated_context",
+      "target": "planning_state_deferred_ideas_hors_scope_\u00e0_reconsid\u00e9rer_plus_tard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L51",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "planning_state_accumulated_context",
+      "target": "planning_state_known_patterns_\u00e0_appliquer_dans_les_prochaines_phases"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/STATE.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "planning_state_accumulated_context",
+      "target": "planning_state_pending_todos"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-PLAN.md",
+      "source_location": "L171",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_01_plan",
+      "target": "04_le_verrou_stripe_billing_04_01_plan_stride_threat_register"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-PLAN.md",
+      "source_location": "L165",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_01_plan",
+      "target": "04_le_verrou_stripe_billing_04_01_plan_trust_boundaries"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-SUMMARY.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_01_summary",
+      "target": "04_le_verrou_stripe_billing_04_01_summary_plan_04_01_schema_gaps_cron_stripe_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-SUMMARY.md",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_01_summary_plan_04_01_schema_gaps_cron_stripe_config",
+      "target": "04_le_verrou_stripe_billing_04_01_summary_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-SUMMARY.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_01_summary_plan_04_01_schema_gaps_cron_stripe_config",
+      "target": "04_le_verrou_stripe_billing_04_01_summary_what_was_done",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-PLAN.md",
+      "source_location": "L197",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_02_plan",
+      "target": "04_le_verrou_stripe_billing_04_02_plan_stride_threat_register"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-PLAN.md",
+      "source_location": "L191",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_02_plan",
+      "target": "04_le_verrou_stripe_billing_04_02_plan_trust_boundaries"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-SUMMARY.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_02_summary",
+      "target": "04_le_verrou_stripe_billing_04_02_summary_plan_04_02_schema_push_vitest_red_test_stubs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-SUMMARY.md",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_02_summary_plan_04_02_schema_push_vitest_red_test_stubs",
+      "target": "04_le_verrou_stripe_billing_04_02_summary_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-SUMMARY.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_02_summary_plan_04_02_schema_push_vitest_red_test_stubs",
+      "target": "04_le_verrou_stripe_billing_04_02_summary_what_was_done",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-PLAN.md",
+      "source_location": "L233",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_03_plan",
+      "target": "04_le_verrou_stripe_billing_04_03_plan_stride_threat_register"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-PLAN.md",
+      "source_location": "L225",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_03_plan",
+      "target": "04_le_verrou_stripe_billing_04_03_plan_trust_boundaries"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-SUMMARY.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_03_summary",
+      "target": "04_le_verrou_stripe_billing_04_03_summary_plan_04_03_masklead_qualify_endpoint_leads_api_timeline_step",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-SUMMARY.md",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_03_summary_plan_04_03_masklead_qualify_endpoint_leads_api_timeline_step",
+      "target": "04_le_verrou_stripe_billing_04_03_summary_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-SUMMARY.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_03_summary_plan_04_03_masklead_qualify_endpoint_leads_api_timeline_step",
+      "target": "04_le_verrou_stripe_billing_04_03_summary_what_was_done",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-PLAN.md",
+      "source_location": "L127",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_04_plan",
+      "target": "04_le_verrou_stripe_billing_04_04_plan_stride_threat_register"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-PLAN.md",
+      "source_location": "L121",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_04_plan",
+      "target": "04_le_verrou_stripe_billing_04_04_plan_trust_boundaries"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-SUMMARY.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_04_summary",
+      "target": "04_le_verrou_stripe_billing_04_04_summary_plan_04_04_patch_api_v1_leads_id_claim",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-SUMMARY.md",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_04_summary_plan_04_04_patch_api_v1_leads_id_claim",
+      "target": "04_le_verrou_stripe_billing_04_04_summary_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-SUMMARY.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_04_summary_plan_04_04_patch_api_v1_leads_id_claim",
+      "target": "04_le_verrou_stripe_billing_04_04_summary_what_was_done",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-05-SUMMARY.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_05_summary",
+      "target": "04_le_verrou_stripe_billing_04_05_summary_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-05-SUMMARY.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_05_summary",
+      "target": "04_le_verrou_stripe_billing_04_05_summary_what_was_built",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-PLAN.md",
+      "source_location": "L260",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_06_plan",
+      "target": "04_le_verrou_stripe_billing_04_06_plan_stride_threat_register"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-PLAN.md",
+      "source_location": "L254",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_06_plan",
+      "target": "04_le_verrou_stripe_billing_04_06_plan_trust_boundaries"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-SUMMARY.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_06_summary",
+      "target": "04_le_verrou_stripe_billing_04_06_summary_plan_04_06_leads_dashboard_detail_page",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-SUMMARY.md",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_06_summary_plan_04_06_leads_dashboard_detail_page",
+      "target": "04_le_verrou_stripe_billing_04_06_summary_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-SUMMARY.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_06_summary_plan_04_06_leads_dashboard_detail_page",
+      "target": "04_le_verrou_stripe_billing_04_06_summary_what_was_done",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-PLAN.md",
+      "source_location": "L333",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_07_plan",
+      "target": "04_le_verrou_stripe_billing_04_07_plan_stride_threat_register"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-PLAN.md",
+      "source_location": "L326",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_07_plan",
+      "target": "04_le_verrou_stripe_billing_04_07_plan_trust_boundaries"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-SUMMARY.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_07_summary",
+      "target": "04_le_verrou_stripe_billing_04_07_summary_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-SUMMARY.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "04_le_verrou_stripe_billing_04_07_summary",
+      "target": "04_le_verrou_stripe_billing_04_07_summary_what_was_built",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "nuxt.config.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "nuxt_config",
+      "target": "nuxt_config_dirname"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "pro_claim_post",
+      "target": "pro_claim_post_claimschema",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "pro_claim_post",
+      "target": "pro_claim_post_generateshortid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "pro_claim_post",
+      "target": "pro_claim_post_slugify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "pro_claim_post",
+      "target": "pro_claim_post_valid_categories",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/pro/documents/presign.post.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "documents_presign_post",
+      "target": "documents_presign_post_getr2client",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/pro/documents/presign.post.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "documents_presign_post",
+      "target": "documents_presign_post_presignschema",
+      "confidence_score": 1.0
+    },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
@@ -3048,16 +5933,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "nuxt.config.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "nuxt_config",
-      "target": "nuxt_config_dirname"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-REVIEWS.md",
       "source_location": "L8",
       "weight": 1.0,
@@ -3174,186 +6049,6 @@
       "confidence_score": 1.0,
       "source": "04_le_verrou_stripe_billing_04_reviews_consensus_summary",
       "target": "04_le_verrou_stripe_billing_04_reviews_divergent_views"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "planning_state",
-      "target": "planning_state_project_state"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L42",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "planning_state_project_state",
-      "target": "planning_state_accumulated_context"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "planning_state_project_state",
-      "target": "planning_state_current_position"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "planning_state_project_state",
-      "target": "planning_state_performance_metrics"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "planning_state_project_state",
-      "target": "planning_state_project_reference"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L70",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "planning_state_project_state",
-      "target": "planning_state_session_continuity"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L65",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "planning_state_accumulated_context",
-      "target": "planning_state_blockers_concerns"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L44",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "planning_state_accumulated_context",
-      "target": "planning_state_decisions"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L51",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "planning_state_accumulated_context",
-      "target": "planning_state_known_patterns_\u00e0_appliquer_dans_les_prochaines_phases"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/STATE.md",
-      "source_location": "L61",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "planning_state_accumulated_context",
-      "target": "planning_state_pending_todos"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-PLAN.md",
-      "source_location": "L197",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "04_le_verrou_stripe_billing_04_02_plan",
-      "target": "04_le_verrou_stripe_billing_04_02_plan_stride_threat_register"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-02-PLAN.md",
-      "source_location": "L191",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "04_le_verrou_stripe_billing_04_02_plan",
-      "target": "04_le_verrou_stripe_billing_04_02_plan_trust_boundaries"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-PLAN.md",
-      "source_location": "L233",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "04_le_verrou_stripe_billing_04_03_plan",
-      "target": "04_le_verrou_stripe_billing_04_03_plan_stride_threat_register"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-03-PLAN.md",
-      "source_location": "L225",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "04_le_verrou_stripe_billing_04_03_plan",
-      "target": "04_le_verrou_stripe_billing_04_03_plan_trust_boundaries"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-PLAN.md",
-      "source_location": "L127",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "04_le_verrou_stripe_billing_04_04_plan",
-      "target": "04_le_verrou_stripe_billing_04_04_plan_stride_threat_register"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-04-PLAN.md",
-      "source_location": "L121",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "04_le_verrou_stripe_billing_04_04_plan",
-      "target": "04_le_verrou_stripe_billing_04_04_plan_trust_boundaries"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-PLAN.md",
-      "source_location": "L333",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "04_le_verrou_stripe_billing_04_07_plan",
-      "target": "04_le_verrou_stripe_billing_04_07_plan_stride_threat_register"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-07-PLAN.md",
-      "source_location": "L326",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "04_le_verrou_stripe_billing_04_07_plan",
-      "target": "04_le_verrou_stripe_billing_04_07_plan_trust_boundaries"
     },
     {
       "relation": "contains",
@@ -4938,26 +7633,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-PLAN.md",
-      "source_location": "L171",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "04_le_verrou_stripe_billing_04_01_plan",
-      "target": "04_le_verrou_stripe_billing_04_01_plan_stride_threat_register"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-01-PLAN.md",
-      "source_location": "L165",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "04_le_verrou_stripe_billing_04_01_plan",
-      "target": "04_le_verrou_stripe_billing_04_01_plan_trust_boundaries"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-05-PLAN.md",
       "source_location": "L218",
       "weight": 1.0,
@@ -4974,28 +7649,8 @@
       "confidence_score": 1.0,
       "source": "04_le_verrou_stripe_billing_04_05_plan",
       "target": "04_le_verrou_stripe_billing_04_05_plan_trust_boundaries"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-PLAN.md",
-      "source_location": "L260",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "04_le_verrou_stripe_billing_04_06_plan",
-      "target": "04_le_verrou_stripe_billing_04_06_plan_stride_threat_register"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".planning/phases/04-le-verrou-stripe-billing/04-06-PLAN.md",
-      "source_location": "L254",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "04_le_verrou_stripe_billing_04_06_plan",
-      "target": "04_le_verrou_stripe_billing_04_06_plan_trust_boundaries"
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "73e386851c7bc542dde9851dec047c42731a1e97"
+  "built_at_commit": "3c4fa4bfbf4f99bdb5b69145d07d08d8f1f5728d"
 }
