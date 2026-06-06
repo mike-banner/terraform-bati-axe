@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 
 useHead({
   title: 'Espace Artisan — Rejoindre BÂTI-AXE',
@@ -117,34 +117,32 @@ function translateAuthError(msg: string): string {
 // ─── Prospect pre-fill ────────────────────────────────────────────────────────
 const prospectId = computed(() => route.query.prospect_id as string || '')
 
-onMounted(async () => {
-  const currentUser = useSupabaseUser().value
+watch(user, async (currentUser) => {
+  if (!currentUser) return
 
-  if (currentUser) {
-    // Admin → console
-    if ((currentUser as any).app_metadata?.role === 'admin') {
-      return navigateTo('/admin')
+  // Admin → console
+  if ((currentUser as any).app_metadata?.role === 'admin') {
+    return navigateTo('/admin')
+  }
+  // Pro with existing profile → dashboard
+  const { data: existingPro } = await supabase
+    .from('professionals')
+    .select('id')
+    .eq('id', currentUser.id)
+    .maybeSingle()
+  if (existingPro) return navigateTo('/app/dashboard')
+}, { immediate: true })
+
+if (prospectId.value) {
+  try {
+    const { data } = await useFetch<{ status: string; company_name?: string; siret?: string; postal_code?: string }>(`/api/v1/prospects/${prospectId.value}`)
+    if (data.value?.status === 'SUCCESS') {
+      proForm.company_name = data.value.company_name || ''
+      proForm.siret        = data.value.siret        || ''
+      proForm.postal_code  = data.value.postal_code  || ''
     }
-    // Pro with existing profile → dashboard
-    const { data: existingPro } = await supabase
-      .from('professionals')
-      .select('id')
-      .eq('id', currentUser.id)
-      .maybeSingle()
-    if (existingPro) return navigateTo('/app/dashboard')
-  }
-
-  if (prospectId.value) {
-    try {
-      const { data } = await useFetch<{ status: string; company_name?: string; siret?: string; postal_code?: string }>(`/api/v1/prospects/${prospectId.value}`)
-      if (data.value?.status === 'SUCCESS') {
-        proForm.company_name = data.value.company_name || ''
-        proForm.siret        = data.value.siret        || ''
-        proForm.postal_code  = data.value.postal_code  || ''
-      }
-    } catch { /* silent */ }
-  }
-})
+  } catch { /* silent */ }
+}
 
 // ─── Upload state ─────────────────────────────────────────────────────────────
 const files = reactive({ kbis: null as File | null, decennale: null as File | null })
