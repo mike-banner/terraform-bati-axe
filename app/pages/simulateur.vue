@@ -26,9 +26,17 @@ const budgetRanges = [
   { id: '> 75k',   label: 'Plus de 75 000 €' },
 ]
 
+const timelineRanges = [
+  { id: '1_semaine', label: "Moins d'1 semaine" },
+  { id: '1_mois',    label: '1 mois' },
+  { id: '3_mois',    label: '3 mois' },
+  { id: '6_mois',    label: '6 mois' },
+  { id: 'flexible',  label: 'Flexible' },
+]
+
 // ─── State ────────────────────────────────────────────────────────────────────
 const step         = ref(1)
-const totalSteps   = 6
+const totalSteps   = 7
 const isSubmitting = ref(false)
 const submitError  = ref<string | null>(null)
 const createdProjectId = ref<string | null>(null)
@@ -37,6 +45,7 @@ const form = reactive({
   category:       '',
   description:    '',
   budget_range:   '',
+  timeline_range: '',
   postal_code:    '',
   customer_name:  '',
   customer_email: '',
@@ -58,13 +67,14 @@ const isStepValid = computed(() => {
     case 1: return !!form.category
     case 2: return form.description.trim().length >= 20
     case 3: return !!form.budget_range
-    case 4: return form.postal_code === '78955'
-    case 5: return (
+    case 4: return !!form.timeline_range
+    case 5: return form.postal_code === '78955'
+    case 6: return (
       form.customer_name.trim().length >= 2 &&
       RE_EMAIL.test(form.customer_email) &&
       RE_PHONE_FR.test(form.customer_phone)
     )
-    case 6: return form.cgu_accepted
+    case 7: return form.cgu_accepted
     default: return false
   }
 })
@@ -81,14 +91,16 @@ const stepLabels: Record<number, string> = {
   1: 'Type de travaux',
   2: 'Description',
   3: 'Budget',
-  4: 'Localisation',
-  5: 'Vos coordonnées',
-  6: 'Validation',
+  4: 'Délai souhaité',
+  5: 'Localisation',
+  6: 'Vos coordonnées',
+  7: 'Validation',
 }
 
 // ─── Handlers ─────────────────────────────────────────────────────────────────
-const selectCategory = (id: string) => { form.category = id; nextStep() }
-const selectBudget   = (id: string) => { form.budget_range = id; nextStep() }
+const selectCategory  = (id: string) => { form.category = id; nextStep() }
+const selectBudget    = (id: string) => { form.budget_range = id; nextStep() }
+const selectTimeline  = (id: string) => { form.timeline_range = id; nextStep() }
 
 const nextStep = () => {
   if (step.value < totalSteps && isStepValid.value) {
@@ -117,6 +129,7 @@ const handleSubmit = async () => {
         category:       form.category,
         description:    form.description,
         budget_range:   form.budget_range,
+        timeline_range: form.timeline_range,
         postal_code:    form.postal_code,
         customer_name:  form.customer_name,
         customer_email: form.customer_email,
@@ -129,7 +142,7 @@ const handleSubmit = async () => {
     if (error.value) throw new Error(error.value.data?.data?.message || error.value.statusMessage || 'Une erreur est survenue.')
     if (data.value?.status === 'SUCCESS') {
       createdProjectId.value = data.value.projectId
-      step.value = 7
+      step.value = 8
     }
   } catch (err: any) {
     submitError.value = err.message || 'Une erreur serveur est survenue. Veuillez réessayer.'
@@ -144,7 +157,7 @@ const handleSubmit = async () => {
     <div class="w-full max-w-xl">
 
       <!-- ─── Success ─────────────────────────────────────────────────────── -->
-      <div v-if="step === 7" class="py-8">
+      <div v-if="step === 8" class="py-8">
         <div class="flex items-center justify-center w-12 h-12 rounded-full bg-foreground text-background mb-8">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
@@ -255,8 +268,30 @@ const handleSubmit = async () => {
           </div>
         </div>
 
-        <!-- ─── Step 4: Location ─────────────────────────────────────────── -->
+        <!-- ─── Step 4: Timeline ────────────────────────────────────────── -->
         <div v-if="step === 4" class="space-y-4">
+          <h1 class="text-2xl font-black tracking-tight text-foreground">Délai souhaité</h1>
+          <div class="space-y-2 pt-2">
+            <button
+              v-for="t in timelineRanges"
+              :key="t.id"
+              @click="selectTimeline(t.id)"
+              class="w-full flex items-center justify-between p-4 border rounded-md text-left transition-colors"
+              :class="form.timeline_range === t.id
+                ? 'border-foreground bg-foreground text-background'
+                : 'border-border hover:border-foreground/40 hover:bg-muted text-foreground'"
+            >
+              <span class="text-sm font-medium">{{ t.label }}</span>
+              <svg v-if="form.timeline_range === t.id" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+              </svg>
+              <div v-else class="w-4 h-4 rounded-full border border-border shrink-0" />
+            </button>
+          </div>
+        </div>
+
+        <!-- ─── Step 5: Location ─────────────────────────────────────────── -->
+        <div v-if="step === 5" class="space-y-4">
           <h1 class="text-2xl font-black tracking-tight text-foreground">Où se situent les travaux ?</h1>
           <p class="text-sm text-muted-foreground">
             Zone pilote actuelle : <strong class="text-foreground">Carrières-sous-Poissy (78955)</strong>.
@@ -297,8 +332,8 @@ const handleSubmit = async () => {
           </div>
         </div>
 
-        <!-- ─── Step 5: Contact ──────────────────────────────────────────── -->
-        <div v-if="step === 5" class="space-y-4">
+        <!-- ─── Step 6: Contact ──────────────────────────────────────────── -->
+        <div v-if="step === 6" class="space-y-4">
           <h1 class="text-2xl font-black tracking-tight text-foreground">Vos coordonnées</h1>
           <p class="text-sm text-muted-foreground">Ces informations restent confidentielles jusqu'au moment du contact avec un artisan.</p>
           <div class="space-y-4 pt-2">
@@ -348,8 +383,8 @@ const handleSubmit = async () => {
           </div>
         </div>
 
-        <!-- ─── Step 6: Validation ───────────────────────────────────────── -->
-        <div v-if="step === 6" class="space-y-5">
+        <!-- ─── Step 7: Validation ───────────────────────────────────────── -->
+        <div v-if="step === 7" class="space-y-5">
           <h1 class="text-2xl font-black tracking-tight text-foreground">Confirmer et envoyer</h1>
 
           <!-- Récap -->
@@ -361,6 +396,10 @@ const handleSubmit = async () => {
             <div class="flex items-center justify-between px-4 py-3">
               <span class="text-muted-foreground">Budget</span>
               <span class="font-medium text-foreground">{{ budgetRanges.find(b => b.id === form.budget_range)?.label }}</span>
+            </div>
+            <div class="flex items-center justify-between px-4 py-3">
+              <span class="text-muted-foreground">Délai</span>
+              <span class="font-medium text-foreground">{{ timelineRanges.find(t => t.id === form.timeline_range)?.label }}</span>
             </div>
             <div class="flex items-center justify-between px-4 py-3">
               <span class="text-muted-foreground">Zone</span>
@@ -411,9 +450,9 @@ const handleSubmit = async () => {
             Retour
           </button>
 
-          <!-- Continue button (steps 1–5, only shown when step needs explicit next; steps 1 and 3 auto-advance) -->
+          <!-- Continue button (shown for steps needing explicit next; steps 1, 3, 4 auto-advance) -->
           <button
-            v-if="step < totalSteps && step !== 1 && step !== 3"
+            v-if="step < totalSteps && step !== 1 && step !== 3 && step !== 4"
             type="button"
             @click="nextStep"
             :disabled="!isStepValid"

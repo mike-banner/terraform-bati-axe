@@ -16,7 +16,8 @@ const createProjectSchema = z.object({
   cgu_accepted: z.literal(true, {
     errorMap: () => ({ message: 'Vous devez accepter les CGU.' })
   }),
-  sms_opt_in: z.boolean().default(false)
+  sms_opt_in: z.boolean().default(false),
+  timeline_range: z.enum(['1_semaine', '1_mois', '3_mois', '6_mois', 'flexible']).optional()
 })
 
 export default defineEventHandler(async (event) => {
@@ -73,6 +74,7 @@ export default defineEventHandler(async (event) => {
         category: data.category,
         description: data.description,
         budget_range: data.budget_range,
+        timeline_range: data.timeline_range ?? null,
         postal_code: data.postal_code,
         zone_id: matchedZone.id,
         status: 'pending'
