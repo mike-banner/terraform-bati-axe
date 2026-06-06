@@ -18,7 +18,7 @@ const { data: pro, refresh } = await useAsyncData('pro-dashboard', async () => {
     .eq('id', user.value.id)
     .maybeSingle()
   return data
-})
+}, { server: false })
 
 // Fetch verifications
 const { data: verifs } = await useAsyncData('pro-verifs', async () => {
@@ -29,7 +29,7 @@ const { data: verifs } = await useAsyncData('pro-verifs', async () => {
     .eq('pro_id', user.value.id)
     .order('created_at', { ascending: false })
   return data || []
-})
+}, { server: false })
 
 const kbis = computed(() => verifs.value?.find(v => v.document_type === 'kbis'))
 const decennale = computed(() => verifs.value?.find(v => v.document_type === 'decennale'))
