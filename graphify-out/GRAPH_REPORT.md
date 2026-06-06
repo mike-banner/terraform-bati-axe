@@ -1,16 +1,16 @@
 # Graph Report - bati-axe  (2026-06-06)
 
 ## Corpus Check
-- 132 files · ~58,987 words
+- 137 files · ~66,484 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 282 nodes · 245 edges · 42 communities (27 shown, 15 thin omitted)
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
+- 407 nodes · 394 edges · 54 communities (34 shown, 20 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `73e38685`
+- Built from commit: `3c4fa4bf`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -45,34 +45,46 @@
 - [[_COMMUNITY_Community 29|Community 29]]
 - [[_COMMUNITY_Community 30|Community 30]]
 - [[_COMMUNITY_Community 33|Community 33]]
+- [[_COMMUNITY_Community 42|Community 42]]
+- [[_COMMUNITY_Community 43|Community 43]]
+- [[_COMMUNITY_Community 44|Community 44]]
+- [[_COMMUNITY_Community 45|Community 45]]
+- [[_COMMUNITY_Community 46|Community 46]]
+- [[_COMMUNITY_Community 47|Community 47]]
+- [[_COMMUNITY_Community 48|Community 48]]
+- [[_COMMUNITY_Community 49|Community 49]]
+- [[_COMMUNITY_Community 50|Community 50]]
+- [[_COMMUNITY_Community 51|Community 51]]
+- [[_COMMUNITY_Community 52|Community 52]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Phase 4: Le Verrou & Stripe Billing — Research` - 20 edges
-2. `Pattern Assignments` - 11 edges
-3. `Shared Patterns` - 10 edges
-4. `UI-SPEC — Phase 4: Le Verrou & Stripe Billing` - 10 edges
-5. `Architecture Patterns` - 9 edges
-6. `Common Pitfalls` - 8 edges
-7. `scripts` - 7 edges
-8. `Phase 4: Le Verrou & Stripe Billing - Context` - 7 edges
-9. `Phase 4: Le Verrou & Stripe Billing - Discussion Log` - 7 edges
-10. `Phase 4: Le Verrou & Stripe Billing - Pattern Map` - 7 edges
+2. `str` - 12 edges
+3. `DesignSystemGenerator` - 11 edges
+4. `Pattern Assignments` - 11 edges
+5. `Shared Patterns` - 10 edges
+6. `UI-SPEC — Phase 4: Le Verrou & Stripe Billing` - 10 edges
+7. `ui-ux-pro-max` - 9 edges
+8. `generate_design_system()` - 9 edges
+9. `Architecture Patterns` - 9 edges
+10. `_search_csv()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
-- None detected - all connections are within the same source files.
+- `_generate_intelligent_overrides()` --calls--> `search()`  [INFERRED]
+  .agent/skills/ui-ux-pro-max/scripts/design_system.py → .agent/skills/ui-ux-pro-max/scripts/core.py
 
 ## Import Cycles
 - None detected.
 
-## Communities (42 total, 15 thin omitted)
+## Communities (54 total, 20 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.18
 Nodes (10): Overview, Phase 1: Foundations & Compliance, Phase 2: Data Foundation & Capture mono-ville, Phase 3: Onboarding Pro & Vérification manuelle, Phase 4: Le Verrou & Stripe Billing, Phase 5: SMS Teasing avec opt-in vérifié, Phase Details, Phases (+2 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.06
-Nodes (35): Alternatives écartées (décisions verrouillées), Applicable ASVS Categories, Architectural Responsibility Map, Assumptions Log, Aucune dépendance supplémentaire requise, Claude's Discretion, Core, Deferred Ideas (OUT OF SCOPE) (+27 more)
+Cohesion: 0.05
+Nodes (43): Alternatives écartées (décisions verrouillées), Applicable ASVS Categories, Architectural Responsibility Map, Assumptions Log, Aucune dépendance supplémentaire requise, Claude's Discretion, Common Pitfalls, Core (+35 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.07
@@ -83,16 +95,16 @@ Cohesion: 0.10
 Nodes (19): Architecture & Contraintes, Base de données, Canonical References, Claude's Discretion, Code existant (patterns à suivre), Dashboard leads — `/espace/leads`, Deferred Ideas, Established Patterns (+11 more)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.12
-Nodes (15): Admin Authorization, Auth Guard (Vue pages), Authentication (all server endpoints), Badge/Status Indicator, Error Wrapping (try/catch), File Classification, Metadata, No Analog Found (+7 more)
+Cohesion: 0.07
+Nodes (26): Admin Authorization, `app/pages/espace/leads/[id].vue` (component, request-response), `app/pages/espace/leads/index.vue` (component, request-response), `app/pages/espace/premium.vue` (component, request-response), Auth Guard (Vue pages), Authentication (all server endpoints), Badge/Status Indicator, Error Wrapping (try/catch) (+18 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.18
-Nodes (11): `app/pages/espace/leads/[id].vue` (component, request-response), `app/pages/espace/leads/index.vue` (component, request-response), `app/pages/espace/premium.vue` (component, request-response), `nuxt.config.ts` (config, modify), Pattern Assignments, `server/api/v1/admin/qualify.post.ts` (controller, request-response), `server/api/v1/leads/[id].get.ts` (controller, request-response), `server/api/v1/leads/index.get.ts` (controller, request-response) (+3 more)
+Cohesion: 0.10
+Nodes (27): bool, DesignSystemGenerator, _detect_page_type(), format_ascii_box(), format_markdown(), format_master_md(), format_page_override_md(), generate_design_system() (+19 more)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.18
-Nodes (10): Accumulated Context, Blockers/Concerns, Current Position, Decisions, Known Patterns (à appliquer dans les prochaines phases), Pending Todos, Performance Metrics, Project Reference (+2 more)
+Cohesion: 0.17
+Nodes (11): Accumulated Context, Blockers/Concerns, Current Position, Decisions, Deferred Ideas (hors scope, à reconsidérer plus tard), Known Patterns (à appliquer dans les prochaines phases), Pending Todos, Performance Metrics (+3 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.22
@@ -107,8 +119,8 @@ Cohesion: 0.25
 Nodes (7): Checkout Stripe, Claude's Discretion, Dashboard leads, Deferred Ideas, Logique de déblocage, Matching leads → pros, Phase 4: Le Verrou & Stripe Billing - Discussion Log
 
 ### Community 17 - "Community 17"
-Cohesion: 0.25
-Nodes (8): Common Pitfalls, Pitfall 1 : `constructEvent()` synchrone crash sur Cloudflare Workers, Pitfall 2 : `readBody()` invalide la signature webhook, Pitfall 3 : `stripe_customer_id` NULL sur `customer.subscription.deleted`, Pitfall 4 : pg_cron non disponible en local dev, Pitfall 5 : ENUM PostgreSQL — pas de rollback de valeur, Pitfall 6 : Stripe Price ID hardcodé, Pitfall 7 : Données sensibles dans les logs Nitro
+Cohesion: 0.07
+Nodes (29): Accessibility, Available Domains, Available Stacks, Common Rules for Professional UI, Example Workflow, How to Use This Skill, Icons & Visual Elements, Interaction (+21 more)
 
 ### Community 18 - "Community 18"
 Cohesion: 0.25
@@ -119,31 +131,55 @@ Cohesion: 0.15
 Nodes (12): Agreed Concerns, Agreed Strengths, Concerns, Consensus Summary, Cross-AI Plan Review — Phase 4, Divergent Views, Phase 4 Plan Review — Le Verrou & Stripe Billing, Risk Assessment: **MEDIUM** (+4 more)
 
 ### Community 20 - "Community 20"
-Cohesion: 0.09
-Nodes (21): dependencies, @aws-sdk/client-s3, @aws-sdk/s3-request-presigner, @lucide/vue, nuxt, reka-ui, shadcn-vue, stripe (+13 more)
+Cohesion: 0.18
+Nodes (11): dependencies, @aws-sdk/client-s3, @aws-sdk/s3-request-presigner, @lucide/vue, nuxt, reka-ui, shadcn-vue, stripe (+3 more)
 
 ### Community 21 - "Community 21"
-Cohesion: 0.12
-Nodes (16): devDependencies, class-variance-authority, clsx, lucide-vue-next, @nuxtjs/supabase, pinia, @pinia/nuxt, radix-vue (+8 more)
+Cohesion: 0.07
+Nodes (26): devDependencies, class-variance-authority, clsx, lucide-vue-next, @nuxtjs/supabase, pinia, @pinia/nuxt, radix-vue (+18 more)
+
+### Community 42 - "Community 42"
+Cohesion: 0.15
+Nodes (15): BM25, detect_domain(), _load_csv(), Lowercase, split, remove punctuation, filter short words, Build BM25 index from documents, Score all documents against query, Load CSV and return list of dicts, Core search function using BM25 (+7 more)
+
+### Community 44 - "Community 44"
+Cohesion: 0.50
+Nodes (3): Plan 04-01 — Schema Gaps, Cron, Stripe Config, Verification, What was done
+
+### Community 45 - "Community 45"
+Cohesion: 0.50
+Nodes (3): Plan 04-02 — Schema Push, vitest, RED Test Stubs, Verification, What was done
+
+### Community 46 - "Community 46"
+Cohesion: 0.50
+Nodes (3): Plan 04-03 — maskLead, qualify endpoint, leads API, timeline step, Verification, What was done
+
+### Community 47 - "Community 47"
+Cohesion: 0.50
+Nodes (3): Plan 04-04 — PATCH /api/v1/leads/[id]/claim, Verification, What was done
+
+### Community 48 - "Community 48"
+Cohesion: 0.50
+Nodes (3): Plan 04-06 — Leads Dashboard + Detail Page, Verification, What was done
 
 ## Knowledge Gaps
-- **204 isolated node(s):** `hours`, `isLocked`, `route`, `showSuccessBanner`, `schema` (+199 more)
+- **246 isolated node(s):** `Prerequisites`, `Step 1: Analyze User Requirements`, `Step 2: Generate Design System (REQUIRED)`, `Step 2b: Persist Design System (Master + Overrides Pattern)`, `Step 3: Supplement with Detailed Searches (as needed)` (+241 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **15 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Phase 4: Le Verrou & Stripe Billing — Research` connect `Community 1` to `Community 17`, `Community 14`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
-- **Why does `UI-SPEC — Phase 4: Le Verrou & Stripe Billing` connect `Community 9` to `Community 15`?**
+- **Why does `Phase 4: Le Verrou & Stripe Billing — Research` connect `Community 1` to `Community 14`?**
   _High betweenness centrality (0.015) - this node is a cross-community bridge._
-- **Why does `devDependencies` connect `Community 21` to `Community 20`?**
-  _High betweenness centrality (0.011) - this node is a cross-community bridge._
-- **What connects `hours`, `isLocked`, `route` to the rest of the system?**
-  _204 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Why does `search()` connect `Community 42` to `Community 12`?**
+  _High betweenness centrality (0.009) - this node is a cross-community bridge._
+- **Why does `UI-SPEC — Phase 4: Le Verrou & Stripe Billing` connect `Community 9` to `Community 15`?**
+  _High betweenness centrality (0.007) - this node is a cross-community bridge._
+- **What connects `Prerequisites`, `Step 1: Analyze User Requirements`, `Step 2: Generate Design System (REQUIRED)` to the rest of the system?**
+  _272 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.05555555555555555 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.045454545454545456 - nodes in this community are weakly interconnected._
 - **Should `Community 9` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
 - **Should `Community 10` be split into smaller, more focused modules?**
