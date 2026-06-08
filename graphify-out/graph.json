@@ -4,6 +4,141 @@
   "graph": {},
   "nodes": [
     {
+      "label": "BeforeAfterSlider.vue",
+      "file_type": "code",
+      "source_file": "app/components/BeforeAfterSlider.vue",
+      "source_location": "L1",
+      "id": "components_beforeafterslider",
+      "community": 60,
+      "norm_label": "beforeafterslider.vue"
+    },
+    {
+      "label": "dynamic.vue",
+      "file_type": "code",
+      "source_file": "app/layouts/dynamic.vue",
+      "source_location": "L1",
+      "id": "layouts_dynamic",
+      "community": 59,
+      "norm_label": "dynamic.vue"
+    },
+    {
+      "label": "isHeaderVisible",
+      "file_type": "code",
+      "source_file": "app/layouts/dynamic.vue",
+      "source_location": "L12",
+      "id": "layouts_dynamic_isheadervisible",
+      "community": 59,
+      "norm_label": "isheadervisible"
+    },
+    {
+      "label": "handleScroll()",
+      "file_type": "code",
+      "source_file": "app/layouts/dynamic.vue",
+      "source_location": "L15",
+      "id": "layouts_dynamic_handlescroll",
+      "community": 59,
+      "norm_label": "handlescroll()"
+    },
+    {
+      "label": "index.vue",
+      "file_type": "code",
+      "source_file": "app/pages/index.vue",
+      "source_location": "L1",
+      "id": "pages_index",
+      "community": 61,
+      "norm_label": "index.vue"
+    },
+    {
+      "label": "verify.post.ts",
+      "file_type": "code",
+      "source_file": "server/api/v1/admin/verify.post.ts",
+      "source_location": "L1",
+      "id": "admin_verify_post",
+      "community": 57,
+      "norm_label": "verify.post.ts"
+    },
+    {
+      "label": "verifySchema",
+      "file_type": "code",
+      "source_file": "server/api/v1/admin/verify.post.ts",
+      "source_location": "L4",
+      "id": "admin_verify_post_verifyschema",
+      "community": 57,
+      "norm_label": "verifyschema"
+    },
+    {
+      "label": "claim.post.ts",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L1",
+      "id": "pro_claim_post",
+      "community": 43,
+      "norm_label": "claim.post.ts"
+    },
+    {
+      "label": "VALID_CATEGORIES",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L6",
+      "id": "pro_claim_post_valid_categories",
+      "community": 43,
+      "norm_label": "valid_categories"
+    },
+    {
+      "label": "claimSchema",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L8",
+      "id": "pro_claim_post_claimschema",
+      "community": 43,
+      "norm_label": "claimschema"
+    },
+    {
+      "label": "generateShortId()",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L20",
+      "id": "pro_claim_post_generateshortid",
+      "community": 43,
+      "norm_label": "generateshortid()"
+    },
+    {
+      "label": "slugify()",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L32",
+      "id": "pro_claim_post_slugify",
+      "community": 43,
+      "norm_label": "slugify()"
+    },
+    {
+      "label": "presign.post.ts",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/documents/presign.post.ts",
+      "source_location": "L1",
+      "id": "documents_presign_post",
+      "community": 51,
+      "norm_label": "presign.post.ts"
+    },
+    {
+      "label": "presignSchema",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/documents/presign.post.ts",
+      "source_location": "L6",
+      "id": "documents_presign_post_presignschema",
+      "community": 51,
+      "norm_label": "presignschema"
+    },
+    {
+      "label": "getR2Client()",
+      "file_type": "code",
+      "source_file": "server/api/v1/pro/documents/presign.post.ts",
+      "source_location": "L11",
+      "id": "documents_presign_post_getr2client",
+      "community": 51,
+      "norm_label": "getr2client()"
+    },
+    {
       "label": "app.vue",
       "file_type": "code",
       "source_file": "app/app.vue",
@@ -20,15 +155,6 @@
       "community": 58,
       "norm_label": "default.vue",
       "id": "layouts_default"
-    },
-    {
-      "label": "dynamic.vue",
-      "file_type": "code",
-      "source_file": "app/layouts/dynamic.vue",
-      "source_location": "L1",
-      "community": 59,
-      "norm_label": "dynamic.vue",
-      "id": "layouts_dynamic"
     },
     {
       "label": "dashboard.vue",
@@ -1408,78 +1534,6 @@
       "id": "nuxt_config_dirname"
     },
     {
-      "label": "claim.post.ts",
-      "file_type": "code",
-      "source_file": "server/api/v1/pro/claim.post.ts",
-      "source_location": "L1",
-      "community": 43,
-      "norm_label": "claim.post.ts",
-      "id": "pro_claim_post"
-    },
-    {
-      "label": "VALID_CATEGORIES",
-      "file_type": "code",
-      "source_file": "server/api/v1/pro/claim.post.ts",
-      "source_location": "L6",
-      "community": 43,
-      "norm_label": "valid_categories",
-      "id": "pro_claim_post_valid_categories"
-    },
-    {
-      "label": "claimSchema",
-      "file_type": "code",
-      "source_file": "server/api/v1/pro/claim.post.ts",
-      "source_location": "L8",
-      "community": 43,
-      "norm_label": "claimschema",
-      "id": "pro_claim_post_claimschema"
-    },
-    {
-      "label": "generateShortId()",
-      "file_type": "code",
-      "source_file": "server/api/v1/pro/claim.post.ts",
-      "source_location": "L20",
-      "community": 43,
-      "norm_label": "generateshortid()",
-      "id": "pro_claim_post_generateshortid"
-    },
-    {
-      "label": "slugify()",
-      "file_type": "code",
-      "source_file": "server/api/v1/pro/claim.post.ts",
-      "source_location": "L32",
-      "community": 43,
-      "norm_label": "slugify()",
-      "id": "pro_claim_post_slugify"
-    },
-    {
-      "label": "presign.post.ts",
-      "file_type": "code",
-      "source_file": "server/api/v1/pro/documents/presign.post.ts",
-      "source_location": "L1",
-      "community": 51,
-      "norm_label": "presign.post.ts",
-      "id": "documents_presign_post"
-    },
-    {
-      "label": "presignSchema",
-      "file_type": "code",
-      "source_file": "server/api/v1/pro/documents/presign.post.ts",
-      "source_location": "L6",
-      "community": 51,
-      "norm_label": "presignschema",
-      "id": "documents_presign_post_presignschema"
-    },
-    {
-      "label": "getR2Client()",
-      "file_type": "code",
-      "source_file": "server/api/v1/pro/documents/presign.post.ts",
-      "source_location": "L11",
-      "community": 51,
-      "norm_label": "getr2client()",
-      "id": "documents_presign_post_getr2client"
-    },
-    {
       "label": "index.vue",
       "file_type": "code",
       "source_file": "app/pages/admin/index.vue",
@@ -1691,7 +1745,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L1",
-      "community": 21,
+      "community": 20,
       "norm_label": "package.json",
       "id": "package"
     },
@@ -1700,7 +1754,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L2",
-      "community": 21,
+      "community": 20,
       "norm_label": "name",
       "id": "package_name"
     },
@@ -1709,7 +1763,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L3",
-      "community": 21,
+      "community": 20,
       "norm_label": "type",
       "id": "package_type"
     },
@@ -1718,7 +1772,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L4",
-      "community": 21,
+      "community": 20,
       "norm_label": "private",
       "id": "package_private"
     },
@@ -1727,7 +1781,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L5",
-      "community": 21,
+      "community": 20,
       "norm_label": "scripts",
       "id": "package_scripts"
     },
@@ -1736,7 +1790,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L6",
-      "community": 21,
+      "community": 20,
       "norm_label": "build",
       "id": "package_scripts_build"
     },
@@ -1745,7 +1799,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L7",
-      "community": 21,
+      "community": 20,
       "norm_label": "dev",
       "id": "package_scripts_dev"
     },
@@ -1754,7 +1808,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L8",
-      "community": 21,
+      "community": 20,
       "norm_label": "generate",
       "id": "package_scripts_generate"
     },
@@ -1763,7 +1817,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L9",
-      "community": 21,
+      "community": 20,
       "norm_label": "preview",
       "id": "package_scripts_preview"
     },
@@ -1772,7 +1826,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L10",
-      "community": 21,
+      "community": 20,
       "norm_label": "postinstall",
       "id": "package_scripts_postinstall"
     },
@@ -1781,7 +1835,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L11",
-      "community": 21,
+      "community": 20,
       "norm_label": "test",
       "id": "package_scripts_test"
     },
@@ -3716,6 +3770,96 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "app/layouts/dynamic.vue",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "layouts_dynamic",
+      "target": "layouts_dynamic_handlescroll",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/layouts/dynamic.vue",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "layouts_dynamic",
+      "target": "layouts_dynamic_isheadervisible",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/admin/verify.post.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "admin_verify_post",
+      "target": "admin_verify_post_verifyschema",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pro_claim_post",
+      "target": "pro_claim_post_claimschema"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pro_claim_post",
+      "target": "pro_claim_post_generateshortid"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L32",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pro_claim_post",
+      "target": "pro_claim_post_slugify"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/pro/claim.post.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pro_claim_post",
+      "target": "pro_claim_post_valid_categories"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/pro/documents/presign.post.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "documents_presign_post",
+      "target": "documents_presign_post_getr2client"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/api/v1/pro/documents/presign.post.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "documents_presign_post",
+      "target": "documents_presign_post_presignschema"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": ".agent/skills/ui-ux-pro-max/SKILL.md",
       "source_location": "L5",
       "weight": 1.0,
@@ -5412,66 +5556,6 @@
       "confidence_score": 1.0,
       "source": "nuxt_config",
       "target": "nuxt_config_dirname"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server/api/v1/pro/claim.post.ts",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "pro_claim_post",
-      "target": "pro_claim_post_claimschema"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server/api/v1/pro/claim.post.ts",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "pro_claim_post",
-      "target": "pro_claim_post_generateshortid"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server/api/v1/pro/claim.post.ts",
-      "source_location": "L32",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "pro_claim_post",
-      "target": "pro_claim_post_slugify"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server/api/v1/pro/claim.post.ts",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "pro_claim_post",
-      "target": "pro_claim_post_valid_categories"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server/api/v1/pro/documents/presign.post.ts",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "documents_presign_post",
-      "target": "documents_presign_post_getr2client"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server/api/v1/pro/documents/presign.post.ts",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "documents_presign_post",
-      "target": "documents_presign_post_presignschema"
     },
     {
       "relation": "contains",
@@ -7697,5 +7781,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "37494ee7813b0fec24d12464221d307ea1f437ad"
+  "built_at_commit": "5308629c7c7611fb978ee1a3a0cd758c73959466"
 }

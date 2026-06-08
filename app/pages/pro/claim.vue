@@ -13,12 +13,18 @@ const user = useSupabaseUser()
 const route = useRoute()
 
 // ─── Regex ────────────────────────────────────────────────────────────────────
-const RE_EMAIL    = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
-const RE_PHONE_FR = /^(?:(?:\+|00)33|0)[1-9](?:[\s.-]?\d{2}){4}$/
+// Email : RFC-lite, max 254 chars
+const RE_EMAIL    = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/
+// Téléphone FR : accepte espaces/tirets/points, ex: 06 11 22 33 44 ou +33611223344
+const RE_PHONE_FR = /^(?:(?:\+|00)33[\s.-]?|0)[1-9](?:[\s.-]?\d{2}){4}$/
+// SIRET : 14 chiffres (espaces ignorés via normalisation)
 const RE_SIRET    = /^\d{14}$/
-const RE_CP       = /^\d{5}$/
-const RE_PASSWORD = /^.{8,}$/
-const RE_NAME     = /^.{2,}$/
+// Code postal FR : 5 chiffres
+const RE_CP       = /^(?:0[1-9]|[1-9]\d)\d{3}$/
+// Mot de passe : 8-72 chars (bcrypt max)
+const RE_PASSWORD = /^.{8,72}$/
+// Nom : 2-100 chars, pas que des espaces
+const RE_NAME     = /^.{2,100}$/
 
 // ─── State ────────────────────────────────────────────────────────────────────
 const authMode  = ref<'register' | 'login'>('login')
@@ -48,6 +54,12 @@ const proForm  = reactive({
   sms_opt_in: false,
   cgu_accepted: false
 })
+
+// ─── Normalisation silencieuse ─────────────────────────────────────────────────
+// Supprime les espaces du SIRET à la saisie (copier-coller depuis Kbis)
+function normalizeSiret(val: string) { proForm.siret = val.replace(/\s/g, '') }
+// Normalise le téléphone : supprime les caractères non valides
+function normalizePhone(val: string) { proForm.phone = val.replace(/[^\d\s.+()-]/g, '') }
 
 // touched: only show errors after the field has been blurred
 const authTouched = reactive({ email: false, password: false, full_name: false })
@@ -485,9 +497,10 @@ const switchMode = (mode: 'register' | 'login') => {
               id="pro-siret"
               type="text"
               v-model="proForm.siret"
-              placeholder="12345678900012"
-              maxlength="14"
+              placeholder="123 456 789 00012"
+              maxlength="19"
               inputmode="numeric"
+              @input="normalizeSiret(($event.target as HTMLInputElement).value)"
               @blur="proTouched.siret = true"
               class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground font-mono tracking-wider transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
               :class="proErrors.siret ? 'border-red-500' : 'border-border'"
@@ -522,6 +535,8 @@ const switchMode = (mode: 'register' | 'login') => {
                 v-model="proForm.phone"
                 placeholder="06 11 22 33 44"
                 autocomplete="tel"
+                maxlength="20"
+                @input="normalizePhone(($event.target as HTMLInputElement).value)"
                 @blur="proTouched.phone = true"
                 class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
                 :class="proErrors.phone ? 'border-red-500' : 'border-border'"

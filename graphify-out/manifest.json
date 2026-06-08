@@ -1,7 +1,7 @@
 {
   ".claude/settings.local.json": {
-    "mtime": 1780760656.4140434,
-    "ast_hash": "4ac134f0373105ce4b2543e9ef10a629",
+    "mtime": 1780819710.299148,
+    "ast_hash": "eaafe55ab43b1eb690162c41ec06f8b2",
     "semantic_hash": ""
   },
   ".planning/intel/classifications/adr-001-initial-stack-a53a9c1f.json": {
@@ -135,8 +135,8 @@
     "semantic_hash": ""
   },
   "app/pages/index.vue": {
-    "mtime": 1780453922.4843435,
-    "ast_hash": "a85622ec2af887428e5a11561cd1895d",
+    "mtime": 1780778090.5623147,
+    "ast_hash": "2238b072a27adb71d7cfb79551b52f54",
     "semantic_hash": ""
   },
   "app/pages/legal/cgu.vue": {
@@ -205,8 +205,8 @@
     "semantic_hash": ""
   },
   "server/api/v1/admin/verify.post.ts": {
-    "mtime": 1780492576.894478,
-    "ast_hash": "f2776bb864947c67d0c3a5e1c3c88fcb",
+    "mtime": 1780927095.1857996,
+    "ast_hash": "6186ce3dfed73264b594fb5282670a7c",
     "semantic_hash": ""
   },
   "server/api/v1/health.get.ts": {
@@ -215,13 +215,13 @@
     "semantic_hash": ""
   },
   "server/api/v1/pro/claim.post.ts": {
-    "mtime": 1780764949.2897046,
-    "ast_hash": "909d6d8b12aea368218a6241109cbb1a",
+    "mtime": 1780927080.1658292,
+    "ast_hash": "04d3d27dd262716e43dad6ade91204d2",
     "semantic_hash": ""
   },
   "server/api/v1/pro/documents/presign.post.ts": {
-    "mtime": 1780450519.7452803,
-    "ast_hash": "cb2030803fbc3c075376f2dbc73c6241",
+    "mtime": 1780927095.1857996,
+    "ast_hash": "28ac3cb7bc34a0a82b09441e633c0471",
     "semantic_hash": ""
   },
   "server/api/v1/pro/documents/view.post.ts": {
@@ -695,8 +695,8 @@
     "semantic_hash": ""
   },
   "app/layouts/dynamic.vue": {
-    "mtime": 1780770686.0764642,
-    "ast_hash": "401a4a3dde55b8b6c7d37944c1d72bb4",
+    "mtime": 1780778125.6318085,
+    "ast_hash": "25af205f67b328a5ec201af673bfbdad",
     "semantic_hash": ""
   },
   "app/pages/app/leads.vue": {
@@ -712,6 +712,11 @@
   "supabase/.temp/linked-project.json": {
     "mtime": 1780772279.620382,
     "ast_hash": "2926c5bdbf7132e82d68e136a02ed5e2",
+    "semantic_hash": ""
+  },
+  "app/components/BeforeAfterSlider.vue": {
+    "mtime": 1780777932.0478864,
+    "ast_hash": "5a6cda201e5b484d124a31933fa0802b",
     "semantic_hash": ""
   }
 }

@@ -121,9 +121,16 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
+  html {
+    overflow-x: hidden;
+    width: 100%;
+  }
   body {
     @apply bg-background text-foreground;
     @apply font-sans;
-    }
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+  }
 }

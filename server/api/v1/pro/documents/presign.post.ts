@@ -50,7 +50,17 @@ export default defineEventHandler(async (event) => {
     ContentType: extension === 'pdf' ? 'application/pdf' : `image/${extension}`
   })
 
-  const signedUrl = await getSignedUrl(client, command, { expiresIn: 900 })
+  let signedUrl: string
+  try {
+    signedUrl = await getSignedUrl(client, command, { expiresIn: 900 })
+  } catch (err: any) {
+    console.error('[presign] R2 getSignedUrl failed:', err?.message ?? err)
+    throw createError({
+      statusCode: 502,
+      statusMessage: 'Storage unavailable',
+      message: `R2 error: ${err?.message ?? 'unknown'}`
+    })
+  }
 
   return {
     status: 'SUCCESS',

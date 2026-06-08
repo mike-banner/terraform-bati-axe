@@ -1,16 +1,16 @@
-# Graph Report - bati-axe  (2026-06-06)
+# Graph Report - bati-axe  (2026-06-08)
 
 ## Corpus Check
-- 142 files · ~66,789 words
+- 143 files · ~67,216 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 412 nodes · 394 edges · 59 communities (39 shown, 20 thin omitted)
+- 418 nodes · 397 edges · 62 communities (40 shown, 22 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `37494ee7`
+- Built from commit: `5308629c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -56,6 +56,8 @@
 - [[_COMMUNITY_Community 50|Community 50]]
 - [[_COMMUNITY_Community 51|Community 51]]
 - [[_COMMUNITY_Community 52|Community 52]]
+- [[_COMMUNITY_Community 57|Community 57]]
+- [[_COMMUNITY_Community 59|Community 59]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Phase 4: Le Verrou & Stripe Billing — Research` - 20 edges
@@ -76,7 +78,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (59 total, 20 thin omitted)
+## Communities (62 total, 22 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.18
@@ -131,12 +133,12 @@ Cohesion: 0.15
 Nodes (12): Agreed Concerns, Agreed Strengths, Concerns, Consensus Summary, Cross-AI Plan Review — Phase 4, Divergent Views, Phase 4 Plan Review — Le Verrou & Stripe Billing, Risk Assessment: **MEDIUM** (+4 more)
 
 ### Community 20 - "Community 20"
-Cohesion: 0.18
-Nodes (11): dependencies, @aws-sdk/client-s3, @aws-sdk/s3-request-presigner, @lucide/vue, nuxt, reka-ui, shadcn-vue, stripe (+3 more)
+Cohesion: 0.09
+Nodes (21): dependencies, @aws-sdk/client-s3, @aws-sdk/s3-request-presigner, @lucide/vue, nuxt, reka-ui, shadcn-vue, stripe (+13 more)
 
 ### Community 21 - "Community 21"
-Cohesion: 0.07
-Nodes (26): devDependencies, class-variance-authority, clsx, lucide-vue-next, @nuxtjs/supabase, pinia, @pinia/nuxt, radix-vue (+18 more)
+Cohesion: 0.12
+Nodes (16): devDependencies, class-variance-authority, clsx, lucide-vue-next, @nuxtjs/supabase, pinia, @pinia/nuxt, radix-vue (+8 more)
 
 ### Community 42 - "Community 42"
 Cohesion: 0.15
@@ -163,21 +165,21 @@ Cohesion: 0.50
 Nodes (3): Plan 04-06 — Leads Dashboard + Detail Page, Verification, What was done
 
 ## Knowledge Gaps
-- **246 isolated node(s):** `Prerequisites`, `Step 1: Analyze User Requirements`, `Step 2: Generate Design System (REQUIRED)`, `Step 2b: Persist Design System (Master + Overrides Pattern)`, `Step 3: Supplement with Detailed Searches (as needed)` (+241 more)
+- **248 isolated node(s):** `isHeaderVisible`, `verifySchema`, `VALID_CATEGORIES`, `claimSchema`, `presignSchema` (+243 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **22 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Phase 4: Le Verrou & Stripe Billing — Research` connect `Community 1` to `Community 14`?**
-  _High betweenness centrality (0.015) - this node is a cross-community bridge._
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **Why does `search()` connect `Community 42` to `Community 12`?**
   _High betweenness centrality (0.008) - this node is a cross-community bridge._
 - **Why does `UI-SPEC — Phase 4: Le Verrou & Stripe Billing` connect `Community 9` to `Community 15`?**
   _High betweenness centrality (0.007) - this node is a cross-community bridge._
-- **What connects `Prerequisites`, `Step 1: Analyze User Requirements`, `Step 2: Generate Design System (REQUIRED)` to the rest of the system?**
-  _272 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `isHeaderVisible`, `verifySchema`, `VALID_CATEGORIES` to the rest of the system?**
+  _274 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.045454545454545456 - nodes in this community are weakly interconnected._
 - **Should `Community 9` be split into smaller, more focused modules?**

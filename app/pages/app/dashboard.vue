@@ -1,5 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'dynamic' })
+
 interface Pro {
   id: string; company_name: string; full_name: string; phone: string
   postal_code: string; canonical_slug: string; short_id: string
@@ -11,42 +12,30 @@ interface Verif {
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
-  maconnerie:   'Maçonnerie',
-  toiture:      'Toiture',
-  electricite:  'Électricité',
-  plomberie:    'Plomberie',
-  peinture:     'Peinture',
-  isolation:    'Isolation',
+  maconnerie: 'Maçonnerie', toiture: 'Toiture', electricite: 'Électricité',
+  plomberie: 'Plomberie', peinture: 'Peinture', isolation: 'Isolation',
 }
 
 const supabase = useSupabaseClient()
 const user     = useSupabaseUser()
-
 useHead({ title: 'Mon profil — BÂTI-AXE' })
 
-watchEffect(() => {
-  if (user.value === null) navigateTo('/pro/claim')
-})
+watchEffect(() => { if (user.value === null) navigateTo('/pro/claim') })
 
 const pro    = ref<Pro | null>(null)
 const verifs = ref<Verif[]>([])
-onMounted(() => loadProData())
 
 async function loadProData() {
   const { data: { session } } = await supabase.auth.getSession()
   const uid = session?.user?.id
   if (!uid) return
   const [{ data: proData, error: proErr }, { data: verifData, error: verifErr }] = await Promise.all([
-    supabase
-      .from('professionals')
+    supabase.from('professionals')
       .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, created_at, category, subscription_status')
-      .eq('id', uid)
-      .maybeSingle(),
-    supabase
-      .from('verifications')
+      .eq('id', uid).maybeSingle(),
+    supabase.from('verifications')
       .select('document_type, status, expiry_date, created_at')
-      .eq('pro_id', uid)
-      .order('created_at', { ascending: false })
+      .eq('pro_id', uid).order('created_at', { ascending: false })
   ])
   if (proErr)   console.error('[dashboard] pro fetch:', proErr.message)
   if (verifErr) console.error('[dashboard] verif fetch:', verifErr.message)
@@ -61,46 +50,62 @@ const decennale = computed(() => verifs.value?.find(v => v.document_type === 'de
 
 const docStatus = (doc: any) => {
   if (!doc) return { label: 'Non envoyé', cls: 'text-muted-foreground border-border' }
-  if (doc.status === 'approved') return { label: 'Validé', cls: 'text-foreground border-foreground/30' }
+  if (doc.status === 'approved') return { label: 'Validé ✓', cls: 'text-foreground border-foreground/30' }
   if (doc.status === 'rejected') return { label: 'Rejeté', cls: 'text-red-700 border-red-200 bg-red-50' }
   return { label: 'En attente', cls: 'text-amber-700 border-amber-300 bg-amber-50' }
 }
 
+// ─── Upload inline ─────────────────────────────────────────────────────────────
+const uploads = reactive({
+  kbis:      { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '' },
+  decennale: { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '' },
+})
+
+function onFileSelect(e: Event, type: 'kbis' | 'decennale') {
+  const f = (e.target as HTMLInputElement).files?.[0]
+  if (f) { uploads[type].file = f; uploads[type].status = 'idle'; uploads[type].error = '' }
+}
+
+async function uploadDoc(type: 'kbis' | 'decennale') {
+  const file = uploads[type].file
+  if (!file) return
+  uploads[type].status = 'uploading'
+  uploads[type].error  = ''
+  try {
+    const presign = await $fetch<{ status: string; signedUrl: string; fileKey: string }>(
+      '/api/v1/pro/documents/presign',
+      { method: 'POST', body: { document_type: type, filename: file.name } }
+    )
+    if (presign.status !== 'SUCCESS') throw new Error('Erreur de signature.')
+    const res = await fetch(presign.signedUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file })
+    if (!res.ok) throw new Error('Échec du transfert.')
+    await (supabase as any).from('verifications').insert({
+      pro_id: user.value?.id, document_type: type, file_key: presign.fileKey, status: 'pending'
+    })
+    uploads[type].status = 'success'
+    await loadProData() // refresh badges
+  } catch (err: any) {
+    uploads[type].status = 'error'
+    uploads[type].error  = err.message || 'Erreur.'
+  }
+}
+
 const steps = computed(() => [
-  {
-    label: 'Compte créé',
-    done: true,
-    desc: user.value?.email || '',
-  },
-  {
-    label: 'Profil entreprise',
-    done: !!pro.value?.company_name,
-    desc: pro.value?.company_name || 'Non renseigné',
-    action: !pro.value?.company_name ? { label: 'Compléter mon profil', to: '/pro/claim' } : null,
-  },
-  {
-    label: 'Kbis envoyé',
-    done: !!kbis.value,
-    desc: kbis.value ? `Statut : ${docStatus(kbis.value).label}` : 'Document manquant',
-    action: !kbis.value ? { label: 'Envoyer le Kbis', to: '/pro/claim' } : null,
-  },
-  {
-    label: 'Décennale envoyée',
-    done: !!decennale.value,
-    desc: decennale.value ? `Statut : ${docStatus(decennale.value).label}` : 'Document manquant',
-    action: !decennale.value ? { label: 'Envoyer la décennale', to: '/pro/claim' } : null,
-  },
-  {
-    label: 'Profil vérifié',
-    done: pro.value?.is_verified === true,
-    desc: pro.value?.is_verified ? 'Votre profil est actif et visible.' : 'En attente de validation par notre équipe (sous 24h ouvrées).',
-  },
+  { label: 'Compte créé',       done: true,                    desc: user.value?.email || '' },
+  { label: 'Profil entreprise', done: !!pro.value?.company_name, desc: pro.value?.company_name || 'Non renseigné',
+    action: !pro.value?.company_name ? { label: 'Compléter mon profil', to: '/pro/claim' } : null },
+  { label: 'Kbis envoyé',       done: !!kbis.value,            desc: kbis.value ? `Statut : ${docStatus(kbis.value).label}` : 'Document manquant' },
+  { label: 'Décennale envoyée', done: !!decennale.value,        desc: decennale.value ? `Statut : ${docStatus(decennale.value).label}` : 'Document manquant' },
+  { label: 'Profil vérifié',    done: pro.value?.is_verified === true,
+    desc: pro.value?.is_verified ? 'Votre profil est actif et visible.' : 'En attente de validation par notre équipe (sous 24h ouvrées).' },
 ])
 
 const currentStepIndex = computed(() => {
   const idx = steps.value.findIndex(s => !s.done)
   return idx === -1 ? steps.value.length - 1 : idx
 })
+
+const docsComplete = computed(() => !!kbis.value && !!decennale.value)
 </script>
 
 <template>
@@ -117,6 +122,7 @@ const currentStepIndex = computed(() => {
     </div>
 
     <template v-else-if="pro">
+
       <!-- Header -->
       <div class="mb-10">
         <div class="flex items-center gap-2 mb-3">
@@ -136,14 +142,75 @@ const currentStepIndex = computed(() => {
         <p class="text-sm text-muted-foreground mt-1">{{ pro.full_name }} · {{ pro.postal_code }}</p>
       </div>
 
-      <!-- Profil -->
+      <!-- ─── Upload banner — documents manquants ─────────────────────────────── -->
+      <div v-if="!docsComplete" class="border border-amber-300 bg-amber-50 rounded-lg p-5 mb-8">
+        <p class="text-sm font-semibold text-amber-900 mb-1">Documents requis</p>
+        <p class="text-xs text-amber-700 mb-5">Envoyez vos justificatifs pour activer votre profil et accéder aux leads.</p>
+
+        <!-- KBIS -->
+        <div v-if="!kbis" class="mb-4">
+          <p class="text-xs font-semibold text-foreground mb-2">Extrait KBIS <span class="text-muted-foreground font-normal">(moins de 3 mois · PDF, JPG, PNG)</span></p>
+          <div v-if="uploads.kbis.status !== 'success'" class="flex items-center gap-3 flex-wrap">
+            <label class="cursor-pointer">
+              <input type="file" @change="onFileSelect($event, 'kbis')" accept=".pdf,image/*" class="sr-only" />
+              <span class="h-9 px-4 border border-border rounded-md text-xs font-medium bg-white hover:bg-muted transition-colors flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
+                Choisir
+              </span>
+            </label>
+            <span class="text-xs text-muted-foreground truncate max-w-[180px]">{{ uploads.kbis.file ? uploads.kbis.file.name : 'Aucun fichier' }}</span>
+            <button
+              v-if="uploads.kbis.file"
+              @click="uploadDoc('kbis')"
+              :disabled="uploads.kbis.status === 'uploading'"
+              class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
+            >
+              <svg v-if="uploads.kbis.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+              {{ uploads.kbis.status === 'uploading' ? 'Envoi…' : 'Envoyer le KBIS' }}
+            </button>
+          </div>
+          <p v-if="uploads.kbis.status === 'error'" class="text-xs text-red-600 mt-1">{{ uploads.kbis.error }}</p>
+          <p v-if="uploads.kbis.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ KBIS envoyé</p>
+        </div>
+        <div v-else class="mb-4 flex items-center gap-2 text-xs text-foreground">
+          <svg class="w-4 h-4 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          KBIS — <span :class="docStatus(kbis).cls" class="px-2 py-0.5 border rounded-full font-semibold">{{ docStatus(kbis).label }}</span>
+        </div>
+
+        <!-- Décennale -->
+        <div v-if="!decennale">
+          <p class="text-xs font-semibold text-foreground mb-2">Attestation décennale <span class="text-muted-foreground font-normal">(PDF, JPG, PNG)</span></p>
+          <div v-if="uploads.decennale.status !== 'success'" class="flex items-center gap-3 flex-wrap">
+            <label class="cursor-pointer">
+              <input type="file" @change="onFileSelect($event, 'decennale')" accept=".pdf,image/*" class="sr-only" />
+              <span class="h-9 px-4 border border-border rounded-md text-xs font-medium bg-white hover:bg-muted transition-colors flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
+                Choisir
+              </span>
+            </label>
+            <span class="text-xs text-muted-foreground truncate max-w-[180px]">{{ uploads.decennale.file ? uploads.decennale.file.name : 'Aucun fichier' }}</span>
+            <button
+              v-if="uploads.decennale.file"
+              @click="uploadDoc('decennale')"
+              :disabled="uploads.decennale.status === 'uploading'"
+              class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
+            >
+              <svg v-if="uploads.decennale.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+              {{ uploads.decennale.status === 'uploading' ? 'Envoi…' : 'Envoyer la décennale' }}
+            </button>
+          </div>
+          <p v-if="uploads.decennale.status === 'error'" class="text-xs text-red-600 mt-1">{{ uploads.decennale.error }}</p>
+          <p v-if="uploads.decennale.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ Décennale envoyée</p>
+        </div>
+        <div v-else class="flex items-center gap-2 text-xs text-foreground">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          Décennale — <span :class="docStatus(decennale).cls" class="px-2 py-0.5 border rounded-full font-semibold">{{ docStatus(decennale).label }}</span>
+        </div>
+      </div>
+
       <!-- Progress checklist -->
       <div class="border border-border rounded-lg divide-y divide-border mb-10">
-        <div
-          v-for="(step, i) in steps"
-          :key="i"
-          class="flex items-start gap-4 px-5 py-4"
-        >
+        <div v-for="(step, i) in steps" :key="i" class="flex items-start gap-4 px-5 py-4">
           <div
             class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5"
             :class="step.done ? 'bg-foreground text-background' : i === currentStepIndex ? 'border-2 border-foreground' : 'border border-border'"
@@ -165,8 +232,8 @@ const currentStepIndex = computed(() => {
         </div>
       </div>
 
-      <!-- Documents status -->
-      <div class="border-t border-border pt-8 mb-10">
+      <!-- Documents status (quand tout est envoyé) -->
+      <div v-if="docsComplete" class="border-t border-border pt-8 mb-10">
         <h2 class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-4">Documents</h2>
         <div class="grid grid-cols-2 gap-3">
           <div class="p-4 border border-border rounded-lg">
@@ -187,8 +254,6 @@ const currentStepIndex = computed(() => {
         </div>
       </div>
 
-
     </template>
-
   </div>
 </template>
