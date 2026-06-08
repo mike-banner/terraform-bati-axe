@@ -160,6 +160,45 @@ const moderateDocument = async (proId: string, docType: 'kbis' | 'decennale', st
   }
 }
 
+// ─── Upload admin ─────────────────────────────────────────────────────────────
+const uploadState = reactive<Record<string, { file: File | null, status: 'idle'|'uploading'|'error', error: string }>>({})
+
+const onFileSelect = (e: Event, proId: string, docType: 'kbis' | 'decennale') => {
+  const f = (e.target as HTMLInputElement).files?.[0]
+  if (f) {
+    uploadState[`${proId}-${docType}`] = { file: f, status: 'idle', error: '' }
+  }
+}
+
+const uploadAdminDoc = async (proId: string, docType: 'kbis' | 'decennale') => {
+  const key = `${proId}-${docType}`
+  const state = uploadState[key]
+  if (!state?.file) return
+  state.status = 'uploading'
+  state.error = ''
+  try {
+    const presign = await $fetch<{ status: string; signedUrl: string; fileKey: string }>(
+      '/api/v1/pro/documents/presign',
+      { method: 'POST', body: { document_type: docType, filename: state.file.name, pro_id: proId } }
+    )
+    if (presign.status !== 'SUCCESS') throw new Error('Erreur de signature.')
+    const res = await fetch(presign.signedUrl, { method: 'PUT', headers: { 'Content-Type': state.file.type }, body: state.file })
+    if (!res.ok) throw new Error('Échec du transfert vers Cloudflare R2.')
+    
+    // Ajout en base
+    await (supabase as any).from('verifications').insert({
+      pro_id: proId, document_type: docType, file_key: presign.fileKey, status: 'approved' // Directement approved pour un admin ? (On met approved pour gagner du temps)
+    })
+    
+    state.status = 'idle'
+    state.file = null
+    await fetchQueue()
+  } catch (err: any) {
+    state.status = 'error'
+    state.error = err.message || 'Erreur inconnue.'
+  }
+}
+
 // ─── Filtered list ────────────────────────────────────────────────────────────
 const filtered = computed(() => {
   let list = activeTab.value === 'all'
@@ -387,6 +426,27 @@ const statusLabel: Record<string, string> = {
                       >
                         Rejeter
                       </button>
+                    </template>
+
+                    <!-- Upload document by Admin (if missing) -->
+                    <template v-if="!pro.verifications?.find(v => v.document_type === docType)">
+                      <div v-if="uploadState[`${pro.id}-${docType}`]?.file" class="flex items-center gap-2">
+                        <span class="text-xs text-muted-foreground truncate w-24" :title="uploadState[`${pro.id}-${docType}`].file!.name">{{ uploadState[`${pro.id}-${docType}`].file!.name }}</span>
+                        <button
+                          @click="uploadAdminDoc(pro.id, docType)"
+                          :disabled="uploadState[`${pro.id}-${docType}`].status === 'uploading'"
+                          class="h-8 px-3 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-1.5 disabled:opacity-40"
+                        >
+                           <svg v-if="uploadState[`${pro.id}-${docType}`].status === 'uploading'" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                           Envoyer
+                        </button>
+                      </div>
+                      <label v-else class="cursor-pointer h-8 px-3 border border-border text-xs font-medium rounded-md hover:bg-muted transition-colors flex items-center gap-1.5">
+                        <input type="file" @change="onFileSelect($event, pro.id, docType)" accept=".pdf,image/*" class="sr-only" />
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                        Uploader
+                      </label>
+                      <p v-if="uploadState[`${pro.id}-${docType}`]?.error" class="text-xs text-red-600 ml-2 mt-1">{{ uploadState[`${pro.id}-${docType}`].error }}</p>
                     </template>
                   </div>
                 </div>
