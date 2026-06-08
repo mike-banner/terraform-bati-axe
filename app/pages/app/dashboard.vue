@@ -24,8 +24,10 @@ watchEffect(() => { if (user.value === null) navigateTo('/pro/claim') })
 
 const pro    = ref<Pro | null>(null)
 const verifs = ref<Verif[]>([])
+const loading = ref(true)
 
 async function loadProData() {
+  loading.value = true
   const { data: { session } } = await supabase.auth.getSession()
   const uid = session?.user?.id
   if (!uid) return
@@ -41,6 +43,7 @@ async function loadProData() {
   if (verifErr) console.error('[dashboard] verif fetch:', verifErr.message)
   pro.value    = proData as Pro | null
   verifs.value = (verifData || []) as Verif[]
+  loading.value = false
 }
 
 watch(user, () => loadProData(), { immediate: true })
@@ -129,8 +132,13 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
 <template>
   <div class="max-w-2xl mx-auto px-6 py-8">
 
+    <!-- Loading -->
+    <div v-if="loading" class="py-12 flex justify-center">
+      <svg class="w-8 h-8 animate-spin text-muted-foreground" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+    </div>
+
     <!-- Not registered yet -->
-    <div v-if="user && !pro" class="py-8">
+    <div v-else-if="user && !pro" class="py-8">
       <h1 class="text-3xl font-black tracking-tight text-foreground mb-3">Mon espace</h1>
       <p class="text-sm text-muted-foreground mb-8">Votre profil artisan n'est pas encore créé.</p>
       <NuxtLink to="/pro/claim" class="inline-flex items-center gap-2 h-11 px-6 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity">
