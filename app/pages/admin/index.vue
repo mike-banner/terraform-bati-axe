@@ -195,7 +195,7 @@ const uploadAdminDoc = async (proId: string, docType: 'kbis' | 'decennale') => {
     await fetchQueue()
   } catch (err: any) {
     state.status = 'error'
-    state.error = err.message || 'Erreur inconnue.'
+    state.error = err.data?.message || err.message || 'Erreur inconnue.'
   }
 }
 

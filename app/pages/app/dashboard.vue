@@ -86,7 +86,7 @@ async function uploadDoc(type: 'kbis' | 'decennale') {
     await loadProData() // refresh badges
   } catch (err: any) {
     uploads[type].status = 'error'
-    uploads[type].error  = err.message || 'Erreur.'
+    uploads[type].error  = err.data?.message || err.message || 'Erreur.'
   }
 }
 
