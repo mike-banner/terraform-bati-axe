@@ -8,10 +8,10 @@ const presignSchema = z.object({
   pro_id: z.string().uuid().optional()
 })
 
-function getAwsClient() {
+function getAwsClient(config: any) {
   return new AwsClient({
-    accessKeyId: process.env.R2_ACCESS_KEY_ID || 'mock',
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || 'mock',
+    accessKeyId: config.r2AccessKeyId || 'mock',
+    secretAccessKey: config.r2SecretAccessKey || 'mock',
     service: 's3',
     region: 'auto'
   })
@@ -19,6 +19,8 @@ function getAwsClient() {
 
 export default defineEventHandler(async (event) => {
   try {
+    const config = useRuntimeConfig(event)
+    
     // 1. Authenticate
     const user = await serverSupabaseUser(event)
     if (!user) {
@@ -49,12 +51,12 @@ export default defineEventHandler(async (event) => {
     const contentType = extension === 'pdf' ? 'application/pdf' : `image/${extension}`
     
     // Fallbacks sécurisés
-    const accountId = process.env.R2_ACCOUNT_ID || 'mock'
-    const bucket = process.env.R2_BUCKET_NAME || 'batiaxe-documents'
+    const accountId = config.r2AccountId || 'mock'
+    const bucket = config.r2BucketName || 'batiaxe-documents'
     const fileKey = `${targetUserId}/${document_type}-${Date.now()}.${extension}`
 
     // 4. Generate presigned PUT URL using aws4fetch (Edge compatible)
-    const aws = getAwsClient()
+    const aws = getAwsClient(config)
     const url = new URL(`https://${accountId}.r2.cloudflarestorage.com/${bucket}/${fileKey}`)
     
     const request = await aws.sign(url, {
