@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { serverSupabaseUser } from '#supabase/server'
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { AwsClient } from 'aws4fetch'
 
 const presignSchema = z.object({
   document_type: z.enum(['kbis', 'decennale']),
@@ -9,15 +8,12 @@ const presignSchema = z.object({
   pro_id: z.string().uuid().optional()
 })
 
-function getR2Client(): S3Client {
-  const accountId = process.env.R2_ACCOUNT_ID || 'mock-account-id'
-  const accessKeyId = process.env.R2_ACCESS_KEY_ID || 'mock-access-key-id'
-  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY || 'mock-secret-access-key'
-
-  return new S3Client({
-    region: 'auto',
-    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
-    credentials: { accessKeyId, secretAccessKey }
+function getAwsClient() {
+  return new AwsClient({
+    accessKeyId: process.env.R2_ACCESS_KEY_ID || 'mock',
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || 'mock',
+    service: 's3',
+    region: 'auto'
   })
 }
 
@@ -50,25 +46,28 @@ export default defineEventHandler(async (event) => {
     }
 
     const extension = filename.split('.').pop()?.toLowerCase() || 'pdf'
+    const contentType = extension === 'pdf' ? 'application/pdf' : `image/${extension}`
     
     // Fallbacks sécurisés
     const accountId = process.env.R2_ACCOUNT_ID || 'mock'
     const bucket = process.env.R2_BUCKET_NAME || 'batiaxe-documents'
     const fileKey = `${targetUserId}/${document_type}-${Date.now()}.${extension}`
 
-    // 4. Generate presigned PUT URL
-    const client = getR2Client()
-    const command = new PutObjectCommand({
-      Bucket: bucket,
-      Key: fileKey,
-      ContentType: extension === 'pdf' ? 'application/pdf' : `image/${extension}`
+    // 4. Generate presigned PUT URL using aws4fetch (Edge compatible)
+    const aws = getAwsClient()
+    const url = new URL(`https://${accountId}.r2.cloudflarestorage.com/${bucket}/${fileKey}`)
+    
+    const request = await aws.sign(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': contentType
+      },
+      aws: { signQuery: true }
     })
-
-    const signedUrl = await getSignedUrl(client, command, { expiresIn: 900 })
 
     return {
       status: 'SUCCESS',
-      signedUrl,
+      signedUrl: request.url,
       fileKey
     }
   } catch (err: any) {
