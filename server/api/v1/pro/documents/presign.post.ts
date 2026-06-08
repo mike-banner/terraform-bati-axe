@@ -8,10 +8,10 @@ const presignSchema = z.object({
   pro_id: z.string().uuid().optional()
 })
 
-function getAwsClient(config: any) {
+function getAwsClient(config: any, env: any) {
   return new AwsClient({
-    accessKeyId: config.r2AccessKeyId || 'mock',
-    secretAccessKey: config.r2SecretAccessKey || 'mock',
+    accessKeyId: config.r2AccessKeyId || env.R2_ACCESS_KEY_ID || 'mock',
+    secretAccessKey: config.r2SecretAccessKey || env.R2_SECRET_ACCESS_KEY || 'mock',
     service: 's3',
     region: 'auto'
   })
@@ -20,6 +20,7 @@ function getAwsClient(config: any) {
 export default defineEventHandler(async (event) => {
   try {
     const config = useRuntimeConfig(event)
+    const env = event.context.cloudflare?.env || process.env || {}
     
     // 1. Authenticate
     const user = await serverSupabaseUser(event)
@@ -51,17 +52,15 @@ export default defineEventHandler(async (event) => {
     const contentType = extension === 'pdf' ? 'application/pdf' : `image/${extension}`
     
     // Fallbacks sécurisés
-    const accountId = config.r2AccountId || 'mock'
-    const bucket = config.r2BucketName || 'batiaxe-documents'
+    const accountId = config.r2AccountId || env.R2_ACCOUNT_ID || 'mock'
+    const bucket = config.r2BucketName || env.R2_BUCKET_NAME || 'batiaxe-documents'
     const fileKey = `${targetUserId}/${document_type}-${Date.now()}.${extension}`
 
     // 4. Generate presigned PUT URL using aws4fetch (Edge compatible)
-    const aws = getAwsClient(config)
+    const aws = getAwsClient(config, env)
     const url = new URL(`https://${accountId}.r2.cloudflarestorage.com/${bucket}/${fileKey}`)
     
     // On ne passe PAS de headers ici pour éviter que la signature ne soit trop stricte.
-    // Si on signe le Content-Type et que le navigateur envoie un Content-Type légèrement différent
-    // (ex: rajout de charset), R2 rejette avec 403, ce qui déclenche une erreur CORS "Failed to fetch".
     const request = await aws.sign(url, {
       method: 'PUT',
       aws: { signQuery: true }
