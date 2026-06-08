@@ -74,8 +74,8 @@ export default defineEventHandler(async (event) => {
   } catch (err: any) {
     console.error('[presign API error]', err)
     throw createError({
-      statusCode: err.statusCode || 500,
-      statusMessage: err.statusMessage || 'Server Error',
+      statusCode: 400, // On force 400 au lieu de 500 car Nuxt masque les 500 en prod !
+      statusMessage: 'Storage Error',
       message: err.message || String(err)
     })
   }

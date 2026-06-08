@@ -431,7 +431,7 @@ const statusLabel: Record<string, string> = {
                     <!-- Upload document by Admin (if missing) -->
                     <template v-if="!pro.verifications?.find(v => v.document_type === docType)">
                       <div v-if="uploadState[`${pro.id}-${docType}`]?.file" class="flex items-center gap-2">
-                        <span class="text-xs text-muted-foreground truncate w-24" :title="uploadState[`${pro.id}-${docType}`].file!.name">{{ uploadState[`${pro.id}-${docType}`].file!.name }}</span>
+                        <span class="text-xs text-muted-foreground truncate w-24" :title="uploadState[`${pro.id}-${docType}`]?.file?.name">{{ uploadState[`${pro.id}-${docType}`]?.file?.name }}</span>
                         <button
                           @click="uploadAdminDoc(pro.id, docType)"
                           :disabled="uploadState[`${pro.id}-${docType}`].status === 'uploading'"
