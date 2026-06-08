@@ -9,6 +9,10 @@ async function signOut() {
 
 const userInitial = computed(() => user.value?.email?.charAt(0).toUpperCase() ?? '')
 
+const route = useRoute()
+const isAdminRoute = computed(() => route.path.startsWith('/admin'))
+const isProRoute = computed(() => route.path.startsWith('/app') || route.path.startsWith('/pro'))
+
 const isHeaderVisible = ref(true)
 let lastScrollPosition = 0
 
@@ -24,16 +28,24 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 </script>
 
 <template>
-  <div class="min-h-screen bg-background text-foreground flex flex-col font-sans antialiased pb-24">
+  <div 
+    class="min-h-screen text-foreground flex flex-col font-sans antialiased pb-24 transition-colors duration-500"
+    :class="isAdminRoute ? 'bg-slate-950 text-slate-100' : 'bg-background'"
+  >
 
     <!-- Header — identique au layout default, se cache au scroll vers le bas -->
     <header
-      class="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm transition-transform duration-300"
-      :class="isHeaderVisible ? 'translate-y-0' : '-translate-y-full'"
+      class="sticky top-0 z-40 border-b transition-transform duration-300"
+      :class="[
+        isHeaderVisible ? 'translate-y-0' : '-translate-y-full',
+        isAdminRoute ? 'border-slate-800 bg-slate-950/95 backdrop-blur-sm' : 'border-border bg-background/95 backdrop-blur-sm'
+      ]"
     >
       <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        <NuxtLink to="/" class="text-base font-bold tracking-tight text-foreground hover:opacity-70 transition-opacity">
+        <NuxtLink to="/" class="text-base font-bold tracking-tight hover:opacity-70 transition-opacity flex items-center gap-2">
           BÂTI-AXE
+          <span v-if="isAdminRoute" class="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-sm bg-red-500/10 text-red-500 border border-red-500/20">Admin</span>
+          <span v-else-if="isProRoute" class="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-sm bg-foreground/10 text-foreground border border-foreground/20">Pro</span>
         </NuxtLink>
         <nav class="flex items-center gap-2">
           <template v-if="user">
@@ -61,8 +73,8 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
       <slot />
     </main>
 
-    <!-- Navigation basse flottante (mobile) -->
-    <div class="fixed bottom-5 left-1/2 -translate-x-1/2 w-[92%] max-w-sm z-50">
+    <!-- Navigation basse flottante (mobile) -> Uniquement pour les Pros -->
+    <div v-if="!isAdminRoute" class="fixed bottom-5 left-1/2 -translate-x-1/2 w-[92%] max-w-sm z-50">
       <nav class="flex items-center justify-around px-6 py-3.5 bg-foreground/95 backdrop-blur-xl rounded-full shadow-2xl border border-foreground/10 text-background/50">
 
         <NuxtLink
