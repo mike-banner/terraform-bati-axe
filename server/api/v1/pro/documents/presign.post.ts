@@ -59,11 +59,11 @@ export default defineEventHandler(async (event) => {
     const aws = getAwsClient(config)
     const url = new URL(`https://${accountId}.r2.cloudflarestorage.com/${bucket}/${fileKey}`)
     
+    // On ne passe PAS de headers ici pour éviter que la signature ne soit trop stricte.
+    // Si on signe le Content-Type et que le navigateur envoie un Content-Type légèrement différent
+    // (ex: rajout de charset), R2 rejette avec 403, ce qui déclenche une erreur CORS "Failed to fetch".
     const request = await aws.sign(url, {
       method: 'PUT',
-      headers: {
-        'Content-Type': contentType
-      },
       aws: { signQuery: true }
     })
 

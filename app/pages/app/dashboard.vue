@@ -86,7 +86,13 @@ async function uploadDoc(type: 'kbis' | 'decennale') {
     await loadProData() // refresh badges
   } catch (err: any) {
     uploads[type].status = 'error'
-    uploads[type].error  = err.data?.message || err.message || 'Erreur.'
+    const errorMsg = err.data?.message || err.message || 'Erreur.'
+    // Différencier l'erreur pour aider au debug
+    if (errorMsg === 'Failed to fetch') {
+      uploads[type].error = 'Erreur réseau (CORS ou blocage navigateur) lors du transfert vers R2.'
+    } else {
+      uploads[type].error = errorMsg
+    }
   }
 }
 
