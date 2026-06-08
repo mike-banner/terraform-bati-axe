@@ -79,9 +79,14 @@ async function uploadDoc(type: 'kbis' | 'decennale') {
     if (presign.status !== 'SUCCESS') throw new Error('Erreur de signature.')
     const res = await fetch(presign.signedUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file })
     if (!res.ok) throw new Error('Échec du transfert.')
-    await (supabase as any).from('verifications').insert({
-      pro_id: user.value?.id, document_type: type, file_key: presign.fileKey, status: 'pending'
-    })
+    const { data: existing } = await supabase.from('verifications').select('id').eq('pro_id', user.value?.id).eq('document_type', type).maybeSingle()
+    if (existing) {
+      const { error: updateErr } = await (supabase as any).from('verifications').update({ file_key: presign.fileKey, status: 'pending' }).eq('id', (existing as any).id)
+      if (updateErr) throw new Error(updateErr.message)
+    } else {
+      const { error: insertErr } = await (supabase as any).from('verifications').insert({ pro_id: user.value?.id, document_type: type, file_key: presign.fileKey, status: 'pending' })
+      if (insertErr) throw new Error(insertErr.message)
+    }
     uploads[type].status = 'success'
     await loadProData() // refresh badges
   } catch (err: any) {
@@ -178,9 +183,17 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
           <p v-if="uploads.kbis.status === 'error'" class="text-xs text-red-600 mt-1">{{ uploads.kbis.error }}</p>
           <p v-if="uploads.kbis.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ KBIS envoyé</p>
         </div>
-        <div v-else class="mb-4 flex items-center gap-2 text-xs text-foreground">
-          <svg class="w-4 h-4 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-          KBIS — <span :class="docStatus(kbis).cls" class="px-2 py-0.5 border rounded-full font-semibold">{{ docStatus(kbis).label }}</span>
+        <div v-else class="mb-4 flex items-center gap-3 text-xs text-foreground flex-wrap">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            KBIS — <span :class="docStatus(kbis).cls" class="px-2 py-0.5 border rounded-full font-semibold">{{ docStatus(kbis).label }}</span>
+          </div>
+          <label class="cursor-pointer">
+            <input type="file" @change="onFileSelect($event, 'kbis'); uploadDoc('kbis')" accept=".pdf,image/*" class="sr-only" />
+            <span class="text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2">
+              {{ uploads.kbis.status === 'uploading' ? 'Envoi...' : 'Modifier' }}
+            </span>
+          </label>
         </div>
 
         <!-- Décennale -->
@@ -208,9 +221,17 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
           <p v-if="uploads.decennale.status === 'error'" class="text-xs text-red-600 mt-1">{{ uploads.decennale.error }}</p>
           <p v-if="uploads.decennale.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ Décennale envoyée</p>
         </div>
-        <div v-else class="flex items-center gap-2 text-xs text-foreground">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-          Décennale — <span :class="docStatus(decennale).cls" class="px-2 py-0.5 border rounded-full font-semibold">{{ docStatus(decennale).label }}</span>
+        <div v-else class="flex items-center gap-3 text-xs text-foreground flex-wrap">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            Décennale — <span :class="docStatus(decennale).cls" class="px-2 py-0.5 border rounded-full font-semibold">{{ docStatus(decennale).label }}</span>
+          </div>
+          <label class="cursor-pointer">
+            <input type="file" @change="onFileSelect($event, 'decennale'); uploadDoc('decennale')" accept=".pdf,image/*" class="sr-only" />
+            <span class="text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2">
+              {{ uploads.decennale.status === 'uploading' ? 'Envoi...' : 'Modifier' }}
+            </span>
+          </label>
         </div>
       </div>
 
