@@ -274,27 +274,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
         </div>
       </div>
 
-      <!-- Documents status (quand tout est envoyé) -->
-      <div v-if="docsComplete" class="border-t border-border pt-8 mb-10">
-        <h2 class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-4">Documents</h2>
-        <div class="grid grid-cols-2 gap-3">
-          <div class="p-4 border border-border rounded-lg">
-            <p class="text-xs text-muted-foreground mb-1">Kbis</p>
-            <span class="inline-flex text-xs font-semibold px-2 py-0.5 rounded-full border" :class="docStatus(kbis).cls">
-              {{ docStatus(kbis).label }}
-            </span>
-          </div>
-          <div class="p-4 border border-border rounded-lg">
-            <p class="text-xs text-muted-foreground mb-1">Décennale</p>
-            <span class="inline-flex text-xs font-semibold px-2 py-0.5 rounded-full border" :class="docStatus(decennale).cls">
-              {{ docStatus(decennale).label }}
-            </span>
-            <p v-if="decennale?.expiry_date" class="text-xs text-muted-foreground mt-1">
-              Expire le {{ new Date(decennale.expiry_date).toLocaleDateString('fr-FR') }}
-            </p>
-          </div>
-        </div>
-      </div>
+
 
     </template>
   </div>
