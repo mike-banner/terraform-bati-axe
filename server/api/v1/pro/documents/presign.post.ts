@@ -9,9 +9,18 @@ const presignSchema = z.object({
 })
 
 function getAwsClient(config: any, env: any) {
+  // Use config directly for r2AccessKeyId if it exists, otherwise check env
+  // Sometimes Cloudflare Pages bindings lowercase keys or remove parts
+  const accessKeyId = config.r2AccessKeyId || env.R2_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY_ID || 'mock'
+  const secretAccessKey = config.r2SecretAccessKey || env.R2_SECRET_ACCESS_KEY || process.env.R2_SECRET_ACCESS_KEY || 'mock'
+  
+  if (accessKeyId === 'mock' || secretAccessKey === 'mock') {
+     console.warn('WARNING: Missing R2 credentials, using mock')
+  }
+
   return new AwsClient({
-    accessKeyId: config.r2AccessKeyId || env.R2_ACCESS_KEY_ID || 'mock',
-    secretAccessKey: config.r2SecretAccessKey || env.R2_SECRET_ACCESS_KEY || 'mock',
+    accessKeyId,
+    secretAccessKey,
     service: 's3',
     region: 'auto'
   })
@@ -20,7 +29,7 @@ function getAwsClient(config: any, env: any) {
 export default defineEventHandler(async (event) => {
   try {
     const config = useRuntimeConfig(event)
-    const env = event.context.cloudflare?.env || process.env || {}
+    const env = event.context.cloudflare?.env || {}
     
     // 1. Authenticate
     const user = await serverSupabaseUser(event)
@@ -49,11 +58,10 @@ export default defineEventHandler(async (event) => {
     }
 
     const extension = filename.split('.').pop()?.toLowerCase() || 'pdf'
-    const contentType = extension === 'pdf' ? 'application/pdf' : `image/${extension}`
     
     // Fallbacks sécurisés
-    const accountId = config.r2AccountId || env.R2_ACCOUNT_ID || 'mock'
-    const bucket = config.r2BucketName || env.R2_BUCKET_NAME || 'batiaxe-documents'
+    const accountId = config.r2AccountId || env.R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID || 'mock'
+    const bucket = config.r2BucketName || env.R2_BUCKET_NAME || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
     const fileKey = `${targetUserId}/${document_type}-${Date.now()}.${extension}`
 
     // 4. Generate presigned PUT URL using aws4fetch (Edge compatible)
