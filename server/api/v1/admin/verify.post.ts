@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Non autorisé.'
       })
     }
-    const userId = (user as any).id ?? (user as any).sub
+    const userId: string | null = (user as any).id ?? (user as any).sub ?? (user as any).user_metadata?.sub ?? null
 
     // 2. Authorize admin — role stored in app_metadata (JWT claim, set via service_role only)
     const isAdmin = (user as any).app_metadata?.role === 'admin'

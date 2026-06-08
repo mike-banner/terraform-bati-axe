@@ -42,6 +42,18 @@ useHead({
       </div>
     </section>
 
+    <!-- Before / After visual -->
+    <section class="max-w-6xl mx-auto px-6 pb-20">
+      <BeforeAfterSlider
+        before-src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1400&q=80"
+        after-src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1400&q=80"
+        before-label="Avant travaux"
+        after-label="Après travaux"
+        before-alt="Chantier de rénovation en cours"
+        after-alt="Rénovation terminée"
+      />
+    </section>
+
     <!-- Divider -->
     <div class="border-t border-border" />
 

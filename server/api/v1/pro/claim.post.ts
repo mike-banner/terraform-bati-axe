@@ -12,7 +12,7 @@ const claimSchema = z.object({
   full_name: z.string().min(2, 'Le nom du gérant est requis.'),
   phone: z.string().regex(/^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone invalide.'),
   postal_code: z.string().regex(/^\d{5}$/, 'Code postal invalide.'),
-  category: z.enum(VALID_CATEGORIES, { errorMap: () => ({ message: 'Corps de métier invalide.' }) }),
+  category: z.enum(VALID_CATEGORIES, { error: 'Corps de métier invalide.' }),
   sms_opt_in: z.boolean().default(false)
 })
 
@@ -51,7 +51,18 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Non autorisé. Veuillez vous connecter.'
       })
     }
-    const userId = (user as any).id ?? (user as any).sub
+    const userId: string | null =
+      (user as any).id ??
+      (user as any).sub ??
+      (user as any).user_metadata?.sub ??
+      null
+
+    if (!userId) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Impossible de résoudre l\'identifiant utilisateur depuis le JWT.'
+      })
+    }
 
     // 2. Validate payload
     const body = await readBody(event)

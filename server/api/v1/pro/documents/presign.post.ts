@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   if (!user) {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
   }
-  const userId = (user as any).id ?? (user as any).sub
+  const userId: string | null = (user as any).id ?? (user as any).sub ?? (user as any).user_metadata?.sub ?? null
 
   // 2. Validate payload
   const body = await readBody(event)
