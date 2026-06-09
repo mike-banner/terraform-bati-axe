@@ -42,6 +42,17 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 409, statusMessage: 'Ce lead est déjà attribué.' })
   }
 
+  // Check how many siblings are already claimed (Cap at 3)
+  const { count: claimedCount } = await supabase
+    .from('leads')
+    .select('id', { count: 'exact', head: true })
+    .eq('project_id', lead.project_id)
+    .eq('status', 'claimed')
+    
+  if ((claimedCount || 0) >= 3) {
+    throw createError({ statusCode: 409, statusMessage: 'Ce lead a déjà été réclamé par le nombre maximum de professionnels (3).' })
+  }
+
   // Claim the pro's own lead row (double ownership check on update — T-04-10)
   const { error: claimError } = await supabase
     .from('leads')
@@ -53,12 +64,14 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 500, statusMessage: 'Erreur lors de la mise à jour du lead.' })
   }
 
-  // Propagate claimed status to sibling leads so BASIC pros see "Déjà attribué" (D-10)
-  await supabase
-    .from('leads')
-    .update({ status: 'claimed' })
-    .eq('project_id', lead.project_id)
-    .neq('pro_id', user.id)
+  // If this was the 3rd claim, we lock out the remaining pros
+  if ((claimedCount || 0) + 1 >= 3) {
+    await supabase
+      .from('leads')
+      .update({ status: 'claimed' }) // 'claimed' serves as the locked/hidden state for other pros
+      .eq('project_id', lead.project_id)
+      .neq('status', 'claimed')
+  }
 
   return { claimed: true, lead_id: id }
 })

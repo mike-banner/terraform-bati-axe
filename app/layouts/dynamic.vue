@@ -78,7 +78,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
       <nav class="flex items-center justify-around px-6 py-3.5 bg-foreground/95 backdrop-blur-xl rounded-full shadow-2xl border border-foreground/10 text-background/50">
 
         <NuxtLink
-          to="/app/dashboard"
+          to="/espace/profil"
           class="flex flex-col items-center gap-1 transition-colors duration-200 hover:text-background cursor-pointer"
           active-class="text-background"
         >
@@ -104,7 +104,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
         </NuxtLink>
 
         <NuxtLink
-          to="/app/messages"
+          to="/espace/messages"
           class="flex flex-col items-center gap-1 transition-colors duration-200 hover:text-background cursor-pointer relative"
           active-class="text-background"
         >
