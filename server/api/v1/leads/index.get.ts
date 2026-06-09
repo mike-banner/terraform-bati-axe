@@ -1,10 +1,11 @@
-import { serverSupabaseUser } from '#supabase/server'
+import { serverSupabaseClient } from '#supabase/server'
 import { createClient } from '@supabase/supabase-js'
 import { maskLead } from '../../../utils/maskLead'
 
 export default defineEventHandler(async (event) => {
-  const user = await serverSupabaseUser(event)
-  if (!user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
+  const supabaseAuth = await serverSupabaseClient(event) as any
+  const { data: { user }, error: authError } = await supabaseAuth.auth.getUser()
+  if (authError || !user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
 
   const config = useRuntimeConfig(event)
   const env = event.context.cloudflare?.env || {}

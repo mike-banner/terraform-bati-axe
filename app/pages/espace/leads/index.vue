@@ -64,6 +64,26 @@ async function logCheckoutStarted() {
     await $fetch('/api/v1/paywall-events', { method: 'POST', body: { event_type: 'checkout_started' } })
   } catch { /* silent */ }
 }
+
+async function updateLeadStatus(lead: any, newStatus: string) {
+  const oldStatus = lead.db_status
+  lead.db_status = newStatus
+  try {
+    await $fetch(`/api/v1/leads/${lead.id}/status`, {
+      method: 'PATCH',
+      body: { status: newStatus }
+    })
+  } catch (err) {
+    lead.db_status = oldStatus
+    alert("Impossible de mettre à jour le statut du lead.")
+  }
+}
+
+async function copyToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch { /* silent */ }
+}
 </script>
 
 <template>
@@ -279,7 +299,18 @@ async function logCheckoutStarted() {
             </div>
             <div class="flex items-center gap-2 text-sm">
               <span class="text-muted-foreground">Tél.</span>
-              <span class="text-foreground font-semibold">{{ lead.customer_phone }}</span>
+              <span class="text-foreground font-semibold flex items-center gap-2">
+                {{ lead.customer_phone }}
+                <button @click="copyToClipboard(lead.customer_phone)" title="Copier le numéro" class="text-muted-foreground hover:text-foreground transition-colors">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"/>
+                  </svg>
+                </button>
+              </span>
+            </div>
+            <!-- Description Preview -->
+            <div class="pt-1">
+              <span class="text-muted-foreground text-xs line-clamp-2">{{ lead.description }}</span>
             </div>
             <!-- Qualification badges (D-12) -->
             <div class="flex items-center gap-2 pt-1">
@@ -306,17 +337,48 @@ async function logCheckoutStarted() {
               <span class="ml-1 text-xs text-muted-foreground">{{ lead.qualify_score }}/4</span>
             </div>
           </div>
-          <div class="px-5 py-4">
-            <NuxtLink
-              :to="`/espace/leads/${lead.id}`"
-              class="inline-flex items-center justify-center gap-2 w-full h-9 px-4 border border-border text-foreground text-xs font-semibold rounded-md hover:bg-muted transition-colors"
-            >
-              Voir le contact
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </NuxtLink>
-          </div>
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex-1">
+                <select
+                  :value="lead.db_status"
+                  @change="updateLeadStatus(lead, ($event.target as HTMLSelectElement).value)"
+                  class="w-full h-9 px-3 border border-border rounded-md text-xs font-semibold text-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20 appearance-none cursor-pointer"
+                >
+                  <option value="new">Nouveau lead</option>
+                  <option value="contacted">Déjà contacté</option>
+                  <option value="won">Chantier gagné</option>
+                  <option value="lost">Chantier perdu</option>
+                </select>
+              </div>
+              <div class="flex gap-2 shrink-0">
+                <a
+                  :href="`tel:${lead.customer_phone}`"
+                  class="inline-flex items-center justify-center w-9 h-9 border border-border text-foreground rounded-md hover:bg-muted transition-colors"
+                  title="Appeler"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
+                  </svg>
+                </a>
+                <a
+                  :href="`mailto:${lead.customer_email}`"
+                  class="inline-flex items-center justify-center w-9 h-9 border border-border text-foreground rounded-md hover:bg-muted transition-colors"
+                  title="Envoyer un email"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            <div class="px-5 pb-4">
+              <NuxtLink
+                :to="`/espace/leads/${lead.id}`"
+                class="inline-flex items-center justify-center gap-2 w-full h-9 px-4 text-muted-foreground text-xs font-semibold rounded-md hover:text-foreground transition-colors"
+              >
+                Voir les détails du projet
+              </NuxtLink>
+            </div>
         </template>
 
         <!-- ── Variant C: Claimed ── -->

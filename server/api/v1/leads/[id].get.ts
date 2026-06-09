@@ -1,9 +1,10 @@
-import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
+import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { maskLead } from '../../../utils/maskLead'
 
 export default defineEventHandler(async (event) => {
-  const user = await serverSupabaseUser(event)
-  if (!user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
+  const supabaseAuth = await serverSupabaseClient(event) as any
+  const { data: { user }, error: authError } = await supabaseAuth.auth.getUser()
+  if (authError || !user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
 
   const id = getRouterParam(event, 'id')
   if (!id) throw createError({ statusCode: 400, statusMessage: 'Identifiant de lead manquant.' })

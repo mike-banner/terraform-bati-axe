@@ -42,6 +42,27 @@ const formattedDate = computed(() =>
     ? new Date(lead.value.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
     : ''
 )
+
+async function updateLeadStatus(newStatus: string) {
+  if (!lead.value) return
+  const oldStatus = lead.value.db_status
+  lead.value.db_status = newStatus
+  try {
+    await $fetch(`/api/v1/leads/${route.params.id}/status`, {
+      method: 'PATCH',
+      body: { status: newStatus }
+    })
+  } catch (err) {
+    lead.value.db_status = oldStatus
+    alert("Impossible de mettre à jour le statut du lead.")
+  }
+}
+
+async function copyToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch { /* silent */ }
+}
 </script>
 
 <template>
@@ -139,7 +160,14 @@ const formattedDate = computed(() =>
               <svg class="w-3.5 h-3.5 shrink-0 text-muted-foreground" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
               </svg>
-              <span class="text-sm font-semibold text-foreground">{{ lead.customer_phone }}</span>
+              <span class="text-sm font-semibold text-foreground flex items-center gap-2">
+                {{ lead.customer_phone }}
+                <button @click="copyToClipboard(lead.customer_phone)" title="Copier le numéro" class="text-muted-foreground hover:text-foreground transition-colors">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"/>
+                  </svg>
+                </button>
+              </span>
             </div>
             <div class="flex items-center gap-3 px-5 py-3">
               <svg class="w-3.5 h-3.5 shrink-0 text-muted-foreground" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -173,6 +201,21 @@ const formattedDate = computed(() =>
               </svg>
               Envoyer un email
             </a>
+          </div>
+
+          <!-- CRM Status Tracker -->
+          <div class="mt-8 border-t border-border pt-8">
+            <h2 class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-4">Statut de la prospection</h2>
+            <select
+              :value="lead.db_status"
+              @change="updateLeadStatus(($event.target as HTMLSelectElement).value)"
+              class="w-full px-4 py-3 border border-border rounded-md text-sm font-semibold text-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20 appearance-none cursor-pointer"
+            >
+              <option value="new">Nouveau lead (À contacter)</option>
+              <option value="contacted">Déjà contacté (En attente/Devis)</option>
+              <option value="won">Chantier gagné (Signé)</option>
+              <option value="lost">Chantier perdu</option>
+            </select>
           </div>
         </template>
 

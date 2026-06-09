@@ -38,6 +38,7 @@ export function maskLead(lead: any, isPremium: boolean, now: Date, isFreeGranted
   return {
     id: lead.id,
     status: 'unlocked',
+    db_status: lead.status, // Original DB status for CRM tracking
     unlocked_at: lead.unlocked_at,
     created_at: lead.created_at,
     category: proj.category,

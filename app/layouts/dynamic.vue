@@ -90,7 +90,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
         </NuxtLink>
 
         <NuxtLink
-          to="/app/leads"
+          to="/espace/leads"
           class="flex flex-col items-center gap-1 transition-colors duration-200 hover:text-background cursor-pointer"
           active-class="text-background"
         >
