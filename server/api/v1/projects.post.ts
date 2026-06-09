@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
         qualify_description: qualifyDescription,
         qualify_returning: qualifyReturning
       })
-      .select('id')
+      .select('id, access_token')
       .single()
 
     if (projectError || !project) {
@@ -144,6 +144,13 @@ export default defineEventHandler(async (event) => {
       // Non-blocking but should be logged or handled
       console.error('Failed to log consent status:', consentError)
     }
+
+    // Mock Email for Magic Link (Phase 5)
+    console.log('\n=============================================')
+    console.log('MOCK EMAIL: Nouveau projet BÂTI-AXE créé !')
+    console.log(`À: ${data.customer_email}`)
+    console.log(`Lien magique (Espace Client): http://localhost:3000/mon-projet/${project.access_token}`)
+    console.log('=============================================\n')
 
     // 6. Log audit entry for tracking
     await supabase

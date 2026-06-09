@@ -30,11 +30,51 @@ const { data: lead, pending, error } = await useAsyncData(
   () => $fetch<{ lead: any }>(`/api/v1/leads/${route.params.id}`).then(r => r.lead)
 )
 
+const isUnlocked = computed(() => lead.value?.status === 'unlocked')
+
+// Only fetch messages if the lead is unlocked
+const { data: messagesData, refresh: refreshMessages } = await useAsyncData(
+  `lead-messages-${route.params.id}`,
+  () => $fetch<{ messages: any[] }>(`/api/v1/messages?lead_id=${route.params.id}`),
+  { watch: [isUnlocked], immediate: false }
+)
+
+// Fetch manually if it's already unlocked on initial load
+watchEffect(() => {
+  if (isUnlocked.value && !messagesData.value) {
+    refreshMessages()
+  }
+})
+
+const messages = computed(() => messagesData.value?.messages || [])
+const chatInput = ref('')
+const isSending = ref(false)
+
+async function sendChatMessage() {
+  if (!chatInput.value.trim() || isSending.value) return
+  isSending.value = true
+  try {
+    await $fetch('/api/v1/messages', {
+      method: 'POST',
+      body: {
+        lead_id: route.params.id,
+        content: chatInput.value
+      }
+    })
+    chatInput.value = ''
+    await refreshMessages()
+  } catch (err) {
+    alert("Impossible d'envoyer le message.")
+  } finally {
+    isSending.value = false
+  }
+}
+
 useHead({
   title: computed(() => `Lead ${CATEGORY_LABELS[lead.value?.category] ?? lead.value?.category ?? ''} — BÂTI-AXE`)
 })
 
-const isUnlocked = computed(() => lead.value?.status === 'unlocked')
+
 const isLocked   = computed(() => lead.value?.status === 'locked')
 
 const formattedDate = computed(() =>
@@ -201,6 +241,51 @@ async function copyToClipboard(text: string) {
               </svg>
               Envoyer un email
             </a>
+          </div>
+
+          <!-- Integrated Chat Section -->
+          <div class="mt-8 border-t border-border pt-8">
+            <h2 class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-4">Messages avec le client</h2>
+            
+            <div class="bg-muted/30 border border-border rounded-lg overflow-hidden flex flex-col h-96">
+              <!-- Message list -->
+              <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
+                <div v-if="messages.length === 0" class="text-center text-sm text-muted-foreground my-auto">
+                  Aucun message. Envoyez le premier !
+                </div>
+                
+                <div v-for="msg in messages" :key="msg.id" class="flex" :class="msg.is_pro_sender ? 'justify-end' : 'justify-start'">
+                  <div class="max-w-[80%] rounded-2xl px-4 py-2 shadow-sm text-sm"
+                       :class="msg.is_pro_sender ? 'bg-foreground text-background rounded-tr-none' : 'bg-background border border-border text-foreground rounded-tl-none'">
+                    <p class="whitespace-pre-wrap">{{ msg.content }}</p>
+                    <p class="text-[10px] mt-1 text-right opacity-70">
+                      {{ new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Input -->
+              <div class="p-3 bg-background border-t border-border">
+                <form @submit.prevent="sendChatMessage" class="flex gap-2">
+                  <input 
+                    v-model="chatInput" 
+                    type="text" 
+                    placeholder="Votre message..." 
+                    class="flex-1 h-9 rounded-md border-border text-sm px-3 focus:ring-1 focus:ring-foreground/20 focus:border-foreground"
+                    required
+                    :disabled="isSending"
+                  />
+                  <button 
+                    type="submit" 
+                    class="inline-flex items-center justify-center h-9 px-4 text-xs font-semibold rounded-md bg-foreground text-background hover:opacity-80 transition-opacity disabled:opacity-50"
+                    :disabled="!chatInput || isSending"
+                  >
+                    Envoyer
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
 
           <!-- CRM Status Tracker -->
