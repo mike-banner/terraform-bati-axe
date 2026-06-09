@@ -33,6 +33,9 @@ export default defineEventHandler(async (event) => {
     sessionParams.customer_email = user.email ?? undefined
   }
 
+  // Phase 4.5: 14-day free trial per CNV-02 / D-06 / D-07 — CB required at trial start (Stripe default)
+  sessionParams.subscription_data = { trial_period_days: 14 }
+
   try {
     const session = await stripe.checkout.sessions.create(sessionParams)
     return { url: session.url }
