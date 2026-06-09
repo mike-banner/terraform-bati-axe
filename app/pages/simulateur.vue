@@ -123,7 +123,7 @@ const handleSubmit = async () => {
   submitError.value  = null
 
   try {
-    const { data, error } = await useFetch<{ status: string; projectId: string; zoneName: string }>('/api/v1/projects', {
+    const data = await $fetch<{ status: string; projectId: string; zoneName: string }>('/api/v1/projects', {
       method: 'POST',
       body: {
         category:       form.category,
@@ -139,13 +139,12 @@ const handleSubmit = async () => {
       }
     })
 
-    if (error.value) throw new Error(error.value.data?.data?.message || error.value.statusMessage || 'Une erreur est survenue.')
-    if (data.value?.status === 'SUCCESS') {
-      createdProjectId.value = data.value.projectId
+    if (data?.status === 'SUCCESS') {
+      createdProjectId.value = data.projectId
       step.value = 8
     }
   } catch (err: any) {
-    submitError.value = err.message || 'Une erreur serveur est survenue. Veuillez réessayer.'
+    submitError.value = err.data?.data?.message || err.statusMessage || err.message || 'Une erreur serveur est survenue. Veuillez réessayer.'
   } finally {
     isSubmitting.value = false
   }

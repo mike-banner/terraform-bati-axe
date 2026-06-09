@@ -57,7 +57,6 @@ export default defineEventHandler(async (event) => {
   const { data: message, error: insertError } = await supabase
     .from('messages')
     .insert({
-      project_id: lead.project_id,
       lead_id: lead.id,
       content,
       is_pro_sender: isProSender

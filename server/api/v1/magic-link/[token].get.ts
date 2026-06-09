@@ -27,14 +27,15 @@ export default defineEventHandler(async (event) => {
       is_pro_sender,
       created_at,
       lead_id,
-      leads (
+      leads!inner (
+        project_id,
         pro_id,
         professionals (
           company_name
         )
       )
     `)
-    .eq('project_id', project.id)
+    .eq('leads.project_id', project.id)
     .order('created_at', { ascending: true })
 
   if (messagesError) {

@@ -87,7 +87,7 @@ export default defineEventHandler(async (event) => {
         timeline_range: data.timeline_range ?? null,
         postal_code: data.postal_code,
         zone_id: matchedZone.id,
-        status: 'pending',
+        status: 'qualified',
         // D-10: stored at insert time; D-11: 4 criteria
         qualify_score: qualifyScore,
         qualify_budget: qualifyBudget,
@@ -105,7 +105,33 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // 4. Save CGU consent row
+    // 4. Distribute leads to verified pros matching the category
+    const { data: pros, error: prosError } = await supabase
+      .from('professionals')
+      .select('id')
+      .eq('category', data.category)
+      .eq('is_verified', true)
+
+    if (prosError) {
+      console.error('Failed to fetch pros for distribution:', prosError)
+    } else if (pros && pros.length > 0) {
+      const leads = pros.map((p: any) => ({
+        project_id: project.id,
+        pro_id: p.id,
+        status: 'new',
+        unlocked_at: null,
+      }))
+
+      const { error: upsertError } = await supabase
+        .from('leads')
+        .upsert(leads, { onConflict: 'project_id,pro_id' })
+
+      if (upsertError) {
+        console.error('Failed to distribute leads:', upsertError)
+      }
+    }
+
+    // 5. Save CGU consent row
     const consentsToInsert: Array<{
       subject_type: string; subject_id: string; channel: string; status: string;
       source: string; ip: string | undefined; user_agent: string | undefined; cgu_version: string | null
@@ -122,7 +148,7 @@ export default defineEventHandler(async (event) => {
       }
     ]
 
-    // 5. Save SMS consent if opted in
+    // 6. Save SMS consent if opted in
     if (data.sms_opt_in) {
       consentsToInsert.push({
         subject_type: 'customer',
@@ -152,7 +178,7 @@ export default defineEventHandler(async (event) => {
     console.log(`Lien magique (Espace Client): http://localhost:3000/mon-projet/${project.access_token}`)
     console.log('=============================================\n')
 
-    // 6. Log audit entry for tracking
+    // 7. Log audit entry for tracking
     await supabase
       .from('audit_logs')
       .insert({

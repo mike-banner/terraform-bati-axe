@@ -117,7 +117,7 @@ const route = useRoute()
 const token = route.params.token
 
 definePageMeta({
-  layout: 'empty'
+  layout: false
 })
 
 useHead({
