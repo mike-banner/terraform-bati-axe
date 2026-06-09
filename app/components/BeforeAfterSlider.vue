@@ -29,7 +29,7 @@ function onMouseLeave() {
   isHovering.value = false
   split.value = 50
 }
-function onTouchMove(e: TouchEvent) { getPosition(e.touches[0]) }
+function onTouchMove(e: TouchEvent) { if (e.touches[0]) getPosition(e.touches[0]) }
 </script>
 
 <template>

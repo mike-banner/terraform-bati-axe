@@ -434,10 +434,10 @@ const statusLabel: Record<string, string> = {
                         <span class="text-xs text-muted-foreground truncate w-24" :title="uploadState[`${pro.id}-${docType}`]?.file?.name">{{ uploadState[`${pro.id}-${docType}`]?.file?.name }}</span>
                         <button
                           @click="uploadAdminDoc(pro.id, docType)"
-                          :disabled="uploadState[`${pro.id}-${docType}`].status === 'uploading'"
+                          :disabled="uploadState[`${pro.id}-${docType}`]?.status === 'uploading'"
                           class="h-8 px-3 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-1.5 disabled:opacity-40"
                         >
-                           <svg v-if="uploadState[`${pro.id}-${docType}`].status === 'uploading'" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                           <svg v-if="uploadState[`${pro.id}-${docType}`]?.status === 'uploading'" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
                            Envoyer
                         </button>
                       </div>
@@ -446,7 +446,7 @@ const statusLabel: Record<string, string> = {
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
                         Uploader
                       </label>
-                      <p v-if="uploadState[`${pro.id}-${docType}`]?.error" class="text-xs text-red-600 ml-2 mt-1">{{ uploadState[`${pro.id}-${docType}`].error }}</p>
+                      <p v-if="uploadState[`${pro.id}-${docType}`]?.error" class="text-xs text-red-600 ml-2 mt-1">{{ uploadState[`${pro.id}-${docType}`]?.error }}</p>
                     </template>
                   </div>
                 </div>

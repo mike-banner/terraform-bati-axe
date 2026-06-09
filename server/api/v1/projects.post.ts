@@ -13,9 +13,7 @@ const createProjectSchema = z.object({
   customer_name: z.string().min(2, 'Le nom doit comporter au moins 2 caractères.'),
   customer_email: z.string().email('Adresse email invalide.'),
   customer_phone: z.string().regex(phoneRegex, 'Numéro de téléphone invalide.'),
-  cgu_accepted: z.literal(true, {
-    errorMap: () => ({ message: 'Vous devez accepter les CGU.' })
-  }),
+  cgu_accepted: z.literal(true, 'Vous devez accepter les CGU.'),
   sms_opt_in: z.boolean().default(false),
   timeline_range: z.enum(['1_semaine', '1_mois', '3_mois', '6_mois', 'flexible']).optional()
 })
@@ -35,7 +33,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const data = validation.data
-    const supabase = await serverSupabaseServiceRole(event)
+    const supabase = await serverSupabaseServiceRole(event) as any
 
     // 2. Verify if the postal code belongs to an active pilot zone
     const { data: matchedZone, error: zoneError } = await supabase
@@ -90,7 +88,10 @@ export default defineEventHandler(async (event) => {
     }
 
     // 4. Save CGU consent row
-    const consentsToInsert = [
+    const consentsToInsert: Array<{
+      subject_type: string; subject_id: string; channel: string; status: string;
+      source: string; ip: string | undefined; user_agent: string | undefined; cgu_version: string | null
+    }> = [
       {
         subject_type: 'customer',
         subject_id: project.id,
