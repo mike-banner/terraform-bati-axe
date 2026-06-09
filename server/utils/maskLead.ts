@@ -1,4 +1,4 @@
-export function maskLead(lead: any, isPremium: boolean, now: Date): Record<string, any> {
+export function maskLead(lead: any, isPremium: boolean, now: Date, isFreeGranted: boolean = false): Record<string, any> {
   const proj = lead.projects || {}
 
   // Claimed by another pro: show only non-sensitive lead info (D-10)
@@ -14,7 +14,8 @@ export function maskLead(lead: any, isPremium: boolean, now: Date): Record<strin
     }
   }
 
-  const isUnlocked = isPremium || (lead.unlocked_at !== null && new Date(lead.unlocked_at) <= now)
+  // D-03: free-grant path — first 3 leads tracked in free_lead_grants junction table
+  const isUnlocked = isPremium || isFreeGranted || (lead.unlocked_at !== null && new Date(lead.unlocked_at) <= now)
 
   if (!isUnlocked) {
     // BASIC pro, 72h not elapsed: mask all customer-identifying fields (D-05)

@@ -35,6 +35,18 @@ export default defineEventHandler(async (event) => {
     const data = validation.data
     const supabase = await serverSupabaseServiceRole(event) as any
 
+    // D-11: compute qualification criteria (T-04.5-10: computed server-side, never read from body)
+    // D-13: informational only — low scores are not rejected
+    const qualifyBudget = data.budget_range !== null && data.budget_range.length > 0
+    const qualifyPhone = data.customer_phone !== null && data.customer_phone.length > 0
+    const qualifyDescription = data.description.length > 50
+    const { count: returningCount } = await supabase
+      .from('projects')
+      .select('id', { count: 'exact', head: true })
+      .eq('customer_email', data.customer_email)
+    const qualifyReturning = (returningCount ?? 0) > 0
+    const qualifyScore = [qualifyBudget, qualifyPhone, qualifyDescription, qualifyReturning].filter(Boolean).length
+
     // 2. Verify if the postal code belongs to an active pilot zone
     const { data: matchedZone, error: zoneError } = await supabase
       .from('zones')
@@ -75,7 +87,13 @@ export default defineEventHandler(async (event) => {
         timeline_range: data.timeline_range ?? null,
         postal_code: data.postal_code,
         zone_id: matchedZone.id,
-        status: 'pending'
+        status: 'pending',
+        // D-10: stored at insert time; D-11: 4 criteria
+        qualify_score: qualifyScore,
+        qualify_budget: qualifyBudget,
+        qualify_phone: qualifyPhone,
+        qualify_description: qualifyDescription,
+        qualify_returning: qualifyReturning
       })
       .select('id')
       .single()
@@ -137,7 +155,8 @@ export default defineEventHandler(async (event) => {
         metadata: {
           category: data.category,
           postal_code: data.postal_code,
-          zone_name: matchedZone.name
+          zone_name: matchedZone.name,
+          qualify_score: qualifyScore
         }
       })
 

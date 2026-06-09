@@ -29,6 +29,13 @@ export default defineEventHandler(async (event) => {
 
   const isPremium = pro.subscription_status === 'active'
 
+  // D-03: resolve free grants for this pro to pass to maskLead (read-only, no counter mutation here)
+  const { data: grants } = await supabase
+    .from('free_lead_grants')
+    .select('lead_id')
+    .eq('pro_id', user.id)
+  const grantedSet = new Set((grants || []).map((g: any) => g.lead_id))
+
   const { data: leads, error: leadsError } = await supabase
     .from('leads')
     .select('id, status, unlocked_at, created_at, projects(id, category, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code)')
@@ -40,7 +47,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const now = new Date()
-  const masked = (leads || []).map((lead: any) => maskLead(lead, isPremium, now))
+  const masked = (leads || []).map((lead: any) => maskLead(lead, isPremium, now, grantedSet.has(lead.id)))
 
   return { leads: masked }
 })
