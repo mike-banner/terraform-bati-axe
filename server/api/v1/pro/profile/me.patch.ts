@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
+import { serverSupabaseUser, serverSupabaseClient } from '#supabase/server'
 
 // CNV-05 D-14/D-15: editable fields; canonical_slug is immutable (T-04.5-15)
 const VALID_CATEGORIES = ['maconnerie', 'toiture', 'electricite', 'plomberie', 'peinture', 'isolation'] as const
@@ -12,14 +12,13 @@ const patchSchema = z.object({
 }).strict() // D-15: canonical_slug, short_id, subscription_status etc. are rejected
 
 export default defineEventHandler(async (event) => {
-  const user = await serverSupabaseUser(event)
-  if (!user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
+  const supabase = await serverSupabaseClient(event) as any
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
 
   const body = await readBody(event)
   const parsed = patchSchema.safeParse(body)
   if (!parsed.success) throw createError({ statusCode: 400, statusMessage: parsed.error.message })
-
-  const supabase = await serverSupabaseServiceRole(event) as any
 
   const { error } = await supabase
     .from('professionals')

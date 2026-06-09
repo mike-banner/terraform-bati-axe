@@ -1,11 +1,10 @@
-import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
+import { serverSupabaseUser, serverSupabaseClient } from '#supabase/server'
 
 // CNV-05 D-14: authenticated pro reads own editable profile
 export default defineEventHandler(async (event) => {
-  const user = await serverSupabaseUser(event)
-  if (!user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
-
-  const supabase = await serverSupabaseServiceRole(event) as any
+  const supabase = await serverSupabaseClient(event) as any
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
 
   const { data: pro, error } = await supabase
     .from('professionals')
@@ -13,7 +12,15 @@ export default defineEventHandler(async (event) => {
     .eq('id', user.id)
     .single()
 
-  if (error || !pro) throw createError({ statusCode: 404, statusMessage: 'Profil professionnel introuvable.' })
+  if (error) {
+    console.error('[API] /me.get.ts Supabase error:', error)
+  }
+  if (error || !pro) {
+    throw createError({ 
+      statusCode: 404, 
+      statusMessage: `Erreur Supabase: ${error?.message || 'Aucune ligne retournée (pro null)'}` 
+    })
+  }
 
   const dept = pro.postal_code ? String(pro.postal_code).slice(0, 2) : null
 

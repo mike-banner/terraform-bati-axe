@@ -74,13 +74,14 @@ export default defineNuxtConfig({
       headers: {
         'Content-Security-Policy': [
           "default-src 'self'",
-          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com",
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://challenges.cloudflare.com",
           "connect-src 'self' ws: wss: http://127.0.0.1:54321 http://localhost:54321 https://*.supabase.co https://*.supabase.in https://*.r2.cloudflarestorage.com",
           "img-src 'self' data: blob:",
           "style-src 'self' 'unsafe-inline'",
           "font-src 'self' data:",
           "frame-src https://challenges.cloudflare.com",
-          "worker-src blob: 'self'",
+          "worker-src 'self' blob:",
+          "child-src 'self' blob:"
         ].join('; ')
       }
     }

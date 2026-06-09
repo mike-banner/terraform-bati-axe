@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: 'dynamic' })
 useHead({ title: 'Mon profil public — BÂTI-AXE' })
 
 const user = useSupabaseUser()

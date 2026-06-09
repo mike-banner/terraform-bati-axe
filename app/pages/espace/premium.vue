@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: 'dynamic' })
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const route = useRoute()

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: 'dynamic' })
 import { ref, computed, watchEffect, onMounted } from 'vue'
 
 useHead({ title: 'Mes leads — BÂTI-AXE' })

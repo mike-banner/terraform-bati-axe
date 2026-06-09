@@ -28,8 +28,8 @@ export default defineNuxtRouteMiddleware((to) => {
     return
   }
 
-  // ── /app/* — page watchEffect handles redirect if not logged in ───────────
-  if (path.startsWith('/app')) {
+  // ── /app/* and /espace/* — page watchEffect handles redirect if not logged in ───────────
+  if (path.startsWith('/app') || path.startsWith('/espace')) {
     return
   }
 
