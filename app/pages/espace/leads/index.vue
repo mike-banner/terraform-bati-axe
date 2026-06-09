@@ -18,11 +18,14 @@ const CATEGORY_LABELS: Record<string, string> = {
   isolation:    'Isolation & Cloisons',
 }
 
-const { data: leads, pending, error, refresh } = await useAsyncData('pro-leads', () =>
-  $fetch<{ leads: any[] }>('/api/v1/leads').then(r => r.leads || [])
+const { data: leadsData, pending, error, refresh } = await useAsyncData('pro-leads', () =>
+  $fetch<{ leads: any[], isPremium: boolean }>('/api/v1/leads')
 )
 
-const hasLockedLeads = computed(() => leads.value?.some((l: any) => l.status === 'locked') ?? false)
+const leads = computed(() => leadsData.value?.leads || [])
+const isPremium = computed(() => leadsData.value?.isPremium ?? false)
+
+const hasLockedLeads = computed(() => leads.value.some((l: any) => l.status === 'locked'))
 
 const route = useRoute()
 const showSuccessBanner = ref(route.query.upgrade === 'success')
@@ -49,6 +52,29 @@ onMounted(() => {
     <div class="mb-10">
       <h1 class="text-3xl font-black tracking-tight text-foreground">Mes leads</h1>
       <p class="text-sm text-muted-foreground mt-1">Leads qualifiés pour votre métier</p>
+      <NuxtLink
+        v-if="!isPremium"
+        to="/espace/premium"
+        class="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mt-2"
+      >
+        Passer Premium pour débloquer tous les contacts
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </NuxtLink>
+      <NuxtLink
+        v-else
+        to="/espace/premium"
+        class="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mt-2"
+      >
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+        </svg>
+        Abonnement Premium actif · Gérer
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </NuxtLink>
     </div>
 
     <!-- Premium banner (BASIC with locked leads) -->

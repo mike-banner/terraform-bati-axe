@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: leads, error: leadsError } = await supabase
     .from('leads')
-    .select('id, status, unlocked_at, created_at, projects(id, category, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code)')
+    .select('id, status, unlocked_at, created_at, projects(id, category, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code, qualify_score, qualify_budget, qualify_phone, qualify_description, qualify_returning)')
     .eq('pro_id', user.id)
     .order('created_at', { ascending: false })
 
@@ -47,7 +47,18 @@ export default defineEventHandler(async (event) => {
   }
 
   const now = new Date()
-  const masked = (leads || []).map((lead: any) => maskLead(lead, isPremium, now, grantedSet.has(lead.id)))
+  const enriched = (leads || []).map((lead: any) => {
+    const masked = maskLead(lead, isPremium, now, grantedSet.has(lead.id))
+    const proj = lead.projects || {}
+    return {
+      ...masked,
+      qualify_score: proj.qualify_score ?? 0,
+      qualify_budget: proj.qualify_budget ?? false,
+      qualify_phone: proj.qualify_phone ?? false,
+      qualify_description: proj.qualify_description ?? false,
+      qualify_returning: proj.qualify_returning ?? false,
+    }
+  })
 
-  return { leads: masked }
+  return { leads: enriched, isPremium }
 })
