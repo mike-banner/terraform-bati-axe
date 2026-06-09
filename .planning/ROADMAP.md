@@ -85,7 +85,7 @@ Plans:
   7. Un pro qualifié qui atteint le paywall voit sa conversion mesurable via les analytics admin.
 **Plans**: 7 plans
 Plans:
-- [ ] 04.5-01-PLAN.md — Schema migration: free_leads_used, qualify_score + 4 booleans, profile fields, paywall_events, free_lead_grants
+- [x] 04.5-01-PLAN.md — Schema migration: free_leads_used, qualify_score + 4 booleans, profile fields, paywall_events, free_lead_grants
 - [ ] 04.5-02-PLAN.md — [BLOCKING] supabase db push + verify columns
 - [ ] 04.5-03-PLAN.md — Extend maskLead + leads API for free-grant counter + compute qualify_score on projects POST
 - [ ] 04.5-04-PLAN.md — Stripe trial_period_days=14 + trial_will_end webhook + paywall analytics endpoints
@@ -131,6 +131,6 @@ Plans:
 | 2. Data Foundation & Capture mono-ville | 1/1 | Completed | 2026-06-03 |
 | 3. Onboarding Pro & Vérification manuelle | 1/1 | Completed | 2026-06-03 |
 | 4. Le Verrou & Stripe Billing | 7/7 | Completed | 2026-06-09 |
-| 4.5. Conversion & Qualification | 0/TBD | Not started | - |
+| 4.5. Conversion & Qualification | 1/7 | In Progress|  |
 | 5. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
 | 6. Réputation & Scale | 0/TBD | Not started | - |
