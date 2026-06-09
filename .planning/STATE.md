@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: context exhaustion at 78% (2026-06-05)
-last_updated: "2026-06-05T20:39:35.892Z"
-last_activity: 2026-06-05 -- Phase 04 Plan 01 complete (schema gaps + cron + Stripe config)
+stopped_at: Phase 4.5 UI-SPEC approved
+last_updated: "2026-06-09T17:00:26.611Z"
+last_activity: 2026-06-09 -- Phase 04.5 planning complete
 progress:
-  total_phases: 5
-  completed_phases: 0
-  total_plans: 7
-  completed_plans: 5
-  percent: 71
+  total_phases: 7
+  completed_phases: 1
+  total_plans: 14
+  completed_plans: 7
+  percent: 14
 ---
 
 # Project State
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 Phase: 4 of 5 (Le Verrou & Stripe Billing)
 Plan: 0 of 1 in current phase
 Status: Ready to execute
-Last activity: 2026-06-05 -- Phase 04 planning complete
+Last activity: 2026-06-09 -- Phase 04.5 planning complete
 Progress: [▓▓▓▓░░░░░░] 60%
 
 ## Performance Metrics
@@ -61,6 +61,7 @@ Progress: [▓▓▓▓░░░░░░] 60%
 ### Deferred Ideas (hors scope, à reconsidérer plus tard)
 
 **Upload photos/plans sur les projets** — Idée écartée à Phase 4.
+
 - Problème bloquant : une photo de façade ou de chantier contient des informations géolocalisables qui court-circuitent ADR-004 (masquage serveur). Un pro BASIC verrait la maison du prospect avant déverrouillage.
 - Décision : pertinent **uniquement** si on construit un suivi de relation client/pro directement sur le site (messagerie, fil de chantier, avancement). Dans ce contexte, les images seraient derrière le même accès conditionné que les coordonnées.
 - À reconsidérer en Phase 6+ si on ajoute une fonctionnalité de suivi de chantier (messagerie pro↔client, jalons de projet, photos d'avancement).
@@ -76,6 +77,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-05T20:39:35.886Z
-Stopped at: context exhaustion at 78% (2026-06-05)
-Resume file: None
+Last session: 2026-06-09T13:01:18.684Z
+Stopped at: Phase 4.5 UI-SPEC approved
+Resume file: .planning/phases/04.5-conversion-qualification/04.5-UI-SPEC.md

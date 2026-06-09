@@ -83,7 +83,15 @@ Plans:
   5. Le pro peut éditer son profil public depuis `/espace/profil` (bio, spécialités, zone) et les changements se reflètent sur `/pro/{dept}/{slug}-{id}`.
   6. La page `/espace/premium` présente un hero axé exclusivité ("Premier contact exclusif") et une section ROI chiffrée ("1 chantier signé rembourse 6 mois d'abonnement").
   7. Un pro qualifié qui atteint le paywall voit sa conversion mesurable via les analytics admin.
-**Plans**: TBD
+**Plans**: 7 plans
+Plans:
+- [ ] 04.5-01-PLAN.md — Schema migration: free_leads_used, qualify_score + 4 booleans, profile fields, paywall_events, free_lead_grants
+- [ ] 04.5-02-PLAN.md — [BLOCKING] supabase db push + verify columns
+- [ ] 04.5-03-PLAN.md — Extend maskLead + leads API for free-grant counter + compute qualify_score on projects POST
+- [ ] 04.5-04-PLAN.md — Stripe trial_period_days=14 + trial_will_end webhook + paywall analytics endpoints
+- [ ] 04.5-05-PLAN.md — Profile API: GET/PATCH /me + logo presigned URL + extend public profile select
+- [ ] 04.5-06-PLAN.md — Market-local API + /espace/leads UI extension (banners, qualif badges, widget, analytics)
+- [ ] 04.5-07-PLAN.md — Refactor /espace/premium (hero/trial/ROI/FAQ) + new /espace/profil page + dashboard nav link
 **UI hint**: yes
 
 ### Phase 5: SMS + Acquisition + Messagerie
