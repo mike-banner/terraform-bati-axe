@@ -27,3 +27,7 @@ logs
 scratch/
 antigravity.md
 claude.md
+.claude/
+.agent/
+.gemini/
+graphify-out/
