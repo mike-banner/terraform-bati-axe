@@ -65,13 +65,24 @@ const startCheckout = async () => {
       </div>
 
       <!-- Header -->
-      <div class="mb-10">
-        <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-6">Abonnement</p>
-        <h1 class="text-3xl font-black tracking-tight text-foreground" style="text-wrap: balance">
-          Débloquez vos leads instantanément.
+      <div class="mb-12">
+        <p class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-6">Abonnement</p>
+        <h1 class="text-3xl font-semibold tracking-tight text-foreground" style="text-wrap: balance">
+          Premier contact exclusif.
         </h1>
         <p class="text-sm text-muted-foreground mt-2 leading-relaxed">
-          Les pros Premium voient les coordonnées du prospect dès la qualification du projet — 72h avant les autres.
+          Accédez aux coordonnées du prospect dès la qualification — 72h avant les autres pros de votre métier.
+        </p>
+      </div>
+
+      <!-- Trial callout -->
+      <div class="flex items-start gap-3 p-4 border border-border rounded-lg mb-4">
+        <svg class="w-4 h-4 text-muted-foreground shrink-0 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1010.058 8.4M12 4.875A2.625 2.625 0 1113.942 8.4M12 4.875V21m-9.375-9.75h18.75M6.375 8.4H3.75a1.5 1.5 0 000 3h15a1.5 1.5 0 000-3h-2.625M12 4.875a2.625 2.625 0 00-2.625 2.625h5.25A2.625 2.625 0 0012 4.875z"/>
+        </svg>
+        <p class="text-sm text-foreground">
+          <span class="font-semibold">14 jours gratuits</span>
+          <span class="text-muted-foreground"> — carte bancaire requise. Facturation automatique après 14 jours si non annulé.</span>
         </p>
       </div>
 
@@ -85,8 +96,8 @@ const startCheckout = async () => {
             Premium
           </span>
         </div>
-        <p class="text-4xl font-black tracking-tight text-foreground mb-1">
-          39 €<span class="text-lg font-medium text-muted-foreground">/mois</span>
+        <p class="text-4xl font-semibold tracking-tight text-foreground mb-1">
+          39 €<span class="text-sm font-semibold text-muted-foreground">/mois</span>
         </p>
         <p class="text-xs text-muted-foreground mb-6">Sans engagement · Annulable à tout moment</p>
 
@@ -101,13 +112,13 @@ const startCheckout = async () => {
             <svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
             </svg>
-            <span class="text-sm text-foreground">Exclusivité 72h avant les pros BASIC</span>
+            <span class="text-sm text-foreground">3 leads gratuits inclus en BASIC — illimités en Premium</span>
           </div>
           <div class="flex items-start gap-3">
             <svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
             </svg>
-            <span class="text-sm text-foreground">Leads illimités dans votre catégorie</span>
+            <span class="text-sm text-foreground">Exclusivité 72h avant les pros BASIC</span>
           </div>
         </div>
 
@@ -118,7 +129,7 @@ const startCheckout = async () => {
           :aria-busy="loading"
           class="inline-flex items-center justify-center gap-2 w-full h-11 px-6 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity disabled:opacity-50"
         >
-          <span v-if="!loading">Démarrer Premium — 39€/mois</span>
+          <span v-if="!loading">Démarrer votre essai gratuit — 14 jours offerts</span>
           <span v-else class="flex items-center gap-2">
             <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -134,7 +145,7 @@ const startCheckout = async () => {
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
           </svg>
-          Paiement sécurisé par Stripe
+          Paiement sécurisé par Stripe · CB requise · Facturation après 14 jours
         </p>
       </div>
 
@@ -172,33 +183,60 @@ const startCheckout = async () => {
               <svg class="w-3.5 h-3.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
             </span>
           </div>
+          <div class="grid grid-cols-3 items-center px-5 py-3">
+            <span class="text-sm text-foreground">3 leads gratuits</span>
+            <span class="flex justify-center">
+              <svg class="w-3.5 h-3.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            </span>
+            <span class="text-center text-xs font-semibold text-foreground">Illimité</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROI section -->
+      <div class="border-t border-border pt-8 mb-8">
+        <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Retour sur investissement</h2>
+        <div class="border border-border rounded-lg p-6">
+          <p class="text-sm font-semibold text-foreground mb-2" style="text-wrap: balance">
+            1 chantier signé rembourse 6 mois d'abonnement.
+          </p>
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            Un chantier moyen en rénovation représente 8 000 € de chiffre d'affaires. Votre abonnement : 39€/mois.
+          </p>
         </div>
       </div>
 
       <!-- FAQ -->
       <div class="border-t border-border pt-8">
-        <h2 class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-4">Questions fréquentes</h2>
+        <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Questions fréquentes</h2>
         <div class="space-y-2">
           <details class="border border-border rounded-lg group">
-            <summary class="px-5 py-4 text-sm font-medium text-foreground cursor-pointer select-none list-none flex items-center justify-between">
+            <summary class="px-5 py-4 text-sm font-semibold text-foreground cursor-pointer select-none list-none flex items-center justify-between">
               Puis-je annuler à tout moment ?
               <svg class="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
             </summary>
             <p class="px-5 pb-4 text-sm text-muted-foreground">Oui, sans frais et immédiatement depuis votre espace.</p>
           </details>
           <details class="border border-border rounded-lg group">
-            <summary class="px-5 py-4 text-sm font-medium text-foreground cursor-pointer select-none list-none flex items-center justify-between">
+            <summary class="px-5 py-4 text-sm font-semibold text-foreground cursor-pointer select-none list-none flex items-center justify-between">
               Que se passe-t-il si j'annule ?
               <svg class="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
             </summary>
             <p class="px-5 pb-4 text-sm text-muted-foreground">Votre accès Premium reste actif jusqu'à la fin de la période en cours.</p>
           </details>
           <details class="border border-border rounded-lg group">
-            <summary class="px-5 py-4 text-sm font-medium text-foreground cursor-pointer select-none list-none flex items-center justify-between">
+            <summary class="px-5 py-4 text-sm font-semibold text-foreground cursor-pointer select-none list-none flex items-center justify-between">
               Le paiement est-il sécurisé ?
               <svg class="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
             </summary>
             <p class="px-5 pb-4 text-sm text-muted-foreground">Oui, les paiements sont traités par Stripe, certifié PCI DSS.</p>
+          </details>
+          <details class="border border-border rounded-lg group">
+            <summary class="px-5 py-4 text-sm font-semibold text-foreground cursor-pointer select-none list-none flex items-center justify-between">
+              Que se passe-t-il après mes 14 jours d'essai ?
+              <svg class="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+            </summary>
+            <p class="px-5 pb-4 text-sm text-muted-foreground">Si vous n'annulez pas pendant la période d'essai, votre abonnement est automatiquement activé à 39€/mois. Vous pouvez annuler à tout moment depuis votre espace.</p>
           </details>
         </div>
       </div>

@@ -5,7 +5,7 @@ interface Pro {
   id: string; company_name: string; full_name: string; phone: string
   postal_code: string; canonical_slug: string; short_id: string
   is_verified: boolean; is_claimed: boolean; decennal_status: string; created_at: string
-  category: string; subscription_status: string
+  category: string; subscription_status: string; bio?: string; logo_url?: string
 }
 interface Verif {
   document_type: string; status: string; expiry_date: string | null; created_at: string
@@ -33,7 +33,7 @@ async function loadProData() {
   if (!uid) return
   const [{ data: proData, error: proErr }, { data: verifData, error: verifErr }] = await Promise.all([
     supabase.from('professionals')
-      .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, created_at, category, subscription_status')
+      .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, created_at, category, subscription_status, bio, logo_url')
       .eq('id', uid).maybeSingle(),
     supabase.from('verifications')
       .select('document_type, status, expiry_date, created_at')
@@ -119,6 +119,9 @@ const steps = computed(() => [
   { label: 'Décennale envoyée', done: !!decennale.value,        desc: decennale.value ? `Statut : ${docStatus(decennale.value).label}` : 'Document manquant' },
   { label: 'Profil vérifié',    done: pro.value?.is_verified === true,
     desc: pro.value?.is_verified ? 'Votre profil est actif et visible.' : 'En attente de validation par notre équipe (sous 24h ouvrées).' },
+  { label: 'Mon profil public', done: !!(pro.value?.bio || pro.value?.logo_url),
+    desc: "Bio, logo, zone d'intervention",
+    action: { label: 'Éditer mon profil', to: '/espace/profil' } },
 ])
 
 const currentStepIndex = computed(() => {
@@ -139,7 +142,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
 
     <!-- Not registered yet -->
     <div v-else-if="user && !pro" class="py-8">
-      <h1 class="text-3xl font-black tracking-tight text-foreground mb-3">Mon espace</h1>
+      <h1 class="text-3xl font-semibold tracking-tight text-foreground mb-3">Mon espace</h1>
       <p class="text-sm text-muted-foreground mb-8">Votre profil artisan n'est pas encore créé.</p>
       <NuxtLink to="/pro/claim" class="inline-flex items-center gap-2 h-11 px-6 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity">
         Créer mon profil artisan
@@ -164,7 +167,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
             {{ CATEGORY_LABELS[pro.category] || pro.category }}
           </span>
         </div>
-        <h1 class="text-3xl font-black tracking-tight text-foreground" style="text-wrap: balance">{{ pro.company_name }}</h1>
+        <h1 class="text-3xl font-semibold tracking-tight text-foreground" style="text-wrap: balance">{{ pro.company_name }}</h1>
         <p class="text-sm text-muted-foreground mt-1">{{ pro.full_name }} · {{ pro.postal_code }}</p>
       </div>
 
