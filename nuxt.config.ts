@@ -37,6 +37,7 @@ export default defineNuxtConfig({
     },
     cloudflare: {
       pages: {
+        // @ts-expect-error nitropack types lag behind Cloudflare Pages API
         compatibilityFlags: ['nodejs_compat'],
         compatibilityDate: '2024-09-23'
       }

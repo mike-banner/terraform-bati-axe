@@ -8,7 +8,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 1: Foundations & Compliance** - Nuxt 3, Supabase CLI local, Cloudflare Pages, pages légales, middleware sécurité.
 - [x] **Phase 2: Data Foundation & Capture mono-ville** - Schéma DB, seed zone pilote, vitrine landing SEO, simulateur de capture 6 étapes.
 - [x] **Phase 3: Onboarding Pro & Vérification manuelle** - Auth Supabase, flux Claim, upload R2, console admin validation docs, consents RGPD/LCEN.
-- [ ] **Phase 4: Le Verrou & Stripe Billing** - API floutage serveur, abonnement Stripe, webhook, déblocage auto 72h.
+- [x] **Phase 4: Le Verrou & Stripe Billing** - API floutage serveur, abonnement Stripe, webhook, déblocage auto 72h.
 - [ ] **Phase 5: SMS Teasing avec opt-in vérifié** - Matching géo, envoi SMS Twilio (instantané Premium / différé Basic), webhook STOP.
 
 ## Phase Details
@@ -61,13 +61,13 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
   4. Un cron `pg_cron` bascule `leads.unlocked_at` à T+72h pour le déblocage gratuit automatique.
 **Plans**: 7 plans
 Plans:
-- [ ] 04-01-PLAN.md — Migrations SQL (schema gaps + pg_cron) + nuxt.config runtimeConfig + .env.example
-- [ ] 04-02-PLAN.md — [BLOCKING] supabase db push + vitest setup + RED test stubs
-- [ ] 04-03-PLAN.md — maskLead helper + qualify endpoint + leads index/detail API
-- [ ] 04-04-PLAN.md — PATCH /api/v1/leads/[id]/claim (Premium-only)
-- [ ] 04-05-PLAN.md — Stripe checkout + webhook (constructEventAsync + SubtleCryptoProvider)
-- [ ] 04-06-PLAN.md — /espace/leads dashboard + /espace/leads/[id] detail + LeadCountdown component
-- [ ] 04-07-PLAN.md — /espace/premium page + admin Projets tab with Qualify button
+- [x] 04-01-PLAN.md — Migrations SQL (schema gaps + pg_cron) + nuxt.config runtimeConfig + .env.example
+- [x] 04-02-PLAN.md — [BLOCKING] supabase db push + vitest setup + RED test stubs
+- [x] 04-03-PLAN.md — maskLead helper + qualify endpoint + leads index/detail API
+- [x] 04-04-PLAN.md — PATCH /api/v1/leads/[id]/claim (Premium-only)
+- [x] 04-05-PLAN.md — Stripe checkout + webhook (constructEventAsync + SubtleCryptoProvider)
+- [x] 04-06-PLAN.md — /espace/leads dashboard + /espace/leads/[id] detail + LeadCountdown component
+- [x] 04-07-PLAN.md — /espace/premium page + admin Projets tab with Qualify button
 
 ### Phase 5: SMS Teasing avec opt-in vérifié
 **Goal**: Boucle de rétention conforme LCEN — les pros avec opt-in SMS sont notifiés lors d'un nouveau projet dans leur zone.
@@ -87,5 +87,5 @@ Plans:
 | 1. Foundations & Compliance | 1/1 | Completed | 2026-06-03 |
 | 2. Data Foundation & Capture mono-ville | 1/1 | Completed | 2026-06-03 |
 | 3. Onboarding Pro & Vérification manuelle | 1/1 | Completed | 2026-06-03 |
-| 4. Le Verrou & Stripe Billing | 0/7 | Not started | - |
+| 4. Le Verrou & Stripe Billing | 7/7 | Completed | 2026-06-09 |
 | 5. SMS Teasing avec opt-in vérifié | 0/1 | Not started | - |

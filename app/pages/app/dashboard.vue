@@ -87,7 +87,7 @@ async function uploadDoc(type: 'kbis' | 'decennale') {
     const res = await fetch(presign.signedUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file })
     if (!res.ok) throw new Error('Échec du transfert.')
     
-    const { data: existing, error: selectErr } = await supabase.from('verifications').select('id').eq('pro_id', uid).eq('document_type', type).maybeSingle()
+    const { data: existing, error: selectErr } = await (supabase as any).from('verifications').select('id').eq('pro_id', uid).eq('document_type', type).maybeSingle()
     if (selectErr && selectErr.code !== 'PGRST116') console.error('Select error:', selectErr)
 
     if (existing) {

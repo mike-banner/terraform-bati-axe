@@ -16,7 +16,7 @@ const { data: pro } = await useAsyncData('pro-premium', async () => {
     .select('id, subscription_status')
     .eq('id', user.value.id)
     .maybeSingle()
-  return data
+  return data as { id: string; subscription_status: string } | null
 }, { server: false, watch: [user] })
 
 const isAlreadyPremium = computed(() => pro.value?.subscription_status === 'active')

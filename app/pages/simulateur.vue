@@ -123,7 +123,7 @@ const handleSubmit = async () => {
   submitError.value  = null
 
   try {
-    const { data, error } = await useFetch('/api/v1/projects', {
+    const { data, error } = await useFetch<{ status: string; projectId: string; zoneName: string }>('/api/v1/projects', {
       method: 'POST',
       body: {
         category:       form.category,
