@@ -9,7 +9,9 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 2: Data Foundation & Capture mono-ville** - Schéma DB, seed zone pilote, vitrine landing SEO, simulateur de capture 6 étapes.
 - [x] **Phase 3: Onboarding Pro & Vérification manuelle** - Auth Supabase, flux Claim, upload R2, console admin validation docs, consents RGPD/LCEN.
 - [x] **Phase 4: Le Verrou & Stripe Billing** - API floutage serveur, abonnement Stripe, webhook, déblocage auto 72h.
-- [ ] **Phase 5: SMS Teasing avec opt-in vérifié** - Matching géo, envoi SMS Twilio (instantané Premium / différé Basic), webhook STOP.
+- [ ] **Phase 4.5: Conversion & Qualification** - Verrou 3 leads gratuits, free trial 14j, plan annuel, auto-qualification, profil public éditable, ROI dashboard, copy Premium refondu.
+- [ ] **Phase 5: SMS + Acquisition + Messagerie** - SMS différencié (Basic→upgrade / Premium→lead direct), cold outreach pros DB, dashboard particulier magic-link, messagerie in-app pro↔particulier, email onboarding (désactivé par défaut), feedback loop lead.
+- [ ] **Phase 6: Réputation & Scale** - Avis clients, referral program, multi-ville.
 
 ## Phase Details
 
@@ -47,7 +49,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
   3. Le profil public est accessible via `/pro/{dept}/{slug}-{short_id}` avec redirect 301 si slug obsolète (ADR-009).
   4. L'administrateur peut valider ou rejeter les documents depuis la console admin et basculer `decennal_status`.
   5. Le consentement SMS est collecté via case à cocher distincte et journalisé dans `consents`.
-**Plans**: TBD
+**Plans**: Completed
 **UI hint**: yes
 
 ### Phase 4: Le Verrou & Stripe Billing
@@ -69,16 +71,49 @@ Plans:
 - [x] 04-06-PLAN.md — /espace/leads dashboard + /espace/leads/[id] detail + LeadCountdown component
 - [x] 04-07-PLAN.md — /espace/premium page + admin Projets tab with Qualify button
 
-### Phase 5: SMS Teasing avec opt-in vérifié
-**Goal**: Boucle de rétention conforme LCEN — les pros avec opt-in SMS sont notifiés lors d'un nouveau projet dans leur zone.
+### Phase 4.5: Conversion & Qualification
+**Goal**: Maximiser la conversion pro Basic → Premium en rendant la valeur de la plateforme immédiatement visible et en levant les frictions à l'abonnement.
 **Depends on**: Phase 4
-**Requirements**: SMS-01, SMS-02, ADM-02, ADM-03
+**Requirements**: CNV-01, CNV-02, CNV-03, CNV-04, CNV-05, CNV-06, CNV-07, CNV-08
 **Success Criteria** (what must be TRUE):
-  1. Un nouveau projet déclenche un SMS instantané aux pros Premium de la zone avec opt-in SMS.
-  2. Les pros Basic reçoivent le même SMS avec un délai de 30 minutes.
-  3. Le mot-clé STOP via webhook Twilio bascule le consent en `revoked` et stoppe les envois.
-  4. L'administrateur dispose d'un tableau de modération des leads et d'un rapport de performance SMS (taux d'ouverture vs clic).
+  1. Un pro Basic peut accéder librement à ses 3 premiers leads (coordonnées complètes) sans abonnement. Au 4ème lead, le paywall s'affiche.
+  2. La page `/espace/premium` propose un toggle mensuel/annuel et un free trial 14 jours activé via Stripe (`trial_period_days: 14`).
+  3. Le score de qualification est calculé automatiquement à la soumission d'un projet et affiché comme badge sur chaque lead card (budget ✓ / téléphone ✓ / description ✓).
+  4. Le dashboard `/espace/leads` affiche un bloc "Marché local" : nombre de projets dans la zone ce mois, catégories dominantes.
+  5. Le pro peut éditer son profil public depuis `/espace/profil` (bio, spécialités, zone) et les changements se reflètent sur `/pro/{dept}/{slug}-{id}`.
+  6. La page `/espace/premium` présente un hero axé exclusivité ("Premier contact exclusif") et une section ROI chiffrée ("1 chantier signé rembourse 6 mois d'abonnement").
+  7. Un pro qualifié qui atteint le paywall voit sa conversion mesurable via les analytics admin.
 **Plans**: TBD
+**UI hint**: yes
+
+### Phase 5: SMS + Acquisition + Messagerie
+**Goal**: Boucle complète d'acquisition, d'activation et de rétention — les pros sont notifiés, les particuliers ont un espace de suivi, et les deux communiquent sur la plateforme.
+**Depends on**: Phase 4.5
+**Requirements**: SMS-01, SMS-02, SMS-04, ACQ-01, MSG-01, MSG-02, MSG-03, EML-01, FDB-01
+**Success Criteria** (what must be TRUE):
+  1. Un nouveau projet qualifié déclenche un SMS immédiat aux pros Premium de la zone (opt-in) avec lien direct vers le lead.
+  2. Les pros Basic reçoivent un SMS avec CTA direct vers `/espace/premium` ("Coordonnées disponibles pour les abonnés Premium").
+  3. Le webhook STOP Twilio bascule le consent en `revoked` et stoppe les envois.
+  4. Une campagne SMS sortante peut être déclenchée depuis l'admin vers les pros DB non inscrits (cold outreach acquisition).
+  5. Un particulier ayant déposé un projet reçoit un magic link et peut accéder à `/mon-projet/[token]` pour voir le statut, les pros consultants, et ses messages.
+  6. Un pro peut envoyer un message à un particulier depuis `/espace/leads/[id]` ; le particulier reçoit une notification email avec lien de réponse.
+  7. Le particulier peut répondre et poser des questions depuis son espace ; le pro reçoit une notification.
+  8. Les emails d'onboarding pro (J+0 / J+1 / J+3) sont implémentés mais inactifs par défaut (`EMAIL_NOTIFICATIONS_ENABLED=false`).
+  9. Un pro peut marquer un lead "Chantier décroché" depuis la fiche lead ; le taux de conversion s'affiche dans le bloc ROI.
+  10. L'administrateur dispose d'un tableau de modération des leads et d'un rapport de performance SMS.
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 6: Réputation & Scale
+**Goal**: Pérenniser la croissance par la preuve sociale et l'expansion géographique conditionnée aux métriques pilote.
+**Depends on**: Phase 5
+**Requirements**: REP-01, REP-02, SCL-01
+**Success Criteria** (what must be TRUE):
+  1. Un particulier peut laisser un avis sur un pro après attribution d'un chantier ; l'avis est affiché sur le profil public.
+  2. Un pro peut inviter un collègue via un lien de parrainage ; les deux reçoivent 1 mois offert à l'activation.
+  3. L'ouverture d'une nouvelle ville est conditionnée à : ≥3 pros Premium actifs + ≥10 projets qualifiés/mois sur Carrières-sous-Poissy.
+**Plans**: TBD
+**UI hint**: yes
 
 ## Progress
 
@@ -88,4 +123,6 @@ Plans:
 | 2. Data Foundation & Capture mono-ville | 1/1 | Completed | 2026-06-03 |
 | 3. Onboarding Pro & Vérification manuelle | 1/1 | Completed | 2026-06-03 |
 | 4. Le Verrou & Stripe Billing | 7/7 | Completed | 2026-06-09 |
-| 5. SMS Teasing avec opt-in vérifié | 0/1 | Not started | - |
+| 4.5. Conversion & Qualification | 0/TBD | Not started | - |
+| 5. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
+| 6. Réputation & Scale | 0/TBD | Not started | - |
