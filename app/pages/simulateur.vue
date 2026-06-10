@@ -40,6 +40,7 @@ const totalSteps   = 7
 const isSubmitting = ref(false)
 const submitError  = ref<string | null>(null)
 const createdProjectId = ref<string | null>(null)
+const createdAccessToken = ref<string | null>(null)
 
 const form = reactive({
   category:       '',
@@ -59,7 +60,7 @@ const touched = reactive({ name: false, email: false, phone: false })
 
 // ─── Regex ────────────────────────────────────────────────────────────────────
 const RE_EMAIL    = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
-const RE_PHONE_FR = /^(?:(?:\+|00)33|0)[1-9](?:[\s.-]?\d{2}){4}$/
+const RE_PHONE_FR = /^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/
 
 // ─── Validation ───────────────────────────────────────────────────────────────
 const isStepValid = computed(() => {
@@ -123,7 +124,7 @@ const handleSubmit = async () => {
   submitError.value  = null
 
   try {
-    const data = await $fetch<{ status: string; projectId: string; zoneName: string }>('/api/v1/projects', {
+    const data = await $fetch<{ status: string; projectId: string; zoneName: string; accessToken?: string }>('/api/v1/projects', {
       method: 'POST',
       body: {
         category:       form.category,
@@ -141,6 +142,7 @@ const handleSubmit = async () => {
 
     if (data?.status === 'SUCCESS') {
       createdProjectId.value = data.projectId
+      if (data.accessToken) createdAccessToken.value = data.accessToken
       step.value = 8
     }
   } catch (err: any) {
@@ -171,6 +173,18 @@ const handleSubmit = async () => {
         <div v-if="createdProjectId" class="p-4 border border-border rounded-lg mb-8">
           <p class="text-xs text-muted-foreground mb-1">Référence de votre projet</p>
           <code class="font-mono text-sm text-foreground select-all">{{ createdProjectId }}</code>
+        </div>
+        
+        <div v-if="createdAccessToken" class="p-5 border border-blue-200 bg-blue-50/50 rounded-lg mb-8">
+          <p class="text-sm font-semibold text-blue-900 mb-1">🛠️ Mode Dév : Tester la messagerie</p>
+          <p class="text-xs text-blue-700 mb-4">En production, ce lien est envoyé par email (Magic Link).</p>
+          <NuxtLink
+            :to="`/mon-projet/${createdAccessToken}`"
+            class="inline-flex items-center justify-center h-10 px-6 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors w-full"
+            target="_blank"
+          >
+            Ouvrir l'Espace Client
+          </NuxtLink>
         </div>
         <NuxtLink
           to="/"
@@ -234,7 +248,9 @@ const handleSubmit = async () => {
             <textarea
               v-model="form.description"
               rows="7"
+              minlength="20"
               maxlength="1000"
+              required
               placeholder="Exemple : refaire entièrement l'électricité d'un appartement de 55 m². Tableau électrique d'époque à remplacer. Environ 15 prises et 8 points lumineux à prévoir."
               class="w-full border border-border rounded-md p-3 text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors resize-none"
             />
@@ -301,6 +317,9 @@ const handleSubmit = async () => {
               v-model="form.postal_code"
               placeholder="78955"
               maxlength="5"
+              minlength="5"
+              pattern="[0-9]{5}"
+              required
               inputmode="numeric"
               class="w-full h-14 px-4 border border-border rounded-md text-xl font-semibold tracking-widest bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
             />
@@ -344,6 +363,8 @@ const handleSubmit = async () => {
                 v-model="form.customer_name"
                 placeholder="Jean Dupont"
                 autocomplete="name"
+                required
+                minlength="2"
                 @blur="touched.name = true"
                 class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
                 :class="contactErrors.name ? 'border-red-500' : 'border-border'"
@@ -358,6 +379,7 @@ const handleSubmit = async () => {
                 v-model="form.customer_email"
                 placeholder="jean.dupont@exemple.com"
                 autocomplete="email"
+                required
                 @blur="touched.email = true"
                 class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
                 :class="contactErrors.email ? 'border-red-500' : 'border-border'"
@@ -372,6 +394,9 @@ const handleSubmit = async () => {
                 v-model="form.customer_phone"
                 placeholder="06 12 34 56 78"
                 autocomplete="tel"
+                required
+                maxlength="17"
+                pattern="^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$"
                 @blur="touched.phone = true"
                 class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
                 :class="contactErrors.phone ? 'border-red-500' : 'border-border'"
