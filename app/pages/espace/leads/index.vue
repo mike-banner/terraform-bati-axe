@@ -261,6 +261,14 @@ async function copyToClipboard(text: string) {
           </div>
           <div class="px-5 py-4">
             <NuxtLink
+              v-if="freeRemaining > 0"
+              :to="`/espace/leads/${lead.id}`"
+              class="inline-flex items-center justify-center gap-2 w-full h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity"
+            >
+              Débloquer (1 crédit gratuit)
+            </NuxtLink>
+            <NuxtLink
+              v-else
               to="/espace/premium"
               @click="logCheckoutStarted"
               class="inline-flex items-center justify-center gap-2 w-full h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity"
