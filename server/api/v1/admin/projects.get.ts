@@ -11,10 +11,16 @@ export default defineEventHandler(async (event) => {
 
   const { data: projects, error } = await supabase
     .from('projects')
-    .select('id, category, status, description, budget_range, timeline_range, created_at')
-    .order('created_at', { ascending: false })
+    .select('id, category, status, description, budget_range, timeline_range, created_at, leads(count)')
+    .order('created_at', { ascending: true })
 
   if (error) throw createError({ statusCode: 500, statusMessage: error.message })
 
-  return { projects }
+  return {
+    projects: projects.map((p: any) => ({
+      ...p,
+      lead_count: p.leads?.[0]?.count ?? 0,
+      leads: undefined,
+    }))
+  }
 })
