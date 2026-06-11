@@ -29,34 +29,5 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: 'Projet introuvable.' })
   }
 
-  // Find all verified pros in the same category (D-01: category matching only)
-  const { data: pros, error: prosError } = await supabase
-    .from('professionals')
-    .select('id')
-    .eq('category', project.category)
-    .eq('is_verified', true)
-
-  if (prosError) {
-    throw createError({ statusCode: 500, statusMessage: 'Erreur lors de la recherche des professionnels.' })
-  }
-
-  // Upsert leads for each matching pro (idempotent via onConflict guard — T-04-08)
-  if (pros && pros.length > 0) {
-    const leads = pros.map((p: any) => ({
-      project_id,
-      pro_id: p.id,
-      status: 'new',
-      unlocked_at: null,
-    }))
-
-    const { error: upsertError } = await supabase
-      .from('leads')
-      .upsert(leads, { onConflict: 'project_id,pro_id' })
-
-    if (upsertError) {
-      throw createError({ statusCode: 500, statusMessage: 'Erreur lors de la création des leads.' })
-    }
-  }
-
-  return { qualified: true, leads_created: pros?.length ?? 0 }
+  return { qualified: true }
 })

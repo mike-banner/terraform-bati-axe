@@ -8,7 +8,7 @@ watchEffect(() => { if (user.value === null) navigateTo('/pro/claim') })
 
 const profile = reactive({
   bio: '',
-  category: '',
+  categories: [] as string[],
   zone: '',
   logo_url: '',
   canonical_slug: '',
@@ -29,7 +29,7 @@ const { refresh } = await useAsyncData('pro-profile', async () => {
     const data = await $fetch<{ profile: Record<string, unknown> }>('/api/v1/pro/profile/me')
     Object.assign(profile, {
       bio: data.profile.bio || '',
-      category: data.profile.category || '',
+      categories: (data.profile.categories as string[]) || (data.profile.category ? [data.profile.category as string] : []),
       zone: data.profile.zone || '',
       logo_url: data.profile.logo_url || '',
       canonical_slug: data.profile.canonical_slug || '',
@@ -78,7 +78,7 @@ async function saveProfile() {
   try {
     await $fetch('/api/v1/pro/profile/me', {
       method: 'PATCH',
-      body: { bio: profile.bio, category: profile.category, zone: profile.zone }
+      body: { bio: profile.bio, categories: profile.categories, zone: profile.zone }
     })
     saveSuccess.value = true
     setTimeout(() => { saveSuccess.value = false }, 3000)
@@ -166,18 +166,36 @@ async function saveProfile() {
           <p class="text-xs text-muted-foreground mt-1 text-right">{{ profile.bio?.length ?? 0 }}/500</p>
         </div>
 
-        <!-- Category -->
+        <!-- Categories -->
         <div class="border-t border-border pt-8">
-          <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Catégorie principale</h2>
-          <select v-model="profile.category"
-            class="w-full px-4 py-3 border border-border rounded-md text-sm text-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20 appearance-none">
-            <option value="maconnerie">Maçonnerie &amp; Gros Œuvre</option>
-            <option value="toiture">Charpente &amp; Toiture</option>
-            <option value="electricite">Électricité</option>
-            <option value="plomberie">Plomberie &amp; Chauffage</option>
-            <option value="peinture">Peinture &amp; Finitions</option>
-            <option value="isolation">Isolation &amp; Cloisons</option>
-          </select>
+          <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Catégories</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
+              <input type="checkbox" v-model="profile.categories" value="maconnerie" class="rounded border-border text-foreground focus:ring-foreground/20">
+              <span class="text-sm font-medium">Maçonnerie &amp; Gros Œuvre</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
+              <input type="checkbox" v-model="profile.categories" value="toiture" class="rounded border-border text-foreground focus:ring-foreground/20">
+              <span class="text-sm font-medium">Charpente &amp; Toiture</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
+              <input type="checkbox" v-model="profile.categories" value="electricite" class="rounded border-border text-foreground focus:ring-foreground/20">
+              <span class="text-sm font-medium">Électricité</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
+              <input type="checkbox" v-model="profile.categories" value="plomberie" class="rounded border-border text-foreground focus:ring-foreground/20">
+              <span class="text-sm font-medium">Plomberie &amp; Chauffage</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
+              <input type="checkbox" v-model="profile.categories" value="peinture" class="rounded border-border text-foreground focus:ring-foreground/20">
+              <span class="text-sm font-medium">Peinture &amp; Finitions</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
+              <input type="checkbox" v-model="profile.categories" value="isolation" class="rounded border-border text-foreground focus:ring-foreground/20">
+              <span class="text-sm font-medium">Isolation &amp; Cloisons</span>
+            </label>
+          </div>
+          <p class="mt-3 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
         </div>
 
         <!-- Zone -->

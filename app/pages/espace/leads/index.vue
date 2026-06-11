@@ -39,6 +39,30 @@ const hasLockedUnfreeLead = computed(() => leads.value.some((l: any) => l.status
 const showFreeLeadsBanner = computed(() => !isPremium.value && freeLeadsUsed.value < 3)
 const showPaywallBanner = computed(() => !isPremium.value && freeLeadsUsed.value >= 3 && hasLockedUnfreeLead.value)
 
+// ─── Filtre + pagination ───────────────────────────────────────────────────────
+const PAGE_SIZE = 5
+const categoryFilter = ref('')
+const currentPage = ref(1)
+
+const availableCategories = computed(() => {
+  const cats = new Set(leads.value.map((l: any) => l.category).filter(Boolean))
+  return [...cats] as string[]
+})
+
+const filteredLeads = computed(() => {
+  if (!categoryFilter.value) return leads.value
+  return leads.value.filter((l: any) => l.category === categoryFilter.value)
+})
+
+const totalPages = computed(() => Math.max(1, Math.ceil(filteredLeads.value.length / PAGE_SIZE)))
+
+const paginatedLeads = computed(() => {
+  const start = (currentPage.value - 1) * PAGE_SIZE
+  return filteredLeads.value.slice(start, start + PAGE_SIZE)
+})
+
+watch(categoryFilter, () => { currentPage.value = 1 })
+
 const route = useRoute()
 const showSuccessBanner = ref(route.query.upgrade === 'success')
 onMounted(() => {
@@ -182,7 +206,7 @@ async function copyToClipboard(text: string) {
     </div>
 
     <!-- Skeleton loading -->
-    <div v-if="pending" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div v-if="pending" class="space-y-3">
       <div v-for="i in 3" :key="i" class="border border-border rounded-lg h-[160px] bg-muted animate-pulse" />
     </div>
 
@@ -198,13 +222,36 @@ async function copyToClipboard(text: string) {
     <!-- Empty state -->
     <div v-else-if="!leads?.length" class="py-16 text-center">
       <p class="text-sm font-semibold text-foreground mb-1">Aucun lead pour l'instant</p>
-      <p class="text-xs text-muted-foreground">Les leads qualifiés apparaîtront ici dès que l'équipe BÂTI-AXE les valide.</p>
+      <p class="text-xs text-muted-foreground">Les leads qualifiés apparaîtront ici dès que vous avez sélectionné vos catégories dans votre profil.</p>
     </div>
+
+    <!-- Filtre catégorie + compteur -->
+    <div v-else class="space-y-4">
+      <div class="flex items-center justify-between gap-3">
+        <span class="text-xs text-muted-foreground">
+          {{ filteredLeads.length }} lead{{ filteredLeads.length !== 1 ? 's' : '' }}
+          <template v-if="categoryFilter"> · {{ CATEGORY_LABELS[categoryFilter] ?? categoryFilter }}</template>
+        </span>
+        <select
+          v-model="categoryFilter"
+          class="h-9 px-3 pr-8 border border-border rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
+        >
+          <option value="">Toutes catégories</option>
+          <option v-for="cat in availableCategories" :key="cat" :value="cat">
+            {{ CATEGORY_LABELS[cat] ?? cat }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Empty filtered state -->
+      <div v-if="filteredLeads.length === 0" class="py-12 text-center">
+        <p class="text-sm text-muted-foreground">Aucun lead pour cette catégorie.</p>
+      </div>
 
     <!-- Lead grid -->
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div
-        v-for="lead in leads"
+        v-for="lead in paginatedLeads"
         :key="lead.id"
         class="border border-border rounded-lg divide-y divide-border"
       >
@@ -414,6 +461,27 @@ async function copyToClipboard(text: string) {
 
       </div>
     </div>
+
+    <!-- Pagination -->
+    <div v-if="totalPages > 1" class="flex items-center justify-between pt-2">
+      <button
+        @click="currentPage--"
+        :disabled="currentPage === 1"
+        class="h-9 px-4 border border-border rounded-md text-sm font-medium text-foreground hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      >
+        ← Précédent
+      </button>
+      <span class="text-xs text-muted-foreground">{{ currentPage }} / {{ totalPages }}</span>
+      <button
+        @click="currentPage++"
+        :disabled="currentPage === totalPages"
+        class="h-9 px-4 border border-border rounded-md text-sm font-medium text-foreground hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      >
+        Suivant →
+      </button>
+    </div>
+
+    </div><!-- /v-else leads -->
 
   </div>
 </template>
