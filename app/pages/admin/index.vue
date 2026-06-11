@@ -58,11 +58,29 @@ interface Project {
   budget_range: string | null
   timeline_range: string | null
   created_at: string
+  lead_count: number
 }
 
 const projects        = ref<Project[]>([])
 const qualifyLoading  = ref<string | null>(null)
 const qualifyResult   = ref<Record<string, number>>({})
+const projectSortAsc  = ref(true)
+
+const sortedProjects = computed(() => {
+  return [...projects.value].sort((a, b) => {
+    const diff = new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    return projectSortAsc.value ? diff : -diff
+  })
+})
+
+function leadAge(createdAt: string): { days: number; label: string; cls: string } {
+  const ms = Date.now() - new Date(createdAt).getTime()
+  const days = Math.floor(ms / 86400000)
+  const hours = Math.floor(ms / 3600000)
+  if (hours < 24) return { days: 0, label: `${hours}h`, cls: 'border-border text-muted-foreground' }
+  if (days < 3)   return { days, label: `${days}j`, cls: 'border-amber-300 text-amber-700 bg-amber-50' }
+  return { days, label: `${days}j`, cls: 'border-red-300 text-red-700 bg-red-50' }
+}
 
 // ─── Access ───────────────────────────────────────────────────────────────────
 const isAdmin = computed(() => (user.value as any)?.app_metadata?.role === 'admin')
@@ -471,14 +489,29 @@ const statusLabel: Record<string, string> = {
 
         <!-- Projects tab -->
         <template v-if="activeTab === 'projects'">
+          <!-- Sort control -->
+          <div v-if="projects.length > 0" class="flex items-center justify-between text-xs text-muted-foreground">
+            <span>{{ projects.length }} projet(s) — <span class="text-red-600 font-medium">{{ projects.filter(p => leadAge(p.created_at).days >= 3).length }} critique(s)</span></span>
+            <button
+              @click="projectSortAsc = !projectSortAsc"
+              class="flex items-center gap-1.5 h-8 px-3 border border-border rounded-md hover:bg-muted transition-colors font-medium text-foreground"
+            >
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M7 12h10M11 17h2" />
+              </svg>
+              {{ projectSortAsc ? 'Plus anciens d\'abord' : 'Plus récents d\'abord' }}
+            </button>
+          </div>
+
           <div v-if="projects.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-border rounded-lg">
             <p class="text-sm text-muted-foreground">Aucun projet trouvé.</p>
           </div>
           <div v-else class="space-y-4">
             <div
-              v-for="project in projects"
+              v-for="project in sortedProjects"
               :key="project.id"
-              class="border border-border rounded-lg overflow-hidden"
+              class="border rounded-lg overflow-hidden transition-colors"
+              :class="leadAge(project.created_at).days >= 3 ? 'border-red-200' : 'border-border'"
             >
               <div class="flex items-start justify-between gap-4 px-5 py-4 bg-muted/50">
                 <div class="space-y-1 flex-1 min-w-0">
@@ -492,12 +525,23 @@ const statusLabel: Record<string, string> = {
                     >
                       {{ project.status === 'qualified' ? 'Qualifié' : 'En attente' }}
                     </span>
+                    <!-- Ancienneté -->
+                    <span
+                      class="text-xs font-semibold px-2 py-0.5 rounded-full border"
+                      :class="leadAge(project.created_at).cls"
+                    >
+                      {{ leadAge(project.created_at).days >= 3 ? '⚠ ' : '' }}{{ leadAge(project.created_at).label }}
+                    </span>
+                    <!-- Nombre de leads -->
+                    <span v-if="project.lead_count > 0" class="text-xs px-2 py-0.5 rounded-full border border-sky-200 text-sky-700 bg-sky-50">
+                      {{ project.lead_count }} lead{{ project.lead_count > 1 ? 's' : '' }}
+                    </span>
                   </div>
                   <p v-if="project.description" class="text-sm text-foreground line-clamp-2">{{ project.description }}</p>
                   <div class="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-muted-foreground">
                     <span v-if="project.budget_range">Budget : {{ project.budget_range }}</span>
                     <span v-if="project.timeline_range">Délai : {{ project.timeline_range }}</span>
-                    <span>{{ new Date(project.created_at).toLocaleDateString('fr-FR') }}</span>
+                    <span>Reçu le {{ new Date(project.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) }}</span>
                   </div>
                 </div>
               </div>
