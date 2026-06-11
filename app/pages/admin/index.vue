@@ -64,8 +64,6 @@ interface Project {
 }
 
 const projects        = ref<Project[]>([])
-const qualifyLoading  = ref<string | null>(null)
-const qualifyResult   = ref<Record<string, number>>({})
 const projectSortAsc  = ref(true)
 
 const sortedProjects = computed(() => {
@@ -114,19 +112,6 @@ const fetchProjects = async () => {
   }
 }
 
-const qualifyProject = async (projectId: string) => {
-  qualifyLoading.value = projectId
-  errorMessage.value = null
-  try {
-    const data = await $fetch('/api/v1/admin/qualify', { method: 'POST', body: { project_id: projectId } })
-    qualifyResult.value[projectId] = (data as any)?.leads_created ?? 0
-    await fetchProjects()
-  } catch (err: any) {
-    errorMessage.value = err.data?.statusMessage || err.message
-  } finally {
-    qualifyLoading.value = null
-  }
-}
 
 onMounted(() => { if (isAdmin.value) { fetchQueue(); fetchProjects() } })
 
@@ -534,9 +519,9 @@ const statusLabel: Record<string, string> = {
                     >
                       {{ leadAge(project.created_at).days >= 3 ? '⚠ ' : '' }}{{ leadAge(project.created_at).label }}
                     </span>
-                    <!-- Nombre de leads -->
+                    <!-- Nombre de claims -->
                     <span v-if="project.lead_count > 0" class="text-xs px-2 py-0.5 rounded-full border border-sky-200 text-sky-700 bg-sky-50">
-                      {{ project.lead_count }} lead{{ project.lead_count > 1 ? 's' : '' }}
+                      {{ project.lead_count }} intéressé{{ project.lead_count > 1 ? 's' : '' }}
                     </span>
                   </div>
                   <p v-if="project.description" class="text-sm text-foreground line-clamp-2">{{ project.description }}</p>
@@ -546,23 +531,6 @@ const statusLabel: Record<string, string> = {
                     <span>Reçu le {{ new Date(project.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) }}</span>
                   </div>
                 </div>
-              </div>
-              <div class="flex items-center justify-between px-5 py-3 bg-muted/30 border-t border-border">
-                <span v-if="qualifyResult[project.id] !== undefined" class="text-xs text-emerald-700 font-medium">
-                  <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                  {{ qualifyResult[project.id] }} lead(s) créé(s)
-                </span>
-                <span v-else class="text-xs text-muted-foreground">
-                  {{ project.status === 'qualified' ? 'Déjà qualifié' : 'Non qualifié' }}
-                </span>
-                <button
-                  @click="qualifyProject(project.id)"
-                  :disabled="project.status === 'qualified' || qualifyLoading === project.id"
-                  class="h-8 px-3 bg-sky-600 text-white text-xs font-semibold rounded-md hover:bg-sky-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
-                >
-                  <svg v-if="qualifyLoading === project.id" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-                  Qualifier
-                </button>
               </div>
             </div>
           </div>

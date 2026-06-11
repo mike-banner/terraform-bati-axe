@@ -50,7 +50,7 @@ const proForm  = reactive({
   full_name: '',
   phone: '',
   postal_code: '',
-  category: '',
+  categories: [] as string[],
   sms_opt_in: false,
   cgu_accepted: false
 })
@@ -111,9 +111,17 @@ const isProFormValid = computed(() =>
   RE_NAME.test(proForm.full_name) &&
   RE_PHONE_FR.test(proForm.phone) &&
   RE_CP.test(proForm.postal_code) &&
-  !!proForm.category &&
+  proForm.categories.length > 0 &&
   proForm.cgu_accepted
 )
+
+const toggleCategory = (id: string) => {
+  if (proForm.categories.includes(id)) {
+    proForm.categories = proForm.categories.filter(c => c !== id)
+  } else {
+    proForm.categories.push(id)
+  }
+}
 
 // ─── Error translation ────────────────────────────────────────────────────────
 function translateAuthError(msg: string): string {
@@ -247,7 +255,7 @@ const handleRegisterCompany = async () => {
         full_name:    proForm.full_name,
         phone:        proForm.phone,
         postal_code:  proForm.postal_code,
-        category:     proForm.category,
+        categories:   proForm.categories,
         sms_opt_in:   proForm.sms_opt_in
       }
     })
@@ -561,24 +569,25 @@ const switchMode = (mode: 'register' | 'login') => {
             </div>
           </div>
 
-          <!-- Category -->
+          <!-- Categories -->
           <div>
-            <label class="block text-sm font-medium text-foreground mb-2">Corps de métier principal <span class="text-red-600">*</span></label>
+            <label class="block text-sm font-medium text-foreground mb-2">Corps de métier <span class="text-red-600">*</span></label>
             <div class="grid grid-cols-2 gap-2">
               <button
                 v-for="cat in CATEGORIES"
                 :key="cat.id"
                 type="button"
-                @click="proForm.category = cat.id"
+                @click="toggleCategory(cat.id)"
                 class="h-10 px-3 rounded-md border text-sm font-medium text-left transition-colors"
-                :class="proForm.category === cat.id
+                :class="proForm.categories.includes(cat.id)
                   ? 'bg-foreground text-background border-foreground'
                   : 'border-border text-foreground hover:bg-muted'"
               >
                 {{ cat.label }}
               </button>
             </div>
-            <p v-if="!proForm.category && proTouched.cgu_accepted" class="mt-1.5 text-xs text-red-600">Sélectionnez votre corps de métier.</p>
+            <p v-if="proForm.categories.length === 0 && proTouched.cgu_accepted" class="mt-1.5 text-xs text-red-600">Sélectionnez au moins un corps de métier.</p>
+            <p class="mt-2 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
           </div>
 
           <!-- Consents -->
