@@ -119,6 +119,32 @@ async function copyToClipboard(text: string) {
 <template>
   <div class="max-w-2xl mx-auto px-6 py-16">
 
+    <!-- Blocker: profil non validé -->
+    <div v-if="profile && !profile.is_verified" class="flex flex-col gap-4 p-6 border border-red-300 bg-red-50 rounded-lg mb-8">
+      <div class="flex items-start gap-3">
+        <svg class="w-5 h-5 text-red-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+        </svg>
+        <div>
+          <p class="text-sm font-semibold text-red-900">Accès aux leads bloqué</p>
+          <p class="text-xs text-red-700 mt-1">Votre profil doit être validé pour accéder aux leads. Cela nécessite :</p>
+          <ul class="text-xs text-red-700 list-disc list-inside mt-2 space-y-1">
+            <li>Avoir envoyé vos documents (KBIS + Décennale)</li>
+            <li>Que nos équipes aient vérifié vos documents (sous 24h ouvrées)</li>
+          </ul>
+        </div>
+      </div>
+      <NuxtLink
+        to="/app/dashboard"
+        class="inline-flex items-center justify-center gap-2 h-10 px-6 bg-red-700 text-white text-sm font-semibold rounded-md hover:bg-red-800 transition-colors self-start"
+      >
+        Retour au dashboard pour envoyer les documents
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </NuxtLink>
+    </div>
+
     <!-- Success banner (?upgrade=success) -->
     <div v-if="showSuccessBanner" class="flex items-start gap-3 p-4 border border-foreground/30 rounded-lg mb-8">
       <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">

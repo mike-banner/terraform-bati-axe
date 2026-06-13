@@ -12,6 +12,7 @@ const profile = reactive({
   canonical_slug: '',
   dept: '',
   company_name: '',
+  phone: '',
 })
 
 const loading = ref(true)
@@ -33,6 +34,7 @@ const { refresh } = await useAsyncData('pro-profile-page', async () => {
       canonical_slug: data.profile.canonical_slug || '',
       dept: data.profile.dept || '',
       company_name: data.profile.company_name || '',
+      phone: data.profile.phone || '',
     })
     fetchError.value = false
   } catch {
@@ -76,7 +78,7 @@ async function saveProfile() {
   try {
     await $fetch('/api/v1/pro/profile/me', {
       method: 'PATCH',
-      body: { bio: profile.bio, categories: profile.categories, zone: profile.zone }
+      body: { bio: profile.bio, categories: profile.categories, zone: profile.zone, phone: profile.phone }
     })
     saveSuccess.value = true
     setTimeout(() => { saveSuccess.value = false }, 3000)
@@ -194,6 +196,18 @@ async function saveProfile() {
             </label>
           </div>
           <p class="mt-3 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
+        </div>
+
+        <!-- Téléphone -->
+        <div class="border-t border-border pt-8">
+          <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Téléphone</h2>
+          <input
+            v-model="profile.phone"
+            type="tel"
+            placeholder="06 11 22 33 44"
+            class="w-full px-4 py-3 border border-border rounded-md text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
+          />
+          <p class="text-xs text-muted-foreground mt-1">Votre numéro sera visible sur votre profil public.</p>
         </div>
 
         <!-- Zone -->

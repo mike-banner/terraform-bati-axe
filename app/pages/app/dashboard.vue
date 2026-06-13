@@ -189,10 +189,15 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
       </div>
 
       <!-- ─── Documents (toujours visible pour permettre le renouvellement) ───── -->
-      <div class="rounded-lg p-5 mb-8 border" :class="docsComplete ? 'border-border' : 'border-amber-300 bg-amber-50'">
-        <p class="text-sm font-semibold mb-1" :class="docsComplete ? 'text-foreground' : 'text-amber-900'">Documents</p>
-        <p v-if="!docsComplete" class="text-xs text-amber-700 mb-5">Envoyez vos justificatifs pour activer votre profil et accéder aux leads.</p>
-        <p v-else class="text-xs text-muted-foreground mb-4">Renouvelez vos justificatifs si nécessaire (expiration, mise à jour).</p>
+      <div class="rounded-lg p-5 mb-8 border" :class="docsComplete ? 'border-border' : 'border-red-300 bg-red-50'">
+        <div class="flex items-start gap-2 mb-3">
+          <svg v-if="!docsComplete" class="w-4 h-4 text-red-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+          <div>
+            <p class="text-sm font-semibold" :class="docsComplete ? 'text-foreground' : 'text-red-900'">Documents requis</p>
+            <p v-if="!docsComplete" class="text-xs text-red-700 mt-0.5">Envoyez vos justificatifs pour valider votre profil et accéder aux leads (même gratuits).</p>
+            <p v-else class="text-xs text-muted-foreground mt-0.5">Renouvelez-les en cas d'expiration ou de mise à jour.</p>
+          </div>
+        </div>
 
         <!-- KBIS -->
         <div v-if="!kbis" class="mb-4">
@@ -268,6 +273,13 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
               {{ uploads.decennale.status === 'uploading' ? 'Envoi...' : 'Modifier' }}
             </span>
           </label>
+        </div>
+
+        <!-- Responsabilité -->
+        <div class="mt-4 pt-4 border-t border-border/50">
+          <p class="text-xs text-muted-foreground leading-relaxed">
+            <span class="font-semibold">⚠️ Responsabilité :</span> Vous garantissez l'authenticité et la validité des documents envoyés. Toute fausse déclaration ou document falsifié peut entraîner la fermeture de votre compte et des poursuites légales. BÂTI-AXE décline toute responsabilité en cas de fraude documentaire.
+          </p>
         </div>
       </div>
 
