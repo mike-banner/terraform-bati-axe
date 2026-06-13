@@ -60,7 +60,7 @@ const touched = reactive({ name: false, email: false, phone: false })
 
 // ─── Regex ────────────────────────────────────────────────────────────────────
 const RE_EMAIL    = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
-const RE_PHONE_FR = /^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/
+const RE_PHONE_FR = /^(?:(?:\+|00)33[\s.-]?|0)[1-9](?:[\s.-]*\d{2}){4}$/
 
 // ─── Validation ───────────────────────────────────────────────────────────────
 const isStepValid = computed(() => {
@@ -110,6 +110,28 @@ const nextStep = () => {
   }
 }
 
+const normalizePhone = (e: Event) => {
+  let val = (e.target as HTMLInputElement).value
+  let cleaned = val.replace(/[^\d+]/g, '')
+  if (cleaned.startsWith('0')) cleaned = '+33' + cleaned.slice(1)
+  if (cleaned.length > 0 && !cleaned.startsWith('+')) cleaned = '+' + cleaned
+  const has33 = cleaned.startsWith('+33')
+  const prefix = has33 ? '+33' : cleaned.slice(0,3)
+  let rest = has33 ? cleaned.slice(3) : cleaned.slice(3)
+  rest = rest.replace(/\D/g, '').slice(0, 9)
+  let formatted = prefix
+  if (rest.length > 0) formatted += ' ' + rest.slice(0,1)
+  if (rest.length > 1) formatted += ' ' + rest.slice(1,3)
+  if (rest.length > 3) formatted += ' ' + rest.slice(3,5)
+  if (rest.length > 5) formatted += ' ' + rest.slice(5,7)
+  if (rest.length > 7) formatted += ' ' + rest.slice(7,9)
+  form.customer_phone = formatted
+}
+
+const normalizePostalCode = (e: Event) => {
+  form.postal_code = (e.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 5)
+}
+
 const prevStep = () => {
   if (step.value > 1) {
     step.value--
@@ -134,7 +156,7 @@ const handleSubmit = async () => {
         postal_code:    form.postal_code,
         customer_name:  form.customer_name,
         customer_email: form.customer_email,
-        customer_phone: form.customer_phone,
+        customer_phone: form.customer_phone.replace(/\s/g, ''),
         cgu_accepted:   form.cgu_accepted,
         sms_opt_in:     form.sms_opt_in,
       }
@@ -321,6 +343,7 @@ const handleSubmit = async () => {
               pattern="[0-9]{5}"
               required
               inputmode="numeric"
+              @input="normalizePostalCode"
               class="w-full h-14 px-4 border border-border rounded-md text-xl font-semibold tracking-widest bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
             />
             <div
@@ -392,11 +415,12 @@ const handleSubmit = async () => {
                 id="c-phone"
                 type="tel"
                 v-model="form.customer_phone"
-                placeholder="06 12 34 56 78"
+                placeholder="+33 6 12 34 56 78"
                 autocomplete="tel"
                 required
                 maxlength="17"
                 pattern="^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$"
+                @input="normalizePhone"
                 @blur="touched.phone = true"
                 class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
                 :class="contactErrors.phone ? 'border-red-500' : 'border-border'"
