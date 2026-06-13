@@ -18,9 +18,25 @@
       </div>
 
       <div>
-        <h2 class="text-xl font-semibold text-foreground mb-3">3. Responsabilité</h2>
+        <h2 class="text-xl font-semibold text-foreground mb-3">3. Responsabilité des documents</h2>
+        <p class="mb-3">
+          Les professionnels qui s'inscrivent sur BÂTI-AXE s'engagent à fournir des documents authentiques, valides et à jour (extrait KBIS, assurance décennale, etc.). Les utilisateurs garantissent personnellement :
+        </p>
+        <ul class="list-disc list-inside space-y-2 ml-2">
+          <li>L'authenticité complète de tous les documents fournis</li>
+          <li>La validité juridique et administrative de ces documents</li>
+          <li>L'absence de falsification ou de modification frauduleuse</li>
+          <li>La conformité des documents avec les informations déclarées sur leur profil</li>
+        </ul>
+        <p class="mt-3">
+          <strong>Conséquences :</strong> Toute fausse déclaration, fourniture de document falsifié ou arnaques documentaires entraînera immédiatement la fermeture du compte, sans remboursement, et la transmission des informations aux autorités compétentes. L'utilisateur en reste seul responsable.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-foreground mb-3">4. Responsabilité générale</h2>
         <p>
-          BÂTI-AXE agit en tant que simple tiers de mise en relation. La responsabilité des travaux et de leur réalisation incombe exclusivement aux professionnels sélectionnés par les clients.
+          BÂTI-AXE agit en tant que simple tiers de mise en relation. La responsabilité des travaux et de leur réalisation incombe exclusivement aux professionnels sélectionnés par les clients. BÂTI-AXE décline toute responsabilité en cas de fraude documentaire, de fausse déclaration ou d'arnaque perpetrée par ses utilisateurs.
         </p>
       </div>
     </section>
