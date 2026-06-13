@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: pro, error } = await supabase
     .from('professionals')
-    .select('id, canonical_slug, short_id, postal_code, category, bio, zone, logo_url, company_name, full_name, is_verified, subscription_status')
+    .select('id, canonical_slug, short_id, postal_code, categories, bio, zone, logo_url, company_name, full_name, is_verified, subscription_status')
     .eq('id', user.id)
     .single()
 

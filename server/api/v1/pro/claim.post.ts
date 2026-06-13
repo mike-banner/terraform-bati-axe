@@ -1,7 +1,13 @@
 import { z } from 'zod'
-import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
+import { serverSupabaseServiceRole, serverSupabaseUser } from '#supabase/server'
 import crypto from 'node:crypto'
-import fs from 'node:fs'
+import * as fs from 'node:fs'
+
+const log = (msg: string) => {
+  try {
+    fs.appendFileSync('/home/mike/projects/bati-axe/scratch/auth_debug.log', `${new Date().toISOString()} - [DEBUG] ${msg}\n`)
+  } catch (e) {}
+}
 
 const VALID_CATEGORIES = ['maconnerie', 'toiture', 'electricite', 'plomberie', 'peinture', 'isolation'] as const
 
@@ -12,7 +18,7 @@ const claimSchema = z.object({
   full_name: z.string().min(2, 'Le nom du gérant est requis.'),
   phone: z.string().regex(/^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone invalide.'),
   postal_code: z.string().regex(/^\d{5}$/, 'Code postal invalide.'),
-  category: z.enum(VALID_CATEGORIES, { error: 'Corps de métier invalide.' }),
+  categories: z.array(z.enum(VALID_CATEGORIES)).min(1, 'Sélectionnez au moins un corps de métier.'),
   sms_opt_in: z.boolean().default(false)
 })
 
@@ -63,11 +69,20 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Impossible de résoudre l\'identifiant utilisateur depuis le JWT.'
       })
     }
+    log('User resolved: ' + userId)
 
     // 2. Validate payload
     const body = await readBody(event)
+    log('Body read')
     const validation = claimSchema.safeParse(body)
     if (!validation.success) {
+      log('Validation failed')
+      fs.appendFileSync('/home/mike/projects/bati-axe/scratch/auth_debug.log', JSON.stringify({
+        timestamp: new Date().toISOString(),
+        context: 'zodError',
+        payload: body,
+        errors: validation.error.format()
+      }, null, 2) + '\n\n')
       throw createError({
         statusCode: 400,
         statusMessage: 'Données d\'inscription invalides.',
@@ -75,28 +90,31 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    log('Validation passed')
     const data = validation.data
     const supabase = await serverSupabaseServiceRole(event) as any
 
     // Check if professional record already exists for this user
     const { data: existingPro } = await supabase
       .from('professionals')
-      .select('id')
+      .select('id, is_verified')
       .eq('id', userId)
       .maybeSingle()
 
-    if (existingPro) {
+    if (existingPro && existingPro.is_verified) {
       throw createError({
         statusCode: 400,
-        statusMessage: 'Vous avez déjà un profil professionnel configuré.'
+        statusMessage: 'Vous avez déjà un profil professionnel configuré et vérifié.'
       })
     }
-
+    log('Existing pro check passed')
+    
     // Check if SIRET is already claimed by another pro
     const { data: siretTaken } = await supabase
       .from('professionals')
       .select('id')
       .eq('siret', data.siret)
+      .neq('id', userId)
       .maybeSingle()
 
     if (siretTaken) {
@@ -105,6 +123,8 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Ce numéro SIRET a déjà été revendiqué par un autre utilisateur.'
       })
     }
+    
+    log('SIRET check passed')
 
     // 3. Find active zone based on postal code
     const { data: matchedZone, error: zoneError } = await supabase
@@ -115,11 +135,13 @@ export default defineEventHandler(async (event) => {
       .maybeSingle()
 
     if (zoneError) {
+      log('Zone error: ' + JSON.stringify(zoneError))
       throw createError({
         statusCode: 500,
         statusMessage: 'Erreur lors de la vérification de la zone géographique.'
       })
     }
+    log('Zone check passed')
 
     const zoneId = matchedZone?.id || null
     const cityName = matchedZone?.name || 'poissy'
@@ -127,15 +149,20 @@ export default defineEventHandler(async (event) => {
     // 4. Generate URL identifiers
     const shortId = generateShortId()
     const canonicalSlug = `${slugify(data.company_name)}-${slugify(cityName)}-${shortId}`
+    log('Slug generated')
 
     // 5. If claiming an existing prospect
     let prospectId = data.prospect_id || null
+    let prospect = null
     if (prospectId) {
-      const { data: prospect, error: prospectErr } = await supabase
+      log('Fetching prospect...')
+      const { data: prospectData, error: prospectErr } = await supabase
         .from('prospects')
-        .select('id, converted_professional_id')
+        .select('*')
         .eq('id', prospectId)
         .maybeSingle()
+
+      prospect = prospectData
 
       if (prospectErr || !prospect) {
         throw createError({
@@ -163,10 +190,11 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    // 6. Insert new professional record
+    // 6. Upsert professional record
+    log('Upserting professional...')
     const { data: newPro, error: proError } = await supabase
       .from('professionals')
-      .insert({
+      .upsert({
         id: userId,
         short_id: shortId,
         canonical_slug: canonicalSlug,
@@ -177,18 +205,18 @@ export default defineEventHandler(async (event) => {
         phone: data.phone,
         postal_code: data.postal_code,
         zone_id: zoneId,
-        category: data.category,
+        categories: data.categories,
         is_verified: false,
         is_claimed: true,
         decennal_status: 'none',
         stripe_customer_id: null,
         subscription_status: 'none'
-      })
+      }, { onConflict: 'id' })
       .select('id')
       .single()
 
     if (proError || !newPro) {
-      console.error('Error inserting pro profile:', proError)
+      log('Pro error: ' + JSON.stringify(proError))
       fs.appendFileSync('/home/mike/projects/bati-axe/scratch/auth_debug.log', JSON.stringify({
         timestamp: new Date().toISOString(),
         context: 'proError',
@@ -199,9 +227,11 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Impossible de créer le profil professionnel.'
       })
     }
+    log('Upsert successful')
 
     // 7. If linked to a prospect, update prospect record
     if (prospectId) {
+      log('Updating prospect record')
       await supabase
         .from('prospects')
         .update({
@@ -242,6 +272,7 @@ export default defineEventHandler(async (event) => {
     }
 
     await supabase.from('consents').insert(consentsToInsert)
+    log('Consents inserted')
 
     // 9. Log Audit Entry
     await supabase.from('audit_logs').insert({
@@ -255,6 +286,7 @@ export default defineEventHandler(async (event) => {
         company_name: data.company_name
       }
     })
+    log('Audit log inserted')
 
     return {
       status: 'SUCCESS',
@@ -262,6 +294,7 @@ export default defineEventHandler(async (event) => {
       slug: canonicalSlug
     }
   } catch (error: any) {
+    log(`ERROR caught: ${error.message}`)
     if (error.statusCode) throw error
     throw createError({
       statusCode: 500,
