@@ -2,6 +2,9 @@
 const user = useSupabaseUser()
 const supabase = useSupabaseClient()
 
+// Auto-logout après 30 min inactivité
+useIdleLogout(30)
+
 async function signOut() {
   await navigateTo('/')
   await supabase.auth.signOut()
