@@ -1,12 +1,9 @@
 import { z } from 'zod'
 import { serverSupabaseServiceRole, serverSupabaseUser } from '#supabase/server'
 import crypto from 'node:crypto'
-import * as fs from 'node:fs'
 
 const log = (msg: string) => {
-  try {
-    fs.appendFileSync('/home/mike/projects/bati-axe/scratch/auth_debug.log', `${new Date().toISOString()} - [DEBUG] ${msg}\n`)
-  } catch (e) {}
+  console.log(`[claim.post] ${new Date().toISOString()} - ${msg}`)
 }
 
 const VALID_CATEGORIES = ['maconnerie', 'toiture', 'electricite', 'plomberie', 'peinture', 'isolation'] as const
@@ -76,13 +73,7 @@ export default defineEventHandler(async (event) => {
     log('Body read')
     const validation = claimSchema.safeParse(body)
     if (!validation.success) {
-      log('Validation failed')
-      fs.appendFileSync('/home/mike/projects/bati-axe/scratch/auth_debug.log', JSON.stringify({
-        timestamp: new Date().toISOString(),
-        context: 'zodError',
-        payload: body,
-        errors: validation.error.format()
-      }, null, 2) + '\n\n')
+      log('Validation failed: ' + JSON.stringify(validation.error.format()))
       throw createError({
         statusCode: 400,
         statusMessage: 'Données d\'inscription invalides.',
@@ -217,11 +208,6 @@ export default defineEventHandler(async (event) => {
 
     if (proError || !newPro) {
       log('Pro error: ' + JSON.stringify(proError))
-      fs.appendFileSync('/home/mike/projects/bati-axe/scratch/auth_debug.log', JSON.stringify({
-        timestamp: new Date().toISOString(),
-        context: 'proError',
-        proError
-      }, null, 2) + '\n\n')
       throw createError({
         statusCode: 500,
         statusMessage: 'Impossible de créer le profil professionnel.'
