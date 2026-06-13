@@ -28,21 +28,18 @@ export default defineNuxtRouteMiddleware((to) => {
     return
   }
 
-  // ── /app/* and /espace/* — page watchEffect handles redirect if not logged in ───────────
+  // ── /app/* and /espace/* ──────────────────────────────────────────────────
   if (path.startsWith('/app') || path.startsWith('/espace')) {
+    if (!isLoggedIn.value) return navigateTo('/pro/claim')
     return
   }
 
-  // ── /pro/claim — redirect away once session is confirmed ─────────────────
+  // ── /pro/claim — let the page component handle redirection ─────────────────
   if (path === '/pro/claim') {
-    if (isAdmin.value)    return navigateTo('/admin')
-    if (isLoggedIn.value) return navigateTo('/app/dashboard')
+    if (isAdmin.value) return navigateTo('/admin')
     return
   }
 
-  // ── Public routes — redirect logged-in pro to dashboard ──────────────────
-  if (isPro.value) {
-    const allowed = ['/legal/']
-    if (!allowed.some(p => path.startsWith(p))) return navigateTo('/app/dashboard')
-  }
+  // ── Public routes — do not blindly redirect to dashboard ──────────────────
+  // Pages like '/' will have their own logic.
 })

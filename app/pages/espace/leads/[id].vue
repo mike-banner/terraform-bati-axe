@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { computed, watchEffect } from 'vue'
 
-const user  = useSupabaseUser()
+useRequireAuth()
 const route = useRoute()
-
-watchEffect(() => {
-  if (user.value === null) navigateTo('/pro/claim')
-})
 
 const CATEGORY_LABELS: Record<string, string> = {
   maconnerie:   'Maçonnerie & Gros Œuvre',

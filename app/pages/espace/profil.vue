@@ -2,9 +2,7 @@
 definePageMeta({ layout: 'dynamic' })
 useHead({ title: 'Mon profil public — BÂTI-AXE' })
 
-const user = useSupabaseUser()
-
-watchEffect(() => { if (user.value === null) navigateTo('/pro/claim') })
+useRequireAuth()
 
 const profile = reactive({
   bio: '',
@@ -24,7 +22,7 @@ const logoError = ref('')
 const logoUploading = ref(false)
 const fetchError = ref(false)
 
-const { refresh } = await useAsyncData('pro-profile', async () => {
+const { refresh } = await useAsyncData('pro-profile-page', async () => {
   try {
     const data = await $fetch<{ profile: Record<string, unknown> }>('/api/v1/pro/profile/me')
     Object.assign(profile, {
@@ -208,18 +206,6 @@ async function saveProfile() {
             class="w-full px-4 py-3 border border-border rounded-md text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
             maxlength="200"
           />
-        </div>
-
-        <!-- Slug (read-only) -->
-        <div class="border-t border-border pt-8">
-          <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">URL de votre profil</h2>
-          <input
-            :value="`batixe.fr/pro/${profile.dept}/${profile.canonical_slug}`"
-            type="text"
-            readonly
-            class="w-full px-4 py-3 border border-border rounded-md text-sm text-muted-foreground bg-muted cursor-not-allowed"
-          />
-          <p class="text-xs text-muted-foreground mt-2">L'URL de votre profil est fixe et ne peut pas être modifiée.</p>
         </div>
 
         <!-- Submit -->

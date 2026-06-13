@@ -2,10 +2,7 @@
 definePageMeta({ layout: 'dynamic' })
 useHead({ title: 'Messagerie — BÂTI-AXE' })
 
-const user = useSupabaseUser()
-watchEffect(() => {
-  if (user.value === null) navigateTo('/pro/claim')
-})
+useRequireAuth()
 </script>
 
 <template>

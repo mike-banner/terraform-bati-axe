@@ -5,7 +5,7 @@ interface Pro {
   id: string; company_name: string; full_name: string; phone: string
   postal_code: string; canonical_slug: string; short_id: string
   is_verified: boolean; is_claimed: boolean; decennal_status: string; created_at: string
-  category: string; subscription_status: string; bio?: string; logo_url?: string
+  categories: string[]; subscription_status: string; bio?: string; logo_url?: string
 }
 interface Verif {
   document_type: string; status: string; expiry_date: string | null; created_at: string
@@ -17,33 +17,45 @@ const CATEGORY_LABELS: Record<string, string> = {
 }
 
 const supabase = useSupabaseClient()
-const user     = useSupabaseUser()
+const { user } = useRequireAuth()
 useHead({ title: 'Mon profil — BÂTI-AXE' })
-
-watchEffect(() => { if (user.value === null) navigateTo('/pro/claim') })
 
 const pro    = ref<Pro | null>(null)
 const verifs = ref<Verif[]>([])
 const loading = ref(true)
+const router = useRouter()
 
 async function loadProData() {
   loading.value = true
-  const { data: { session } } = await supabase.auth.getSession()
-  const uid = session?.user?.id
-  if (!uid) return
-  const [{ data: proData, error: proErr }, { data: verifData, error: verifErr }] = await Promise.all([
-    supabase.from('professionals')
-      .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, created_at, category, subscription_status, bio, logo_url')
-      .eq('id', uid).maybeSingle(),
-    supabase.from('verifications')
-      .select('document_type, status, expiry_date, created_at')
-      .eq('pro_id', uid).order('created_at', { ascending: false })
-  ])
-  if (proErr)   console.error('[dashboard] pro fetch:', proErr.message)
-  if (verifErr) console.error('[dashboard] verif fetch:', verifErr.message)
-  pro.value    = proData as Pro | null
-  verifs.value = (verifData || []) as Verif[]
-  loading.value = false
+  try {
+    const uid = user.value?.id
+    if (!uid) {
+      loading.value = false
+      return
+    }
+    const [{ data: proData, error: proErr }, { data: verifData, error: verifErr }] = await Promise.all([
+      supabase.from('professionals')
+        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, created_at, categories, subscription_status, bio, logo_url')
+        .eq('id', uid).maybeSingle(),
+      supabase.from('verifications')
+        .select('document_type, status, expiry_date, created_at')
+        .eq('pro_id', uid).order('created_at', { ascending: false })
+    ])
+    if (proErr && proErr.code !== 'PGRST116') console.error('[dashboard] pro fetch:', proErr.message)
+    if (verifErr) console.error('[dashboard] verif fetch:', verifErr.message)
+    
+    if (!proData) {
+      console.warn('[dashboard] Profile missing, proData is null. Showing fallback UI.')
+      return
+    }
+
+    pro.value    = proData as Pro | null
+    verifs.value = (verifData || []) as Verif[]
+  } catch (e) {
+    console.error('Error loading pro data', e)
+  } finally {
+    loading.value = false
+  }
 }
 
 watch(user, () => loadProData(), { immediate: true })
@@ -53,7 +65,21 @@ const decennale = computed(() => verifs.value?.find(v => v.document_type === 'de
 
 const docStatus = (doc: any) => {
   if (!doc) return { label: 'Non envoyé', cls: 'text-muted-foreground border-border' }
-  if (doc.status === 'approved') return { label: 'Validé ✓', cls: 'text-foreground border-foreground/30' }
+  
+  if (doc.status === 'approved') {
+    if (doc.expiry_date) {
+      const daysLeft = Math.ceil((new Date(doc.expiry_date).getTime() - new Date().getTime()) / (1000 * 3600 * 24))
+      if (daysLeft < 0) {
+        return { label: 'Expiré ⚠️', cls: 'text-red-700 border-red-200 bg-red-50' }
+      }
+      const warningDays = doc.document_type === 'decennale' ? 30 : 14
+      if (daysLeft <= warningDays) {
+        return { label: 'Expire bientôt', cls: 'text-amber-700 border-amber-300 bg-amber-50' }
+      }
+    }
+    return { label: 'Validé ✓', cls: 'text-foreground border-foreground/30' }
+  }
+  
   if (doc.status === 'rejected') return { label: 'Rejeté', cls: 'text-red-700 border-red-200 bg-red-50' }
   return { label: 'En attente', cls: 'text-amber-700 border-amber-300 bg-amber-50' }
 }
@@ -140,16 +166,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
       <svg class="w-8 h-8 animate-spin text-muted-foreground" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
     </div>
 
-    <!-- Not registered yet -->
-    <div v-else-if="user && !pro" class="py-8">
-      <h1 class="text-3xl font-semibold tracking-tight text-foreground mb-3">Mon espace</h1>
-      <p class="text-sm text-muted-foreground mb-8">Votre profil artisan n'est pas encore créé.</p>
-      <NuxtLink to="/pro/claim" class="inline-flex items-center gap-2 h-11 px-6 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity">
-        Créer mon profil artisan
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </NuxtLink>
-    </div>
-
+    <!-- Main Dashboard -->
     <template v-else-if="pro">
 
       <!-- Header -->
@@ -163,8 +180,8 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
             <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             {{ pro.is_verified ? 'Vérifié BÂTI-AXE' : 'Vérification en cours' }}
           </span>
-          <span v-if="pro.category" class="inline-flex items-center text-xs font-medium px-3 py-1.5 border border-border rounded-full text-muted-foreground">
-            {{ CATEGORY_LABELS[pro.category] || pro.category }}
+          <span v-if="pro.categories && pro.categories.length > 0" class="inline-flex items-center text-xs font-medium px-3 py-1.5 border border-border rounded-full text-muted-foreground gap-1">
+            <span v-for="cat in pro.categories" :key="cat">{{ CATEGORY_LABELS[cat] || cat }}</span>
           </span>
         </div>
         <h1 class="text-3xl font-semibold tracking-tight text-foreground" style="text-wrap: balance">{{ pro.company_name }}</h1>
@@ -285,5 +302,20 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
 
 
     </template>
+
+    <!-- Fallback if pro is null and redirect fails -->
+    <div v-else class="py-16 text-center space-y-4">
+      <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+      </div>
+      <h2 class="text-xl font-semibold text-foreground">Profil professionnel introuvable</h2>
+      <p class="text-sm text-muted-foreground max-w-md mx-auto">
+        Votre compte existe, mais les données de votre entreprise n'ont pas pu être chargées.
+      </p>
+      <NuxtLink to="/pro/claim" class="mt-6 inline-flex items-center justify-center h-10 px-6 rounded-md bg-foreground text-background font-medium text-sm hover:opacity-90 transition-opacity">
+        Créer ou vérifier mon profil
+      </NuxtLink>
+    </div>
+
   </div>
 </template>
