@@ -1,114 +1,255 @@
 <template>
-  <div class="min-h-screen bg-slate-50 py-12">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Loading State -->
-      <div v-if="pending" class="text-center py-12">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-500 border-t-transparent"></div>
-        <p class="mt-4 text-slate-500">Chargement de votre espace...</p>
+  <div class="min-h-screen bg-background text-foreground flex flex-col font-sans antialiased">
+
+    <!-- Header minimal — accès par lien magique, pas de nav authentifiée -->
+    <header class="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
+      <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+        <NuxtLink to="/" class="text-base font-bold tracking-tight text-foreground hover:opacity-70 transition-opacity">
+          BÂTI-AXE
+        </NuxtLink>
+        <span class="text-xs text-muted-foreground font-medium tracking-wide">Suivi de projet</span>
+      </div>
+    </header>
+
+    <main class="flex-grow">
+
+      <!-- Loading -->
+      <div v-if="pending" class="flex flex-col items-center justify-center py-32 gap-4">
+        <div class="w-7 h-7 border-2 border-border border-t-foreground rounded-full animate-spin"></div>
+        <p class="text-sm text-muted-foreground">Chargement de votre espace...</p>
       </div>
 
-      <!-- Error State -->
-      <div v-else-if="error" class="bg-white p-8 rounded-2xl shadow-sm text-center border border-red-100">
-        <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-        </div>
-        <h1 class="text-2xl font-bold text-slate-900 mb-2">Lien invalide ou expiré</h1>
-        <p class="text-slate-600 mb-6">Nous n'avons pas pu trouver de projet correspondant à ce lien sécurisé.</p>
-        <NuxtLink to="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">
+      <!-- Erreur -->
+      <div v-else-if="error" class="max-w-md mx-auto px-6 py-32 text-center">
+        <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-8">Erreur</p>
+        <h1 class="text-3xl font-black tracking-tight text-foreground mb-4" style="text-wrap: balance">
+          Lien invalide ou expiré
+        </h1>
+        <p class="text-sm text-muted-foreground leading-relaxed mb-8">
+          Nous n'avons pas pu trouver de projet correspondant à ce lien sécurisé. Vérifiez votre SMS ou email d'origine.
+        </p>
+        <NuxtLink
+          to="/"
+          class="inline-flex items-center gap-2 h-10 px-6 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity"
+        >
           Retour à l'accueil
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
         </NuxtLink>
       </div>
 
-      <!-- Project View -->
+      <!-- Vue principale -->
       <div v-else-if="data">
-        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mb-8">
-          <div class="p-8 bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
-            <div class="flex items-center gap-3 mb-4 text-indigo-100">
-              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-              </svg>
-              <span class="font-medium tracking-wide uppercase text-sm">Votre Projet</span>
-            </div>
-            <h1 class="text-3xl font-bold mb-2">{{ data.project.category }}</h1>
-            <p class="text-indigo-100 text-lg opacity-90">{{ data.project.description }}</p>
-          </div>
-          <div class="p-8 grid grid-cols-2 gap-6 bg-slate-50/50">
-            <div>
-              <p class="text-sm font-medium text-slate-500 mb-1">Budget estimé</p>
-              <p class="text-slate-900 font-semibold">{{ data.project.budget_range }}</p>
-            </div>
-            <div>
-              <p class="text-sm font-medium text-slate-500 mb-1">Délai souhaité</p>
-              <p class="text-slate-900 font-semibold">{{ data.project.timeline_range || 'Non précisé' }}</p>
-            </div>
-          </div>
-        </div>
 
-        <h2 class="text-2xl font-bold text-slate-900 mb-6">Discussions avec les Artisans</h2>
-        
-        <div v-if="!data.messages || groupedMessages.length === 0" class="bg-white rounded-2xl p-12 text-center shadow-sm border border-slate-200">
-          <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg class="w-10 h-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
+        <!-- Bandeau projet — fond noir, typographie forte -->
+        <section class="bg-foreground text-background">
+          <div class="max-w-6xl mx-auto px-6 py-14 md:py-20">
+            <p class="text-xs font-medium tracking-widest uppercase text-background/40 mb-6">
+              Votre projet · Bâti-Axe
+            </p>
+            <h1
+              class="text-4xl sm:text-5xl md:text-[3.5rem] font-black tracking-tight leading-[1.05] mb-5"
+              style="text-wrap: balance"
+            >
+              {{ data.project.category }}
+            </h1>
+            <p
+              class="text-background/65 text-base leading-relaxed max-w-xl"
+              style="text-wrap: pretty"
+            >
+              {{ data.project.description }}
+            </p>
           </div>
-          <h3 class="text-xl font-semibold text-slate-900 mb-2">Pas encore de contact</h3>
-          <p class="text-slate-500">Votre projet est en cours de validation. Vous serez alerté dès qu'un artisan qualifié vous écrira.</p>
-        </div>
+        </section>
 
-        <div v-else class="space-y-6">
-          <!-- One card per artisan thread -->
-          <div v-for="thread in groupedMessages" :key="thread.leadId" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold text-lg">
-                  {{ thread.companyName.charAt(0) }}
+        <!-- Détails projet — grille avec séparateurs -->
+        <section class="border-b border-border">
+          <div class="max-w-6xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4">
+              <div class="py-7 pr-6 md:pr-10 border-r border-border">
+                <p class="text-xs font-medium text-muted-foreground mb-1.5">Budget estimé</p>
+                <p class="text-sm font-semibold text-foreground">{{ data.project.budget_range }}</p>
+              </div>
+              <div class="py-7 px-6 md:px-10 border-r border-border">
+                <p class="text-xs font-medium text-muted-foreground mb-1.5">Délai souhaité</p>
+                <p class="text-sm font-semibold text-foreground">{{ data.project.timeline_range || 'Non précisé' }}</p>
+              </div>
+              <div class="py-7 px-6 md:px-10 border-r border-border">
+                <p class="text-xs font-medium text-muted-foreground mb-1.5">Statut du dossier</p>
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-foreground inline-block"></span>
+                  <p class="text-sm font-semibold text-foreground">Actif</p>
                 </div>
-                <div>
-                  <h3 class="font-bold text-slate-900 text-lg">{{ thread.companyName }}</h3>
-                  <p class="text-sm text-slate-500">Artisan Qualifié Bâti-Axe</p>
+              </div>
+              <div class="py-7 pl-6 md:pl-10">
+                <p class="text-xs font-medium text-muted-foreground mb-1.5">Protection</p>
+                <div class="flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-foreground shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                  </svg>
+                  <p class="text-sm font-semibold text-foreground">RGPD conforme</p>
                 </div>
               </div>
             </div>
-            
-            <div class="p-6 h-96 overflow-y-auto bg-slate-50/30 flex flex-col gap-4">
-              <div v-for="msg in thread.messages" :key="msg.id" class="flex" :class="msg.is_pro_sender ? 'justify-start' : 'justify-end'">
-                <div class="max-w-[80%] rounded-2xl px-5 py-3 shadow-sm"
-                     :class="msg.is_pro_sender ? 'bg-white border border-slate-200 text-slate-800 rounded-tl-none' : 'bg-indigo-600 text-white rounded-tr-none'">
-                  <p class="whitespace-pre-wrap">{{ msg.content }}</p>
-                  <p class="text-[10px] mt-2 text-right" :class="msg.is_pro_sender ? 'text-slate-400' : 'text-indigo-200'">
-                    {{ new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }}
-                  </p>
+          </div>
+        </section>
+
+        <!-- Section messages -->
+        <section class="max-w-6xl mx-auto px-6 py-16 md:py-20">
+
+          <!-- État vide : en attente d'artisans -->
+          <div v-if="!data.messages || groupedMessages.length === 0">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+              <div>
+                <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-8">Artisans</p>
+                <h2 class="text-3xl font-black tracking-tight text-foreground mb-4" style="text-wrap: balance">
+                  Votre projet est en cours de validation.
+                </h2>
+                <p class="text-sm text-muted-foreground leading-relaxed">
+                  Dès validation, les artisans partenaires de votre zone reçoivent une alerte SMS. Vous serez prévenu dès qu'un professionnel vous écrit ici.
+                </p>
+              </div>
+
+              <div class="space-y-3">
+                <div class="flex items-start gap-4 p-5 border border-border rounded-lg">
+                  <div class="w-7 h-7 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-foreground">Décennale vérifiée</p>
+                    <p class="text-xs text-muted-foreground mt-0.5">Attestation contrôlée à la main avant tout accès au lead.</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-4 p-5 border border-border rounded-lg">
+                  <div class="w-7 h-7 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-foreground">Vos coordonnées masquées</p>
+                    <p class="text-xs text-muted-foreground mt-0.5">L'artisan vous contacte via notre messagerie. Vos données restent privées.</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-4 p-5 border border-border rounded-lg">
+                  <div class="w-7 h-7 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-foreground">Zone d'intervention confirmée</p>
+                    <p class="text-xs text-muted-foreground mt-0.5">Seuls les artisans actifs dans votre secteur voient votre projet.</p>
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="p-4 bg-white border-t border-slate-100">
-              <form @submit.prevent="sendMessage(thread.leadId)" class="flex gap-3">
-                <input 
-                  v-model="replyContent[thread.leadId]" 
-                  type="text" 
-                  placeholder="Écrivez votre réponse..." 
-                  class="flex-1 rounded-xl border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-slate-50 px-4 py-3"
-                  required
-                  :disabled="isSending === thread.leadId"
-                />
-                <button 
-                  type="submit" 
-                  class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  :disabled="!replyContent[thread.leadId] || isSending === thread.leadId"
-                >
-                  <span v-if="isSending === thread.leadId">Envoi...</span>
-                  <span v-else>Envoyer</span>
-                </button>
-              </form>
+          <!-- Fils de discussion -->
+          <div v-else>
+            <div class="mb-10">
+              <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-2">Messages</p>
+              <h2 class="text-2xl font-black tracking-tight text-foreground">
+                {{ groupedMessages.length }}
+                artisan{{ groupedMessages.length > 1 ? 's' : '' }}
+                {{ groupedMessages.length > 1 ? 'ont' : 'a' }} pris contact
+              </h2>
+            </div>
+
+            <div class="space-y-6">
+              <div
+                v-for="thread in groupedMessages"
+                :key="thread.leadId"
+                class="border border-border rounded-lg overflow-hidden"
+              >
+                <!-- En-tête du fil -->
+                <div class="px-6 py-4 border-b border-border flex items-center gap-4 bg-background">
+                  <div class="w-10 h-10 rounded-full bg-foreground text-background flex items-center justify-center font-bold text-sm shrink-0 select-none">
+                    {{ thread.companyName.charAt(0).toUpperCase() }}
+                  </div>
+                  <div class="min-w-0">
+                    <h3 class="font-semibold text-foreground text-sm truncate">{{ thread.companyName }}</h3>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                      <svg class="w-3 h-3 text-muted-foreground shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                      </svg>
+                      <p class="text-xs text-muted-foreground">Artisan qualifié Bâti-Axe</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bulles de messages -->
+                <div class="px-6 py-6 flex flex-col gap-3 max-h-96 overflow-y-auto bg-muted/30">
+                  <div
+                    v-for="msg in thread.messages"
+                    :key="msg.id"
+                    class="flex"
+                    :class="msg.is_pro_sender ? 'justify-start' : 'justify-end'"
+                  >
+                    <div
+                      class="max-w-[78%] px-4 py-3"
+                      :class="msg.is_pro_sender
+                        ? 'rounded-lg rounded-tl-none border border-border bg-background text-foreground'
+                        : 'rounded-lg rounded-tr-none bg-foreground text-background'"
+                    >
+                      <p class="text-sm whitespace-pre-wrap leading-relaxed">{{ msg.content }}</p>
+                      <p
+                        class="text-[10px] mt-1.5 text-right"
+                        :class="msg.is_pro_sender ? 'text-muted-foreground' : 'text-background/50'"
+                      >
+                        {{ new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Zone de réponse -->
+                <div class="px-6 py-4 border-t border-border bg-background">
+                  <form @submit.prevent="sendMessage(thread.leadId)" class="flex gap-2">
+                    <input
+                      v-model="replyContent[thread.leadId]"
+                      type="text"
+                      placeholder="Votre réponse..."
+                      class="flex-1 h-10 px-4 text-sm border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/15 focus:border-foreground transition-all"
+                      required
+                      :disabled="isSending === thread.leadId"
+                    />
+                    <button
+                      type="submit"
+                      class="inline-flex items-center gap-1.5 h-10 px-5 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+                      :disabled="!replyContent[thread.leadId]?.trim() || isSending === thread.leadId"
+                    >
+                      <svg v-if="isSending === thread.leadId" class="animate-spin w-3.5 h-3.5" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                      </svg>
+                      <span>{{ isSending === thread.leadId ? 'Envoi...' : 'Répondre' }}</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-border mt-auto">
+      <div class="max-w-6xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
+        <p>&copy; 2026 BÂTI-AXE. Tous droits réservés. Conforme RGPD.</p>
+        <div class="flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+          </svg>
+          <span>Lien sécurisé · Données chiffrées</span>
         </div>
       </div>
-    </div>
+    </footer>
   </div>
 </template>
 
@@ -121,16 +262,14 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Suivi de mon projet - Bâti-Axe'
+  title: 'Suivi de mon projet — Bâti-Axe'
 })
 
-// Fetch project and messages
-const { data, pending, error, refresh } = await useFetch(`/api/v1/magic-link/${token}`)
+const { data, pending, error, refresh } = await useFetch(`/api/v1/magic-link/${token}`, { server: false })
 
-// Group messages by lead_id (i.e. by Pro)
 const groupedMessages = computed(() => {
   if (!data.value?.messages) return []
-  
+
   const groups = {}
   data.value.messages.forEach(msg => {
     if (!groups[msg.lead_id]) {
@@ -142,34 +281,32 @@ const groupedMessages = computed(() => {
     }
     groups[msg.lead_id].messages.push(msg)
   })
-  
+
   return Object.values(groups)
 })
 
-// Chat state
 const replyContent = ref({})
 const isSending = ref(null)
 
 const sendMessage = async (leadId) => {
   const content = replyContent.value[leadId]
-  if (!content) return
-  
+  if (!content?.trim()) return
+
   isSending.value = leadId
-  
+
   try {
     await $fetch('/api/v1/messages', {
       method: 'POST',
       body: {
         lead_id: leadId,
-        content: content,
+        content: content.trim(),
         access_token: token
       }
     })
-    
-    // Clear input and refresh data
+
     replyContent.value[leadId] = ''
     await refresh()
-  } catch (e) {
+  } catch {
     alert("Une erreur est survenue lors de l'envoi du message.")
   } finally {
     isSending.value = null

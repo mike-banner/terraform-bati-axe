@@ -18,7 +18,7 @@ const RE_EMAIL    = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/
 // Téléphone FR : accepte espaces/tirets/points, ex: 06 11 22 33 44 ou +33611223344
 const RE_PHONE_FR = /^(?:(?:\+|00)33[\s.-]?|0)[1-9](?:[\s.-]?\d{2}){4}$/
 // SIRET : 14 chiffres (espaces ignorés via normalisation)
-const RE_SIRET    = /^\d{14}$/
+const RE_SIRET    = /^(\d{3}\s?){3}\d{5}$|^\d{14}$/
 // Code postal FR : 5 chiffres
 const RE_CP       = /^(?:0[1-9]|[1-9]\d)\d{3}$/
 // Mot de passe : 8-72 chars (bcrypt max)
@@ -56,10 +56,36 @@ const proForm  = reactive({
 })
 
 // ─── Normalisation silencieuse ─────────────────────────────────────────────────
-// Supprime les espaces du SIRET à la saisie (copier-coller depuis Kbis)
-function normalizeSiret(val: string) { proForm.siret = val.replace(/\s/g, '') }
-// Normalise le téléphone : supprime les caractères non valides
-function normalizePhone(val: string) { proForm.phone = val.replace(/[^\d\s.+()-]/g, '') }
+function normalizeSiret(val: string) { 
+  let digits = val.replace(/\D/g, '')
+  if (digits.length > 14) digits = digits.slice(0, 14)
+  let formatted = digits
+  if (digits.length > 9) formatted = `${digits.slice(0,3)} ${digits.slice(3,6)} ${digits.slice(6,9)} ${digits.slice(9)}`
+  else if (digits.length > 6) formatted = `${digits.slice(0,3)} ${digits.slice(3,6)} ${digits.slice(6)}`
+  else if (digits.length > 3) formatted = `${digits.slice(0,3)} ${digits.slice(3)}`
+  proForm.siret = formatted
+}
+
+function normalizePhone(val: string) {
+  let cleaned = val.replace(/[^\d+]/g, '')
+  if (cleaned.startsWith('0')) cleaned = '+33' + cleaned.slice(1)
+  if (cleaned.length > 0 && !cleaned.startsWith('+')) cleaned = '+' + cleaned
+  const has33 = cleaned.startsWith('+33')
+  const prefix = has33 ? '+33' : cleaned.slice(0,3)
+  let rest = has33 ? cleaned.slice(3) : cleaned.slice(3)
+  rest = rest.replace(/\D/g, '').slice(0, 9)
+  let formatted = prefix
+  if (rest.length > 0) formatted += ' ' + rest.slice(0,1)
+  if (rest.length > 1) formatted += ' ' + rest.slice(1,3)
+  if (rest.length > 3) formatted += ' ' + rest.slice(3,5)
+  if (rest.length > 5) formatted += ' ' + rest.slice(5,7)
+  if (rest.length > 7) formatted += ' ' + rest.slice(7,9)
+  proForm.phone = formatted
+}
+
+function normalizePostalCode(val: string) {
+  proForm.postal_code = val.replace(/\D/g, '').slice(0, 5)
+}
 
 // touched: only show errors after the field has been blurred
 const authTouched = reactive({ email: false, password: false, full_name: false })
@@ -137,20 +163,27 @@ function translateAuthError(msg: string): string {
 // ─── Prospect pre-fill ────────────────────────────────────────────────────────
 const prospectId = computed(() => route.query.prospect_id as string || '')
 
-watch(user, async (currentUser) => {
-  if (!currentUser?.id) return
+// Vérification bloquante (SSR + Client)
+const { data: existingPro } = await useAsyncData(`check-pro-${user.value?.id || 'anon'}`, async () => {
+  if (!user.value?.id) return null
+  const { data } = await supabase.from('professionals').select('id').eq('id', user.value.id).maybeSingle()
+  return data
+})
 
-  // Admin → console
-  if ((currentUser as any).app_metadata?.role === 'admin') {
-    return navigateTo('/admin')
+const router = useRouter()
+
+watch(user, async (newUser) => {
+  if (newUser?.id) {
+    if (existingPro.value) {
+      router.push('/app/dashboard')
+    } else if ((newUser as any).app_metadata?.role === 'admin') {
+      router.push('/admin')
+    } else {
+      activeStep.value = 2
+    }
+  } else {
+    activeStep.value = 1
   }
-  // Pro with existing profile → dashboard
-  const { data: existingPro } = await supabase
-    .from('professionals')
-    .select('id')
-    .eq('id', currentUser.id)
-    .maybeSingle()
-  if (existingPro) return navigateTo('/app/dashboard')
 }, { immediate: true })
 
 if (prospectId.value) {
@@ -189,7 +222,10 @@ const touchAllPro = () => {
 
 const handleAuth = async () => {
   touchAllAuth()
-  if (!isAuthValid.value) return
+  if (!isAuthValid.value) {
+    globalError.value = 'Veuillez corriger les champs en rouge pour continuer.'
+    return
+  }
   isLoading.value = true
   globalError.value = null
 
@@ -240,10 +276,14 @@ const handleAuth = async () => {
 }
 
 const handleRegisterCompany = async () => {
-  touchAllPro()
-  if (!isProFormValid.value) return
   isLoading.value = true
   globalError.value = null
+  touchAllPro()
+  if (!isProFormValid.value) {
+    globalError.value = 'Veuillez corriger les champs en rouge pour continuer.'
+    isLoading.value = false
+    return
+  }
 
   try {
     const result = await $fetch<{ status: string; slug: string; professionalId: string }>('/api/v1/pro/claim', {
@@ -251,21 +291,28 @@ const handleRegisterCompany = async () => {
       body: {
         prospect_id:  prospectId.value || undefined,
         company_name: proForm.company_name,
-        siret:        proForm.siret,
+        siret:        proForm.siret.replace(/\s/g, ''),
         full_name:    proForm.full_name,
-        phone:        proForm.phone,
+        phone:        proForm.phone.replace(/\s/g, ''),
         postal_code:  proForm.postal_code,
         categories:   proForm.categories,
         sms_opt_in:   proForm.sms_opt_in
       }
     })
 
-    if (result?.status === 'SUCCESS') {
+      if (result?.status === 'SUCCESS') {
       claimSlug.value = result.slug
       activeStep.value = 3
     }
   } catch (err: any) {
-    globalError.value = err.message
+    // Extraire l'erreur de validation Zod si disponible pour plus de clarté
+    const zodErrors = err.data?.data
+    if (zodErrors) {
+      const messages = Object.values(zodErrors).filter(v => v && (v as any)._errors).map(v => (v as any)._errors.join(', '))
+      globalError.value = messages.length > 0 ? messages.join(' | ') : err.message
+    } else {
+      globalError.value = err.message
+    }
   } finally {
     isLoading.value = false
   }
@@ -319,6 +366,16 @@ const switchMode = (mode: 'register' | 'login') => {
   authTouched.password  = false
   authTouched.full_name = false
   globalError.value     = null
+}
+
+const logoutAndRestart = async () => {
+  await supabase.auth.signOut()
+  switchMode('register')
+  activeStep.value = 1
+}
+
+const backToStep2 = () => {
+  activeStep.value = 2
 }
 </script>
 
@@ -560,6 +617,7 @@ const switchMode = (mode: 'register' | 'login') => {
                 placeholder="78955"
                 maxlength="5"
                 inputmode="numeric"
+                @input="normalizePostalCode(($event.target as HTMLInputElement).value)"
                 @blur="proTouched.postal_code = true"
                 class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
                 :class="proErrors.postal_code ? 'border-red-500' : 'border-border'"
@@ -630,6 +688,16 @@ const switchMode = (mode: 'register' | 'login') => {
           >
             <svg v-if="isLoading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
             <span>Valider mon profil</span>
+          </button>
+          
+          <button
+            type="button"
+            @click="logoutAndRestart"
+            :disabled="isLoading"
+            class="w-full h-11 border border-border text-foreground text-sm font-semibold rounded-md hover:bg-muted transition-colors flex items-center justify-center gap-2 disabled:opacity-50 mt-3"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            <span>Retour (Changer d'e-mail)</span>
           </button>
         </form>
       </div>
@@ -708,15 +776,26 @@ const switchMode = (mode: 'register' | 'login') => {
           </div>
         </div>
 
-        <button
-          @click="finishOnboarding"
-          class="w-full h-11 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center justify-center gap-2"
-        >
-          <span>Finaliser mon inscription</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
+        <div class="flex flex-col gap-3">
+          <button
+            @click="finishOnboarding"
+            class="w-full h-11 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center justify-center gap-2"
+          >
+            <span>Finaliser mon inscription</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          
+          <button
+            type="button"
+            @click="backToStep2"
+            class="w-full h-11 border border-border text-foreground text-sm font-semibold rounded-md hover:bg-muted transition-colors flex items-center justify-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            <span>Retour aux infos de l'entreprise</span>
+          </button>
+        </div>
 
-        <p class="text-xs text-center text-muted-foreground">Vous pouvez envoyer vos documents plus tard depuis votre espace.</p>
+        <p class="text-xs text-center text-muted-foreground mt-4">Vous pouvez envoyer vos documents plus tard depuis votre espace.</p>
       </div>
 
       <!-- ─── STEP 4: Success ──────────────────────────────────────────────── -->
