@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: context exhaustion at 78% (2026-06-09)
-last_updated: "2026-06-09T18:37:42.420Z"
-last_activity: 2026-06-09
+status: planning
+stopped_at: context exhaustion at 75% (2026-06-13)
+last_updated: "2026-06-13T01:44:32.230Z"
+last_activity: 2026-06-11
 progress:
-  total_phases: 7
-  completed_phases: 1
-  total_plans: 14
-  completed_plans: 12
-  percent: 14
+  total_phases: 8
+  completed_phases: 2
+  total_plans: 16
+  completed_plans: 15
+  percent: 25
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 
 ## Current Position
 
-Phase: 04.5 (conversion-qualification) — EXECUTING
-Plan: 2 of 7
-Status: Ready to execute
-Last activity: 2026-06-09
-Progress: [██████░░░░] 57%
+Phase: 05 (SMS + Acquisition + Messagerie) — NOT STARTED
+Plan: 0 of TBD
+Status: Ready to plan
+Last activity: 2026-06-11
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -47,12 +47,15 @@ Progress: [██████░░░░] 57%
 - [Pre-Phase]: URL hybride slug + nanoid(8) pour les profils pro (ADR-009).
 - [Phase 2]: Intégration de Zod et client Service Role pour contourner le RLS client sur l'API publique `/api/v1/projects`.
 - [Phase 3]: Accès admin contrôlé par `ADMIN_EMAILS` env var (pas de table rôles en DB pour l'instant). Ajouter l'email dans `.env` local ET dans Cloudflare Pages > Settings > Environment variables en prod.
+- [Phase 4.6]: Architecture "Marché Dynamique" : abandon du modèle "Push" dans la table `leads`. Les chantiers sont lus en direct depuis `projects` selon le tableau `categories TEXT[]` du profil Pro. La ligne `leads` n'est créée qu'au moment du déblocage ou claim. Les UI utilisent des checkboxes multi-sélection.
+- [2026-06-13]: Garde d'auth centralisée dans le composable `useRequireAuth()` (remplace le `watchEffect` fragile sur les 7 pages protégées) — corrige une race d'hydratation qui éjectait un pro connecté au rechargement de `/espace/*`. Voir Known Patterns ci-dessous.
+- [2026-06-13]: Indicateur de fraîcheur des leads (`app/components/LeadAge.vue`) : badge d'âge dont le ton chauffe (vert <24h → ambre 3-7j → rouge ≥7j) pour pousser le pro à contacter vite. `created_at` était déjà exposé par l'API leads.
 
 ### Known Patterns (à appliquer dans les prochaines phases)
 
 **Ajouter un admin** : mettre l'email dans `ADMIN_EMAILS` dans `.env` (local) et dans les env vars Cloudflare Pages (prod). Le check est dans `server/api/v1/admin/verify.post.ts` et `app/pages/admin/index.vue`.
 
-**Nouvelle route protégée** : utiliser `watchEffect(() => { if (!user.value) navigateTo('/pro/claim') })` en haut du `<script setup>` — ne pas utiliser le middleware global car `supabase.redirect` est à `false` (ADR).
+**Nouvelle route protégée** : appeler `useRequireAuth()` en haut du `<script setup>` (composable `app/composables/useRequireAuth.ts`). NE PAS utiliser `watchEffect(() => { if (!user.value) navigateTo('/pro/claim') })` : ce pattern redirige sur le `null` transitoire de `useSupabaseUser()` pendant l'hydratation et éjecte un pro pourtant connecté au rechargement (bug corrigé le 2026-06-13). Le composable valide la session de façon autoritaire via `getSession()` puis ne réagit qu'à une déconnexion explicite. Toujours pas de middleware global car `supabase.redirect` est à `false` (ADR).
 
 **Profil non encore vérifié** : ne jamais retourner 404 pour un profil existant — retourner les données avec `is_verified: false` et laisser la page afficher l'état pending. Réserver 404 aux profils introuvables en DB.
 
@@ -77,6 +80,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-09T18:37:42.410Z
-Stopped at: context exhaustion at 78% (2026-06-09)
+Last session: 2026-06-13T01:44:32.217Z
+Stopped at: context exhaustion at 75% (2026-06-13)
 Resume file: None
