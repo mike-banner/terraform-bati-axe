@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: in_progress
 stopped_at: null
-last_updated: "2026-06-13T16:31:00.000Z"
+last_updated: "2026-06-13T20:41:00.000Z"
 last_activity: 2026-06-13
 progress:
   total_phases: 8
   completed_phases: 2
   total_plans: 16
   completed_plans: 15
-  percent: 30
+  percent: 31
 ---
 
 # Project State
@@ -53,6 +53,7 @@ Progress: [████████░░] 80%
 - [2026-06-13 PM]: **Bug fix `useRequireAuth()`** : `getSession()` retournait `null` transitoirement à l'hydratation SSR. Refactorisé en `watch(immediate)` pour attendre la première valeur non-undefined de `user`. Cela permettait aux users non-connectés d'être redirigés vers login même après une création de compte réussie.
 - [2026-06-13 PM]: **Structure V1 professionnel** : séparation claire entre Dashboard (statut + upload docs) et Profil (édition infos publiques + nouveau champ Téléphone). Validation stricte : accès leads bloqué si `is_verified = false`.
 - [2026-06-13 PM]: **Timeout auto-logout** : inactivité 30 min → déconnexion automatique (composable `useIdleLogout.ts`). Appliqué au layout `dynamic.vue` pour les pages protégées.
+- [2026-06-13 PM]: **RLS Security Verified & Documented** : All 11 tables have RLS enabled. Security policies enforce: public SELECT on verified professionals only; authenticated users full access to own records; service-role-only for sensitive tables (projects, prospects, paywall_events, audit_logs). Migration `20260613000000_test_data_seeding.sql` creates 18 test leads (3 per category) with full verification documents. Architecture is reproducible for production deployment. See `.planning/RLS-SECURITY.md`.
 
 ### Known Patterns (à appliquer dans les prochaines phases)
 
