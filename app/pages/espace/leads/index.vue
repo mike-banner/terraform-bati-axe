@@ -1,14 +1,10 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'dynamic' })
-import { ref, computed, watchEffect, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 useHead({ title: 'Mes leads — BÂTI-AXE' })
 
-const user = useSupabaseUser()
-
-watchEffect(() => {
-  if (user.value === null) navigateTo('/pro/claim')
-})
+useRequireAuth()
 
 const CATEGORY_LABELS: Record<string, string> = {
   maconnerie:   'Maçonnerie & Gros Œuvre',
@@ -23,7 +19,7 @@ const { data: leadsData, pending, error, refresh } = await useAsyncData('pro-lea
   $fetch<{ leads: any[], isPremium: boolean }>('/api/v1/leads')
 )
 
-const { data: profile } = await useAsyncData('pro-profile', () =>
+const { data: profile } = await useAsyncData('pro-profile-leads', () =>
   $fetch<{ profile: any }>('/api/v1/pro/profile/me').then(r => r.profile).catch(() => null)
 )
 
@@ -259,7 +255,10 @@ async function copyToClipboard(text: string) {
         <!-- ── Variant A: Locked ── -->
         <template v-if="lead.status === 'locked'">
           <div class="flex items-center justify-between px-5 py-4">
-            <p class="text-sm font-semibold text-foreground">{{ CATEGORY_LABELS[lead.category] ?? lead.category }}</p>
+            <div class="space-y-1.5">
+              <p class="text-sm font-semibold text-foreground">{{ CATEGORY_LABELS[lead.category] ?? lead.category }}</p>
+              <LeadAge v-if="lead.created_at" :created-at="lead.created_at" />
+            </div>
             <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-amber-300 text-amber-700 bg-amber-50">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
@@ -331,7 +330,10 @@ async function copyToClipboard(text: string) {
         <!-- ── Variant B: Unlocked ── -->
         <template v-else-if="lead.status === 'unlocked'">
           <div class="flex items-center justify-between px-5 py-4">
-            <p class="text-sm font-semibold text-foreground">{{ CATEGORY_LABELS[lead.category] ?? lead.category }}</p>
+            <div class="space-y-1.5">
+              <p class="text-sm font-semibold text-foreground">{{ CATEGORY_LABELS[lead.category] ?? lead.category }}</p>
+              <LeadAge v-if="lead.created_at" :created-at="lead.created_at" />
+            </div>
             <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-foreground/30 text-foreground">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
