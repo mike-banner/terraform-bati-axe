@@ -68,18 +68,43 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 500, statusMessage: 'Erreur lors de l\'envoi du message' })
   }
 
-  // Mock Email Notification
-  console.log('\n=============================================')
+  // Email Notification via Resend (Abstraction)
+  const siteUrl = useRuntimeConfig(event).public.siteUrl
   if (isProSender) {
-    console.log('MOCK EMAIL: Nouveau message de votre artisan')
-    console.log(`À: ${lead.projects.customer_email}`)
-    console.log(`Lien magique: http://localhost:3000/mon-projet/${lead.projects.access_token}`)
+    await sendEmail({
+      to: lead.projects.customer_email,
+      subject: `Nouveau message de votre artisan sur BÂTI-AXE`,
+      html: `
+        <p>Bonjour,</p>
+        <p>Vous avez reçu un nouveau message concernant votre projet.</p>
+        <p>
+          <a href="${siteUrl}/mon-projet/${lead.projects.access_token}" style="background-color: #4f46e5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Lire et répondre
+          </a>
+        </p>
+        <p>L'équipe BÂTI-AXE</p>
+      `
+    })
   } else {
-    // For the pro, we would need the pro's email. Let's just log it generically.
-    console.log('MOCK EMAIL: Le particulier vous a répondu !')
-    console.log(`Connectez-vous sur votre Espace Pro pour lire le message.`)
+    // For the pro, we fetch the pro's email from professionals table or auth.
+    const { data: proAuth } = await supabase.auth.admin.getUserById(lead.pro_id)
+    if (proAuth && proAuth.user) {
+      await sendEmail({
+        to: proAuth.user.email,
+        subject: `Nouveau message d'un client sur BÂTI-AXE`,
+        html: `
+          <p>Bonjour,</p>
+          <p>Un client vous a répondu concernant le chantier <strong>${lead.projects.category || 'en cours'}</strong>.</p>
+          <p>
+            <a href="${siteUrl}/espace/leads/${lead.id}" style="background-color: #0f172a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+              Voir le message sur mon Espace Pro
+            </a>
+          </p>
+          <p>L'équipe BÂTI-AXE</p>
+        `
+      })
+    }
   }
-  console.log('=============================================\n')
 
   return { success: true, messageId: message.id, createdAt: message.created_at }
 })

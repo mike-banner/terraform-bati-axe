@@ -25,43 +25,57 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 403, statusMessage: 'Réservé aux pros Premium.' })
   }
 
-  // Verify ownership — prevents cross-pro access (T-04-10)
-  const { data: lead, error: leadError } = await supabase
-    .from('leads')
-    .select('id, status, pro_id, project_id')
+  // Verify project exists
+  const { data: project, error: projectError } = await supabase
+    .from('projects')
+    .select('id, status')
     .eq('id', id)
-    .eq('pro_id', user.id)
     .single()
 
-  if (leadError || !lead) {
-    throw createError({ statusCode: 404, statusMessage: 'Lead introuvable.' })
-  }
-
-  // Idempotence guard — already claimed (T-04-11)
-  if (lead.status === 'claimed') {
-    throw createError({ statusCode: 409, statusMessage: 'Ce lead est déjà attribué.' })
+  if (projectError || !project) {
+    throw createError({ statusCode: 404, statusMessage: 'Projet introuvable.' })
   }
 
   // Check how many siblings are already claimed (Cap at 3)
   const { count: claimedCount } = await supabase
     .from('leads')
     .select('id', { count: 'exact', head: true })
-    .eq('project_id', lead.project_id)
+    .eq('project_id', id)
     .eq('status', 'claimed')
     
   if ((claimedCount || 0) >= 3) {
-    throw createError({ statusCode: 409, statusMessage: 'Ce lead a déjà été réclamé par le nombre maximum de professionnels (3).' })
+    throw createError({ statusCode: 409, statusMessage: 'Ce projet a déjà été réclamé par le nombre maximum de professionnels (3).' })
   }
 
-  // Claim the pro's own lead row (double ownership check on update — T-04-10)
-  const { error: claimError } = await supabase
+  // Check if pro already has a lead row
+  const { data: lead, error: leadError } = await supabase
     .from('leads')
-    .update({ status: 'claimed' })
-    .eq('id', id)
+    .select('id, status')
+    .eq('project_id', id)
     .eq('pro_id', user.id)
+    .maybeSingle()
 
-  if (claimError) {
-    throw createError({ statusCode: 500, statusMessage: 'Erreur lors de la mise à jour du lead.' })
+  // Idempotence guard
+  if (lead?.status === 'claimed') {
+    throw createError({ statusCode: 409, statusMessage: 'Ce projet est déjà attribué.' })
+  }
+
+  // Claim or Create the pro's lead row
+  let activeLeadId = lead?.id
+  if (lead) {
+    const { error: claimError } = await supabase
+      .from('leads')
+      .update({ status: 'claimed' })
+      .eq('id', lead.id)
+    if (claimError) throw createError({ statusCode: 500, statusMessage: 'Erreur lors de la mise à jour.' })
+  } else {
+    const { data: newLead, error: insertError } = await supabase
+      .from('leads')
+      .insert({ project_id: id, pro_id: user.id, status: 'claimed', unlocked_at: new Date().toISOString() })
+      .select('id')
+      .single()
+    if (insertError) throw createError({ statusCode: 500, statusMessage: 'Erreur lors de la création.' })
+    activeLeadId = newLead.id
   }
 
   // If this was the 3rd claim, we lock out the remaining pros
@@ -69,9 +83,9 @@ export default defineEventHandler(async (event) => {
     await supabase
       .from('leads')
       .update({ status: 'claimed' }) // 'claimed' serves as the locked/hidden state for other pros
-      .eq('project_id', lead.project_id)
+      .eq('project_id', id)
       .neq('status', 'claimed')
   }
 
-  return { claimed: true, lead_id: id }
+  return { claimed: true, lead_id: activeLeadId }
 })
