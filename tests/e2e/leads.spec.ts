@@ -322,6 +322,30 @@ test.describe('Leads — indicateur de fraîcheur', () => {
     await expect(page.getByText(/il y a 5 j/)).toBeVisible({ timeout: 10_000 })
     await expect(page.getByText(/Nouveau ·/)).not.toBeVisible()
   })
+
+  test('tri par défaut "Plus urgents" place l\'ancien en haut, "Plus récents" inverse', async ({ page }) => {
+    await setupAuth(page)
+    await mockProfileAndMarket(page)
+
+    const old = makeLockedLead({ id: 'old', category: 'electricite', created_at: new Date(Date.now() - 5 * 24 * 3600_000).toISOString() })
+    const fresh = makeLockedLead({ id: 'fresh', category: 'maconnerie', created_at: new Date().toISOString() })
+    // Ordre d'arrivée volontairement "récent puis ancien" pour prouver que le tri agit
+    await page.route('**/api/v1/leads', route =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ leads: [fresh, old], isPremium: false }) })
+    )
+
+    await gotoLeads(page)
+
+    // On vérifie l'ordre DOM des cartes (robuste, indépendant des colonnes CSS).
+    const firstCard = page.locator('div.grid > div').first()
+
+    // Défaut "Plus urgents" → l'ancien (il y a 5 j) est la première carte
+    await expect(firstCard.getByText(/il y a 5 j/)).toBeVisible({ timeout: 10_000 })
+
+    // Bascule "Plus récents" → le nouveau devient la première carte
+    await page.selectOption('select[aria-label="Trier les leads"]', 'recent')
+    await expect(firstCard.getByText(/Nouveau ·/)).toBeVisible()
+  })
 })
 
 test.describe('Leads — filtre par catégorie', () => {
@@ -360,7 +384,7 @@ test.describe('Leads — filtre par catégorie', () => {
     await expect(page.getByText('3 leads', { exact: true })).toBeVisible({ timeout: 10_000 })
 
     // Filtre sur "Maçonnerie"
-    await page.selectOption('select', 'maconnerie')
+    await page.selectOption('select[aria-label="Filtrer par catégorie"]', 'maconnerie')
 
     // Après filtre : 2 leads maçonnerie ("2 leads · Maçonnerie" → regex, pas exact)
     await expect(page.getByText(/2 leads/)).toBeVisible()
@@ -396,7 +420,7 @@ test.describe('Leads — filtre par catégorie', () => {
     await gotoLeads(page)
 
     // Les options du select sont dynamiques — on sélectionne par valeur brute
-    await page.selectOption('select', 'maconnerie')
+    await page.selectOption('select[aria-label="Filtrer par catégorie"]', 'maconnerie')
     // Puis on essaie de sélectionner une catégorie qui n'existe pas dans les leads
     // En repassant à "Toutes catégories" pour simuler l'état 0 résultat filtré,
     // ici on vérifie juste que le filtre fonctionne avec résultat non-vide

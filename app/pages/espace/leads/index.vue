@@ -38,6 +38,9 @@ const showPaywallBanner = computed(() => !isPremium.value && freeLeadsUsed.value
 // ─── Filtre + pagination ───────────────────────────────────────────────────────
 const PAGE_SIZE = 5
 const categoryFilter = ref('')
+// Tri par défaut : 'urgent' = les plus anciens (donc les plus critiques) en haut,
+// pour qu'aucun lead ne se perde en bas de liste. Le pro peut basculer.
+const sortMode = ref<'urgent' | 'recent'>('urgent')
 const currentPage = ref(1)
 
 const availableCategories = computed(() => {
@@ -50,14 +53,21 @@ const filteredLeads = computed(() => {
   return leads.value.filter((l: any) => l.category === categoryFilter.value)
 })
 
-const totalPages = computed(() => Math.max(1, Math.ceil(filteredLeads.value.length / PAGE_SIZE)))
+const sortedLeads = computed(() => {
+  const ts = (l: any) => new Date(l.created_at ?? 0).getTime()
+  // 'urgent' → ancien d'abord (asc) ; 'recent' → récent d'abord (desc)
+  const dir = sortMode.value === 'urgent' ? 1 : -1
+  return [...filteredLeads.value].sort((a, b) => (ts(a) - ts(b)) * dir)
+})
+
+const totalPages = computed(() => Math.max(1, Math.ceil(sortedLeads.value.length / PAGE_SIZE)))
 
 const paginatedLeads = computed(() => {
   const start = (currentPage.value - 1) * PAGE_SIZE
-  return filteredLeads.value.slice(start, start + PAGE_SIZE)
+  return sortedLeads.value.slice(start, start + PAGE_SIZE)
 })
 
-watch(categoryFilter, () => { currentPage.value = 1 })
+watch([categoryFilter, sortMode], () => { currentPage.value = 1 })
 
 const route = useRoute()
 const showSuccessBanner = ref(route.query.upgrade === 'success')
@@ -228,15 +238,26 @@ async function copyToClipboard(text: string) {
           {{ filteredLeads.length }} lead{{ filteredLeads.length !== 1 ? 's' : '' }}
           <template v-if="categoryFilter"> · {{ CATEGORY_LABELS[categoryFilter] ?? categoryFilter }}</template>
         </span>
-        <select
-          v-model="categoryFilter"
-          class="h-9 px-3 pr-8 border border-border rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
-        >
-          <option value="">Toutes catégories</option>
-          <option v-for="cat in availableCategories" :key="cat" :value="cat">
-            {{ CATEGORY_LABELS[cat] ?? cat }}
-          </option>
-        </select>
+        <div class="flex items-center gap-2">
+          <select
+            v-model="sortMode"
+            aria-label="Trier les leads"
+            class="h-9 px-3 pr-8 border border-border rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
+          >
+            <option value="urgent">Plus urgents</option>
+            <option value="recent">Plus récents</option>
+          </select>
+          <select
+            v-model="categoryFilter"
+            aria-label="Filtrer par catégorie"
+            class="h-9 px-3 pr-8 border border-border rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
+          >
+            <option value="">Toutes catégories</option>
+            <option v-for="cat in availableCategories" :key="cat" :value="cat">
+              {{ CATEGORY_LABELS[cat] ?? cat }}
+            </option>
+          </select>
+        </div>
       </div>
 
       <!-- Empty filtered state -->
