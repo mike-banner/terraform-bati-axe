@@ -28,7 +28,12 @@ const router = useRouter()
 async function loadProData() {
   loading.value = true
   try {
-    const uid = user.value?.id
+    // Le token JWT doit être attaché au client Supabase AVANT la requête : sinon
+    // elle part en `anon` et la policy RLS publique (is_verified=true) masque la
+    // ligne d'un pro non encore vérifié → faux « Profil introuvable ».
+    // getSession() force la restauration de la session et donc l'attache du token.
+    const { data: { session } } = await supabase.auth.getSession()
+    const uid = session?.user?.id
     if (!uid) {
       loading.value = false
       return
