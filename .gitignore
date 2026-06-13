@@ -31,3 +31,12 @@ claude.md
 .agent/
 .gemini/
 graphify-out/
+
+# Caches / sorties d'outils (jamais committés)
+.wrangler/
+test-results/
+playwright-report/
+
+# Brouillons / notes locales (hors repo)
+supabase/snippets/
+/A FAIREmd
