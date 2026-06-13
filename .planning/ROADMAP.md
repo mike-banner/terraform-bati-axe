@@ -10,6 +10,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 3: Onboarding Pro & Vérification manuelle** - Auth Supabase, flux Claim, upload R2, console admin validation docs, consents RGPD/LCEN.
 - [x] **Phase 4: Le Verrou & Stripe Billing** - API floutage serveur, abonnement Stripe, webhook, déblocage auto 72h.
 - [x] **Phase 4.5: Conversion & Qualification** - Verrou 3 leads gratuits, free trial 14j, plan annuel, auto-qualification, profil public éditable, ROI dashboard, copy Premium refondu, CRM Minimaliste.
+- [x] **Phase 4.6: Marché Dynamique & Multi-Catégories** - Refonte DB (categories TEXT[]), fin du push leads, pull temps réel via projects, UI sélection multiple (profil/claim).
 - [ ] **Phase 5: SMS + Acquisition + Messagerie** - SMS différencié (Basic→upgrade / Premium→lead direct), cold outreach pros DB, dashboard particulier magic-link, messagerie in-app pro↔particulier, email onboarding (désactivé par défaut), feedback loop lead.
 - [ ] **Phase 6: Réputation & Scale** - Avis clients, referral program, multi-ville.
 
@@ -95,6 +96,17 @@ Plans:
 - [x] 04.5-08-PLAN.md — CRM Minimaliste: lead description preview + fast copy + manual status tracking
 **UI hint**: yes
 
+### Phase 4.6: Marché Dynamique & Multi-Catégories
+**Goal**: Transition d'un système "push" rigide vers un marché "pull" dynamique supportant les artisans multi-métiers.
+**Depends on**: Phase 4.5
+**Success Criteria** (what must be TRUE):
+  1. Base de données : Colonne `categories TEXT[]` dans `professionals` (migration des anciennes catégories uniques).
+  2. Back-End : Fin de l'insertion aveugle dans `leads`. API `/api/v1/leads` scanne `projects` en temps réel par rapport aux `categories` du pro. Attribution de la ligne `leads` uniquement au déblocage.
+  3. Front-End : Sélection multiple de catégories via cases à cocher sur `/espace/profil` et `/pro/claim` (mise à jour immédiate des leads affichés).
+**Plans**: Completed (Refonte intégrée au codebase via migration `20260611000000_phase6_multi_category.sql` et modification API).
+**UI hint**: yes
+
+
 ### Phase 5: SMS + Acquisition + Messagerie
 **Goal**: Boucle complète d'acquisition, d'activation et de rétention — les pros sont notifiés, les particuliers ont un espace de suivi, et les deux communiquent sur la plateforme.
 **Depends on**: Phase 4.5
@@ -133,5 +145,6 @@ Plans:
 | 3. Onboarding Pro & Vérification manuelle | 1/1 | Completed | 2026-06-03 |
 | 4. Le Verrou & Stripe Billing | 7/7 | Completed | 2026-06-09 |
 | 4.5. Conversion & Qualification | 8/8 | Completed | 2026-06-09 |
+| 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
 | 5. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
 | 6. Réputation & Scale | 0/TBD | Not started | - |
