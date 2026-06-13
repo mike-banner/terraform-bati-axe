@@ -163,28 +163,35 @@ function translateAuthError(msg: string): string {
 // ─── Prospect pre-fill ────────────────────────────────────────────────────────
 const prospectId = computed(() => route.query.prospect_id as string || '')
 
-// Vérification bloquante (SSR + Client)
-const { data: existingPro } = await useAsyncData(`check-pro-${user.value?.id || 'anon'}`, async () => {
-  if (!user.value?.id) return null
-  const { data } = await supabase.from('professionals').select('id').eq('id', user.value.id).maybeSingle()
-  return data
-})
-
 const router = useRouter()
 
-watch(user, async (newUser) => {
-  if (newUser?.id) {
-    if (existingPro.value) {
-      router.push('/app/dashboard')
-    } else if ((newUser as any).app_metadata?.role === 'admin') {
-      router.push('/admin')
-    } else {
-      activeStep.value = 2
-    }
+// Aiguillage d'un utilisateur authentifié confirmé : profil existant → dashboard,
+// admin → console, sinon étape 2 (renseigner l'entreprise).
+async function routeAuthedUser(authedUser: any) {
+  const { data: pro } = await supabase
+    .from('professionals').select('id').eq('id', authedUser.id).maybeSingle()
+  if (pro) return router.push('/app/dashboard')
+  if (authedUser.app_metadata?.role === 'admin') return router.push('/admin')
+  if (authedUser.user_metadata?.full_name) proForm.full_name = authedUser.user_metadata.full_name
+  activeStep.value = 2
+}
+
+// Décision d'auth autoritaire, client uniquement : getSession() lit le stockage
+// réel et ne souffre PAS du null transitoire de useSupabaseUser() à l'hydratation.
+// Évite le « flash connexion » pour un pro déjà connecté qui atterrit ici.
+onMounted(async () => {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (session?.user) {
+    await routeAuthedUser(session.user)
   } else {
     activeStep.value = 1
   }
-}, { immediate: true })
+})
+
+// Déconnexion explicite après coup → retour à l'écran de connexion.
+watch(user, (newUser) => {
+  if (newUser === null) activeStep.value = 1
+})
 
 if (prospectId.value) {
   try {
