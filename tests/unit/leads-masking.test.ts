@@ -57,4 +57,26 @@ describe('maskLead', () => {
     expect(result.customer_phone).toBeUndefined()
     expect(result.customer_email).toBeUndefined()
   })
+
+  it('isFreeGranted=true + BASIC + no unlocked_at → unlocked avec données réelles (D-03)', () => {
+    const result = maskLead({ ...baseLead, status: 'new', unlocked_at: null }, false, now, true)
+    expect(result.status).toBe('unlocked')
+    expect(result.customer_name).toBe('Jean Dupont')
+    expect(result.customer_phone).toBe('06 12 34 56 78')
+    expect(result.customer_email).toBe('jean.dupont@example.com')
+    expect(result.postal_code).toBe('75001')
+  })
+
+  it('isFreeGranted=true + claimed → D-10 prioritaire, données masquées', () => {
+    const result = maskLead({ ...baseLead, status: 'claimed', unlocked_at: null }, false, now, true)
+    expect(result.status).toBe('claimed')
+    expect(result.customer_name).toBeUndefined()
+  })
+
+  it('claimed + premium → données complètes visibles (D-06 bypass D-10)', () => {
+    const result = maskLead({ ...baseLead, status: 'claimed', unlocked_at: null }, true, now)
+    expect(result.status).toBe('unlocked')
+    expect(result.customer_name).toBe('Jean Dupont')
+    expect(result.customer_email).toBe('jean.dupont@example.com')
+  })
 })

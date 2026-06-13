@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { serverSupabaseServiceRole } from '#supabase/server'
+import { computeQualifyScore } from '../../utils/qualifyScore'
 
 // French phone validation regex
 const phoneRegex = /^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/
@@ -37,15 +38,16 @@ export default defineEventHandler(async (event) => {
 
     // D-11: compute qualification criteria (T-04.5-10: computed server-side, never read from body)
     // D-13: informational only — low scores are not rejected
-    const qualifyBudget = data.budget_range !== null && data.budget_range.length > 0
-    const qualifyPhone = data.customer_phone !== null && data.customer_phone.length > 0
-    const qualifyDescription = data.description.length > 50
     const { count: returningCount } = await supabase
       .from('projects')
       .select('id', { count: 'exact', head: true })
       .eq('customer_email', data.customer_email)
-    const qualifyReturning = (returningCount ?? 0) > 0
-    const qualifyScore = [qualifyBudget, qualifyPhone, qualifyDescription, qualifyReturning].filter(Boolean).length
+    const { qualify_budget: qualifyBudget, qualify_phone: qualifyPhone, qualify_description: qualifyDescription, qualify_returning: qualifyReturning, qualify_score: qualifyScore } = computeQualifyScore({
+      budget_range: data.budget_range,
+      customer_phone: data.customer_phone,
+      description: data.description,
+      returning_count: returningCount ?? 0,
+    })
 
     // 2. Verify if the postal code belongs to an active pilot zone
     let { data: matchedZone, error: zoneError } = await supabase
@@ -69,12 +71,17 @@ export default defineEventHandler(async (event) => {
         matchedZone = fallbackZone
       } else {
         // La table est complètement vide (ex: base de production non seedée)
-        const { data: newZone } = await supabase.from('zones').insert({
+        const { data: newZone, error: insertError } = await supabase.from('zones').insert({
           name: 'Pilote Carrières-sous-Poissy',
           type: 'city',
           postal_codes: ['78955'],
           is_active: true
         }).select('id, name').single()
+        
+        if (insertError) {
+          console.error('Failed to create fallback zone:', insertError)
+        }
+        
         if (newZone) {
           matchedZone = newZone
         }
@@ -118,36 +125,26 @@ export default defineEventHandler(async (event) => {
       .single()
 
     if (projectError || !project) {
+      console.error('Failed to create project record:', projectError)
       throw createError({
         statusCode: 500,
-        statusMessage: 'Failed to create project record'
+        statusMessage: `Failed to create project: ${projectError?.message || 'Unknown error'}`
       })
     }
 
-    // 4. Distribute leads to verified pros matching the category
+    // 4. Match verified pros for the category (e.g. for future SMS alerts)
+    // We NO LONGER pre-insert into the leads table (Dynamic Market Model)
     const { data: pros, error: prosError } = await supabase
       .from('professionals')
-      .select('id')
-      .eq('category', data.category)
+      .select('id, phone')
+      .contains('categories', [data.category])
       .eq('is_verified', true)
 
     if (prosError) {
       console.error('Failed to fetch pros for distribution:', prosError)
     } else if (pros && pros.length > 0) {
-      const leads = pros.map((p: any) => ({
-        project_id: project.id,
-        pro_id: p.id,
-        status: 'new',
-        unlocked_at: null,
-      }))
-
-      const { error: upsertError } = await supabase
-        .from('leads')
-        .upsert(leads, { onConflict: 'project_id,pro_id' })
-
-      if (upsertError) {
-        console.error('Failed to distribute leads:', upsertError)
-      }
+      console.log(`Matched ${pros.length} pros for project ${project.id}. Alerts will be triggered.`)
+      // TODO: Insert into sms_logs or trigger notification service here
     }
 
     // 5. Save CGU consent row

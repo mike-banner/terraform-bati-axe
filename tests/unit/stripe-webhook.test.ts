@@ -4,8 +4,9 @@ import { handleStripeEvent } from '../../server/utils/handleStripeEvent'
 function makeSupabaseMock() {
   const eq = vi.fn().mockResolvedValue({ error: null })
   const update = vi.fn().mockReturnValue({ eq })
-  const from = vi.fn().mockReturnValue({ update })
-  return { from, update, eq }
+  const insert = vi.fn().mockResolvedValue({ error: null })
+  const from = vi.fn().mockReturnValue({ update, insert })
+  return { from, update, insert, eq }
 }
 
 describe('handleStripeEvent', () => {
@@ -16,7 +17,9 @@ describe('handleStripeEvent', () => {
         type: 'checkout.session.completed',
         data: {
           object: {
+            id: 'cs_test_abc',
             customer: 'cus_test_123',
+            mode: 'subscription',
             metadata: { pro_id: 'pro-001' },
           },
         },
@@ -28,6 +31,28 @@ describe('handleStripeEvent', () => {
       expect.objectContaining({ subscription_status: 'active', stripe_customer_id: 'cus_test_123' }),
     )
     expect(supabase.eq).toHaveBeenCalledWith('id', 'pro-001')
+  })
+
+  it('checkout.session.completed → inserts paywall_events row (CNV-07)', async () => {
+    const supabase = makeSupabaseMock()
+    await handleStripeEvent(
+      {
+        type: 'checkout.session.completed',
+        data: {
+          object: {
+            id: 'cs_test_abc',
+            customer: 'cus_test_123',
+            mode: 'subscription',
+            metadata: { pro_id: 'pro-001' },
+          },
+        },
+      },
+      supabase,
+    )
+    expect(supabase.from).toHaveBeenCalledWith('paywall_events')
+    expect(supabase.insert).toHaveBeenCalledWith(
+      expect.objectContaining({ pro_id: 'pro-001', event_type: 'checkout_completed' }),
+    )
   })
 
   it('customer.subscription.deleted → sets subscription_status to canceled (D-14)', async () => {
