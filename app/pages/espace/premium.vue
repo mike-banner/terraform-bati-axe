@@ -1,14 +1,10 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'dynamic' })
 const supabase = useSupabaseClient()
-const user = useSupabaseUser()
+const { user } = useRequireAuth()
 const route = useRoute()
 
 useHead({ title: 'Passer Premium — BÂTI-AXE' })
-
-watchEffect(() => {
-  if (user.value === null) navigateTo('/pro/claim')
-})
 
 const { data: pro } = await useAsyncData('pro-premium', async () => {
   if (!user.value?.id) return null

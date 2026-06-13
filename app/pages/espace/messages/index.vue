@@ -55,10 +55,7 @@
 </template>
 
 <script setup lang="ts">
-const user = useSupabaseUser()
-watchEffect(() => {
-  if (user.value === null) navigateTo('/pro/claim')
-})
+useRequireAuth()
 
 useHead({
   title: 'Messagerie — BÂTI-AXE'
