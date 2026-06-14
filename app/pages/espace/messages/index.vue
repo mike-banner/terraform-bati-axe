@@ -61,12 +61,15 @@ useHead({
   title: 'Messagerie — BÂTI-AXE'
 })
 
+// useRequestFetch transmet le cookie d'auth au SSR (sinon 401 au rechargement).
+const requestFetch = useRequestFetch()
+
 // We use the existing leads API and filter for unlocked leads
 const { data, pending } = await useAsyncData(
   'pro-conversations',
   async () => {
     // 1. Get all leads for this pro
-    const { leads } = await $fetch<{ leads: any[] }>('/api/v1/leads')
+    const { leads } = await requestFetch<{ leads: any[] }>('/api/v1/leads')
     
     // 2. Filter only unlocked leads
     const unlockedLeads = leads.filter(l => l.status === 'unlocked')
