@@ -21,6 +21,8 @@ const saveSuccess = ref(false)
 const saveError = ref('')
 const logoError = ref('')
 const logoUploading = ref(false)
+const logoProgress = ref(0)
+const logoStage = ref<'compress' | 'upload'>('compress')
 const fetchError = ref(false)
 
 const { refresh } = await useAsyncData('pro-profile-page', async () => {
@@ -48,26 +50,88 @@ const { refresh } = await useAsyncData('pro-profile-page', async () => {
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml']
 const MAX_SIZE = 5_242_880
 
+// Compresse une image raster côté client : redimensionne à 512px max et
+// réencode en WebP qualité 0.82. Un logo de plusieurs Mo tombe à ~20-50 Ko,
+// l'upload devient quasi instantané. SVG (vectoriel) et GIF (animé) intacts.
+async function compressImage(file: File): Promise<{ blob: Blob; type: string; name: string }> {
+  if (file.type === 'image/svg+xml' || file.type === 'image/gif') {
+    return { blob: file, type: file.type, name: file.name }
+  }
+  const dataUrl = await new Promise<string>((resolve, reject) => {
+    const r = new FileReader()
+    r.onload = () => resolve(r.result as string)
+    r.onerror = () => reject(new Error('Lecture du fichier impossible.'))
+    r.readAsDataURL(file)
+  })
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const i = new Image()
+    i.onload = () => resolve(i)
+    i.onerror = () => reject(new Error('Image invalide.'))
+    i.src = dataUrl
+  })
+  const MAX_DIM = 512
+  const scale = Math.min(1, MAX_DIM / Math.max(img.width, img.height))
+  const w = Math.round(img.width * scale)
+  const h = Math.round(img.height * scale)
+  const canvas = document.createElement('canvas')
+  canvas.width = w
+  canvas.height = h
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return { blob: file, type: file.type, name: file.name }
+  ctx.drawImage(img, 0, 0, w, h)
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/webp', 0.82))
+  // Si la compression échoue ou alourdit, on garde l'original.
+  if (!blob || blob.size >= file.size) {
+    return { blob: file, type: file.type, name: file.name }
+  }
+  const name = file.name.replace(/\.[^.]+$/, '') + '.webp'
+  return { blob, type: 'image/webp', name }
+}
+
+// PUT avec progression réelle : fetch n'expose pas la progression d'upload,
+// XMLHttpRequest oui (xhr.upload.onprogress).
+function putWithProgress(url: string, blob: Blob, contentType: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open('PUT', url)
+    xhr.setRequestHeader('Content-Type', contentType)
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) logoProgress.value = Math.round((e.loaded / e.total) * 100)
+    }
+    xhr.onload = () => (xhr.status >= 200 && xhr.status < 300)
+      ? resolve()
+      : reject(new Error('Échec du transfert.'))
+    xhr.onerror = () => reject(new Error('Échec du transfert.'))
+    xhr.send(blob)
+  })
+}
+
 async function handleLogoUpload(event: Event) {
-  const file = (event.target as HTMLInputElement).files?.[0]
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
   if (!file) return
   logoError.value = ''
-  if (file.size > MAX_SIZE) { logoError.value = 'Logo trop volumineux (5 Mo max).'; return }
-  if (!ALLOWED_MIME.includes(file.type)) { logoError.value = 'Format non supporté.'; return }
+  if (!ALLOWED_MIME.includes(file.type)) { logoError.value = 'Format non supporté.'; input.value = ''; return }
+  if (file.size > MAX_SIZE) { logoError.value = 'Logo trop volumineux (5 Mo max).'; input.value = ''; return }
+
   logoUploading.value = true
+  logoProgress.value = 0
+  logoStage.value = 'compress'
   try {
+    const { blob, type, name } = await compressImage(file)
+    logoStage.value = 'upload'
     const presign = await $fetch<{ status: string; signedUrl: string; publicUrl: string }>(
       '/api/v1/pro/profile/logo-presign',
-      { method: 'POST', body: { content_type: file.type, filename: file.name } }
+      { method: 'POST', body: { content_type: type, filename: name } }
     )
-    const res = await fetch(presign.signedUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file })
-    if (!res.ok) throw new Error('Échec du transfert.')
+    await putWithProgress(presign.signedUrl, blob, type)
     await $fetch('/api/v1/pro/profile/me', { method: 'PATCH', body: { logo_url: presign.publicUrl } })
     profile.logo_url = presign.publicUrl
-  } catch {
-    logoError.value = 'Impossible de télécharger le logo. Réessayez.'
+  } catch (e: any) {
+    logoError.value = e?.message || 'Impossible de télécharger le logo. Réessayez.'
   } finally {
     logoUploading.value = false
+    input.value = '' // permet de re-sélectionner le même fichier
   }
 }
 
@@ -144,7 +208,25 @@ async function saveProfile() {
               {{ logoUploading ? 'Téléchargement…' : "Choisir un logo d'entreprise" }}
               <input type="file" accept="image/*" class="sr-only" @change="handleLogoUpload" :disabled="logoUploading" />
             </label>
-            <p class="text-xs text-muted-foreground mt-2">5 Mo max. JPG, PNG, WebP, GIF, SVG.</p>
+            <p class="text-xs text-muted-foreground mt-2">5 Mo max. JPG, PNG, WebP, GIF, SVG. L'image est compressée automatiquement.</p>
+
+            <!-- Progression -->
+            <div v-if="logoUploading" class="mt-3 w-56 max-w-full" role="status" aria-live="polite">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-medium text-foreground inline-flex items-center gap-1.5">
+                  <svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                  {{ logoStage === 'compress' ? 'Compression…' : 'Téléchargement…' }}
+                </span>
+                <span v-if="logoStage === 'upload'" class="text-xs font-semibold text-foreground tabular-nums">{{ logoProgress }}%</span>
+              </div>
+              <div class="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                <div
+                  class="h-full bg-foreground rounded-full transition-all duration-200"
+                  :class="logoStage === 'compress' ? 'animate-pulse w-1/3' : ''"
+                  :style="logoStage === 'upload' ? { width: logoProgress + '%' } : undefined"
+                />
+              </div>
+            </div>
           </div>
         </div>
         <p v-if="logoError" class="text-xs text-destructive mt-2">{{ logoError }}</p>
