@@ -125,8 +125,14 @@ async function handleLogoUpload(event: Event) {
       { method: 'POST', body: { content_type: type, filename: name } }
     )
     await putWithProgress(presign.signedUrl, blob, type)
-    await $fetch('/api/v1/pro/profile/me', { method: 'PATCH', body: { logo_url: presign.publicUrl } })
-    profile.logo_url = presign.publicUrl
+    // publicUrl est vide tant que le bucket R2 n'a pas d'URL publique configurée.
+    // Dans ce cas le fichier est bien stocké, mais on n'écrase pas logo_url (sinon 400 / logo effacé).
+    if (presign.publicUrl) {
+      await $fetch('/api/v1/pro/profile/me', { method: 'PATCH', body: { logo_url: presign.publicUrl } })
+      profile.logo_url = presign.publicUrl
+    } else {
+      logoError.value = "Logo envoyé ✓ — son affichage public nécessite encore la config d'une URL R2 publique."
+    }
   } catch (e: any) {
     logoError.value = e?.message || 'Impossible de télécharger le logo. Réessayez.'
   } finally {

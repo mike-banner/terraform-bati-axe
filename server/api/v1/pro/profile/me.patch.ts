@@ -19,6 +19,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   if (body.bio === '') body.bio = null
   if (body.zone === '') body.zone = null
+  if (body.logo_url === '') body.logo_url = null
   
   // Backwards compatibility during transition
   if (body.category !== undefined && body.categories === undefined) {
