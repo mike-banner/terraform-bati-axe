@@ -24,6 +24,12 @@ const logoUploading = ref(false)
 const logoProgress = ref(0)
 const logoStage = ref<'compress' | 'upload'>('compress')
 const logoName = ref('')
+const logoVersion = ref(0)
+const logoFailed = ref(false)
+// Affichage via le proxy serveur (bucket privé) ; ?v= force le rechargement après upload.
+const logoSrc = computed(() =>
+  profile.canonical_slug ? `/api/v1/pro/logo/${profile.canonical_slug}?v=${logoVersion.value}` : ''
+)
 const fetchError = ref(false)
 
 const { refresh } = await useAsyncData('pro-profile-page', async () => {
@@ -127,6 +133,8 @@ async function handleLogoUpload(event: Event) {
     )
     await putWithProgress(presign.signedUrl, blob, type)
     logoName.value = file.name
+    logoFailed.value = false
+    logoVersion.value++ // cache-bust : recharge le logo via le proxy
     // publicUrl est vide tant que le bucket R2 n'a pas d'URL publique configurée.
     // Dans ce cas le fichier est bien stocké, mais on n'écrase pas logo_url (sinon 400 / logo effacé).
     if (presign.publicUrl) {
@@ -203,7 +211,7 @@ async function saveProfile() {
         <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Logo d'entreprise</h2>
         <div class="flex items-center gap-4">
           <div class="w-20 h-20 border border-border rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0">
-            <img v-if="profile.logo_url" :src="profile.logo_url" alt="Logo" class="w-full h-full object-cover" />
+            <img v-if="logoSrc && !logoFailed" :src="logoSrc" alt="Logo" class="w-full h-full object-cover" @error="logoFailed = true" />
             <svg v-else class="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z"/>
             </svg>
