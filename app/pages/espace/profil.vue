@@ -135,13 +135,12 @@ async function handleLogoUpload(event: Event) {
     logoName.value = file.name
     logoFailed.value = false
     logoVersion.value++ // cache-bust : recharge le logo via le proxy
-    // publicUrl est vide tant que le bucket R2 n'a pas d'URL publique configurée.
-    // Dans ce cas le fichier est bien stocké, mais on n'écrase pas logo_url (sinon 400 / logo effacé).
+    // L'affichage passe par le proxy serveur (logoSrc) qui sert le dernier logo
+    // du bucket privé — indépendant de publicUrl. Si une URL publique existe, on la
+    // stocke aussi dans logo_url (sinon on n'y touche pas pour éviter un 400).
     if (presign.publicUrl) {
       await $fetch('/api/v1/pro/profile/me', { method: 'PATCH', body: { logo_url: presign.publicUrl } })
       profile.logo_url = presign.publicUrl
-    } else {
-      logoError.value = "Logo envoyé ✓ — son affichage public nécessite encore la config d'une URL R2 publique."
     }
   } catch (e: any) {
     logoError.value = e?.message || 'Impossible de télécharger le logo. Réessayez.'
