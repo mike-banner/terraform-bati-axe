@@ -1,5 +1,4 @@
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
-import { createClient } from '@supabase/supabase-js'
 import { maskLead } from '../../../utils/maskLead'
 
 export default defineEventHandler(async (event) => {
@@ -7,16 +6,10 @@ export default defineEventHandler(async (event) => {
   const { data: { user }, error: authError } = await supabaseAuth.auth.getUser()
   if (authError || !user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
 
-  const config = useRuntimeConfig(event)
-  const env = event.context.cloudflare?.env || {}
-  const supabaseUrl = env.NUXT_PUBLIC_SUPABASE_URL || process.env.NUXT_PUBLIC_SUPABASE_URL || env.SUPABASE_URL || process.env.SUPABASE_URL
-  const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
-
-  if (!supabaseUrl || !serviceKey) {
-    throw createError({ statusCode: 500, statusMessage: 'Configuration Supabase manquante sur le serveur.' })
-  }
-
-  const supabase = createClient(supabaseUrl, serviceKey)
+  // Client service-role via le module : il lit la clé depuis runtimeConfig,
+  // seul canal fiable au runtime Cloudflare (event.context.cloudflare.env et
+  // process.env y sont vides). Nécessite NUXT_SUPABASE_SERVICE_KEY en env.
+  const supabase = serverSupabaseServiceRole(event) as any
 
   const { data: pro, error: proError } = await supabase
     .from('professionals')
