@@ -15,16 +15,20 @@ const CATEGORY_LABELS: Record<string, string> = {
   isolation:    'Isolation & Cloisons',
 }
 
+// useRequestFetch transmet le cookie d'auth au SSR (sinon $fetch interne part
+// sans cookie -> 401 -> "Impossible de charger les leads" au rechargement).
+const requestFetch = useRequestFetch()
+
 const { data: leadsData, pending, error, refresh } = await useAsyncData('pro-leads', () =>
-  $fetch<{ leads: any[], isPremium: boolean }>('/api/v1/leads')
+  requestFetch<{ leads: any[], isPremium: boolean }>('/api/v1/leads')
 )
 
 const { data: profile } = await useAsyncData('pro-profile-leads', () =>
-  $fetch<{ profile: any }>('/api/v1/pro/profile/me').then(r => r.profile).catch(() => null)
+  requestFetch<{ profile: any }>('/api/v1/pro/profile/me').then(r => r.profile).catch(() => null)
 )
 
 const { data: marketData } = await useAsyncData('market-local', () =>
-  $fetch<{ data: any }>('/api/v1/market-local').then(r => r.data).catch(() => null)
+  requestFetch<{ data: any }>('/api/v1/market-local').then(r => r.data).catch(() => null)
 )
 
 const leads = computed(() => leadsData.value?.leads || [])
