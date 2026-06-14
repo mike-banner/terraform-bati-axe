@@ -118,16 +118,11 @@ async function uploadDoc(type: 'kbis' | 'decennale') {
     const res = await fetch(presign.signedUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file })
     if (!res.ok) throw new Error('Échec du transfert.')
     
-    const { data: existing, error: selectErr } = await (supabase as any).from('verifications').select('id').eq('pro_id', uid).eq('document_type', type).maybeSingle()
-    if (selectErr && selectErr.code !== 'PGRST116') console.error('Select error:', selectErr)
-
-    if (existing) {
-      const { error: updateErr } = await (supabase as any).from('verifications').update({ file_key: presign.fileKey, status: 'pending' }).eq('id', existing.id)
-      if (updateErr) throw new Error(updateErr.message)
-    } else {
-      const { error: insertErr } = await (supabase as any).from('verifications').insert({ pro_id: uid, document_type: type, file_key: presign.fileKey, status: 'pending' })
-      if (insertErr) throw new Error(insertErr.message)
-    }
+    // Historisation : chaque envoi crée une nouvelle ligne — on ne perd jamais
+    // l'ancien justificatif (preuve décennale). L'admin valide la plus récente,
+    // le dashboard affiche la plus récente (tri created_at desc).
+    const { error: insertErr } = await (supabase as any).from('verifications').insert({ pro_id: uid, document_type: type, file_key: presign.fileKey, status: 'pending' })
+    if (insertErr) throw new Error(insertErr.message)
     uploads[type].status = 'success'
     await loadProData() // refresh badges
   } catch (err: any) {

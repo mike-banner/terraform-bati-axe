@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { serverSupabaseUser } from '#supabase/server'
+import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 import { AwsClient } from 'aws4fetch'
 
 const presignSchema = z.object({
@@ -57,12 +57,14 @@ export default defineEventHandler(async (event) => {
       targetUserId = pro_id
     }
 
-    const extension = filename.split('.').pop()?.toLowerCase() || 'pdf'
-    
     // Fallbacks sécurisés
     const accountId = config.r2AccountId || env.R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID || 'mock'
     const bucket = config.r2BucketName || env.R2_BUCKET_NAME || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
-    const fileKey = `${targetUserId}/${document_type}-${Date.now()}.${extension}`
+
+    // Clé lisible et historisée : {short_id}__{slug}/{type}/{type}_{date}_{rand8}.{ext}
+    const sb = serverSupabaseServiceRole(event) as any
+    const { data: pro } = await sb.from('professionals').select('short_id, canonical_slug').eq('id', targetUserId).maybeSingle()
+    const { fileKey } = buildStorageKey({ shortId: pro?.short_id, slug: pro?.canonical_slug, userId: targetUserId, type: document_type, filename })
 
     // 4. Generate presigned PUT URL using aws4fetch (Edge compatible)
     const aws = getAwsClient(config, env)
