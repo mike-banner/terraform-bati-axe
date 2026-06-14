@@ -29,7 +29,7 @@ const { data: headerPro } = await useAsyncData('header-pro', async () => {
   if (!user.value?.id) return null
   const { data } = await supabase.from('professionals').select('company_name').eq('id', user.value.id).maybeSingle()
   return data
-})
+}, { server: false })
 
 onMounted(() => window.addEventListener('scroll', handleScroll))
 onUnmounted(() => window.removeEventListener('scroll', handleScroll))
@@ -54,9 +54,10 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
           BÂTI-AXE
           <span v-if="isAdminRoute" class="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-sm bg-red-500/10 text-red-500 border border-red-500/20">Admin</span>
           <span v-else-if="isProRoute" class="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-sm bg-foreground/10 text-foreground border border-foreground/20">Pro</span>
-          <span v-if="headerPro?.company_name" class="ml-2 text-sm font-medium text-foreground truncate max-w-[150px] sm:max-w-xs">{{ headerPro.company_name }}</span>
+          <ClientOnly><span v-if="headerPro?.company_name" class="ml-2 text-sm font-medium text-foreground truncate max-w-[150px] sm:max-w-xs">{{ headerPro.company_name }}</span></ClientOnly>
         </NuxtLink>
         <nav class="flex items-center gap-2">
+          <ClientOnly>
           <template v-if="user">
             <button
               class="flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-md border border-border hover:bg-muted transition-colors"
@@ -73,6 +74,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
               Se connecter
             </NuxtLink>
           </template>
+          </ClientOnly>
         </nav>
       </div>
     </header>
