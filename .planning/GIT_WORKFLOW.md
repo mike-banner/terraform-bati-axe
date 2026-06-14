@@ -4,11 +4,20 @@
 
 ---
 
-## 📋 Types de branches
+## ⚠️ RÉALITÉ ACTUELLE (à lire en premier)
+
+Aujourd'hui, **`development` EST la production** : Cloudflare Pages déploie la Production depuis `development`. `main` **n'existe pas**. Donc **merger dans `development` = déployer en prod**. Le schéma « cible » ci-dessous (main = prod, development = staging) **n'est PAS encore en place**.
+
+- **Modèle actuel (A)** : trunk sur `development`. Branches courtes `feat|fix|refactor|docs/*` depuis `development` → merge → déploiement. Versions marquées par des **tags** (`git tag -a v0.x.0`).
+- **Modèle cible (B), à mettre en place quand le projet sera validé / au lancement public** : créer `main` = prod, reconfigurer la branche Production de Cloudflare sur `main`, `development` redevient staging. ➜ **Point à traiter en backlog.**
+
+---
+
+## 📋 Types de branches (modèle CIBLE B — pas encore actif)
 
 ```
-main                  ← Production (jamais toucher directement)
-├─ development        ← Integration branch (à jour avec main)
+main                  ← Production (jamais toucher directement)   [À CRÉER au lancement]
+├─ development        ← Integration / staging                      [aujourd'hui = prod]
 │  ├─ feat/*          ← Features (nouvelles fonctionnalités)
 │  ├─ fix/*           ← Bugfixes (problèmes critiques)
 │  ├─ refactor/*      ← Refactorisation (pas de logique change)
