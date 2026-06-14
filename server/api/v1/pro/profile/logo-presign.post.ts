@@ -39,8 +39,13 @@ export default defineEventHandler(async (event) => {
     const bucket = config.r2BucketName || env.R2_BUCKET_NAME || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
     const r2PublicBaseUrl = config.r2PublicBaseUrl || env.R2_PUBLIC_BASE_URL || process.env.R2_PUBLIC_BASE_URL || ''
 
+    // Résolution défensive de l'id (comme documents/presign) : selon le runtime,
+    // user.id peut être undefined alors que l'id réel est dans user.sub.
+    const userId = (user as any).id ?? (user as any).sub ?? (user as any).user_metadata?.sub ?? null
+    if (!userId) throw createError({ statusCode: 401, statusMessage: 'Identifiant utilisateur introuvable.' })
+
     const safeName = filename.replace(/[^a-zA-Z0-9._-]/g, '_')
-    const fileKey = `pro-logos/${user.id}/${Date.now()}-${safeName}`
+    const fileKey = `pro-logos/${userId}/${Date.now()}-${safeName}`
 
     const aws = getAwsClient(config, env)
     const url = new URL(`https://${accountId}.r2.cloudflarestorage.com/${bucket}/${fileKey}`)
