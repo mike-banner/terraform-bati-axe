@@ -16,9 +16,9 @@
     {"name": "Test email réel via Resend", "status": "done", "detail": "Envoyé vers mike.webfree@gmail.com (id 9d811364). Câblage Resend prouvé."}
   ],
   "remaining_tasks": [
-    {"name": "Passe visuelle Playwright (/mon-projet/[token], /espace/messages)", "status": "not_started", "blocking_dependency": "restart Claude Code pour charger le MCP Chromium"},
-    {"name": "Merge fix/messaging-unlock-guard -> development", "status": "not_started"},
-    {"name": "Corriger 10 erreurs typecheck préexistantes (leads/index.get.ts)", "status": "not_started"},
+    {"name": "Merge fix/messaging-unlock-guard -> development", "status": "done", "detail": "merge --no-ff 5509878, branche supprimée, poussé en prod (395dc83) le 2026-06-15"},
+    {"name": "Corriger erreurs typecheck préexistantes (leads/index.get.ts)", "status": "done", "detail": "leadMap typé Map<string, any> ; typecheck projet clean ; commit 395dc83 poussé"},
+    {"name": "Passe visuelle Playwright (/mon-projet/[token], /espace/messages)", "status": "not_started", "note": "audit de vérif seulement — design repoussé en fin de projet"},
     {"name": "Design minimum messagerie + test réel envoi/réception message (branche feat/messagerie-min)", "status": "not_started"},
     {"name": "Planifier le vrai reste de Phase 5 (SMS, cold outreach, email prod)", "status": "not_started", "note": "EN DERNIER par décision utilisateur"},
     {"name": "Phase design TOTALE finale (ux-pro-max -> impeccable -> taste-skill), inclut design email", "status": "not_started", "note": "À la toute fin du projet"}
@@ -40,6 +40,6 @@
     {"decision": "Fix REQ-03 réplique maskLead.isUnlocked au lieu d'un nouveau modèle", "rationale": "Cohérence avec le contrôle serveur existant (ADR-004)", "phase": "05"}
   ],
   "uncommitted_files": [],
-  "next_action": "Après restart CC : lancer la passe visuelle Playwright sur http://localhost:3000/mon-projet/f43c8e3c-2555-404e-86d5-9391f43bfd3d et /espace/messages (démarrer le serveur dev si arrêté).",
+  "next_action": "Sur development (à jour + poussé). Prochaine tâche de l'ordre fixé : messagerie min + test réel envoi/réception d'un message (branche feat/messagerie-min). La passe visuelle Playwright reste optionnelle (audit, le design est repoussé en fin de projet).",
   "context_notes": "On était en mode vérification du plan 05-01 (déjà codé hors flux GSD, sans SUMMARY). Tout le fond backend est validé. Reste surtout le visuel + le merge + la dette typecheck. Serveur dev sur :3000 (CLAUDE.md : un seul serveur). Voir mémoire project_design_strategy."
 }
