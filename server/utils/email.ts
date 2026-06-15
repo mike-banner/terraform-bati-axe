@@ -21,6 +21,9 @@ export async function sendEmail(options: { to: string; subject: string; html: st
   // PROD : envoi réel via Resend.
   const config = useRuntimeConfig()
   const apiKey = config.resendApiKey || process.env.RESEND_API_KEY
+  // Expéditeur configurable. Défaut = sender partagé Resend (ne livre qu'à
+  // l'adresse du compte tant que le domaine n'est pas vérifié).
+  const from = (config as any).emailFrom || 'BÂTI-AXE <onboarding@resend.dev>'
 
   if (!apiKey) {
     console.warn('⚠️ Missing RESEND_API_KEY. Falling back to console.log')
@@ -36,7 +39,7 @@ export async function sendEmail(options: { to: string; subject: string; html: st
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'BÂTI-AXE <noreply@bati-axe.fr>', // Domaine vérifié côté Resend
+        from, // configurable via NUXT_EMAIL_FROM (défaut: onboarding@resend.dev)
         to: [options.to],
         subject: options.subject,
         html: options.html

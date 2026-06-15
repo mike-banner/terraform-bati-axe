@@ -65,6 +65,10 @@ export default defineNuxtConfig({
     r2SecretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
     r2BucketName: process.env.R2_BUCKET_NAME || 'batiaxe-documents',
     resendApiKey: process.env.RESEND_API_KEY,
+    // Expéditeur Resend. Tant que le domaine n'est pas vérifié, garder le sender
+    // partagé 'onboarding@resend.dev' (ne livre qu'à l'adresse du compte Resend).
+    // Override prod via NUXT_EMAIL_FROM une fois bati-axe.fr vérifié.
+    emailFrom: process.env.EMAIL_FROM || 'BÂTI-AXE <onboarding@resend.dev>',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
     }
