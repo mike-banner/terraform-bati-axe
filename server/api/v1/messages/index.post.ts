@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
   // Get lead info
   const { data: lead, error: leadError } = await supabase
     .from('leads')
-    .select('id, pro_id, project_id, status, projects(access_token, customer_email)')
+    .select('id, pro_id, project_id, status, unlocked_at, projects(access_token, customer_email, category)')
     .eq('id', lead_id)
     .single()
 
@@ -44,10 +44,38 @@ export default defineEventHandler(async (event) => {
     if (lead.pro_id !== user.id) {
       throw createError({ statusCode: 403, statusMessage: 'Vous ne possédez pas ce lead' })
     }
-    // Check if the pro has actually unlocked the lead
-    // They must either be Premium, or have used a free grant, or the lead is unlocked.
-    // For simplicity here, we assume if they can send a request from the UI, they have access.
-    // In a real strict implementation, we would replicate maskLead's isUnlocked check.
+
+    // ADR-004 / REQ-03 : un pro ne peut écrire au client que s'il a réellement
+    // débloqué le lead (coordonnées visibles). On réplique la logique isUnlocked
+    // de maskLead : Premium OU free-grant pour ce lead OU déblocage 72h écoulé.
+    const now = new Date()
+    const { data: pro } = await supabase
+      .from('professionals')
+      .select('subscription_status')
+      .eq('id', user.id)
+      .single()
+
+    const isPremium = pro?.subscription_status === 'active'
+    const isTimeUnlocked = lead.unlocked_at !== null && new Date(lead.unlocked_at) <= now
+
+    let isFreeGranted = false
+    if (!isPremium && !isTimeUnlocked) {
+      const { data: grant } = await supabase
+        .from('free_lead_grants')
+        .select('id')
+        .eq('pro_id', user.id)
+        .eq('lead_id', lead.id)
+        .maybeSingle()
+      isFreeGranted = !!grant
+    }
+
+    if (!isPremium && !isTimeUnlocked && !isFreeGranted) {
+      throw createError({
+        statusCode: 403,
+        statusMessage: 'Débloquez ce lead avant de contacter le client.'
+      })
+    }
+
     isProSender = true
   } else {
     throw createError({ statusCode: 401, statusMessage: 'Non authentifié' })

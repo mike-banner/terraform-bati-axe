@@ -1,0 +1,45 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-06-15T12:24:36.791Z",
+  "phase": "05",
+  "phase_name": "SMS + Acquisition + Messagerie",
+  "phase_dir": ".planning/phases/05-sms-acquisition-messagerie",
+  "plan": 1,
+  "task": null,
+  "total_tasks": null,
+  "status": "paused",
+  "branch": "fix/messaging-unlock-guard",
+  "completed_tasks": [
+    {"name": "Vérification UAT Phase 5 plan 01 (Espace Client & Messagerie)", "status": "done", "detail": "4/5 PASS via HTTP/DB local + smoke prod. Voir 05-UAT.md."},
+    {"name": "Fix REQ-03 — verrou de déblocage messagerie", "status": "done", "commit": "1700a83"},
+    {"name": "Bascule EMAIL_LIVE (vrais emails en dev)", "status": "done", "commit": "883fc18"},
+    {"name": "Test email réel via Resend", "status": "done", "detail": "Envoyé vers mike.webfree@gmail.com (id 9d811364). Câblage Resend prouvé."}
+  ],
+  "remaining_tasks": [
+    {"name": "Passe visuelle Playwright (/mon-projet/[token], /espace/messages)", "status": "not_started", "blocking_dependency": "restart Claude Code pour charger le MCP Chromium"},
+    {"name": "Merge fix/messaging-unlock-guard -> development", "status": "not_started"},
+    {"name": "Corriger 10 erreurs typecheck préexistantes (leads/index.get.ts)", "status": "not_started"},
+    {"name": "Design minimum messagerie + test réel envoi/réception message (branche feat/messagerie-min)", "status": "not_started"},
+    {"name": "Planifier le vrai reste de Phase 5 (SMS, cold outreach, email prod)", "status": "not_started", "note": "EN DERNIER par décision utilisateur"},
+    {"name": "Phase design TOTALE finale (ux-pro-max -> impeccable -> taste-skill), inclut design email", "status": "not_started", "note": "À la toute fin du projet"}
+  ],
+  "blockers": [
+    {"description": "Playwright MCP configuré sur Chromium mais nécessite restart CC", "type": "human_action", "workaround": "claude --continue après restart"},
+    {"description": "Domaine bati-axe.fr non acheté/vérifié chez Resend", "type": "external", "workaround": "Mode test : envoi uniquement vers mike.webfree@gmail.com via onboarding@resend.dev"},
+    {"description": "Auth/session gotrue locale rejette création/login user test (bad_jwt)", "type": "technical", "workaround": "Tests endpoints authentifiés via cookie mocké (E2E) ou revue de code"}
+  ],
+  "human_actions_pending": [
+    {"action": "Redémarrer Claude Code", "context": "Activer le MCP Playwright sur Chromium pour la passe visuelle", "blocking": true},
+    {"action": "Vérifier l'email reçu sur mike.webfree@gmail.com + cliquer le magic link", "context": "Validation manuelle réception Phase 5", "blocking": false},
+    {"action": "Acheter et vérifier le domaine bati-axe.fr chez Resend", "context": "Débloque l'envoi multi-destinataires (yopmail, vrais clients)", "blocking": false}
+  ],
+  "decisions": [
+    {"decision": "Phase design totale en toute fin (ux-pro-max -> impeccable -> taste-skill)", "rationale": "Centraliser tout le travail visuel, design email inclus", "phase": "post-05"},
+    {"decision": "Planification du reste de Phase 5 en dernier", "rationale": "Préférence utilisateur — d'abord near-term (messagerie min + test)", "phase": "05"},
+    {"decision": "Pas de branche séparée pour le design email maintenant", "rationale": "Intégré à la phase design finale", "phase": "post-05"},
+    {"decision": "Fix REQ-03 réplique maskLead.isUnlocked au lieu d'un nouveau modèle", "rationale": "Cohérence avec le contrôle serveur existant (ADR-004)", "phase": "05"}
+  ],
+  "uncommitted_files": [],
+  "next_action": "Après restart CC : lancer la passe visuelle Playwright sur http://localhost:3000/mon-projet/f43c8e3c-2555-404e-86d5-9391f43bfd3d et /espace/messages (démarrer le serveur dev si arrêté).",
+  "context_notes": "On était en mode vérification du plan 05-01 (déjà codé hors flux GSD, sans SUMMARY). Tout le fond backend est validé. Reste surtout le visuel + le merge + la dette typecheck. Serveur dev sur :3000 (CLAUDE.md : un seul serveur). Voir mémoire project_design_strategy."
+}

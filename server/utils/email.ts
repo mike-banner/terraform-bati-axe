@@ -6,7 +6,9 @@ import { useRuntimeConfig } from '#imports'
 // « externals are not allowed »). Un simple fetch suffit pour du HTML brut.
 export async function sendEmail(options: { to: string; subject: string; html: string }) {
   // DEV : on mocke l'e-mail (pas de quota consommé, pas de clé requise).
-  if (import.meta.dev) {
+  // Bascule opt-in EMAIL_LIVE=true → envoi réel même en dev (vérification manuelle).
+  const liveOverride = process.env.EMAIL_LIVE === 'true'
+  if (import.meta.dev && !liveOverride) {
     console.log('\n=============================================')
     console.log(`[MOCK EMAIL] To: ${options.to}`)
     console.log(`[MOCK EMAIL] Subject: ${options.subject}`)
