@@ -76,18 +76,23 @@ export default defineEventHandler(async (event) => {
       // First, ensure the lead row exists.
       let activeLeadId = lead?.id
       if (!lead) {
+        // NB: 'unlocked' n'est PAS une valeur de l'enum lead_status
+        // ('new', 'contacted', 'won', 'lost', 'claimed'). Le déblocage est porté
+        // par unlocked_at + free_lead_grants (cf. maskLead), pas par le statut.
         const { data: newLead, error: leadInsertError } = await supabase
           .from('leads')
-          .insert({ project_id: id, pro_id: user.id, status: 'unlocked', unlocked_at: now.toISOString() })
+          .insert({ project_id: id, pro_id: user.id, status: 'new', unlocked_at: now.toISOString() })
           .select('id')
           .single()
-        
-        if (newLead) {
-          activeLeadId = newLead.id
-          virtualLead.id = newLead.id
-          virtualLead.status = 'unlocked'
-          virtualLead.unlocked_at = now.toISOString()
+
+        // Ne pas avaler l'erreur : un insert raté empêchait silencieusement le free grant.
+        if (leadInsertError || !newLead) {
+          throw createError({ statusCode: 500, statusMessage: 'Échec de la création du lead pour le déblocage gratuit.' })
         }
+        activeLeadId = newLead.id
+        virtualLead.id = newLead.id
+        virtualLead.status = 'new'
+        virtualLead.unlocked_at = now.toISOString()
       }
 
       if (activeLeadId) {
