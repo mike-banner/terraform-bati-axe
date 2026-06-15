@@ -64,26 +64,39 @@ useHead({
 // useRequestFetch transmet le cookie d'auth au SSR (sinon 401 au rechargement).
 const requestFetch = useRequestFetch()
 
-// We use the existing leads API and filter for unlocked leads
+// Leads débloqués + dernier message réel par lead (clé claim_id).
 const { data, pending } = await useAsyncData(
   'pro-conversations',
   async () => {
-    // 1. Get all leads for this pro
-    const { leads } = await requestFetch<{ leads: any[] }>('/api/v1/leads')
-    
-    // 2. Filter only unlocked leads
+    const [{ leads }, { lastByLead }] = await Promise.all([
+      requestFetch<{ leads: any[] }>('/api/v1/leads'),
+      requestFetch<{ lastByLead: Record<string, { content: string; created_at: string; is_pro_sender: boolean }> }>(
+        '/api/v1/messages/recent'
+      ),
+    ])
+
     const unlockedLeads = leads.filter(l => l.status === 'unlocked')
-    
-    // 3. For a real app we would fetch the last message for each, 
-    // but to avoid N+1 queries, we will just show the leads.
-    // The API for leads could be extended to return last_message, but for MVP:
-    return unlockedLeads.map(l => ({
-      lead_id: l.id,
-      customer_name: l.customer_name,
-      category: l.category,
-      last_message: l.description ? l.description.substring(0, 50) + '...' : '',
-      last_message_date: l.created_at
-    }))
+
+    return unlockedLeads
+      .map((l) => {
+        const last = l.claim_id ? lastByLead[l.claim_id] : null
+        return {
+          lead_id: l.id, // id projet — sert au routage /espace/leads/[id]
+          customer_name: l.customer_name,
+          category: l.category,
+          last_message: last
+            ? (last.is_pro_sender ? 'Vous : ' : '') + last.content
+            : '',
+          last_message_date: last?.created_at ?? null,
+        }
+      })
+      // Conversations actives (avec message) d'abord, du plus récent au plus ancien.
+      .sort((a, b) => {
+        if (!a.last_message_date && !b.last_message_date) return 0
+        if (!a.last_message_date) return 1
+        if (!b.last_message_date) return -1
+        return new Date(b.last_message_date).getTime() - new Date(a.last_message_date).getTime()
+      })
   }
 )
 
