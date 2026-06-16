@@ -26,15 +26,15 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 ## Current Position
 
 Phase: 05 (SMS + Acquisition + Messagerie) — EN COURS
-Plan: 1 of 4 exécuté (05-01 messagerie livrée ✅)
-Status: Planifié — prêt à exécuter 05-02 (Acquisition) puis 05-03 (Feedback + onboarding) ; 05-04 (SMS) DIFFÉRÉ en toute fin
+Plan: 2 of 4 exécutés (05-01 messagerie + 05-03 feedback loop livrés ✅)
+Status: 05-02 (Acquisition) bloqué sur source prospects (CSV à fournir) ; 05-04 (SMS) DIFFÉRÉ. Prochain candidat : phase design OU 05-02 quand données dispo.
 Last activity: 2026-06-16
 Progress: [███████▌░░] 75% (6/8 phases — 1, 2, 3, 4, 4.5, 4.6 livrées)
 
 ### Plans Phase 5
 - [x] 05-01 — Magic Link & Messagerie in-app (livré, validé prod)
-- [ ] 05-02 — Acquisition Pros (cold email, infra `prospects` existante) ← prochain
-- [ ] 05-03 — Feedback loop lead + Email onboarding (flag off)
+- [x] 05-03 — Feedback loop (refus→remise auto) + profil public espace particulier (livré, validé prod 2026-06-16, merge b4970a9). Partie B onboarding emails (REQ-07) NON faite.
+- [ ] 05-02 — Acquisition Pros (cold email) — 🔴 bloqué : pas de liste de pros (CSV à fournir)
 - [ ] 05-04 — SMS différencié — ⏸ DIFFÉRÉ (aucune dépense sans feu vert)
 
 ## Performance Metrics
