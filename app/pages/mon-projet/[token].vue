@@ -267,6 +267,17 @@ useHead({
 
 const { data, pending, error, refresh } = await useFetch(`/api/v1/magic-link/${token}`, { server: false })
 
+// Réception live : rafraîchit les fils tant que la page est ouverte.
+let pollTimer = null
+onMounted(() => {
+  pollTimer = setInterval(() => {
+    if (!pending.value) refresh()
+  }, 7000)
+})
+onBeforeUnmount(() => {
+  if (pollTimer) clearInterval(pollTimer)
+})
+
 const groupedMessages = computed(() => {
   if (!data.value?.messages) return []
 

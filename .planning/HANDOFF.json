@@ -21,7 +21,7 @@
   ],
   "remaining_tasks": [
     {"name": "Nettoyer les données de test créées en prod", "status": "not_started", "note": "Projet 'Mike Client Test' (id bf1f19e6-83a6-4269-9484-fca0e3581c02, customer_email mike.webfree@gmail.com), pro 'TEST PLOMBERIE SARL' (id a58b8257-86db-42ca-8613-1456781f64e6, email pro.test.1781553778064@example.com), lead claim_id afbf0574-4de9-4551-826f-e57f25ddbb15 + 3 messages + free_lead_grant. Supprimer via API/CLI Supabase."},
-    {"name": "Merger feat/messagerie-min --no-ff dans development", "status": "not_started", "note": "Messagerie validée. Branche encore ouverte (rappel hook stale-branch)."},
+    {"name": "Merger feat/messagerie-min --no-ff dans development", "status": "done", "detail": "Mergé le 2026-06-16 (--no-ff). Commits b63d05a, c44c382, aa0404d, 1f4c644. Code fusionné sans conflit (email.ts/nuxt.config/.env gardent la version development avec le fix Resend) ; seul HANDOFF.json en conflit, résolu. Branche supprimée."},
     {"name": "Poser NUXT_EMAIL_FROM en prod quand bati-axe.fr vérifié chez Resend", "status": "not_started", "note": "Code déjà prêt (défaut onboarding@resend.dev). Mettre 'BÂTI-AXE <noreply@bati-axe.fr>' en Prod ET Preview. Débloque aussi l'envoi multi-destinataires."},
     {"name": "Planifier le vrai reste de Phase 5 (SMS, cold outreach, email prod)", "status": "not_started", "note": "EN DERNIER par décision utilisateur"},
     {"name": "Phase design TOTALE finale (ux-pro-max -> impeccable -> taste-skill), inclut design email", "status": "not_started", "note": "À la toute fin du projet"}

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watchEffect } from 'vue'
+import { computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
 
 useRequireAuth()
 const route = useRoute()
@@ -31,18 +31,36 @@ const { data: lead, pending, error } = await useAsyncData(
 
 const isUnlocked = computed(() => lead.value?.status === 'unlocked')
 
-// Only fetch messages if the lead is unlocked
+// La messagerie est clé sur leads.id (= claim_id), PAS sur l'id projet de la route.
+// `/api/v1/leads/[id]` renvoie ce claim_id ; on l'utilise pour GET/POST messages.
+const claimId = computed<string | null>(() => lead.value?.claim_id ?? null)
+const canChat = computed(() => isUnlocked.value && !!claimId.value)
+
+// Only fetch messages if the lead is unlocked and a claim row exists
 const { data: messagesData, refresh: refreshMessages } = await useAsyncData(
   `lead-messages-${route.params.id}`,
-  () => requestFetch<{ messages: any[] }>(`/api/v1/messages?lead_id=${route.params.id}`),
-  { watch: [isUnlocked], immediate: false }
+  () => claimId.value
+    ? requestFetch<{ messages: any[] }>(`/api/v1/messages?lead_id=${claimId.value}`)
+    : Promise.resolve({ messages: [] }),
+  { watch: [claimId], immediate: false }
 )
 
 // Fetch manually if it's already unlocked on initial load
 watchEffect(() => {
-  if (isUnlocked.value && !messagesData.value) {
+  if (canChat.value && !messagesData.value) {
     refreshMessages()
   }
+})
+
+// Réception live : rafraîchit le fil tant que la page est ouverte (client only).
+let pollTimer: ReturnType<typeof setInterval> | null = null
+onMounted(() => {
+  pollTimer = setInterval(() => {
+    if (canChat.value) refreshMessages()
+  }, 7000)
+})
+onBeforeUnmount(() => {
+  if (pollTimer) clearInterval(pollTimer)
 })
 
 const messages = computed(() => messagesData.value?.messages || [])
@@ -50,13 +68,13 @@ const chatInput = ref('')
 const isSending = ref(false)
 
 async function sendChatMessage() {
-  if (!chatInput.value.trim() || isSending.value) return
+  if (!chatInput.value.trim() || isSending.value || !claimId.value) return
   isSending.value = true
   try {
     await $fetch('/api/v1/messages', {
       method: 'POST',
       body: {
-        lead_id: route.params.id,
+        lead_id: claimId.value,
         content: chatInput.value
       }
     })
@@ -266,17 +284,20 @@ async function copyToClipboard(text: string) {
 
               <!-- Input -->
               <div class="p-3 bg-background border-t border-border">
-                <form @submit.prevent="sendChatMessage" class="flex gap-2">
-                  <input 
-                    v-model="chatInput" 
-                    type="text" 
-                    placeholder="Votre message..." 
+                <p v-if="!claimId" class="text-xs text-muted-foreground text-center py-1">
+                  Conversation indisponible pour ce lead.
+                </p>
+                <form v-else @submit.prevent="sendChatMessage" class="flex gap-2">
+                  <input
+                    v-model="chatInput"
+                    type="text"
+                    placeholder="Votre message..."
                     class="flex-1 h-9 rounded-md border-border text-sm px-3 focus:ring-1 focus:ring-foreground/20 focus:border-foreground"
                     required
                     :disabled="isSending"
                   />
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     class="inline-flex items-center justify-center h-9 px-4 text-xs font-semibold rounded-md bg-foreground text-background hover:opacity-80 transition-opacity disabled:opacity-50"
                     :disabled="!chatInput || isSending"
                   >
