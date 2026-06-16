@@ -43,5 +43,36 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 500, statusMessage: 'Erreur lors du chargement des messages' })
   }
 
-  return { project, messages: messagesData || [] }
+  // REQ-09 — Artisans engagés sur le projet (status 'claimed' = ont débloqué le lead),
+  // avec de quoi lier vers leur fiche publique (/pro/[dept]/[slug]) + la décision
+  // du particulier (REQ-06). On expose TOUS les pros engagés, même sans message échangé.
+  const { data: engagedLeads } = await supabase
+    .from('leads')
+    .select(`
+      id,
+      customer_decision,
+      status,
+      professionals (
+        company_name, canonical_slug, postal_code, category, logo_url, is_verified
+      )
+    `)
+    .eq('project_id', project.id)
+    .eq('status', 'claimed')
+
+  const pros = (engagedLeads || []).map((l: any) => {
+    const p = l.professionals || {}
+    const postal = p.postal_code || ''
+    return {
+      lead_id: l.id,
+      customer_decision: l.customer_decision || 'pending',
+      company_name: p.company_name || 'Artisan',
+      canonical_slug: p.canonical_slug || null,
+      dept: postal ? postal.slice(0, 2) : null,
+      category: p.category || null,
+      logo_url: p.logo_url || null,
+      is_verified: p.is_verified ?? false
+    }
+  })
+
+  return { project, messages: messagesData || [], pros }
 })

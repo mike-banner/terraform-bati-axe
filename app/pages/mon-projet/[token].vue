@@ -95,6 +95,76 @@
           </div>
         </section>
 
+        <!-- Section artisans engagés — profil public + décision (REQ-06 / REQ-09) -->
+        <section v-if="data.pros && data.pros.length" class="border-b border-border">
+          <div class="max-w-6xl mx-auto px-6 py-16 md:py-20">
+            <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-2">Vos artisans</p>
+            <h2 class="text-2xl font-black tracking-tight text-foreground mb-3">
+              {{ data.pros.length }} artisan{{ data.pros.length > 1 ? 's' : '' }} certifié{{ data.pros.length > 1 ? 's' : '' }} sur votre projet
+            </h2>
+            <p class="text-sm text-muted-foreground leading-relaxed mb-8 max-w-xl">
+              Consultez chaque profil, puis indiquez votre choix. Si aucun ne vous convient, votre projet sera automatiquement reproposé à de nouveaux artisans.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div
+                v-for="pro in data.pros"
+                :key="pro.lead_id"
+                class="border border-border rounded-lg p-5 flex flex-col gap-4"
+                :class="{ 'opacity-55': pro.customer_decision === 'refused' }"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="w-11 h-11 rounded-full bg-foreground text-background flex items-center justify-center font-bold text-sm shrink-0 select-none overflow-hidden">
+                    <img v-if="pro.logo_url" :src="pro.logo_url" :alt="pro.company_name" class="w-full h-full object-cover" />
+                    <span v-else>{{ pro.company_name.charAt(0).toUpperCase() }}</span>
+                  </div>
+                  <div class="min-w-0">
+                    <h3 class="font-semibold text-foreground text-sm truncate">{{ pro.company_name }}</h3>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                      <svg v-if="pro.is_verified" class="w-3 h-3 text-foreground shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                      </svg>
+                      <p class="text-xs text-muted-foreground">{{ pro.is_verified ? 'Décennale vérifiée' : 'Artisan Bâti-Axe' }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2 mt-auto">
+                  <NuxtLink
+                    v-if="pro.canonical_slug && pro.dept"
+                    :to="`/pro/${pro.dept}/${pro.canonical_slug}`"
+                    target="_blank"
+                    class="inline-flex items-center justify-center h-9 px-4 text-xs font-semibold border border-border rounded-md text-foreground hover:bg-muted transition-colors"
+                  >
+                    Voir le profil
+                  </NuxtLink>
+
+                  <template v-if="pro.customer_decision === 'pending'">
+                    <button
+                      type="button"
+                      @click="decide(pro.lead_id, 'selected')"
+                      :disabled="isDeciding === pro.lead_id"
+                      class="inline-flex items-center justify-center h-9 px-4 text-xs font-semibold bg-foreground text-background rounded-md hover:opacity-80 transition-opacity disabled:opacity-40"
+                    >
+                      J'ai retenu celui-ci
+                    </button>
+                    <button
+                      type="button"
+                      @click="decide(pro.lead_id, 'refused')"
+                      :disabled="isDeciding === pro.lead_id"
+                      class="inline-flex items-center justify-center h-9 px-4 text-xs font-semibold text-muted-foreground rounded-md hover:text-foreground transition-colors disabled:opacity-40"
+                    >
+                      Pas intéressé
+                    </button>
+                  </template>
+                  <span v-else-if="pro.customer_decision === 'selected'" class="text-xs font-semibold text-foreground">Retenu ✓</span>
+                  <span v-else class="text-xs font-medium text-muted-foreground">Écarté</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- Section messages -->
         <section class="max-w-6xl mx-auto px-6 py-16 md:py-20">
 
@@ -298,6 +368,27 @@ const groupedMessages = computed(() => {
 
 const replyContent = ref({})
 const isSending = ref(null)
+const isDeciding = ref(null)
+
+// REQ-06 — Décision du particulier sur un artisan (retenir / écarter).
+// La remise au marché automatique (si tout est refusé) est gérée côté serveur.
+const decide = async (leadId, decision) => {
+  isDeciding.value = leadId
+  try {
+    const res = await $fetch(`/api/v1/magic-link/${token}/decision`, {
+      method: 'POST',
+      body: { lead_id: leadId, decision }
+    })
+    await refresh()
+    if (res?.relaunched) {
+      alert('Aucun artisan retenu : votre projet est de nouveau proposé à de nouveaux professionnels.')
+    }
+  } catch {
+    alert("Une erreur est survenue. Merci de réessayer.")
+  } finally {
+    isDeciding.value = null
+  }
+}
 
 const sendMessage = async (leadId) => {
   const content = replyContent.value[leadId]
