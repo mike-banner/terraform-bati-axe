@@ -76,13 +76,24 @@
   - [ ] Une ligne `consents` (subject_type='prospect') trace l'envoi (LCEN/RGPD).
   - [ ] Aucun envoi vers un prospect `optin_status='unsubscribed'`.
 
-### REQ-06: Feedback loop lead (relancer la recherche)
-- **Current State:** Une fois 3 pros ayant débloqué (cap concurrentiel), le particulier n'a aucun moyen de relancer si aucun ne convient.
-- **Target State:** Depuis `/mon-projet/[token]`, un bouton « Je n'ai pas trouvé mon bonheur → relancer » réouvre le projet au marché.
+### REQ-06: Feedback loop lead (refus → remise au marché automatique)
+- **Current State:** Une fois 3 pros ayant débloqué (cap concurrentiel), le particulier n'a aucun moyen d'écarter un artisan ni de relancer. Aucun état « refusé/retenu » par lead.
+- **Target State:** Depuis son espace magic-link `/mon-projet/[token]` (sans compte — friction zéro), le particulier peut **écarter** un artisan (« Pas intéressé ») ou en **retenir** un (« J'ai retenu celui-ci »). Quand **tous les pros engagés sont refusés**, le projet **repart automatiquement** sur le marché pour 3 nouveaux pros, et le particulier en est **notifié par email** (pas de bouton « relancer » manuel).
 - **Acceptance Criteria:**
-  - [ ] Un endpoint authentifié par `access_token` réouvre le projet (reset du cap : le projet réapparaît dans `market-local` pour de nouveaux pros).
-  - [ ] Les anciens `leads`/conversations ne sont pas détruits (historique conservé).
-  - [ ] Le bouton n'est proposé que lorsque le cap de 3 est atteint.
+  - [ ] Chaque `lead` porte un état particulier : `pending` / `refused` / `selected` (défaut `pending`).
+  - [ ] Un endpoint authentifié par `access_token` permet de passer un lead en `refused` ou `selected`.
+  - [ ] `selected` → le projet est clôturé (sort du marché, plus de nouveaux pros).
+  - [ ] Quand **tous** les leads débloqués d'un projet sont `refused` → remise au marché **automatique** (le projet redevient visible dans `market-local` pour 3 nouveaux pros) ; les `leads`/`messages` existants sont **conservés** (historique intact).
+  - [ ] À la remise au marché, un email est envoyé au particulier (« votre projet est de nouveau visible »).
+  - [ ] Anti-spam : pas de remise en boucle instantanée (cooldown ou borne sur le nombre de relances).
+
+### REQ-09: Accès au profil public pro depuis l'espace particulier
+- **Current State:** Le magic-link `/mon-projet/[token]` ne renvoie que `company_name` par pro ; impossible de consulter la fiche d'un artisan. La fiche publique existe pourtant (`app/pages/pro/[dept]/[slug].vue` + `server/api/v1/pro/profile/[slug].get.ts`, lookup par `short_id`).
+- **Target State:** Depuis son espace, le particulier peut consulter le **profil public** de chaque artisan qui l'a contacté (entreprise, métier, zone, bio, logo, statut vérifié) avant de discuter/refuser/retenir.
+- **Acceptance Criteria:**
+  - [ ] `magic-link/[token].get.ts` renvoie, pour chaque pro engagé, de quoi construire le lien public (`canonical_slug` / `short_id` / `category`, + `logo_url`).
+  - [ ] L'espace particulier affiche chaque artisan en carte avec un lien vers sa fiche publique (`/pro/[dept]/[slug]`).
+  - [ ] La fiche publique reste accessible pour un pro **non vérifié** (`is_verified:false`) sans 404 (invariant CLAUDE.md).
 
 ### REQ-07: Email onboarding pro (flag désactivé par défaut)
 - **Current State:** Aucun email transactionnel d'accueil au pro.
