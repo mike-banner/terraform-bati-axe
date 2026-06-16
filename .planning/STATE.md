@@ -21,15 +21,21 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 5: SMS + Acquisition + Messagerie (à démarrer)
+**Current focus**: Phase 5 — messagerie livrée ; reste Acquisition + Feedback loop (SMS différé)
 
 ## Current Position
 
-Phase: 05 (SMS + Acquisition + Messagerie) — NOT STARTED
-Plan: 0 of TBD
-Status: Ready to plan
-Last activity: 2026-06-14
+Phase: 05 (SMS + Acquisition + Messagerie) — EN COURS
+Plan: 1 of 4 exécuté (05-01 messagerie livrée ✅)
+Status: Planifié — prêt à exécuter 05-02 (Acquisition) puis 05-03 (Feedback + onboarding) ; 05-04 (SMS) DIFFÉRÉ en toute fin
+Last activity: 2026-06-16
 Progress: [███████▌░░] 75% (6/8 phases — 1, 2, 3, 4, 4.5, 4.6 livrées)
+
+### Plans Phase 5
+- [x] 05-01 — Magic Link & Messagerie in-app (livré, validé prod)
+- [ ] 05-02 — Acquisition Pros (cold email, infra `prospects` existante) ← prochain
+- [ ] 05-03 — Feedback loop lead + Email onboarding (flag off)
+- [ ] 05-04 — SMS différencié — ⏸ DIFFÉRÉ (aucune dépense sans feu vert)
 
 ## Performance Metrics
 
