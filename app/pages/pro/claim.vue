@@ -436,7 +436,7 @@ const backToStep2 = () => {
           <!-- Full name (register only) -->
           <Transition name="field">
             <div v-if="authMode === 'register'">
-              <label for="auth-name" class="block text-sm font-medium text-foreground mb-1.5">Nom complet</label>
+              <label for="auth-name" class="block text-sm font-heading font-500 text-text mb-2">Nom complet</label>
               <input
                 id="auth-name"
                 type="text"
@@ -444,18 +444,18 @@ const backToStep2 = () => {
                 autocomplete="name"
                 placeholder="Jean Dupont"
                 @blur="authTouched.full_name = true"
-                class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                class="w-full px-4 py-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 :class="authErrors.full_name ? 'border-red-500' : 'border-border'"
                 :aria-invalid="!!authErrors.full_name"
                 :aria-describedby="authErrors.full_name ? 'err-name' : undefined"
               />
-              <p v-if="authErrors.full_name" id="err-name" class="mt-1.5 text-xs text-red-600">{{ authErrors.full_name }}</p>
+              <p v-if="authErrors.full_name" id="err-name" class="mt-2 text-xs text-red-600 font-500">{{ authErrors.full_name }}</p>
             </div>
           </Transition>
 
           <!-- Email -->
           <div>
-            <label for="auth-email" class="block text-sm font-medium text-foreground mb-1.5">Adresse e-mail</label>
+            <label for="auth-email" class="block text-sm font-heading font-500 text-text mb-2">Adresse e-mail</label>
             <input
               id="auth-email"
               type="email"
@@ -463,12 +463,12 @@ const backToStep2 = () => {
               autocomplete="email"
               placeholder="contact@dupont-plomberie.fr"
               @blur="authTouched.email = true"
-              class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              class="w-full px-4 py-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="authErrors.email ? 'border-red-500' : 'border-border'"
               :aria-invalid="!!authErrors.email"
               :aria-describedby="authErrors.email ? 'err-email' : undefined"
             />
-            <p v-if="authErrors.email" id="err-email" class="mt-1.5 text-xs text-red-600">{{ authErrors.email }}</p>
+            <p v-if="authErrors.email" id="err-email" class="mt-2 text-xs text-red-600 font-500">{{ authErrors.email }}</p>
           </div>
 
           <!-- Password -->
@@ -506,7 +506,7 @@ const backToStep2 = () => {
                 </svg>
               </button>
             </div>
-            <p v-if="authErrors.password" id="err-password" class="mt-1.5 text-xs text-red-600">{{ authErrors.password }}</p>
+            <p v-if="authErrors.password" id="err-password" class="mt-2 text-xs text-red-600 font-500">{{ authErrors.password }}</p>
             <p v-if="authMode === 'register' && !authErrors.password" class="mt-1.5 text-xs text-muted-foreground">8 caractères minimum.</p>
           </div>
 
@@ -547,23 +547,23 @@ const backToStep2 = () => {
 
           <!-- Company name -->
           <div>
-            <label for="pro-company" class="block text-sm font-medium text-foreground mb-1.5">Raison sociale</label>
+            <label for="pro-company" class="block text-sm font-heading font-500 text-text mb-2">Raison sociale</label>
             <input
               id="pro-company"
               type="text"
               v-model="proForm.company_name"
               placeholder="DUPONT PLOMBERIE SARL"
               @blur="proTouched.company_name = true"
-              class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              class="w-full px-4 py-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="proErrors.company_name ? 'border-red-500' : 'border-border'"
               :aria-invalid="!!proErrors.company_name"
             />
-            <p v-if="proErrors.company_name" class="mt-1.5 text-xs text-red-600">{{ proErrors.company_name }}</p>
+            <p v-if="proErrors.company_name" class="mt-2 text-xs text-red-600 font-500">{{ proErrors.company_name }}</p>
           </div>
 
           <!-- SIRET -->
           <div>
-            <label for="pro-siret" class="block text-sm font-medium text-foreground mb-1.5">Numéro SIRET</label>
+            <label for="pro-siret" class="block text-sm font-heading font-500 text-text mb-2">Numéro SIRET</label>
             <input
               id="pro-siret"
               type="text"
@@ -577,29 +577,29 @@ const backToStep2 = () => {
               :class="proErrors.siret ? 'border-red-500' : 'border-border'"
               :aria-invalid="!!proErrors.siret"
             />
-            <p v-if="proErrors.siret" class="mt-1.5 text-xs text-red-600">{{ proErrors.siret }}</p>
+            <p v-if="proErrors.siret" class="mt-2 text-xs text-red-600 font-500">{{ proErrors.siret }}</p>
             <p v-else class="mt-1.5 text-xs text-muted-foreground">14 chiffres, sans espace.</p>
           </div>
 
           <!-- Manager name -->
           <div>
-            <label for="pro-name" class="block text-sm font-medium text-foreground mb-1.5">Nom du gérant</label>
+            <label for="pro-name" class="block text-sm font-heading font-500 text-text mb-2">Nom du gérant</label>
             <input
               id="pro-name"
               type="text"
               v-model="proForm.full_name"
               @blur="proTouched.full_name = true"
-              class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              class="w-full px-4 py-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="proErrors.full_name ? 'border-red-500' : 'border-border'"
               :aria-invalid="!!proErrors.full_name"
             />
-            <p v-if="proErrors.full_name" class="mt-1.5 text-xs text-red-600">{{ proErrors.full_name }}</p>
+            <p v-if="proErrors.full_name" class="mt-2 text-xs text-red-600 font-500">{{ proErrors.full_name }}</p>
           </div>
 
           <!-- Phone + Postal code -->
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label for="pro-phone" class="block text-sm font-medium text-foreground mb-1.5">Téléphone</label>
+              <label for="pro-phone" class="block text-sm font-heading font-500 text-text mb-2">Téléphone</label>
               <input
                 id="pro-phone"
                 type="tel"
@@ -609,14 +609,14 @@ const backToStep2 = () => {
                 maxlength="20"
                 @input="normalizePhone(($event.target as HTMLInputElement).value)"
                 @blur="proTouched.phone = true"
-                class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                class="w-full px-4 py-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 :class="proErrors.phone ? 'border-red-500' : 'border-border'"
                 :aria-invalid="!!proErrors.phone"
               />
-              <p v-if="proErrors.phone" class="mt-1.5 text-xs text-red-600">{{ proErrors.phone }}</p>
+              <p v-if="proErrors.phone" class="mt-2 text-xs text-red-600 font-500">{{ proErrors.phone }}</p>
             </div>
             <div>
-              <label for="pro-cp" class="block text-sm font-medium text-foreground mb-1.5">Code postal</label>
+              <label for="pro-cp" class="block text-sm font-heading font-500 text-text mb-2">Code postal</label>
               <input
                 id="pro-cp"
                 type="text"
@@ -626,11 +626,11 @@ const backToStep2 = () => {
                 inputmode="numeric"
                 @input="normalizePostalCode(($event.target as HTMLInputElement).value)"
                 @blur="proTouched.postal_code = true"
-                class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                class="w-full px-4 py-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 :class="proErrors.postal_code ? 'border-red-500' : 'border-border'"
                 :aria-invalid="!!proErrors.postal_code"
               />
-              <p v-if="proErrors.postal_code" class="mt-1.5 text-xs text-red-600">{{ proErrors.postal_code }}</p>
+              <p v-if="proErrors.postal_code" class="mt-2 text-xs text-red-600 font-500">{{ proErrors.postal_code }}</p>
             </div>
           </div>
 
@@ -651,7 +651,7 @@ const backToStep2 = () => {
                 {{ cat.label }}
               </button>
             </div>
-            <p v-if="proForm.categories.length === 0 && proTouched.cgu_accepted" class="mt-1.5 text-xs text-red-600">Sélectionnez au moins un corps de métier.</p>
+            <p v-if="proForm.categories.length === 0 && proTouched.cgu_accepted" class="mt-2 text-xs text-red-600 font-500">Sélectionnez au moins un corps de métier.</p>
             <p class="mt-2 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
           </div>
 

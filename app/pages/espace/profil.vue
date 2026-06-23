@@ -192,7 +192,7 @@ async function saveProfile() {
 
       <!-- Page header -->
       <div class="mb-12">
-        <h1 class="text-3xl font-semibold tracking-tight text-foreground">Mon profil public</h1>
+        <h1 class="text-4xl font-heading font-bold tracking-tight text-text">Mon profil public</h1>
         <p class="text-sm text-muted-foreground mt-1">Ces informations sont visibles sur votre page publique BÂTI-AXE.</p>
       </div>
 
@@ -207,7 +207,7 @@ async function saveProfile() {
 
       <!-- Logo upload -->
       <div class="border-t border-border pt-8 mb-8">
-        <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Logo d'entreprise</h2>
+        <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Logo d'entreprise</h2>
         <div class="flex items-center gap-4">
           <div class="w-20 h-20 border border-border rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0">
             <img v-if="logoSrc && !logoFailed" :src="logoSrc" alt="Logo" class="w-full h-full object-cover" @error="logoFailed = true" />
@@ -243,12 +243,12 @@ async function saveProfile() {
 
         <!-- Bio -->
         <div class="border-t border-border pt-8">
-          <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Présentation</h2>
+          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Présentation</h2>
           <textarea
             v-model="profile.bio"
             rows="4"
             placeholder="Décrivez votre activité, votre expérience et ce qui vous différencie…"
-            class="w-full px-4 py-3 border border-border rounded-md text-sm text-foreground placeholder:text-muted-foreground bg-background resize-none focus:outline-none focus:ring-1 focus:ring-foreground/20"
+            class="w-full px-4 py-3 border border-border rounded-md text-sm text-text placeholder:text-gray-500 bg-white resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             maxlength="500"
           />
           <p class="text-xs text-muted-foreground mt-1 text-right">{{ profile.bio?.length ?? 0 }}/500</p>
@@ -256,30 +256,30 @@ async function saveProfile() {
 
         <!-- Categories -->
         <div class="border-t border-border pt-8">
-          <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Catégories</h2>
+          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Catégories</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
-              <input type="checkbox" v-model="profile.categories" value="maconnerie" class="rounded border-border text-foreground focus:ring-foreground/20">
+              <input type="checkbox" v-model="profile.categories" value="maconnerie" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
               <span class="text-sm font-medium">Maçonnerie &amp; Gros Œuvre</span>
             </label>
             <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
-              <input type="checkbox" v-model="profile.categories" value="toiture" class="rounded border-border text-foreground focus:ring-foreground/20">
+              <input type="checkbox" v-model="profile.categories" value="toiture" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
               <span class="text-sm font-medium">Charpente &amp; Toiture</span>
             </label>
             <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
-              <input type="checkbox" v-model="profile.categories" value="electricite" class="rounded border-border text-foreground focus:ring-foreground/20">
+              <input type="checkbox" v-model="profile.categories" value="electricite" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
               <span class="text-sm font-medium">Électricité</span>
             </label>
             <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
-              <input type="checkbox" v-model="profile.categories" value="plomberie" class="rounded border-border text-foreground focus:ring-foreground/20">
+              <input type="checkbox" v-model="profile.categories" value="plomberie" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
               <span class="text-sm font-medium">Plomberie &amp; Chauffage</span>
             </label>
             <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
-              <input type="checkbox" v-model="profile.categories" value="peinture" class="rounded border-border text-foreground focus:ring-foreground/20">
+              <input type="checkbox" v-model="profile.categories" value="peinture" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
               <span class="text-sm font-medium">Peinture &amp; Finitions</span>
             </label>
             <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
-              <input type="checkbox" v-model="profile.categories" value="isolation" class="rounded border-border text-foreground focus:ring-foreground/20">
+              <input type="checkbox" v-model="profile.categories" value="isolation" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
               <span class="text-sm font-medium">Isolation &amp; Cloisons</span>
             </label>
           </div>
@@ -288,7 +288,7 @@ async function saveProfile() {
 
         <!-- Téléphone -->
         <div class="border-t border-border pt-8">
-          <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Téléphone</h2>
+          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Téléphone</h2>
           <input
             v-model="profile.phone"
             type="tel"
@@ -300,7 +300,7 @@ async function saveProfile() {
 
         <!-- Zone -->
         <div class="border-t border-border pt-8">
-          <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Zone d'intervention</h2>
+          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Zone d'intervention</h2>
           <input
             v-model="profile.zone"
             type="text"
