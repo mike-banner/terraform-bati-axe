@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: in_progress
 stopped_at: null
-last_updated: "2026-06-14T22:30:00.000Z"
-last_activity: 2026-06-14
+last_updated: "2026-06-23T21:20:00.000Z"
+last_activity: 2026-06-23
 progress:
   total_phases: 8
-  completed_phases: 6
-  total_plans: 16
-  completed_plans: 15
-  percent: 75
+  completed_phases: 6.5
+  total_plans: 22
+  completed_plans: 16
+  percent: 76
 ---
 
 # Project State
@@ -25,13 +25,22 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 
 ## Current Position
 
-Phase: 05 (SMS + Acquisition + Messagerie) — EN COURS
-Plan: 2 of 4 exécutés (05-01 messagerie + 05-03 feedback loop livrés ✅)
-Status: 05-02 (Acquisition) bloqué sur source prospects (CSV à fournir) ; 05-04 (SMS) DIFFÉRÉ. Prochain candidat : phase design OU 05-02 quand données dispo.
-Last activity: 2026-06-16
-Progress: [███████▌░░] 75% (6/8 phases — 1, 2, 3, 4, 4.5, 4.6 livrées)
+Phase: 04.7 (Refonte UI Globale & Application du Design System) — Wave 1 EN COURS
+Plan: 1 of 7 exécutés (04.7-01 CSS Foundation livrée ✅)
+Status: CSS foundation established with MASTER.md design tokens (Figtree + Noto Sans, cyan/green palette, spacing/shadow/radius system). Phase 4.7 foundation complete; ready for Wave 2 page refactors.
+Last activity: 2026-06-23
+Progress: [████████▌░] 76% (6.5/8 phases — 1, 2, 3, 4, 4.5, 4.6, 4.7 Wave 1 livrée)
 
-### Plans Phase 5
+### Plans Phase 4.7
+- [x] 04.7-01 — CSS Foundation & Design Tokens (MASTER.md colors + fonts + tokens, livré 2026-06-23)
+- [ ] 04.7-02 — Landing page refactor (hero, categories, featured listings)
+- [ ] 04.7-03 — Marketplace page styling
+- [ ] 04.7-04 — Professional dashboard refactor
+- [ ] 04.7-05 — Form components & modals
+- [ ] 04.7-06 — Mobile-first responsive refinement
+- [ ] 04.7-07 — Dark mode & accessibility audit
+
+### Plans Phase 5 (blocked/deferred)
 - [x] 05-01 — Magic Link & Messagerie in-app (livré, validé prod)
 - [x] 05-03 — Feedback loop (refus→remise auto) + profil public espace particulier (livré, validé prod 2026-06-16, merge b4970a9). Partie B onboarding emails (REQ-07) NON faite.
 - [ ] 05-02 — Acquisition Pros (cold email) — 🔴 bloqué : pas de liste de pros (CSV à fournir)
@@ -60,6 +69,7 @@ Progress: [███████▌░░] 75% (6/8 phases — 1, 2, 3, 4, 4.5, 
 - [2026-06-13 PM]: **Structure V1 professionnel** : séparation claire entre Dashboard (statut + upload docs) et Profil (édition infos publiques + nouveau champ Téléphone). Validation stricte : accès leads bloqué si `is_verified = false`.
 - [2026-06-13 PM]: **Timeout auto-logout** : inactivité 30 min → déconnexion automatique (composable `useIdleLogout.ts`). Appliqué au layout `dynamic.vue` pour les pages protégées.
 - [2026-06-13 PM]: **RLS Security Verified & Documented** : All 11 tables have RLS enabled. Security policies enforce: public SELECT on verified professionals only; authenticated users full access to own records; service-role-only for sensitive tables (projects, prospects, paywall_events, audit_logs). Migration `20260613000000_test_data_seeding.sql` creates 18 test leads (3 per category) with full verification documents. Architecture is reproducible for production deployment. See `.planning/RLS-SECURITY.md`.
+- [2026-06-23 PM]: **Phase 4.7 Design System Adoption** : Transition from self-hosted Clash Display + Geist Variable (Brique & Béton OKLCH palette) to Google Fonts (Figtree + Noto Sans) with MASTER.md hex color system (cyan #0891B2, green #22C55E, cream #ECFEFF, charcoal #164E63). CSS tokens for spacing, shadows, and radius defined in `app/assets/css/tailwind.css` as the foundation for all subsequent page refactors (04.7-02 through 04.7-07).
 
 ### Known Patterns (à appliquer dans les prochaines phases)
 
