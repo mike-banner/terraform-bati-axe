@@ -296,18 +296,18 @@ async function copyToClipboard(text: string) {
       </div>
 
     <!-- Lead grid -->
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div
         v-for="lead in paginatedLeads"
         :key="lead.id"
-        class="border border-border rounded-lg divide-y divide-border"
+        class="bg-background rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer"
       >
 
         <!-- ── Variant A: Locked ── -->
         <template v-if="lead.status === 'locked'">
-          <div class="flex items-center justify-between px-5 py-4">
+          <div class="flex items-center justify-between px-6 py-5">
             <div class="space-y-1.5">
-              <p class="text-sm font-semibold text-foreground">{{ CATEGORY_LABELS[lead.category] ?? lead.category }}</p>
+              <p class="text-sm font-heading font-600 text-text">{{ CATEGORY_LABELS[lead.category] ?? lead.category }}</p>
               <LeadAge v-if="lead.created_at" :created-at="lead.created_at" />
             </div>
             <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-amber-300 text-amber-700 bg-amber-50">
@@ -382,7 +382,7 @@ async function copyToClipboard(text: string) {
         <template v-else-if="lead.status === 'unlocked'">
           <div class="flex items-center justify-between px-5 py-4">
             <div class="space-y-1.5">
-              <p class="text-sm font-semibold text-foreground">{{ CATEGORY_LABELS[lead.category] ?? lead.category }}</p>
+              <p class="text-sm font-heading font-600 text-text">{{ CATEGORY_LABELS[lead.category] ?? lead.category }}</p>
               <LeadAge v-if="lead.created_at" :created-at="lead.created_at" />
             </div>
             <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-foreground/30 text-foreground">
