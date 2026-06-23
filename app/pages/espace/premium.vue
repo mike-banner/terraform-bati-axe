@@ -36,7 +36,7 @@ const startCheckout = async () => {
 </script>
 
 <template>
-  <div class="min-h-[calc(100vh-3.5rem)] bg-background">
+  <div class="min-h-[calc(100vh-3.5rem)] bg-white">
     <div class="max-w-2xl mx-auto px-6 py-16">
 
       <!-- Success banner (post-checkout redirect) -->
@@ -64,10 +64,10 @@ const startCheckout = async () => {
       <!-- Header -->
       <div class="mb-12">
         <p class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-6">Abonnement</p>
-        <h1 class="text-3xl font-semibold tracking-tight text-foreground" style="text-wrap: balance">
+        <h1 class="text-4xl sm:text-5xl font-heading font-bold tracking-tight text-text" style="text-wrap: balance">
           Premier contact exclusif.
         </h1>
-        <p class="text-sm text-muted-foreground mt-2 leading-relaxed">
+        <p class="text-base text-gray-700 mt-3 leading-relaxed">
           Accédez aux coordonnées du prospect dès la qualification — 72h avant les autres pros de votre métier.
         </p>
       </div>
