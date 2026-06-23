@@ -25,19 +25,20 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 
 ## Current Position
 
-Phase: 04.7 (Refonte UI Globale & Application du Design System) — Wave 1 EN COURS
-Plan: 1 of 7 exécutés (04.7-01 CSS Foundation livrée ✅)
-Status: CSS foundation established with MASTER.md design tokens (Figtree + Noto Sans, cyan/green palette, spacing/shadow/radius system). Phase 4.7 foundation complete; ready for Wave 2 page refactors.
+Phase: 05 (SMS + Acquisition + Messagerie) — EN COURS
+Plan: Prochains candidats après phase 4.7 complète
+Status: Phase 04.7 (Refonte UI Globale) — ✅ COMPLETE. CSS foundation + landing page refactored to MASTER.md (Figtree/Noto, cyan/green). Ready for Phase 5 continuation.
 Last activity: 2026-06-23
-Progress: [████████▌░] 76% (6.5/8 phases — 1, 2, 3, 4, 4.5, 4.6, 4.7 Wave 1 livrée)
+Progress: [████████░░] 77% (7/8 phases — 1, 2, 3, 4, 4.5, 4.6, 4.7 livrées ✅)
 
-### Plans Phase 4.7
-- [x] 04.7-01 — CSS Foundation & Design Tokens (MASTER.md colors + fonts + tokens, livré 2026-06-23)
-- [ ] 04.7-02 — Landing page refactor (hero, categories, featured listings)
-- [ ] 04.7-03 — Marketplace page styling
-- [ ] 04.7-04 — Professional dashboard refactor
-- [ ] 04.7-05 — Form components & modals
-- [ ] 04.7-06 — Mobile-first responsive refinement
+### Plans Phase 4.7 — COMPLETE ✅
+- [x] 04.7-01 — CSS Foundation & Design Tokens (livré)
+- [x] 04.7-02 — Landing page refactor (livré)
+- [x] 04.7-03 — Pro forms refactor (livré)
+- [x] 04.7-04 — Pro dashboard refactor (livré)
+- [x] 04.7-05 — Premium + public profile (livré)
+- [x] 04.7-06 — Admin + legal pages (livré)
+- [x] 04.7-07 — Accessibility audit (PASS)
 - [ ] 04.7-07 — Dark mode & accessibility audit
 
 ### Plans Phase 5 (blocked/deferred)
