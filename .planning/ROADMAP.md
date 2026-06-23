@@ -11,6 +11,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 4: Le Verrou & Stripe Billing** - API floutage serveur, abonnement Stripe, webhook, déblocage auto 72h.
 - [x] **Phase 4.5: Conversion & Qualification** - Verrou 3 leads gratuits, free trial 14j, plan annuel, auto-qualification, profil public éditable, ROI dashboard, copy Premium refondu, CRM Minimaliste.
 - [x] **Phase 4.6: Marché Dynamique & Multi-Catégories** - Refonte DB (categories TEXT[]), fin du push leads, pull temps réel via projects, UI sélection multiple (profil/claim).
+- [ ] **Phase 4.7: Refonte UI Globale & Application du Design System** - Application du MASTER.md, harmonisation de la typographie (Figtree/Noto) et du thème B2B/Marketplace.
 - [ ] **Phase 5: SMS + Acquisition + Messagerie** - SMS différencié (Basic→upgrade / Premium→lead direct), cold outreach pros DB, dashboard particulier magic-link, messagerie in-app pro↔particulier, email onboarding (désactivé par défaut), feedback loop lead.
 - [ ] **Phase 6: Réputation & Scale** - Avis clients, referral program, multi-ville.
 
@@ -107,9 +108,30 @@ Plans:
 **UI hint**: yes
 
 
+### Phase 4.7: Refonte UI Globale & Application du Design System
+**Goal**: Appliquer la charte graphique globale (MASTER.md) sur l'ensemble de la plateforme pour préparer le scale et la crédibilité B2B.
+**Depends on**: Phase 4.6
+**Requirements**: UI-MASTER-01, UI-LANDING-01, UI-FORMS-01, UI-DASHBOARD-01, UI-PREMIUM-01, UI-PROFILE-PUBLIC-01, UI-ADMIN-01, UI-LEGAL-01, UI-AUDIT-01
+**Success Criteria** (what must be TRUE):
+  1. Le fichier `design-system/bati-axe/MASTER.md` est appliqué aux configurations Tailwind (couleurs hex exactes, polices Figtree/Noto Google Fonts).
+  2. Toutes les pages (landing, forms, dashboard, premium, admin, legal) adoptent le style "Vibrant & Block-based" sans perte de données ou de logique.
+  3. L'expérience utilisateur (Marketplace) est unifiée : typographie cohérente, couleurs cyan/green, espacement système, ombres, transitions fluides.
+  4. Accessibilité WCAG AA : contraste 4.5:1 texte, focus visibles, navigation clavier complète.
+  5. Responsive à tous les breakpoints (375px, 768px, 1024px, 1440px) sans scroll horizontal.
+**Plans**: 7 plans
+Plans:
+- [ ] 04.7-01-PLAN.md — CSS foundation (fonts Google Figtree+Noto, couleurs MASTER.md, tokens spacing/shadow/radius)
+- [ ] 04.7-02-PLAN.md — Landing page refactor (hero, Marketplace pattern, SVG icons, responsive)
+- [ ] 04.7-03-PLAN.md — Pro forms refactor (claim, profile, input styles, labels, sections)
+- [ ] 04.7-04-PLAN.md — Pro dashboard refactor (leads grid 1→2→3 col, card layout, hover effects)
+- [ ] 04.7-05-PLAN.md — Premium + public profile (CTA hero, pricing cards, profile sections)
+- [ ] 04.7-06-PLAN.md — Admin + legal pages (table layout, text styling, heading hierarchy)
+- [ ] 04.7-07-PLAN.md — Accessibility audit, responsive test, pre-delivery checklist
+**UI hint**: yes
+
 ### Phase 5: SMS + Acquisition + Messagerie
 **Goal**: Boucle complète d'acquisition, d'activation et de rétention — les pros sont notifiés, les particuliers ont un espace de suivi, et les deux communiquent sur la plateforme.
-**Depends on**: Phase 4.5
+**Depends on**: Phase 4.7 (design system) + Phase 4.5 (messaging/feedback)
 **Requirements**: SMS-01, SMS-02, SMS-04, ACQ-01, MSG-01, MSG-02, MSG-03, EML-01, FDB-01
 **Success Criteria** (what must be TRUE):
   1. Un nouveau projet qualifié déclenche un SMS immédiat aux pros Premium de la zone (opt-in) avec lien direct vers le lead.
@@ -146,5 +168,6 @@ Plans:
 | 4. Le Verrou & Stripe Billing | 7/7 | Completed | 2026-06-09 |
 | 4.5. Conversion & Qualification | 8/8 | Completed | 2026-06-09 |
 | 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
+| 4.7. Refonte UI Globale & Design System | 0/7 | Planning complete | - |
 | 5. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
 | 6. Réputation & Scale | 0/TBD | Not started | - |
