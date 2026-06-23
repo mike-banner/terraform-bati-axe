@@ -1,19 +1,13 @@
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { AwsClient } from 'aws4fetch'
 import { serverSupabaseUser } from '#supabase/server'
 import { z } from 'zod'
 
 const schema = z.object({ file_key: z.string().min(1) })
 
-function getR2Client(): S3Client {
-  return new S3Client({
-    region: 'auto',
-    endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-    credentials: {
-      accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
-      secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
-    }
-  })
+function getAwsClient(config: any, env: any) {
+  const accessKeyId = config.r2AccessKeyId || env.R2_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY_ID || ''
+  const secretAccessKey = config.r2SecretAccessKey || env.R2_SECRET_ACCESS_KEY || process.env.R2_SECRET_ACCESS_KEY || ''
+  return new AwsClient({ accessKeyId, secretAccessKey, service: 's3', region: 'auto' })
 }
 
 export default defineEventHandler(async (event) => {
@@ -28,13 +22,22 @@ export default defineEventHandler(async (event) => {
   const parsed = schema.safeParse(body)
   if (!parsed.success) throw createError({ statusCode: 400, statusMessage: 'file_key requis.' })
 
-  const r2 = getR2Client()
-  const command = new GetObjectCommand({
-    Bucket: process.env.R2_BUCKET_NAME || 'batiaxe-documents',
-    Key: parsed.data.file_key,
+  const config = useRuntimeConfig(event)
+  const env = event.context.cloudflare?.env || {}
+
+  const accountId = config.r2AccountId || env.R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID || ''
+  const bucket = config.r2BucketName || env.R2_BUCKET_NAME || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
+
+  const aws = getAwsClient(config, env)
+  const url = new URL(`https://${accountId}.r2.cloudflarestorage.com/${bucket}/${parsed.data.file_key}`)
+
+  // Expiration de 300 secondes (5 minutes) pour la signature
+  url.searchParams.set('X-Amz-Expires', '300')
+
+  const request = await aws.sign(url, {
+    method: 'GET',
+    aws: { signQuery: true }
   })
 
-  const signedUrl = await getSignedUrl(r2, command, { expiresIn: 300 })
-
-  return { status: 'SUCCESS', signedUrl }
+  return { status: 'SUCCESS', signedUrl: request.url }
 })

@@ -13,8 +13,6 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1059.0",
-    "@aws-sdk/s3-request-presigner": "^3.1059.0",
     "@lucide/vue": "^1.17.0",
     "aws4fetch": "^1.0.20",
     "nuxt": "^4.4.6",
