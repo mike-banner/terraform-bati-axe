@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: null
-last_updated: "2026-06-23T21:20:00.000Z"
-last_activity: 2026-06-23
+status: executing
+stopped_at: context exhaustion at 75% (2026-06-13)
+last_updated: "2026-06-24T10:37:24.732Z"
+last_activity: 2026-06-24 -- Phase 05 execution started
 progress:
-  total_phases: 8
-  completed_phases: 6.5
-  total_plans: 22
-  completed_plans: 16
-  percent: 76
+  total_phases: 10
+  completed_phases: 2
+  total_plans: 32
+  completed_plans: 22
+  percent: 20
 ---
 
 # Project State
@@ -25,13 +25,14 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 
 ## Current Position
 
-Phase: 05 (SMS + Acquisition + Messagerie) — EN COURS
-Plan: Prochains candidats après phase 4.7 complète
-Status: Phase 04.7 (Refonte UI Globale) — ✅ COMPLETE. CSS foundation + landing page refactored to MASTER.md (Figtree/Noto, cyan/green). Ready for Phase 5 continuation.
-Last activity: 2026-06-23
+Phase: 05 (integration-api-siret-badges) — EXECUTING
+Plan: 1 of 5
+Status: Executing Phase 05
+Last activity: 2026-06-24 -- Phase 05 execution started
 Progress: [████████░░] 77% (7/8 phases — 1, 2, 3, 4, 4.5, 4.6, 4.7 livrées ✅)
 
 ### Plans Phase 4.7 — COMPLETE ✅
+
 - [x] 04.7-01 — CSS Foundation & Design Tokens (livré)
 - [x] 04.7-02 — Landing page refactor (livré)
 - [x] 04.7-03 — Pro forms refactor (livré)
@@ -42,6 +43,7 @@ Progress: [████████░░] 77% (7/8 phases — 1, 2, 3, 4, 4.5, 
 - [ ] 04.7-07 — Dark mode & accessibility audit
 
 ### Plans Phase 5 (blocked/deferred)
+
 - [x] 05-01 — Magic Link & Messagerie in-app (livré, validé prod)
 - [x] 05-03 — Feedback loop (refus→remise auto) + profil public espace particulier (livré, validé prod 2026-06-16, merge b4970a9). Partie B onboarding emails (REQ-07) NON faite.
 - [ ] 05-02 — Acquisition Pros (cold email) — 🔴 bloqué : pas de liste de pros (CSV à fournir)

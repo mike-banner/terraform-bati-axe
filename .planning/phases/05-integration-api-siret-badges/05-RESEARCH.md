@@ -439,20 +439,19 @@ Recommandation : **`decennal_status === 'valid'`** comme source de vérité, `la
 
 ---
 
-## Questions ouvertes
+## Questions ouvertes (RESOLVED)
 
 1. **Pré-remplissage ou silencieux ?**
    - Ce qu'on sait : le lookup retourne `nom_complet` qui peut différer du nom commercial saisi
-   - Ce qui est flou : l'utilisateur veut-il que le formulaire soit pré-rempli automatiquement ?
-   - Recommandation : silencieux pour v1 (stocker en DB, badge uniquement). Confirmer avec l'utilisateur si le pré-remplissage est un success criteria explicite.
+   - RESOLVED: silencieux v1 — lookup stocké en DB uniquement, badge affiché. Pas de modification du champ `company_name` saisi par l'utilisateur.
 
 2. **Entreprise fermée : blocage dur ou avertissement ?**
    - Ce qu'on sait : `etat_administratif: "F"` = entreprise radiée
-   - Recommandation : blocage dur (entreprise fermée ≠ artisan légitime). À confirmer si des cas légitimes existent (ex: reprise d'entreprise en cours).
+   - RESOLVED: blocage dur — `createError(422)` avec message explicite. Entreprise fermée ≠ artisan légitime actif.
 
 3. **Badge sur le profil public `/pro/[dept]/[slug]` ?**
    - Les success criteria mentionnent "badge de profil" sans préciser public ou privé uniquement.
-   - Recommandation : afficher sur les deux (dashboard privé + profil public) — c'est le point fort B2B de crédibilité.
+   - RESOLVED: affiché sur les deux — dashboard privé `/app/dashboard` ET profil public `/pro/[dept]/[slug]`. Point fort B2B de crédibilité côté particuliers.
 
 ---
 

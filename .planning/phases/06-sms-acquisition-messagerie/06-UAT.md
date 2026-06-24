@@ -1,7 +1,7 @@
 ---
 status: complete
-phase: 05-sms-acquisition-messagerie
-source: [05-SPEC.md, 05-01-PLAN.md]
+phase: 06-sms-acquisition-messagerie
+source: [06-SPEC.md, 06-01-PLAN.md]
 started: "2026-06-15T11:15:00.000Z"
 updated: "2026-06-15T11:30:00.000Z"
 ---
@@ -61,6 +61,6 @@ skipped: 0
 
 ## Notes hors périmètre
 
-- Playwright (test visuel) BLOQUÉ : le MCP est configuré sur le channel `chrome` (Google Chrome système, absent — install nécessite sudo). Chromium est pourtant présent (~/.cache/ms-playwright/chromium-1223). Fix : ajouter `--browser chromium` aux args du MCP playwright dans ~/.claude.json + redémarrer la session. Vérification effectuée via HTTP/DB (le fond de la Phase 5 est backend et entièrement falsifiable par ce biais).
-- SPEC Phase 5 a restreint le périmètre à "Espace Client & Messagerie". SMS/Twilio, cold outreach et vrai provider email sont explicitement repoussés (Out of Scope du SPEC) — non testés ici car non livrés.
+- Playwright (test visuel) BLOQUÉ : le MCP est configuré sur le channel `chrome` (Google Chrome système, absent — install nécessite sudo). Chromium est pourtant présent (~/.cache/ms-playwright/chromium-1223). Fix : ajouter `--browser chromium` aux args du MCP playwright dans ~/.claude.json + redémarrer la session. Vérification effectuée via HTTP/DB (le fond de la Phase 6 est backend et entièrement falsifiable par ce biais).
+- SPEC Phase 6 a restreint le périmètre à "Espace Client & Messagerie". SMS/Twilio, cold outreach et vrai provider email sont explicitement repoussés (Out of Scope du SPEC) — non testés ici car non livrés.
 - Observabilité notification client→pro : envisager un console.warn quand le pro destinataire est introuvable, au lieu d'un saut silencieux.

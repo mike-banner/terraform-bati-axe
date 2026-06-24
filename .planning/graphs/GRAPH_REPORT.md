@@ -1,16 +1,16 @@
 # Graph Report - bati-axe  (2026-06-24)
 
 ## Corpus Check
-- 235 files · ~327,019 words
+- 255 files · ~343,358 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1898 nodes · 2730 edges · 249 communities (200 shown, 49 thin omitted)
+- 2039 nodes · 2957 edges · 264 communities (214 shown, 50 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `963de63d`
+- Built from commit: `ac21422c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -220,18 +220,32 @@
 - [[_COMMUNITY_Community 246|Community 246]]
 - [[_COMMUNITY_Community 247|Community 247]]
 - [[_COMMUNITY_Community 248|Community 248]]
+- [[_COMMUNITY_Community 249|Community 249]]
+- [[_COMMUNITY_Community 250|Community 250]]
+- [[_COMMUNITY_Community 251|Community 251]]
+- [[_COMMUNITY_Community 252|Community 252]]
+- [[_COMMUNITY_Community 253|Community 253]]
+- [[_COMMUNITY_Community 254|Community 254]]
+- [[_COMMUNITY_Community 255|Community 255]]
+- [[_COMMUNITY_Community 256|Community 256]]
+- [[_COMMUNITY_Community 257|Community 257]]
+- [[_COMMUNITY_Community 259|Community 259]]
+- [[_COMMUNITY_Community 260|Community 260]]
+- [[_COMMUNITY_Community 261|Community 261]]
+- [[_COMMUNITY_Community 262|Community 262]]
+- [[_COMMUNITY_Community 263|Community 263]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Communities (244 total, 44 thin omitted)` - 157 edges
-2. `Communities (224 total, 44 thin omitted)` - 139 edges
-3. `Communities (222 total, 44 thin omitted)` - 137 edges
-4. `Communities (221 total, 44 thin omitted)` - 136 edges
-5. `Communities (220 total, 44 thin omitted)` - 135 edges
-6. `Communities (218 total, 43 thin omitted)` - 135 edges
-7. `Communities (219 total, 43 thin omitted)` - 135 edges
-8. `Communities (216 total, 43 thin omitted)` - 132 edges
-9. `Communities (141 total, 34 thin omitted)` - 78 edges
-10. `Phase 4: Le Verrou & Stripe Billing — Research` - 20 edges
+1. `Communities (264 total, 50 thin omitted)` - 170 edges
+2. `Communities (263 total, 50 thin omitted)` - 169 edges
+3. `Communities (260 total, 49 thin omitted)` - 167 edges
+4. `Communities (260 total, 51 thin omitted)` - 165 edges
+5. `Communities (259 total, 51 thin omitted)` - 164 edges
+6. `Communities (255 total, 51 thin omitted)` - 161 edges
+7. `Communities (252 total, 50 thin omitted)` - 159 edges
+8. `Communities (251 total, 50 thin omitted)` - 158 edges
+9. `Phase 4: Le Verrou & Stripe Billing — Research` - 20 edges
+10. `Phase 5 : Intégration API État (SIRET) & Badges de Confiance — Research` - 20 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -239,7 +253,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (249 total, 49 thin omitted)
+## Communities (264 total, 50 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.12
@@ -295,7 +309,7 @@ Nodes (12): Agreed Concerns, Agreed Strengths, Concerns, Consensus Summary, Cros
 
 ### Community 20 - "Community 20"
 Cohesion: 0.05
-Nodes (43): dependencies, aws4fetch, @aws-sdk/client-s3, @aws-sdk/s3-request-presigner, @lucide/vue, nuxt, reka-ui, resend (+35 more)
+Nodes (43): dependencies, aws4fetch, @lucide/vue, nuxt, reka-ui, resend, shadcn-vue, stripe (+35 more)
 
 ### Community 21 - "Community 21"
 Cohesion: 0.09
@@ -318,8 +332,8 @@ Cohesion: 0.10
 Nodes (18): availableCategories, categoryFilter, currentPage, filteredLeads, freeLeadsUsed, freeRemaining, hasLockedUnfreeLead, if() (+10 more)
 
 ### Community 34 - "Community 34"
-Cohesion: 0.15
-Nodes (12): Administration, Capture (Simulateur Nuxt), Compliance & Légal, Infrastructure & Setup, Le Verrou (Logique de Floutage), Out of Scope, Requirements: BÂTI-AXE, Revendication (Claim) & Vérification (+4 more)
+Cohesion: 0.14
+Nodes (13): Administration, Capture (Simulateur Nuxt), Compliance & Légal, Infrastructure & Setup, Le Verrou (Logique de Floutage), Out of Scope, Phase 5 : Intégration API État (SIRET) & Badges de Confiance, Requirements: BÂTI-AXE (+5 more)
 
 ### Community 40 - "Community 40"
 Cohesion: 0.25
@@ -328,6 +342,10 @@ Nodes (4): currentStepIndex, decennale, steps, uploads
 ### Community 42 - "Community 42"
 Cohesion: 0.50
 Nodes (3): Ce qui a été fait, Impact, Résumé d'Exécution : Plan 08 (CRM Minimaliste)
+
+### Community 43 - "Community 43"
+Cohesion: 0.24
+Nodes (4): claimSchema, VALID_CATEGORIES, lookupSiret(), SiretLookupResult
 
 ### Community 44 - "Community 44"
 Cohesion: 0.50
@@ -590,12 +608,12 @@ Cohesion: 0.11
 Nodes (17): Before/After Section (Lines 121–127), Brand Banner (Lines 79–88), CTA Final Section (Lines 174–189), Dependency Graph, Deviations from Plan, Hero Section (Lines 19–56), Key Files, Known Limitations / Deferred Items (+9 more)
 
 ### Community 142 - "Community 142"
-Cohesion: 0.38
-Nodes (12): Community Hubs (Navigation), Corpus Check, God Nodes (most connected - your core abstractions), Graph Freshness, Graph Report - bati-axe  (2026-06-09), Graph Report - bati-axe  (2026-06-23), Graph Report - bati-axe  (2026-06-24), Import Cycles (+4 more)
+Cohesion: 0.18
+Nodes (10): Community Hubs (Navigation), Corpus Check, God Nodes (most connected - your core abstractions), Graph Freshness, Graph Report - bati-axe  (2026-06-24), Import Cycles, Knowledge Gaps, Suggested Questions (+2 more)
 
 ### Community 143 - "Community 143"
-Cohesion: 0.25
-Nodes (7): built_at_commit, directed, graph, hyperedges, links, multigraph, nodes
+Cohesion: 0.22
+Nodes (8): API-01 — Lookup SIRET (siret-lookup.test.ts), API-02 — Badge Entreprise Vérifiée (badges.test.ts), Cas de test critiques, Commande de validation complète, Invariants non bloquants (fallback gracieux), Phase 05 — Validation Strategy (Nyquist), Suites de tests automatisées, TRST-01 — Badge Décennale Certifiée & Auto-approbation (auto-approve.test.ts)
 
 ### Community 144 - "Community 144"
 Cohesion: 0.40
@@ -770,8 +788,8 @@ Cohesion: 0.12
 Nodes (15): Backward Compatibility, Colors (MASTER.md Hex Palette), Commit Details, Component Base Styles (`@layer components`), Deviations from Plan, Fonts, Known Issues / Stubs, Next Steps (+7 more)
 
 ### Community 217 - "Community 217"
-Cohesion: 0.09
-Nodes (165): Communities (141 total, 34 thin omitted), Communities (216 total, 43 thin omitted), Communities (218 total, 43 thin omitted), Communities (219 total, 43 thin omitted), Communities (220 total, 44 thin omitted), Communities (221 total, 44 thin omitted), Communities (222 total, 44 thin omitted), Communities (224 total, 44 thin omitted) (+157 more)
+Cohesion: 0.17
+Nodes (11): compilerOptions, esModuleInterop, module, moduleResolution, paths, skipLibCheck, strict, target (+3 more)
 
 ### Community 218 - "Community 218"
 Cohesion: 0.50
@@ -794,8 +812,8 @@ Cohesion: 0.17
 Nodes (11): Dependency Graph, Deviations from Plan, Key Files, Known Limitations / Deferred Items, Next Steps, Objective, Phase 4.7 Plan 5: Premium & Public Profile Refactor (Partial), Premium Page Hero Section (+3 more)
 
 ### Community 224 - "Community 224"
-Cohesion: 0.18
-Nodes (10): Audit de légitimité des paquets, Carte des responsabilités architecturales, Ce qu'il ne faut pas construire soi-même, Disponibilité de l'environnement, Journal des hypothèses, Métadonnées, Phase 5 : Intégration API État (SIRET) & Badges de Confiance — Research, Questions ouvertes (+2 more)
+Cohesion: 0.17
+Nodes (11): Audit de légitimité des paquets, Carte des responsabilités architecturales, Ce qu'il ne faut pas construire soi-même, Disponibilité de l'environnement, Journal des hypothèses, Métadonnées, Phase 5 : Intégration API État (SIRET) & Badges de Confiance — Research, Questions ouvertes (+3 more)
 
 ### Community 225 - "Community 225"
 Cohesion: 0.29
@@ -865,22 +883,70 @@ Nodes (6): 1. Base de données (`messages`), 2. Expérience Pro (Responsive Mess
 Cohesion: 0.40
 Nodes (4): Critical Anti-Patterns (do NOT repeat these), Infrastructure State, Reprise — Phase 6 (Espace Client & Messagerie), Required Reading (in order)
 
+### Community 249 - "Community 249"
+Cohesion: 0.22
+Nodes (8): Ce qui a été livré, Checkpoint en attente, Deviations from Plan, Known Stubs, Phase 05 Plan 01 : Migration SQL colonnes siret_* — Summary, Self-Check: PASSED, Tasks, Threat Flags
+
+### Community 250 - "Community 250"
+Cohesion: 0.22
+Nodes (8): Corrections automatiques (Rule 3 — Bloquant), Déviations du plan, Known Stubs, Phase 05 Plan 05 : Approbation Admin → Badge Décennale — Summary, Résultat de vérification, Self-Check: PASSED, Threat Flags, Tâches exécutées
+
+### Community 252 - "Community 252"
+Cohesion: 0.18
+Nodes (10): compilerOptions, esModuleInterop, module, moduleResolution, paths, skipLibCheck, strict, target (+2 more)
+
+### Community 253 - "Community 253"
+Cohesion: 0.20
+Nodes (9): Ce qui a été livré, Deviations from Plan, Infrastructure ajoutée (Rule 2), Known Stubs, Phase 05 Plan 02 : Lookup SIRET inline + tests Vitest — Summary, Self-Check: PASSED, Tasks, TDD Gate Compliance (+1 more)
+
+### Community 254 - "Community 254"
+Cohesion: 0.33
+Nodes (4): ADMIN_USER, createErrorMock, mockServerSupabaseServiceRole, mockServerSupabaseUser
+
+### Community 255 - "Community 255"
+Cohesion: 0.08
+Nodes (177): Communities (251 total, 50 thin omitted), Communities (252 total, 50 thin omitted), Communities (255 total, 51 thin omitted), Communities (259 total, 51 thin omitted), Communities (260 total, 49 thin omitted), Communities (260 total, 51 thin omitted), Communities (263 total, 50 thin omitted), Communities (264 total, 50 thin omitted) (+169 more)
+
+### Community 256 - "Community 256"
+Cohesion: 0.22
+Nodes (8): Dépendances manquantes corrigées (Rule 3 — Blocking), Déviations du plan, Known Stubs, Phase 05 Plan 03 : Composants Badge de Confiance — Summary, Résultat de vérification, Self-Check: PASSED, Threat Flags, Tâches exécutées
+
+### Community 257 - "Community 257"
+Cohesion: 0.22
+Nodes (8): compilerOptions, jsx, lib, module, moduleResolution, strict, target, include
+
+### Community 259 - "Community 259"
+Cohesion: 0.22
+Nodes (8): Ce qui a été livré, Deviations from Plan, Known Stubs, Modification mineure scope élargi (Rule 2 — cohérence), Phase 05 Plan 04 : Câblage badges confiance — Summary, Self-Check: PASSED, Threat Flags, Tâches exécutées
+
+### Community 260 - "Community 260"
+Cohesion: 0.22
+Nodes (8): Corrections automatiques (Rule 1 — Bug), Déviations du plan, Known Stubs, Phase 05 Plan 06 : Auto-approbation décennale — Summary, Résultat de vérification, Self-Check: PASSED, Threat Flags, Tâches exécutées
+
+### Community 261 - "Community 261"
+Cohesion: 0.29
+Nodes (5): createErrorMock, mockServerSupabaseServiceRole, mockServerSupabaseUser, PRO_USER, VALID_DECENNALE_BODY
+
+### Community 263 - "Community 263"
+Cohesion: 0.12
+Nodes (16): Avertissements, CR-01 : Injection de `file_key` arbitraire dans `upload.post.ts` — bypass de la vérification R2, CR-02 : Injection de paramètre dans l'URL de l'API gouvernementale (`siretLookup.ts`), CR-03 : L'upsert dans `claim.post.ts` écrase le `canonical_slug` d'un profil existant non vérifié, IN-01 : Duplication de la logique `@keyframes shimmer` dans les deux composants Badge, IN-02 : Le `dept` de l'URL n'est jamais utilisé dans `[slug].get.ts`, Informations, Narrative Findings (AI reviewer) (+8 more)
+
 ## Knowledge Gaps
-- **1253 isolated node(s):** `version`, `timestamp`, `phase`, `phase_name`, `phase_dir` (+1248 more)
+- **1332 isolated node(s):** `version`, `timestamp`, `phase`, `phase_name`, `phase_dir` (+1327 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **49 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **50 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Communities (244 total, 44 thin omitted)` connect `Community 217` to `Community 142`?**
-  _High betweenness centrality (0.002) - this node is a cross-community bridge._
-- **Why does `Communities (224 total, 44 thin omitted)` connect `Community 217` to `Community 142`?**
+- **Why does `Communities (264 total, 50 thin omitted)` connect `Community 255` to `Community 142`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
-- **Why does `Phase 5 : Intégration API État (SIRET) & Badges de Confiance — Research` connect `Community 224` to `Community 225`, `Community 226`, `Community 227`, `Community 228`, `Community 229`, `Community 230`, `Community 231`, `Community 232`, `Community 233`?**
+- **Why does `Communities (263 total, 50 thin omitted)` connect `Community 255` to `Community 142`?**
+  _High betweenness centrality (0.001) - this node is a cross-community bridge._
+- **Why does `Communities (260 total, 49 thin omitted)` connect `Community 255` to `Community 142`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
 - **What connects `version`, `timestamp`, `phase` to the rest of the system?**
-  _1253 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1332 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `Community 10` be split into smaller, more focused modules?**

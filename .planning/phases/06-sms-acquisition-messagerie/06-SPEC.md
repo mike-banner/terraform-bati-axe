@@ -1,4 +1,4 @@
-# SPEC.md : Phase 5 (Espace Client & Messagerie Asynchrone)
+# SPEC.md : Phase 6 (Espace Client & Messagerie Asynchrone)
 
 ## Boundaries
 
@@ -48,9 +48,9 @@
 
 ---
 
-# SPEC — Reste de Phase 5 (post-messagerie)
+# SPEC — Reste de Phase 6 (post-messagerie)
 
-> Addendum 2026-06-16. La partie « Espace Client & Messagerie » ci-dessus est **livrée** (plan 05-01, validée en prod). Cette section cadre le reste de la Phase 5 ROADMAP : **Acquisition (cold outreach)**, **Feedback loop lead**, **Email onboarding**, et **SMS différencié (différé)**.
+> Addendum 2026-06-16. La partie « Espace Client & Messagerie » ci-dessus est **livrée** (plan 06-01, validée en prod). Cette section cadre le reste de la Phase 6 ROADMAP : **Acquisition (cold outreach)**, **Feedback loop lead**, **Email onboarding**, et **SMS différencié (différé)**.
 
 ## Boundaries (reste)
 
@@ -59,7 +59,7 @@
 - Feedback loop côté particulier : bouton « relancer ma recherche » qui remet le projet sur le marché pour 3 nouveaux pros.
 - Email onboarding pro (bienvenue post-claim / post-validation), derrière un flag **désactivé par défaut**.
 
-**Out of Scope (différé en fin de Phase 5) :**
+**Out of Scope (différé en fin de Phase 6) :**
 - **SMS différencié** (Basic→upgrade / Premium→lead direct). *Décision utilisateur : aucun paiement fournisseur tant que non prêt, même pour tester.* Spec posée (REQ-08), exécution repoussée à la toute fin.
 - Scraping automatique de la base prospects. *Source de données à trancher au moment de l'exécution (REQ-05).* 
 - Design visuel des emails/pages. *Centralisé dans la phase design finale.*
