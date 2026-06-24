@@ -1,16 +1,16 @@
 # Graph Report - bati-axe  (2026-06-24)
 
 ## Corpus Check
-- 254 files · ~337,298 words
+- 255 files · ~343,358 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2017 nodes · 2602 edges · 263 communities (213 shown, 50 thin omitted)
+- 2039 nodes · 2957 edges · 264 communities (214 shown, 50 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `59e60bad`
+- Built from commit: `ac21422c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -233,18 +233,19 @@
 - [[_COMMUNITY_Community 260|Community 260]]
 - [[_COMMUNITY_Community 261|Community 261]]
 - [[_COMMUNITY_Community 262|Community 262]]
+- [[_COMMUNITY_Community 263|Community 263]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Communities (260 total, 49 thin omitted)` - 167 edges
-2. `Communities (260 total, 51 thin omitted)` - 165 edges
-3. `Communities (259 total, 51 thin omitted)` - 164 edges
-4. `Communities (255 total, 51 thin omitted)` - 161 edges
-5. `Communities (252 total, 50 thin omitted)` - 159 edges
-6. `Communities (251 total, 50 thin omitted)` - 158 edges
-7. `Phase 4: Le Verrou & Stripe Billing — Research` - 20 edges
-8. `Phase 5 : Intégration API État (SIRET) & Badges de Confiance — Research` - 20 edges
-9. `UI-SPEC — Phase 4: Le Verrou & Stripe Billing` - 18 edges
-10. `Page 1 — `/espace/leads` (Dashboard Leads)` - 17 edges
+1. `Communities (264 total, 50 thin omitted)` - 170 edges
+2. `Communities (263 total, 50 thin omitted)` - 169 edges
+3. `Communities (260 total, 49 thin omitted)` - 167 edges
+4. `Communities (260 total, 51 thin omitted)` - 165 edges
+5. `Communities (259 total, 51 thin omitted)` - 164 edges
+6. `Communities (255 total, 51 thin omitted)` - 161 edges
+7. `Communities (252 total, 50 thin omitted)` - 159 edges
+8. `Communities (251 total, 50 thin omitted)` - 158 edges
+9. `Phase 4: Le Verrou & Stripe Billing — Research` - 20 edges
+10. `Phase 5 : Intégration API État (SIRET) & Badges de Confiance — Research` - 20 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -252,7 +253,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (263 total, 50 thin omitted)
+## Communities (264 total, 50 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.12
@@ -903,8 +904,8 @@ Cohesion: 0.33
 Nodes (4): ADMIN_USER, createErrorMock, mockServerSupabaseServiceRole, mockServerSupabaseUser
 
 ### Community 255 - "Community 255"
-Cohesion: 0.07
-Nodes (172): Communities (251 total, 50 thin omitted), Communities (252 total, 50 thin omitted), Communities (255 total, 51 thin omitted), Communities (259 total, 51 thin omitted), Communities (260 total, 49 thin omitted), Communities (260 total, 51 thin omitted), Community 0 - "Community 0", Community 100 - "Community 100" (+164 more)
+Cohesion: 0.08
+Nodes (177): Communities (251 total, 50 thin omitted), Communities (252 total, 50 thin omitted), Communities (255 total, 51 thin omitted), Communities (259 total, 51 thin omitted), Communities (260 total, 49 thin omitted), Communities (260 total, 51 thin omitted), Communities (263 total, 50 thin omitted), Communities (264 total, 50 thin omitted) (+169 more)
 
 ### Community 256 - "Community 256"
 Cohesion: 0.22
@@ -926,22 +927,26 @@ Nodes (8): Corrections automatiques (Rule 1 — Bug), Déviations du plan, Known
 Cohesion: 0.29
 Nodes (5): createErrorMock, mockServerSupabaseServiceRole, mockServerSupabaseUser, PRO_USER, VALID_DECENNALE_BODY
 
+### Community 263 - "Community 263"
+Cohesion: 0.12
+Nodes (16): Avertissements, CR-01 : Injection de `file_key` arbitraire dans `upload.post.ts` — bypass de la vérification R2, CR-02 : Injection de paramètre dans l'URL de l'API gouvernementale (`siretLookup.ts`), CR-03 : L'upsert dans `claim.post.ts` écrase le `canonical_slug` d'un profil existant non vérifié, IN-01 : Duplication de la logique `@keyframes shimmer` dans les deux composants Badge, IN-02 : Le `dept` de l'URL n'est jamais utilisé dans `[slug].get.ts`, Informations, Narrative Findings (AI reviewer) (+8 more)
+
 ## Knowledge Gaps
-- **1321 isolated node(s):** `version`, `timestamp`, `phase`, `phase_name`, `phase_dir` (+1316 more)
+- **1332 isolated node(s):** `version`, `timestamp`, `phase`, `phase_name`, `phase_dir` (+1327 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **50 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Communities (260 total, 49 thin omitted)` connect `Community 255` to `Community 142`?**
-  _High betweenness centrality (0.002) - this node is a cross-community bridge._
-- **Why does `Communities (260 total, 51 thin omitted)` connect `Community 255` to `Community 142`?**
+- **Why does `Communities (264 total, 50 thin omitted)` connect `Community 255` to `Community 142`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
-- **Why does `Communities (259 total, 51 thin omitted)` connect `Community 255` to `Community 142`?**
+- **Why does `Communities (263 total, 50 thin omitted)` connect `Community 255` to `Community 142`?**
+  _High betweenness centrality (0.001) - this node is a cross-community bridge._
+- **Why does `Communities (260 total, 49 thin omitted)` connect `Community 255` to `Community 142`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
 - **What connects `version`, `timestamp`, `phase` to the rest of the system?**
-  _1321 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1332 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `Community 10` be split into smaller, more focused modules?**
