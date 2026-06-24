@@ -43,6 +43,12 @@
 - [ ] **ADM-02**: Modération et nettoyage des leads suspects avant envoi aux artisans
 - [ ] **ADM-03**: Console d'analytics (taux d'ouverture SMS vs taux de clic)
 
+## Phase 5 : Intégration API État (SIRET) & Badges de Confiance
+
+- [x] **API-01**: Lookup SIRET automatique au Claim — Au POST /api/v1/pro/claim, appeler l'API Recherche Entreprises (recherche-entreprises.api.gouv.fr) avec le SIRET saisi. Stocker raison sociale, adresse et statut dans `siret_company_name`, `siret_address`, `siret_status`. Bloquer si `etat_administratif='F'` (fermé). Ne pas bloquer sur `not_found` (non diffusible) ou `error` (API indisponible).
+- [x] **API-02**: Badge Entreprise Vérifiée — Afficher le badge `BadgeEntrepriseVerifiee` sur le dashboard pro et le profil public `/pro/[dept]/[slug]` quand `siret_status === 'active'`. Ne pas afficher si `null`, `not_found` ou `error`.
+- [x] **TRST-01**: Badge Décennale Certifiée BÂTI-AXE — L'approbation admin du dossier décennale met à jour `decennal_status` à `'valid'` et ajoute `'decennale_certified'` dans `labels` JSONB. Le badge `BadgeDecennaleCertifiee` s'affiche sur dashboard et profil public quand `decennal_status === 'valid'`.
+
 ## v2 Requirements
 - **GEO-01**: Scalabilité géographique dynamique automatisée (activation multi-villes via console admin)
 - **PAY-01**: Facturation automatisée Stripe et gestion des factures PDF
@@ -84,12 +90,16 @@
 | SMS-02 | Phase 5 | Pending |
 | ADM-02 | Phase 5 | Pending |
 | ADM-03 | Phase 5 | Pending |
+| API-01 | Phase 5 | Completed |
+| API-02 | Phase 5 | Completed |
+| TRST-01 | Phase 5 | Completed |
 
 **Coverage:**
 - v1 requirements: 24 total
-- Mapped to phases: 24
+- Phase 5 (API+Trust): 3 additional
+- Mapped to phases: 27
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-02*
-*Last updated: 2026-06-03 after Phase 2 completion*
+*Last updated: 2026-06-24 after Phase 5 wave 3 completion*
