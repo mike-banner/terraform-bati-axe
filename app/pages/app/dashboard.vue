@@ -181,20 +181,35 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
     <!-- Main Dashboard -->
     <template v-else-if="pro">
 
+      <!-- Breadcrumbs -->
+      <IdentityBreadcrumbs :items="[
+        { label: 'BÂTI-AXE' },
+        { label: 'Espace Pro', to: '/espace/leads' },
+        { label: 'Tableau de bord' }
+      ]" />
+
       <!-- Header -->
       <div class="mb-10">
-        <div class="flex items-center gap-2 mb-3">
-          <span
-            class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full"
-            :class="pro.is_verified ? 'border-foreground/30 text-foreground' : 'border-amber-300 text-amber-700 bg-amber-50'"
-          >
-            <svg v-if="pro.is_verified" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-            <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            {{ pro.is_verified ? 'Vérifié BÂTI-AXE' : 'Vérification en cours' }}
-          </span>
-          <span v-if="pro.categories && pro.categories.length > 0" class="inline-flex items-center text-xs font-medium px-3 py-1.5 border border-border rounded-full text-muted-foreground gap-1">
-            <span v-for="cat in pro.categories" :key="cat">{{ CATEGORY_LABELS[cat] || cat }}</span>
-          </span>
+        <div class="mb-4 space-y-2">
+          <div>
+            <PremiumBadge v-if="pro.is_verified" />
+            <span
+              v-else
+              class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-amber-300 text-amber-700 bg-amber-50"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Vérification en cours
+            </span>
+          </div>
+          <div v-if="pro.categories && pro.categories.length > 0" class="flex flex-wrap gap-1.5">
+            <span
+              v-for="cat in pro.categories"
+              :key="cat"
+              class="inline-flex items-center text-xs font-medium px-2.5 py-1 border border-border rounded-full text-muted-foreground bg-background"
+            >
+              {{ CATEGORY_LABELS[cat] || cat }}
+            </span>
+          </div>
         </div>
         <h1 class="text-3xl font-semibold tracking-tight text-foreground" style="text-wrap: balance">{{ pro.company_name }}</h1>
         <p class="text-sm text-muted-foreground mt-1">{{ pro.full_name }} · {{ pro.postal_code }}</p>
@@ -304,8 +319,8 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
       </div>
 
       <!-- Progress checklist -->
-      <div class="border border-border rounded-lg divide-y divide-border mb-10">
-        <div v-for="(step, i) in steps" :key="i" class="flex items-start gap-4 px-5 py-4">
+      <div class="border border-border rounded-lg mb-10 overflow-hidden bg-white shadow-sm">
+        <div v-for="(step, i) in steps" :key="i" class="flex items-start gap-4 px-5 py-4 border-b border-border last:border-0 hover:-translate-y-0.5 hover:shadow-md hover:bg-slate-50 transition-all duration-300 relative group">
           <div
             class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5"
             :class="step.done ? 'bg-foreground text-background' : i === currentStepIndex ? 'border-2 border-foreground' : 'border border-border'"

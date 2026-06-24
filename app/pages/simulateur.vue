@@ -176,7 +176,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="min-h-[calc(100vh-3.5rem)] bg-background flex items-start justify-center px-4 py-12 md:py-16">
+  <div class="min-h-[calc(100vh-3.5rem)] bg-page flex items-start justify-center px-4 py-12 md:py-16">
     <div class="w-full max-w-xl">
 
       <!-- ─── Success ─────────────────────────────────────────────────────── -->

@@ -1,13 +1,9 @@
 @import "tailwindcss";
-
 @import "tw-animate-css";
-
 @import "shadcn-vue/tailwind.css";
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;700&display=swap');
 
 @custom-variant dark (&:is(.dark *));
-
-/* ── Google Fonts: Figtree (headings) + Noto Sans (body) ── */
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;700&display=swap');
 
 @theme inline {
     --font-sans: 'Noto Sans', sans-serif;
@@ -16,7 +12,8 @@
     --color-primary: #0891B2;         /* cyan — primary links/secondary CTAs */
     --color-secondary: #22D3EE;       /* cyan lighter — hover states */
     --color-cta: #22C55E;             /* green — primary buttons */
-    --color-background: #ECFEFF;      /* light cyan page bg */
+    --color-background: #FFFFFF;      /* blanc — inputs, cartes, composants */
+    --color-page: #ECFEFF;            /* cyan clair — fond de page */
     --color-text: #164E63;            /* dark cyan text */
     --color-border: #E2E8F0;          /* gray border */
     --color-border-error: #DC2626;    /* red error state */
@@ -66,6 +63,27 @@
     --color-accent-foreground: #FFFFFF;
     --color-destructive: #DC2626;
     --color-input: #E2E8F0;
+    /* Variables requises par Tailwind v4 pour bg-foreground / text-background */
+    --color-foreground: #164E63;
+    /* shadcn-vue standard light mode (required for Tailwind v4) */
+    --background: #FFFFFF;
+    --foreground: #164E63;
+    --card: #FFFFFF;
+    --card-foreground: #164E63;
+    --popover: #FFFFFF;
+    --popover-foreground: #164E63;
+    --primary: #0891B2;
+    --primary-foreground: #FFFFFF;
+    --secondary: #E2E8F0;
+    --secondary-foreground: #164E63;
+    --muted: #E2E8F0;
+    --muted-foreground: #64748B;
+    --accent: #22C55E;
+    --accent-foreground: #FFFFFF;
+    --destructive: #DC2626;
+    --border: #E2E8F0;
+    --input: #E2E8F0;
+    --ring: #0891B220;
 }
 
 :root {
@@ -73,7 +91,8 @@
     --color-primary: #0891B2;
     --color-secondary: #22D3EE;
     --color-cta: #22C55E;
-    --color-background: #ECFEFF;
+    --color-background: #FFFFFF;
+    --color-page: #ECFEFF;
     --color-text: #164E63;
     --color-border: #E2E8F0;
     --color-border-error: #DC2626;
@@ -127,6 +146,10 @@
     --primary-foreground: #FFFFFF;
     --secondary: #E2E8F0;
     --secondary-foreground: #164E63;
+    --background: #FFFFFF;
+    --foreground: #164E63;
+    --border: #E2E8F0;
+    --ring: #0891B220;
 }
 
 .dark {
@@ -181,7 +204,7 @@
     width: 100%;
   }
   body {
-    background-color: var(--color-background);
+    background-color: var(--color-page);
     color: var(--color-text);
     font-family: var(--font-sans);
     overflow-x: hidden;

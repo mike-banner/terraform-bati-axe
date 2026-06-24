@@ -387,7 +387,7 @@ const backToStep2 = () => {
 </script>
 
 <template>
-  <div class="min-h-[calc(100vh-3.5rem)] bg-background flex items-start justify-center px-4 py-16">
+  <div class="min-h-[calc(100vh-3.5rem)] bg-page flex items-start justify-center px-4 py-16">
     <div class="w-full max-w-md">
 
       <!-- Page title -->
@@ -487,7 +487,7 @@ const backToStep2 = () => {
                 autocomplete="current-password"
                 placeholder="••••••••"
                 @blur="authTouched.password = true"
-                class="w-full h-11 px-3 pr-10 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                class="w-full h-11 px-3 pr-10 border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 :class="authErrors.password ? 'border-red-500' : 'border-border'"
                 :aria-invalid="!!authErrors.password"
                 :aria-describedby="authErrors.password ? 'err-password' : undefined"
@@ -573,7 +573,7 @@ const backToStep2 = () => {
               inputmode="numeric"
               @input="normalizeSiret(($event.target as HTMLInputElement).value)"
               @blur="proTouched.siret = true"
-              class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground font-mono tracking-wider transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              class="w-full h-11 px-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 font-mono tracking-wider transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="proErrors.siret ? 'border-red-500' : 'border-border'"
               :aria-invalid="!!proErrors.siret"
             />

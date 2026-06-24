@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-screen bg-background text-foreground flex flex-col font-sans antialiased">
+  <div class="min-h-screen bg-page text-foreground flex flex-col font-sans antialiased">
 
     <!-- Header minimal — accès par lien magique, pas de nav authentifiée -->
-    <header class="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
+    <header class="sticky top-0 z-40 border-b border-border bg-page/95 backdrop-blur-sm">
       <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
         <NuxtLink to="/" class="text-base font-bold tracking-tight text-foreground hover:opacity-70 transition-opacity">
           BÂTI-AXE

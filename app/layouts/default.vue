@@ -16,8 +16,8 @@ const espaceLink = computed(() => isAdmin.value ? '/admin' : '/app/dashboard')
 </script>
 
 <template>
-  <div class="min-h-screen bg-background text-foreground flex flex-col font-sans antialiased">
-    <header class="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
+  <div class="min-h-screen bg-page text-foreground flex flex-col font-sans antialiased">
+    <header class="sticky top-0 z-40 border-b border-border bg-page/95 backdrop-blur-sm">
       <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
         <NuxtLink to="/" class="text-base font-bold tracking-tight text-foreground hover:opacity-70 transition-opacity">BÂTI-AXE</NuxtLink>
         <nav class="flex items-center gap-2">

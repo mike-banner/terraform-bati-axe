@@ -38,7 +38,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 <template>
   <div 
     class="min-h-screen text-foreground flex flex-col font-sans antialiased pb-24 transition-colors duration-500"
-    :class="isAdminRoute ? 'bg-slate-950 text-slate-100' : 'bg-background'"
+    :class="isAdminRoute ? 'bg-slate-950 text-slate-100' : 'bg-page'"
   >
 
     <!-- Header — identique au layout default, se cache au scroll vers le bas -->
@@ -46,7 +46,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
       class="sticky top-0 z-40 border-b transition-transform duration-300"
       :class="[
         isHeaderVisible ? 'translate-y-0' : '-translate-y-full',
-        isAdminRoute ? 'border-slate-800 bg-slate-950/95 backdrop-blur-sm' : 'border-border bg-background/95 backdrop-blur-sm'
+        isAdminRoute ? 'border-slate-800 bg-slate-950/95 backdrop-blur-sm' : 'border-border bg-page/95 backdrop-blur-sm'
       ]"
     >
       <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
