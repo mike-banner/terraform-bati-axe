@@ -1,4 +1,4 @@
-# CONTEXT.md : Phase 5 (Espace Client & Messagerie)
+# CONTEXT.md : Phase 6 (Espace Client & Messagerie)
 
 ## Décisions d'Implémentation
 
