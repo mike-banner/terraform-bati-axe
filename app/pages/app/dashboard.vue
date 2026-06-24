@@ -106,7 +106,8 @@ const docStatus = (doc: any) => {
 // ─── Upload inline ─────────────────────────────────────────────────────────────
 const uploads = reactive({
   kbis:      { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '' },
-  decennale: { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '' },
+  decennale: { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '',
+    policyNumber: '', expirationDate: '' },
 })
 
 function onFileSelect(e: Event, type: 'kbis' | 'decennale') {
@@ -131,12 +132,16 @@ async function uploadDoc(type: 'kbis' | 'decennale') {
     if (presign.status !== 'SUCCESS') throw new Error('Erreur de signature.')
     const res = await fetch(presign.signedUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file })
     if (!res.ok) throw new Error('Échec du transfert.')
-    
-    // Historisation : chaque envoi crée une nouvelle ligne — on ne perd jamais
-    // l'ancien justificatif (preuve décennale). L'admin valide la plus récente,
-    // le dashboard affiche la plus récente (tri created_at desc).
-    const { error: insertErr } = await (supabase as any).from('verifications').insert({ pro_id: uid, document_type: type, file_key: presign.fileKey, status: 'pending' })
-    if (insertErr) throw new Error(insertErr.message)
+
+    // Historisation via endpoint serveur : auto-approbation pour la décennale,
+    // pending pour le KBIS (validation admin requise).
+    const uploadBody: Record<string, string> = { document_type: type, file_key: presign.fileKey }
+    if (type === 'decennale') {
+      uploadBody.policy_number  = uploads.decennale.policyNumber
+      uploadBody.expiration_date = uploads.decennale.expirationDate
+    }
+    const { error: insertErr } = await $fetch<{ error: string | null }>('/api/v1/pro/documents/upload', { method: 'POST', body: uploadBody })
+    if (insertErr) throw new Error(insertErr)
     uploads[type].status = 'success'
     await loadProData() // refresh badges
   } catch (err: any) {
@@ -275,27 +280,49 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
         <!-- Décennale -->
         <div v-if="!decennale">
           <p class="text-xs font-semibold text-foreground mb-2">Attestation décennale <span class="text-muted-foreground font-normal">(PDF, JPG, PNG)</span></p>
-          <div v-if="uploads.decennale.status !== 'success'" class="flex items-center gap-3 flex-wrap">
-            <label class="cursor-pointer">
-              <input type="file" @change="onFileSelect($event, 'decennale')" accept=".pdf,image/*" class="sr-only" />
-              <span class="h-9 px-4 border border-border rounded-md text-xs font-medium bg-white hover:bg-muted transition-colors flex items-center gap-2">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
-                Choisir
-              </span>
-            </label>
-            <span class="text-xs text-muted-foreground truncate max-w-[180px]">{{ uploads.decennale.file ? uploads.decennale.file.name : 'Aucun fichier' }}</span>
-            <button
-              v-if="uploads.decennale.file"
-              @click="uploadDoc('decennale')"
-              :disabled="uploads.decennale.status === 'uploading'"
-              class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
-            >
-              <svg v-if="uploads.decennale.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-              {{ uploads.decennale.status === 'uploading' ? 'Envoi…' : 'Envoyer la décennale' }}
-            </button>
+          <div v-if="uploads.decennale.status !== 'success'" class="space-y-3">
+            <!-- Champs obligatoires : numéro de police + date d'expiration -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-muted-foreground mb-1">Numéro de police <span class="text-red-500">*</span></label>
+                <input
+                  v-model="uploads.decennale.policyNumber"
+                  type="text"
+                  placeholder="Ex : 12345678A"
+                  class="h-9 w-full px-3 border border-border rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-muted-foreground mb-1">Date d'expiration <span class="text-red-500">*</span></label>
+                <input
+                  v-model="uploads.decennale.expirationDate"
+                  type="date"
+                  class="h-9 w-full px-3 border border-border rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
+                />
+              </div>
+            </div>
+            <div class="flex items-center gap-3 flex-wrap">
+              <label class="cursor-pointer">
+                <input type="file" @change="onFileSelect($event, 'decennale')" accept=".pdf,image/*" class="sr-only" />
+                <span class="h-9 px-4 border border-border rounded-md text-xs font-medium bg-white hover:bg-muted transition-colors flex items-center gap-2">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
+                  Choisir
+                </span>
+              </label>
+              <span class="text-xs text-muted-foreground truncate max-w-[180px]">{{ uploads.decennale.file ? uploads.decennale.file.name : 'Aucun fichier' }}</span>
+              <button
+                v-if="uploads.decennale.file"
+                @click="uploadDoc('decennale')"
+                :disabled="uploads.decennale.status === 'uploading' || !uploads.decennale.policyNumber || !uploads.decennale.expirationDate"
+                class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
+              >
+                <svg v-if="uploads.decennale.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                {{ uploads.decennale.status === 'uploading' ? 'Envoi…' : 'Envoyer la décennale' }}
+              </button>
+            </div>
           </div>
           <p v-if="uploads.decennale.status === 'error'" class="text-xs text-red-600 mt-1">{{ uploads.decennale.error }}</p>
-          <p v-if="uploads.decennale.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ Décennale envoyée</p>
+          <p v-if="uploads.decennale.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ Décennale envoyée — badge décennale activé automatiquement</p>
         </div>
         <div v-else class="flex items-center gap-3 text-xs text-foreground flex-wrap">
           <div class="flex items-center gap-2">
