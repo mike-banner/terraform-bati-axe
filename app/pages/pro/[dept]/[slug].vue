@@ -19,6 +19,7 @@ interface ProProfile {
   is_verified: boolean
   is_claimed: boolean
   decennal_status: string
+  siret_status: string | null
   member_since: string
 }
 
@@ -263,16 +264,18 @@ useHead(() => ({
     <div v-else>
 
       <!-- Badge -->
-      <div class="mb-8">
+      <div class="mb-8 flex flex-wrap items-center gap-2">
         <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border border-border rounded-full text-foreground">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
           </svg>
           Vérifié BÂTI-AXE
         </span>
-        <span v-if="pro!.category" class="ml-2 inline-flex items-center text-xs px-3 py-1.5 border border-border rounded-full text-muted-foreground">
+        <span v-if="pro!.category" class="inline-flex items-center text-xs px-3 py-1.5 border border-border rounded-full text-muted-foreground">
           {{ CATEGORY_LABELS[pro!.category] ?? pro!.category }}
         </span>
+        <BadgeEntrepriseVerifiee v-if="pro!.siret_status === 'active'" />
+        <BadgeDecennaleCertifiee v-if="pro!.decennal_status === 'valid'" />
       </div>
 
       <!-- Identity -->

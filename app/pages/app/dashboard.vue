@@ -6,6 +6,8 @@ interface Pro {
   postal_code: string; canonical_slug: string; short_id: string
   is_verified: boolean; is_claimed: boolean; decennal_status: string; created_at: string
   categories: string[]; subscription_status: string; bio?: string; logo_url?: string
+  siret_status?: string | null
+  siret_company_name?: string | null
 }
 interface Verif {
   document_type: string; status: string; expiry_date: string | null; created_at: string
@@ -41,7 +43,7 @@ async function loadProData() {
     }
     const [{ data: proData, error: proErr }, { data: verifData, error: verifErr }] = await Promise.all([
       supabase.from('professionals')
-        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, created_at, categories, subscription_status, bio, logo_url')
+        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, created_at, categories, subscription_status, bio, logo_url')
         .eq('id', uid).maybeSingle(),
       supabase.from('verifications')
         .select('document_type, status, expiry_date, created_at, file_key, reviewed_at')
@@ -191,7 +193,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
       <!-- Header -->
       <div class="mb-10">
         <div class="mb-4 space-y-2">
-          <div>
+          <div class="flex flex-wrap gap-2">
             <PremiumBadge v-if="pro.is_verified" />
             <span
               v-else
@@ -200,6 +202,8 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               Vérification en cours
             </span>
+            <BadgeEntrepriseVerifiee v-if="pro.siret_status === 'active'" />
+            <BadgeDecennaleCertifiee v-if="pro.decennal_status === 'valid'" />
           </div>
           <div v-if="pro.categories && pro.categories.length > 0" class="flex flex-wrap gap-1.5">
             <span

@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: pro, error } = await supabase
     .from('professionals')
-    .select('id, company_name, full_name, email, phone, canonical_slug, short_id, category, bio, zone, logo_url, is_verified, is_claimed, decennal_status, created_at')
+    .select('id, company_name, full_name, email, phone, canonical_slug, short_id, category, bio, zone, logo_url, is_verified, is_claimed, decennal_status, siret_status, created_at')
     .eq('short_id', shortId)
     .maybeSingle()
 
@@ -59,6 +59,7 @@ export default defineEventHandler(async (event) => {
       is_verified: pro.is_verified as boolean,
       is_claimed: pro.is_claimed as boolean,
       decennal_status: pro.decennal_status as string,
+      siret_status: pro.siret_status as string | null,
       member_since: pro.created_at as string,
     },
     verifications: verifications.map((v: any) => ({
