@@ -12,7 +12,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 4.5: Conversion & Qualification** - Verrou 3 leads gratuits, free trial 14j, plan annuel, auto-qualification, profil public éditable, ROI dashboard, copy Premium refondu, CRM Minimaliste.
 - [x] **Phase 4.6: Marché Dynamique & Multi-Catégories** - Refonte DB (categories TEXT[]), fin du push leads, pull temps réel via projects, UI sélection multiple (profil/claim).
 - [ ] **Phase 4.7: Refonte UI Globale & Application du Design System** - Application du MASTER.md, harmonisation de la typographie (Figtree/Noto) et du thème B2B/Marketplace.
-- [ ] **Phase 5: Intégration API État (SIRET) & Badges de Confiance** - Récupération auto des infos légales (API Gouv/Pappers), vérification asynchrone décennale, et nouveaux copywriting labels.
+- [x] **Phase 5: Intégration API État (SIRET) & Badges de Confiance** - Récupération auto des infos légales (API Gouv/Pappers), vérification asynchrone décennale, et nouveaux copywriting labels. (completed 2026-06-24)
 - [ ] **Phase 6: SMS + Acquisition + Messagerie** - SMS différencié (Basic→upgrade / Premium→lead direct), cold outreach pros DB, dashboard particulier magic-link, messagerie in-app pro↔particulier, email onboarding (désactivé par défaut), feedback loop lead.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville.
 
@@ -145,7 +145,7 @@ Plans:
 - [x] 05-03-PLAN.md — Composants BadgeEntrepriseVerifiee.vue + BadgeDecennaleCertifiee.vue + tests
 - [x] 05-04-PLAN.md — Wiring badges dashboard.vue + profil public [slug].vue
 - [x] 05-05-PLAN.md — Suppression de la route admin approve-pro + Nettoyage admin dashboard (inutile)
-- [ ] 05-06-PLAN.md — Upload Décennale pro : saisie Numéro + Date d'expiration + Auto-approbation + Mécanisme blocage expiration
+- [x] 05-06-PLAN.md — Upload Décennale pro : saisie Numéro + Date d'expiration + Auto-approbation + Mécanisme blocage expiration
 **UI hint**: yes
 
 ### Phase 6: SMS + Acquisition + Messagerie
@@ -188,6 +188,6 @@ Plans:
 | 4.5. Conversion & Qualification | 8/8 | Completed | 2026-06-09 |
 | 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
 | 4.7. Refonte UI Globale & Design System | 0/7 | Planning complete | - |
-| 5. Intégration API État (SIRET) & Badges de Confiance | 5/6 | In Progress|  |
+| 5. Intégration API État (SIRET) & Badges de Confiance | 6/6 | Complete   | 2026-06-24 |
 | 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
