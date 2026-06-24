@@ -137,14 +137,15 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Lors de l'inscription (Claim), l'artisan saisit son SIRET et l'API récupère automatiquement Raison Sociale, Adresse, Statut (Actif/Fermé).
   2. Le badge de profil affiche dynamiquement `Entreprise Vérifiée (API Gouv)` si le SIRET est actif.
-  3. L'upload de l'attestation Décennale reste manuel, mais l'approbation admin déclenche un badge premium `Décennale Certifiée BÂTI-AXE`.
-**Plans**: 5 plans
+  3. L'upload de la Décennale oblige le pro à saisir son Numéro de Police et sa Date d'Expiration. L'approbation est automatique (le pro engage sa responsabilité via CGU). Le badge `Décennale Certifiée BÂTI-AXE` s'active. Le système bloque le pro/badge si la date d'expiration est dépassée.
+**Plans**: 6 plans
 Plans:
-- [ ] 05-01-PLAN.md — [BLOCKING] Migration SQL colonnes siret_* sur professionals + supabase db push
+- [x] 05-01-PLAN.md — [BLOCKING] Migration SQL colonnes siret_* sur professionals + supabase db push
 - [ ] 05-02-PLAN.md — Lookup SIRET inline dans claim.post.ts + helper siretLookup.ts + tests Vitest (4 cas)
 - [ ] 05-03-PLAN.md — Composants BadgeEntrepriseVerifiee.vue + BadgeDecennaleCertifiee.vue + tests
 - [ ] 05-04-PLAN.md — Wiring badges dashboard.vue + profil public [slug].vue
-- [ ] 05-05-PLAN.md — approve-pro.post.ts : decennal_status=valid + labels + tests + REQUIREMENTS.md
+- [ ] 05-05-PLAN.md — Suppression de la route admin approve-pro + Nettoyage admin dashboard (inutile)
+- [ ] 05-06-PLAN.md — Upload Décennale pro : saisie Numéro + Date d'expiration + Auto-approbation + Mécanisme blocage expiration
 **UI hint**: yes
 
 ### Phase 6: SMS + Acquisition + Messagerie
@@ -187,6 +188,6 @@ Plans:
 | 4.5. Conversion & Qualification | 8/8 | Completed | 2026-06-09 |
 | 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
 | 4.7. Refonte UI Globale & Design System | 0/7 | Planning complete | - |
-| 5. Intégration API État (SIRET) & Badges de Confiance | 0/5 | Planning complete | - |
+| 5. Intégration API État (SIRET) & Badges de Confiance | 1/5 | In Progress|  |
 | 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
 | 7. Réputation & Scale | 0/TBD | Not started | - |

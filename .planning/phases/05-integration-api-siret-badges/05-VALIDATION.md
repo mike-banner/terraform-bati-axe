@@ -13,7 +13,7 @@ status: pending
 |-------|---------|----------------------|----------|
 | SIRET lookup helper | `tests/siret-lookup.test.ts` | API-01 | `npx vitest run tests/siret-lookup.test.ts` |
 | Composants badges | `tests/badges.test.ts` | API-02, TRST-01 | `npx vitest run tests/badges.test.ts` |
-| Admin approve-pro | `tests/admin-approve.test.ts` | TRST-01 | `npx vitest run tests/admin-approve.test.ts` |
+| Auto-approve upload | `tests/auto-approve.test.ts` | TRST-01 | `npx vitest run tests/auto-approve.test.ts` |
 
 ## Cas de test critiques
 
@@ -34,17 +34,18 @@ status: pending
 | SIRET non diffusible | `siret_status = 'non_diffusible'` | Badge absent |
 | SIRET absent | `siret_status = null` | Badge absent |
 
-### TRST-01 — Badge Décennale Certifiée (admin-approve.test.ts)
+### TRST-01 — Badge Décennale Certifiée & Auto-approbation (auto-approve.test.ts)
 
 | Cas | Action | Résultat |
 |-----|--------|----------|
-| Approbation admin | `PATCH /api/v1/admin/approve-pro` | `decennal_status = 'valid'` ET `labels` contient `decennale_certifiee` |
-| Badge affiché | `labels` contient `decennale_certifiee` | `🛡️ Décennale Certifiée BÂTI-AXE` visible |
+| Upload décennale complet | Saisie numéro police + date exp + fichier | `decennal_status = 'valid'` automatiquement, date et numéro sauvegardés. |
+| Badge affiché | `decennal_status = 'valid'` et date valide | `🛡️ Décennale Certifiée BÂTI-AXE` visible |
+| Expiration bloquante | Date d'expiration dépassée | Badge masqué, alerte `Expiré ⚠️` sur le dashboard |
 
 ## Commande de validation complète
 
 ```bash
-npx vitest run tests/siret-lookup.test.ts tests/badges.test.ts tests/admin-approve.test.ts
+npx vitest run tests/siret-lookup.test.ts tests/badges.test.ts tests/auto-approve.test.ts
 ```
 
 ## Invariants non bloquants (fallback gracieux)
