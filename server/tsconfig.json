@@ -7,8 +7,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "paths": {
-      "~/*": ["./*"]
+      "#supabase/server": ["../node_modules/@nuxtjs/supabase/dist/runtime/server/index.d.ts"],
+      "~/*": ["../*"]
     }
   },
-  "include": ["tests/**/*.ts", "server/utils/**/*.ts", "server/api/**/*.ts"]
+  "include": ["./**/*.ts"]
 }

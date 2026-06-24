@@ -37,19 +37,40 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'KBIS et attestation décennale doivent être validés avant d\'approuver le dossier.'
       })
     }
-  }
 
-  await supabase
-    .from('professionals')
-    .update({ is_verified: approved })
-    .eq('id', pro_id)
+    // Récupérer les labels existants pour concaténation idempotente
+    const { data: proData } = await supabase
+      .from('professionals')
+      .select('labels')
+      .eq('id', pro_id)
+      .single()
+
+    const currentLabels: string[] = proData?.labels ?? []
+    const newLabels = currentLabels.includes('decennale_certified')
+      ? currentLabels
+      : [...currentLabels, 'decennale_certified']
+
+    await supabase
+      .from('professionals')
+      .update({ is_verified: true, decennal_status: 'valid', labels: newLabels })
+      .eq('id', pro_id)
+  } else {
+    await supabase
+      .from('professionals')
+      .update({ is_verified: false })
+      .eq('id', pro_id)
+  }
 
   await supabase.from('audit_logs').insert({
     actor_id: (user as any).id,
     action: 'doc_validated',
     target_table: 'professionals',
     target_id: pro_id,
-    metadata: { manual_approval: true, approved }
+    metadata: {
+      manual_approval: true,
+      approved,
+      ...(approved ? { decennal_status: 'valid', badge: 'decennale_certified' } : {})
+    }
   })
 
   return { status: 'SUCCESS', approved }
