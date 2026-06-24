@@ -141,8 +141,8 @@ Plans:
 **Plans**: 6 plans
 Plans:
 - [x] 05-01-PLAN.md — [BLOCKING] Migration SQL colonnes siret_* sur professionals + supabase db push
-- [ ] 05-02-PLAN.md — Lookup SIRET inline dans claim.post.ts + helper siretLookup.ts + tests Vitest (4 cas)
-- [ ] 05-03-PLAN.md — Composants BadgeEntrepriseVerifiee.vue + BadgeDecennaleCertifiee.vue + tests
+- [x] 05-02-PLAN.md — Lookup SIRET inline dans claim.post.ts + helper siretLookup.ts + tests Vitest (4 cas)
+- [x] 05-03-PLAN.md — Composants BadgeEntrepriseVerifiee.vue + BadgeDecennaleCertifiee.vue + tests
 - [ ] 05-04-PLAN.md — Wiring badges dashboard.vue + profil public [slug].vue
 - [ ] 05-05-PLAN.md — Suppression de la route admin approve-pro + Nettoyage admin dashboard (inutile)
 - [ ] 05-06-PLAN.md — Upload Décennale pro : saisie Numéro + Date d'expiration + Auto-approbation + Mécanisme blocage expiration
@@ -188,6 +188,6 @@ Plans:
 | 4.5. Conversion & Qualification | 8/8 | Completed | 2026-06-09 |
 | 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
 | 4.7. Refonte UI Globale & Design System | 0/7 | Planning complete | - |
-| 5. Intégration API État (SIRET) & Badges de Confiance | 1/5 | In Progress|  |
+| 5. Intégration API État (SIRET) & Badges de Confiance | 3/6 | In Progress|  |
 | 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
