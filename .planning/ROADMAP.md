@@ -12,8 +12,9 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 4.5: Conversion & Qualification** - Verrou 3 leads gratuits, free trial 14j, plan annuel, auto-qualification, profil public éditable, ROI dashboard, copy Premium refondu, CRM Minimaliste.
 - [x] **Phase 4.6: Marché Dynamique & Multi-Catégories** - Refonte DB (categories TEXT[]), fin du push leads, pull temps réel via projects, UI sélection multiple (profil/claim).
 - [ ] **Phase 4.7: Refonte UI Globale & Application du Design System** - Application du MASTER.md, harmonisation de la typographie (Figtree/Noto) et du thème B2B/Marketplace.
-- [ ] **Phase 5: SMS + Acquisition + Messagerie** - SMS différencié (Basic→upgrade / Premium→lead direct), cold outreach pros DB, dashboard particulier magic-link, messagerie in-app pro↔particulier, email onboarding (désactivé par défaut), feedback loop lead.
-- [ ] **Phase 6: Réputation & Scale** - Avis clients, referral program, multi-ville.
+- [ ] **Phase 5: Intégration API État (SIRET) & Badges de Confiance** - Récupération auto des infos légales (API Gouv/Pappers), vérification asynchrone décennale, et nouveaux copywriting labels.
+- [ ] **Phase 6: SMS + Acquisition + Messagerie** - SMS différencié (Basic→upgrade / Premium→lead direct), cold outreach pros DB, dashboard particulier magic-link, messagerie in-app pro↔particulier, email onboarding (désactivé par défaut), feedback loop lead.
+- [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville.
 
 ## Phase Details
 
@@ -129,7 +130,24 @@ Plans:
 - [ ] 04.7-07-PLAN.md — Accessibility audit, responsive test, pre-delivery checklist
 **UI hint**: yes
 
-### Phase 5: SMS + Acquisition + Messagerie
+### Phase 5: Intégration API État (SIRET) & Badges de Confiance
+**Goal**: Automatiser la vérification de l'existence légale de l'entreprise via une API d'État (recherche-entreprises.api.gouv.fr) pour renforcer la crédibilité B2B avec des badges de confiance.
+**Depends on**: Phase 4.7
+**Requirements**: API-01, API-02, TRST-01
+**Success Criteria** (what must be TRUE):
+  1. Lors de l'inscription (Claim), l'artisan saisit son SIRET et l'API récupère automatiquement Raison Sociale, Adresse, Statut (Actif/Fermé).
+  2. Le badge de profil affiche dynamiquement `Entreprise Vérifiée (API Gouv)` si le SIRET est actif.
+  3. L'upload de l'attestation Décennale reste manuel, mais l'approbation admin déclenche un badge premium `Décennale Certifiée BÂTI-AXE`.
+**Plans**: 5 plans
+Plans:
+- [ ] 05-01-PLAN.md — [BLOCKING] Migration SQL colonnes siret_* sur professionals + supabase db push
+- [ ] 05-02-PLAN.md — Lookup SIRET inline dans claim.post.ts + helper siretLookup.ts + tests Vitest (4 cas)
+- [ ] 05-03-PLAN.md — Composants BadgeEntrepriseVerifiee.vue + BadgeDecennaleCertifiee.vue + tests
+- [ ] 05-04-PLAN.md — Wiring badges dashboard.vue + profil public [slug].vue
+- [ ] 05-05-PLAN.md — approve-pro.post.ts : decennal_status=valid + labels + tests + REQUIREMENTS.md
+**UI hint**: yes
+
+### Phase 6: SMS + Acquisition + Messagerie
 **Goal**: Boucle complète d'acquisition, d'activation et de rétention — les pros sont notifiés, les particuliers ont un espace de suivi, et les deux communiquent sur la plateforme.
 **Depends on**: Phase 4.7 (design system) + Phase 4.5 (messaging/feedback)
 **Requirements**: SMS-01, SMS-02, SMS-04, ACQ-01, MSG-01, MSG-02, MSG-03, EML-01, FDB-01
@@ -147,9 +165,9 @@ Plans:
 **Plans**: TBD
 **UI hint**: yes
 
-### Phase 6: Réputation & Scale
+### Phase 7: Réputation & Scale
 **Goal**: Pérenniser la croissance par la preuve sociale et l'expansion géographique conditionnée aux métriques pilote.
-**Depends on**: Phase 5
+**Depends on**: Phase 6
 **Requirements**: REP-01, REP-02, SCL-01
 **Success Criteria** (what must be TRUE):
   1. Un particulier peut laisser un avis sur un pro après attribution d'un chantier ; l'avis est affiché sur le profil public.
@@ -169,5 +187,6 @@ Plans:
 | 4.5. Conversion & Qualification | 8/8 | Completed | 2026-06-09 |
 | 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
 | 4.7. Refonte UI Globale & Design System | 0/7 | Planning complete | - |
-| 5. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
-| 6. Réputation & Scale | 0/TBD | Not started | - |
+| 5. Intégration API État (SIRET) & Badges de Confiance | 0/5 | Planning complete | - |
+| 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
+| 7. Réputation & Scale | 0/TBD | Not started | - |
