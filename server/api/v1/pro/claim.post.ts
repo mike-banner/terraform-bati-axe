@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { serverSupabaseServiceRole, serverSupabaseUser } from '#supabase/server'
 import crypto from 'node:crypto'
+import { lookupSiret } from '~/server/utils/siretLookup'
 
 const log = (msg: string) => {
   console.log(`[claim.post] ${new Date().toISOString()} - ${msg}`)
@@ -117,6 +118,16 @@ export default defineEventHandler(async (event) => {
     
     log('SIRET check passed')
 
+    // Lookup SIRET via API Recherche Entreprises
+    const siretLookup = await lookupSiret(data.siret)
+    log('SIRET lookup: ' + siretLookup.status)
+    if (siretLookup.status === 'closed') {
+      throw createError({
+        statusCode: 422,
+        statusMessage: "Votre entreprise apparaît comme fermée dans l'annuaire officiel. Contactez-nous si c'est une erreur : contact@bati-axe.fr"
+      })
+    }
+
     // 3. Find active zone based on postal code
     const { data: matchedZone, error: zoneError } = await supabase
       .from('zones')
@@ -201,7 +212,11 @@ export default defineEventHandler(async (event) => {
         is_claimed: true,
         decennal_status: 'none',
         stripe_customer_id: null,
-        subscription_status: 'none'
+        subscription_status: 'none',
+        siret_status: siretLookup.status,
+        siret_verified_at: siretLookup.verified_at,
+        siret_company_name: siretLookup.company_name ?? null,
+        siret_address: siretLookup.address ?? null
       }, { onConflict: 'id' })
       .select('id')
       .single()
