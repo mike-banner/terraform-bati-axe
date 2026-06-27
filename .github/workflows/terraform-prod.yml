@@ -20,8 +20,11 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_SECRET_ACCESS_KEY }}
       
+      AWS_ENDPOINT_URL_S3: "https://${{ secrets.TF_VAR_cloudflare_account_id }}.r2.cloudflarestorage.com"
+      
       # Cloudflare & Supabase Secrets
       TF_VAR_cloudflare_api_token: ${{ secrets.TF_VAR_cloudflare_api_token }}
+      TF_VAR_cloudflare_account_id: ${{ secrets.TF_VAR_cloudflare_account_id }}
       TF_VAR_existing_database_url: ${{ secrets.TF_VAR_existing_database_url }}
       TF_VAR_supabase_url: ${{ secrets.TF_VAR_SUPABASE_URL }}
       TF_VAR_supabase_anon_key: ${{ secrets.TF_VAR_SUPABASE_ANON_KEY }}
