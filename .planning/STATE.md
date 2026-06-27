@@ -16,6 +16,11 @@ progress:
 
 # Project State
 
+## 🔒 Lock & Sync Status
+- **Lock Type:** None
+- **Git-Pulse:** Enabled (run `scripts/git-pulse.sh` to check for Claude's activity)
+- **Vault Sync:** Enabled (run `scripts/sync-vault-to-ki.py` after Vault updates)
+
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-06-02)

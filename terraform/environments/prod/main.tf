@@ -1,3 +1,4 @@
+# Déclencheur CI/CD de test
 module "platform" {
   source = "../../modules/platform"
 

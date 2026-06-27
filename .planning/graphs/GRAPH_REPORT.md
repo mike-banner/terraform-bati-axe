@@ -1,16 +1,16 @@
 # Graph Report - bati-axe  (2026-06-24)
 
 ## Corpus Check
-- 255 files · ~343,358 words
+- 255 files · ~346,468 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2039 nodes · 2957 edges · 264 communities (214 shown, 50 thin omitted)
+- 2040 nodes · 2958 edges · 264 communities (214 shown, 50 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ac21422c`
+- Built from commit: `6c33ec28`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -280,8 +280,8 @@ Cohesion: 0.50
 Nodes (3): Ce qui a été fait, Résultats et Décisions, Résumé d'Exécution : Plan 06
 
 ### Community 13 - "Community 13"
-Cohesion: 0.14
-Nodes (13): Accumulated Context, Blockers/Concerns, Current Position, Decisions, Deferred Ideas (hors scope, à reconsidérer plus tard), Known Patterns (à appliquer dans les prochaines phases), Pending Todos, Performance Metrics (+5 more)
+Cohesion: 0.13
+Nodes (14): Accumulated Context, Blockers/Concerns, Current Position, Decisions, Deferred Ideas (hors scope, à reconsidérer plus tard), Known Patterns (à appliquer dans les prochaines phases), 🔒 Lock & Sync Status, Pending Todos (+6 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.25
@@ -932,7 +932,7 @@ Cohesion: 0.12
 Nodes (16): Avertissements, CR-01 : Injection de `file_key` arbitraire dans `upload.post.ts` — bypass de la vérification R2, CR-02 : Injection de paramètre dans l'URL de l'API gouvernementale (`siretLookup.ts`), CR-03 : L'upsert dans `claim.post.ts` écrase le `canonical_slug` d'un profil existant non vérifié, IN-01 : Duplication de la logique `@keyframes shimmer` dans les deux composants Badge, IN-02 : Le `dept` de l'URL n'est jamais utilisé dans `[slug].get.ts`, Informations, Narrative Findings (AI reviewer) (+8 more)
 
 ## Knowledge Gaps
-- **1332 isolated node(s):** `version`, `timestamp`, `phase`, `phase_name`, `phase_dir` (+1327 more)
+- **1333 isolated node(s):** `version`, `timestamp`, `phase`, `phase_name`, `phase_dir` (+1328 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **50 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -946,7 +946,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `Communities (260 total, 49 thin omitted)` connect `Community 255` to `Community 142`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
 - **What connects `version`, `timestamp`, `phase` to the rest of the system?**
-  _1332 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1333 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `Community 10` be split into smaller, more focused modules?**
