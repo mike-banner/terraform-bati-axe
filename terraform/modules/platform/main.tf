@@ -39,10 +39,9 @@ module "cloudflare_pages" {
   env_vars = {
     DATABASE_URL                  = var.create_supabase ? module.supabase_project[0].database_url : var.existing_database_url
     SUPABASE_URL                  = var.supabase_url
-    NEXT_PUBLIC_SUPABASE_URL      = var.supabase_url
-    PUBLIC_SUPABASE_URL           = var.supabase_url
-    NEXT_PUBLIC_SUPABASE_ANON_KEY = var.supabase_anon_key
-    PUBLIC_SUPABASE_ANON_KEY      = var.supabase_anon_key
+    NUXT_PUBLIC_SUPABASE_URL      = var.supabase_url
+    SUPABASE_KEY                  = var.supabase_anon_key
+    NUXT_PUBLIC_SUPABASE_KEY      = var.supabase_anon_key
     SUPABASE_SERVICE_ROLE_KEY     = var.supabase_service_role_key
   }
 }
