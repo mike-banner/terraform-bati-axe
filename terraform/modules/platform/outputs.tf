@@ -20,16 +20,16 @@ output "active_workspace" {
 
 output "supabase_project_ref" {
   description = "Référence du projet Supabase créé (identifiant unique)"
-  value       = module.supabase_project.project_ref
+  value       = var.create_supabase ? module.supabase_project[0].project_ref : ""
 }
 
 output "supabase_api_url" {
   description = "URL de l'API Supabase (NEXT_PUBLIC_SUPABASE_URL)"
-  value       = module.supabase_project.api_url
+  value       = var.create_supabase ? module.supabase_project[0].api_url : ""
 }
 
 output "supabase_database_url" {
   description = "URL de connexion PostgreSQL directe — sensible, ne pas exposer publiquement"
-  value       = module.supabase_project.database_url
+  value       = var.create_supabase ? module.supabase_project[0].database_url : var.existing_database_url
   sensitive   = true
 }
