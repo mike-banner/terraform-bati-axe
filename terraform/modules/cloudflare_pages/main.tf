@@ -40,7 +40,7 @@ resource "cloudflare_pages_project" "this" {
   # Configuration du build Astro/Nuxt (commande et répertoire de sortie)
   build_config = {
     build_command   = "npm run build"
-    destination_dir = ".output/public"
+    destination_dir = "dist"
     root_dir        = ""
   }
 
