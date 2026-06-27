@@ -1,0 +1,51 @@
+name: Terraform Production
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'terraform/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Terraform Apply (Prod)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform/environments/prod
+    
+    env:
+      # S3 Backend (R2)
+      AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_SECRET_ACCESS_KEY }}
+      
+      # Cloudflare & Supabase Secrets
+      TF_VAR_cloudflare_api_token: ${{ secrets.TF_VAR_cloudflare_api_token }}
+      TF_VAR_existing_database_url: ${{ secrets.TF_VAR_existing_database_url }}
+      TF_VAR_supabase_url: ${{ secrets.TF_VAR_SUPABASE_URL }}
+      TF_VAR_supabase_anon_key: ${{ secrets.TF_VAR_SUPABASE_ANON_KEY }}
+      TF_VAR_supabase_service_role_key: ${{ secrets.TF_VAR_SUPABASE_SERVICE_ROLE_KEY }}
+      
+      # Dummy vars (non utilisées en prod car Supabase n'est pas créé, mais requises par TF)
+      TF_VAR_supabase_access_token: "dummy"
+      TF_VAR_supabase_organization_id: "dummy"
+      TF_VAR_supabase_database_password: "dummy"
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5.0"
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -no-color
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
