@@ -33,9 +33,7 @@ resource "cloudflare_pages_project" "this" {
       pr_comments_enabled            = true
       production_deployments_enabled = true
 
-      # Prévisualisation activée sur toutes les branches hors production
-      preview_deployment_setting = "custom"
-      preview_branch_includes    = ["dev", "staging"]
+      preview_deployment_setting = "all"
     }
   }
 
@@ -54,7 +52,7 @@ resource "cloudflare_pages_project" "this" {
       compatibility_date  = "2024-06-26"
       env_vars = {
         for k, v in var.env_vars : k => {
-          type  = (startswith(k, "NEXT_PUBLIC_") || startswith(k, "PUBLIC_")) ? "plain_text" : "secret_text"
+          type  = startswith(k, "NUXT_PUBLIC_") ? "plain_text" : "secret_text"
           value = v
         }
       }
@@ -64,7 +62,7 @@ resource "cloudflare_pages_project" "this" {
       compatibility_date  = "2024-06-26"
       env_vars = {
         for k, v in var.env_vars : k => {
-          type  = (startswith(k, "NEXT_PUBLIC_") || startswith(k, "PUBLIC_")) ? "plain_text" : "secret_text"
+          type  = startswith(k, "NUXT_PUBLIC_") ? "plain_text" : "secret_text"
           value = v
         }
       }
