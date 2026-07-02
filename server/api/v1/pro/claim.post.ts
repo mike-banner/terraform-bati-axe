@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { serverSupabaseServiceRole, serverSupabaseUser } from '#supabase/server'
 import crypto from 'node:crypto'
-import { lookupSiret } from '~/server/utils/siretLookup'
 
 const log = (msg: string) => {
   console.log(`[claim.post] ${new Date().toISOString()} - ${msg}`)
