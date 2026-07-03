@@ -8,17 +8,19 @@
 @theme inline {
     --font-sans: 'Noto Sans', sans-serif;
     --font-heading: 'Figtree', sans-serif;
-    /* MASTER.md color palette */
-    --color-primary: #0891B2;         /* cyan — primary links/secondary CTAs */
-    --color-secondary: #22D3EE;       /* cyan lighter — hover states */
-    --color-cta: #22C55E;             /* green — primary buttons */
+    /* MASTER.md color palette — gris industriel + orange sécurité (Sketch 001) */
+    --color-primary: #64748B;         /* slate — liens/CTA secondaires */
+    --color-secondary: #94A3B8;       /* slate clair — hover states */
+    --color-cta: #F97316;             /* orange sécurité — boutons primaires */
     --color-background: #FFFFFF;      /* blanc — inputs, cartes, composants */
-    --color-page: #ECFEFF;            /* cyan clair — fond de page */
-    --color-text: #164E63;            /* dark cyan text */
+    --color-page: #F8FAFC;            /* slate-50 — fond de page */
+    --color-text: #0F172A;            /* slate-900 texte */
     --color-border: #E2E8F0;          /* gray border */
     --color-border-error: #DC2626;    /* red error state */
     --color-border-disabled: #F1F5F9; /* light gray disabled state */
-    --color-ring: #0891B220;          /* cyan with 13% opacity for focus ring */
+    --color-ring: #F9731633;          /* orange with 20% opacity for focus ring */
+    --color-industrial: #64748B;      /* Sketch 001 — structure industrielle */
+    --color-safety: #F97316;          /* Sketch 001 — CTA haute conversion */
     /* Spacing tokens (explicit names for grid consistency) */
     --space-xs: 0.25rem;              /* 4px */
     --space-sm: 0.5rem;               /* 8px */
@@ -38,66 +40,66 @@
     --radius-lg: 12px;
     --radius-xl: 16px;
     /* shadcn-vue chart colors (kept for backward compat) */
-    --color-chart-1: #0891B2;
-    --color-chart-2: #22C55E;
-    --color-chart-3: #22D3EE;
+    --color-chart-1: #64748B;
+    --color-chart-2: #F97316;
+    --color-chart-3: #94A3B8;
     --color-chart-4: #E2E8F0;
-    --color-chart-5: #164E63;
+    --color-chart-5: #0F172A;
     /* shadcn-vue sidebar colors (kept for backward compat) */
-    --color-sidebar: #ECFEFF;
-    --color-sidebar-foreground: #164E63;
-    --color-sidebar-primary: #0891B2;
-    --color-sidebar-primary-foreground: #ECFEFF;
-    --color-sidebar-accent: #22C55E;
-    --color-sidebar-accent-foreground: #ECFEFF;
+    --color-sidebar: #F8FAFC;
+    --color-sidebar-foreground: #0F172A;
+    --color-sidebar-primary: #64748B;
+    --color-sidebar-primary-foreground: #F8FAFC;
+    --color-sidebar-accent: #F97316;
+    --color-sidebar-accent-foreground: #F8FAFC;
     --color-sidebar-border: #E2E8F0;
-    --color-sidebar-ring: #0891B2;
+    --color-sidebar-ring: #64748B;
     /* shadcn-vue standard colors (kept for backward compat) */
     --color-card: #FFFFFF;
-    --color-card-foreground: #164E63;
+    --color-card-foreground: #0F172A;
     --color-popover: #FFFFFF;
-    --color-popover-foreground: #164E63;
+    --color-popover-foreground: #0F172A;
     --color-muted: #E2E8F0;
     --color-muted-foreground: #64748B;
-    --color-accent: #22C55E;
+    --color-accent: #F97316;
     --color-accent-foreground: #FFFFFF;
     --color-destructive: #DC2626;
     --color-input: #E2E8F0;
     /* Variables requises par Tailwind v4 pour bg-foreground / text-background */
-    --color-foreground: #164E63;
+    --color-foreground: #0F172A;
     /* shadcn-vue standard light mode (required for Tailwind v4) */
     --background: #FFFFFF;
-    --foreground: #164E63;
+    --foreground: #0F172A;
     --card: #FFFFFF;
-    --card-foreground: #164E63;
+    --card-foreground: #0F172A;
     --popover: #FFFFFF;
-    --popover-foreground: #164E63;
-    --primary: #0891B2;
+    --popover-foreground: #0F172A;
+    --primary: #64748B;
     --primary-foreground: #FFFFFF;
     --secondary: #E2E8F0;
-    --secondary-foreground: #164E63;
+    --secondary-foreground: #0F172A;
     --muted: #E2E8F0;
     --muted-foreground: #64748B;
-    --accent: #22C55E;
+    --accent: #F97316;
     --accent-foreground: #FFFFFF;
     --destructive: #DC2626;
     --border: #E2E8F0;
     --input: #E2E8F0;
-    --ring: #0891B220;
+    --ring: #F9731633;
 }
 
 :root {
     /* MASTER.md primary palette */
-    --color-primary: #0891B2;
-    --color-secondary: #22D3EE;
-    --color-cta: #22C55E;
+    --color-primary: #64748B;
+    --color-secondary: #94A3B8;
+    --color-cta: #F97316;
     --color-background: #FFFFFF;
-    --color-page: #ECFEFF;
-    --color-text: #164E63;
+    --color-page: #F8FAFC;
+    --color-text: #0F172A;
     --color-border: #E2E8F0;
     --color-border-error: #DC2626;
     --color-border-disabled: #F1F5F9;
-    --color-ring: #0891B220;
+    --color-ring: #F9731633;
     /* Spacing */
     --space-xs: 0.25rem;
     --space-sm: 0.5rem;
@@ -117,49 +119,49 @@
     --radius-lg: 12px;
     --radius-xl: 16px;
     /* shadcn-vue chart colors */
-    --chart-1: #0891B2;
-    --chart-2: #22C55E;
-    --chart-3: #22D3EE;
+    --chart-1: #64748B;
+    --chart-2: #F97316;
+    --chart-3: #94A3B8;
     --chart-4: #E2E8F0;
-    --chart-5: #164E63;
+    --chart-5: #0F172A;
     /* shadcn-vue sidebar colors */
-    --sidebar: #ECFEFF;
-    --sidebar-foreground: #164E63;
-    --sidebar-primary: #0891B2;
-    --sidebar-primary-foreground: #ECFEFF;
-    --sidebar-accent: #22C55E;
-    --sidebar-accent-foreground: #ECFEFF;
+    --sidebar: #F8FAFC;
+    --sidebar-foreground: #0F172A;
+    --sidebar-primary: #64748B;
+    --sidebar-primary-foreground: #F8FAFC;
+    --sidebar-accent: #F97316;
+    --sidebar-accent-foreground: #F8FAFC;
     --sidebar-border: #E2E8F0;
-    --sidebar-ring: #0891B2;
+    --sidebar-ring: #64748B;
     /* shadcn-vue standard colors */
     --card: #FFFFFF;
-    --card-foreground: #164E63;
+    --card-foreground: #0F172A;
     --popover: #FFFFFF;
-    --popover-foreground: #164E63;
+    --popover-foreground: #0F172A;
     --muted: #E2E8F0;
     --muted-foreground: #64748B;
-    --accent: #22C55E;
+    --accent: #F97316;
     --accent-foreground: #FFFFFF;
     --destructive: #DC2626;
     --input: #E2E8F0;
-    --primary: #0891B2;
+    --primary: #64748B;
     --primary-foreground: #FFFFFF;
     --secondary: #E2E8F0;
-    --secondary-foreground: #164E63;
+    --secondary-foreground: #0F172A;
     --background: #FFFFFF;
-    --foreground: #164E63;
+    --foreground: #0F172A;
     --border: #E2E8F0;
-    --ring: #0891B220;
+    --ring: #F9731633;
 }
 
 .dark {
-    /* Dark mode — kept as-is for now */
-    --color-primary: #22D3EE;
-    --color-secondary: #0891B2;
+    /* Dark mode — gris industriel + orange sécurité */
+    --color-primary: #94A3B8;
+    --color-secondary: #64748B;
     --color-background: #0F172A;
     --color-text: #F1F5F9;
     --color-border: #334155;
-    --color-ring: #22D3EE40;
+    --color-ring: #F9731640;
     /* shadcn-vue dark mode (standard) */
     --background: #0F172A;
     --foreground: #F1F5F9;
@@ -167,31 +169,31 @@
     --card-foreground: #F1F5F9;
     --popover: #1E293B;
     --popover-foreground: #F1F5F9;
-    --primary: #22D3EE;
+    --primary: #94A3B8;
     --primary-foreground: #0F172A;
     --secondary: #334155;
     --secondary-foreground: #F1F5F9;
     --muted: #334155;
     --muted-foreground: #94A3B8;
-    --accent: #22C55E;
+    --accent: #F97316;
     --accent-foreground: #0F172A;
     --destructive: #EF4444;
     --border: #334155;
     --input: #334155;
-    --ring: #22D3EE;
-    --chart-1: #22D3EE;
-    --chart-2: #22C55E;
-    --chart-3: #0891B2;
+    --ring: #94A3B8;
+    --chart-1: #94A3B8;
+    --chart-2: #F97316;
+    --chart-3: #64748B;
     --chart-4: #334155;
     --chart-5: #64748B;
     --sidebar: #1E293B;
     --sidebar-foreground: #F1F5F9;
-    --sidebar-primary: #22D3EE;
+    --sidebar-primary: #94A3B8;
     --sidebar-primary-foreground: #0F172A;
-    --sidebar-accent: #22C55E;
+    --sidebar-accent: #F97316;
     --sidebar-accent-foreground: #0F172A;
     --sidebar-border: #334155;
-    --sidebar-ring: #22D3EE;
+    --sidebar-ring: #94A3B8;
 }
 
 @layer base {
