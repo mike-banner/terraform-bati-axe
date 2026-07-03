@@ -234,31 +234,31 @@ const statusLabel: Record<string, string> = {
     <div class="max-w-6xl mx-auto px-6 py-10 space-y-8">
 
       <!-- Header -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
         <div>
-          <h1 class="text-2xl font-black tracking-tight text-foreground">Console de modération</h1>
+          <h1 class="text-3xl font-bold tracking-tight text-slate-900">Console de modération</h1>
           <p class="text-sm text-muted-foreground mt-1">Validation des Kbis et attestations décennales.</p>
         </div>
         <div v-if="isAdmin" class="flex items-center gap-2">
           <button
             @click="activeTab = 'pending'; categoryFilter = ''"
-            class="h-9 px-4 text-sm font-medium rounded-md border transition-colors"
-            :class="activeTab === 'pending' ? 'bg-foreground text-background border-foreground' : 'border-border text-muted-foreground hover:text-foreground hover:bg-muted'"
+            class="h-9 px-4 text-sm font-medium rounded-full border transition-colors"
+            :class="activeTab === 'pending' ? 'bg-safety text-white border-safety' : 'bg-white border-slate-200 text-muted-foreground hover:text-foreground hover:bg-muted'"
           >
             En attente
             <span v-if="pendingCount" class="ml-1.5 text-xs font-bold">({{ pendingCount }})</span>
           </button>
           <button
             @click="activeTab = 'all'"
-            class="h-9 px-4 text-sm font-medium rounded-md border transition-colors"
-            :class="activeTab === 'all' ? 'bg-foreground text-background border-foreground' : 'border-border text-muted-foreground hover:text-foreground hover:bg-muted'"
+            class="h-9 px-4 text-sm font-medium rounded-full border transition-colors"
+            :class="activeTab === 'all' ? 'bg-safety text-white border-safety' : 'bg-white border-slate-200 text-muted-foreground hover:text-foreground hover:bg-muted'"
           >
             Tous les pros
           </button>
           <button
             @click="activeTab = 'projects'; categoryFilter = ''"
-            class="h-9 px-4 text-sm font-medium rounded-md border transition-colors"
-            :class="activeTab === 'projects' ? 'bg-foreground text-background border-foreground' : 'border-border text-muted-foreground hover:text-foreground hover:bg-muted'"
+            class="h-9 px-4 text-sm font-medium rounded-full border transition-colors"
+            :class="activeTab === 'projects' ? 'bg-safety text-white border-safety' : 'bg-white border-slate-200 text-muted-foreground hover:text-foreground hover:bg-muted'"
           >
             Projets
           </button>
@@ -269,7 +269,7 @@ const statusLabel: Record<string, string> = {
       <div v-if="isAdmin && activeTab === 'all'" class="flex items-center justify-end">
         <select
           v-model="categoryFilter"
-          class="h-9 px-3 pr-8 border border-border rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
+          class="h-9 px-3 pr-8 border border-slate-200 rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
         >
           <option value="">Toutes catégories</option>
           <option v-for="cat in availableCategories" :key="cat" :value="cat">
@@ -308,27 +308,27 @@ const statusLabel: Record<string, string> = {
 
         <!-- Pro cards (hidden when Projets tab is active) -->
         <template v-if="activeTab !== 'projects'">
-        <div v-if="filtered.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-border rounded-lg">
+        <div v-if="filtered.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-slate-200 rounded-3xl">
           <p class="text-sm text-muted-foreground">Aucun dossier {{ activeTab === 'pending' ? 'en attente' : '' }}.</p>
         </div>
         <div v-else-if="filtered.length > 0" class="space-y-4">
           <div
             v-for="pro in filtered"
             :key="pro.id"
-            class="border border-border rounded-lg overflow-hidden"
+            class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm"
           >
             <!-- Pro header row -->
             <div class="flex items-start justify-between gap-4 px-5 py-4 bg-muted/50">
               <div class="space-y-1 flex-1 min-w-0">
                 <div class="flex items-center gap-2 flex-wrap">
-                  <span class="text-sm font-bold text-foreground">{{ pro.company_name }}</span>
+                  <span class="text-sm font-bold text-slate-900">{{ pro.company_name }}</span>
                   <span
                     class="text-xs font-medium px-2 py-0.5 rounded-full border"
-                    :class="pro.is_verified ? 'border-emerald-400 text-emerald-700 bg-emerald-50' : 'border-amber-300 text-amber-700 bg-amber-50'"
+                    :class="pro.is_verified ? 'border-slate-300 text-slate-700 bg-slate-100' : 'border-amber-300 text-amber-700 bg-amber-50'"
                   >
                     {{ pro.is_verified ? 'Approuvé' : 'En attente' }}
                   </span>
-                  <span v-if="pro.category" class="text-xs px-2 py-0.5 rounded-full border border-border text-muted-foreground">
+                  <span v-if="pro.category" class="text-xs px-2 py-0.5 rounded-full border border-slate-200 text-muted-foreground">
                     {{ CATEGORY_LABELS[pro.category] ?? pro.category }}
                   </span>
                 </div>
@@ -355,7 +355,7 @@ const statusLabel: Record<string, string> = {
                     @click="approvePro(pro.id, true)"
                     :disabled="actionLoading === `${pro.id}-approve` || !canApprove(pro)"
                     :title="!canApprove(pro) ? 'KBIS et décennale doivent être validés avant approbation' : ''"
-                    class="h-8 px-3 bg-emerald-600 text-white text-xs font-semibold rounded-md hover:bg-emerald-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
+                    class="h-8 px-3 bg-safety text-white text-xs font-semibold rounded-full hover:bg-orange-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
                   >
                     <svg v-if="actionLoading === `${pro.id}-approve`" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
                     <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
@@ -367,7 +367,7 @@ const statusLabel: Record<string, string> = {
                   v-if="pro.is_verified"
                   @click="approvePro(pro.id, false)"
                   :disabled="actionLoading === `${pro.id}-approve`"
-                  class="h-8 px-3 border border-red-200 text-red-700 text-xs font-semibold rounded-md hover:bg-red-50 transition-colors disabled:opacity-40"
+                  class="h-8 px-3 bg-white border border-red-200 text-red-700 text-xs font-semibold rounded-full hover:bg-red-50 transition-colors disabled:opacity-40"
                 >
                   Suspendre
                 </button>
@@ -375,7 +375,7 @@ const statusLabel: Record<string, string> = {
             </div>
 
             <!-- Documents -->
-            <div class="divide-y divide-border">
+            <div class="divide-y divide-slate-100">
               <div
                 v-for="docType in (['kbis', 'decennale'] as const)"
                 :key="docType"
@@ -407,7 +407,7 @@ const statusLabel: Record<string, string> = {
                     <button
                       v-if="pro.verifications?.find(v => v.document_type === docType)?.file_key"
                       @click="viewDocument(pro.verifications!.find(v => v.document_type === docType)!.file_key)"
-                      class="h-8 px-3 border border-border text-xs font-medium rounded-md hover:bg-muted transition-colors flex items-center gap-1.5"
+                      class="h-8 px-3 bg-white border border-slate-200 text-xs font-medium rounded-full hover:bg-muted transition-colors flex items-center gap-1.5"
                     >
                       Ouvrir
                       <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
@@ -427,7 +427,7 @@ const statusLabel: Record<string, string> = {
                       <button
                         @click="moderateDocument(pro.id, docType, 'rejected')"
                         :disabled="actionLoading === `${pro.id}-${docType}`"
-                        class="h-8 px-3 border border-red-200 text-red-700 text-xs font-semibold rounded-md hover:bg-red-50 transition-colors disabled:opacity-40"
+                        class="h-8 px-3 bg-white border border-red-200 text-red-700 text-xs font-semibold rounded-full hover:bg-red-50 transition-colors disabled:opacity-40"
                       >
                         Rejeter
                       </button>
@@ -446,7 +446,7 @@ const statusLabel: Record<string, string> = {
                            Envoyer
                         </button>
                       </div>
-                      <label v-else class="cursor-pointer h-8 px-3 border border-border text-xs font-medium rounded-md hover:bg-muted transition-colors flex items-center gap-1.5">
+                      <label v-else class="cursor-pointer h-8 px-3 bg-white border border-slate-200 text-xs font-medium rounded-full hover:bg-muted transition-colors flex items-center gap-1.5">
                         <input type="file" @change="onFileSelect($event, pro.id, docType)" accept=".pdf,image/*" class="sr-only" />
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
                         Uploader
@@ -465,7 +465,7 @@ const statusLabel: Record<string, string> = {
                   <input
                     type="date"
                     v-model="expiryDates[`${pro.id}-decennale`]"
-                    class="h-9 px-3 border border-border rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    class="h-9 px-3 border border-slate-200 rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20"
                   />
                 </div>
               </div>
@@ -481,7 +481,7 @@ const statusLabel: Record<string, string> = {
             <span>{{ projects.length }} projet(s) — <span class="text-red-600 font-medium">{{ projects.filter(p => leadAge(p.created_at).days >= 3).length }} critique(s)</span></span>
             <button
               @click="projectSortAsc = !projectSortAsc"
-              class="flex items-center gap-1.5 h-8 px-3 border border-border rounded-md hover:bg-muted transition-colors font-medium text-foreground"
+              class="flex items-center gap-1.5 h-8 px-3 bg-white border border-slate-200 rounded-full hover:bg-muted transition-colors font-medium text-foreground"
             >
               <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M7 12h10M11 17h2" />
@@ -490,25 +490,25 @@ const statusLabel: Record<string, string> = {
             </button>
           </div>
 
-          <div v-if="projects.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-border rounded-lg">
+          <div v-if="projects.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-slate-200 rounded-3xl">
             <p class="text-sm text-muted-foreground">Aucun projet trouvé.</p>
           </div>
           <div v-else class="space-y-4">
             <div
               v-for="project in sortedProjects"
               :key="project.id"
-              class="border rounded-lg overflow-hidden transition-colors"
-              :class="leadAge(project.created_at).days >= 3 ? 'border-red-200' : 'border-border'"
+              class="bg-white border rounded-3xl overflow-hidden shadow-sm transition-colors"
+              :class="leadAge(project.created_at).days >= 3 ? 'border-red-200' : 'border-slate-200'"
             >
               <div class="flex items-start justify-between gap-4 px-5 py-4 bg-muted/50">
                 <div class="space-y-1 flex-1 min-w-0">
                   <div class="flex items-center gap-2 flex-wrap">
-                    <span v-if="project.category" class="text-xs px-2 py-0.5 rounded-full border border-border text-muted-foreground">
+                    <span v-if="project.category" class="text-xs px-2 py-0.5 rounded-full border border-slate-200 text-muted-foreground">
                       {{ CATEGORY_LABELS[project.category] ?? project.category }}
                     </span>
                     <span
                       class="text-xs font-medium px-2 py-0.5 rounded-full border"
-                      :class="project.status === 'qualified' ? 'border-emerald-400 text-emerald-700 bg-emerald-50' : 'border-amber-300 text-amber-700 bg-amber-50'"
+                      :class="project.status === 'qualified' ? 'border-slate-300 text-slate-700 bg-slate-100' : 'border-amber-300 text-amber-700 bg-amber-50'"
                     >
                       {{ project.status === 'qualified' ? 'Qualifié' : 'En attente' }}
                     </span>
