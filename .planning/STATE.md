@@ -31,22 +31,22 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 
 ## Current Position
 
-Phase: 04.7 (UI-Refonte) — COMPLETE ✅
-Plan: 8 of 8
-Status: Phase 04.7 terminée, en attente de vérification humaine (checkpoint plan 08)
+Phase: 04.7 (UI-Refonte) — REPLAN v2 (planned, non exécutée)
+Plan: 0 of 8
+Status: v1 (cyan/vert) rejetée par l'utilisateur et archivée dans `.planning/legacy/04.7-v1-cyan-vert/`. Replan v2 vers la charte Sketch 001 (gris industriel #64748B + orange sécurité #F97316, DM Sans, Bento). Plans vérifiés par plan-checker (0 blocker).
 Last activity: 2026-07-03
-Progress: [█████████░] 88%
+Progress: [░░░░░░░░░░] 0%
 
-### Plans Phase 4.7 — COMPLETE ✅
+### Plans Phase 4.7 v2 — PLANNED (3 vagues)
 
-- [x] 04.7-01 — CSS Foundation & Design Tokens (livré)
-- [x] 04.7-02 — Landing page refactor (livré)
-- [x] 04.7-03 — Pro forms refactor (livré)
-- [x] 04.7-04 — Pro dashboard refactor (livré)
-- [x] 04.7-05 — Premium + public profile (livré)
-- [x] 04.7-06 — Admin + legal pages (livré)
-- [x] 04.7-07 — Accessibility audit (PASS)
-- [x] 04.7-08 — Composants Premium (Badge & Breadcrumbs) — livré, checkpoint human-verify en attente
+- [ ] 04.7-01 — Fondation CSS : tokens gris/orange, DM Sans, .bento-card (vague 1)
+- [ ] 04.7-02 — Landing : hero Bento Grid Variant C (vague 2)
+- [ ] 04.7-03 — Dashboard : repoint Ui*, suppression doublons, badges (vague 2)
+- [ ] 04.7-04 — Espace leads : grille bento, fiche détail (vague 2)
+- [ ] 04.7-05 — Formulaires claim/profil/simulateur (vague 2)
+- [ ] 04.7-06 — Premium + profil public (vague 2)
+- [ ] 04.7-07 — Admin + légal (vague 2)
+- [ ] 04.7-08 — Gate zéro vert/cyan + a11y + checkpoint human-verify (vague 3)
 
 ### Plans Phase 5 (blocked/deferred)
 
