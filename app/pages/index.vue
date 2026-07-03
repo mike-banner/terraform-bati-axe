@@ -12,64 +12,81 @@ const heroPhoto = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?
 
 <template>
   <div>
-    <!-- ───────────────── Hero split : texte crème / photo chantier ───────────────── -->
-    <section class="mx-auto w-full max-w-[1400px] px-[clamp(1.25rem,5vw,4rem)] pt-[clamp(3rem,7vw,6rem)] pb-[clamp(3rem,6vw,5rem)]">
-      <div class="grid items-center gap-[clamp(2rem,5vw,4.5rem)] lg:grid-cols-[1.05fr_0.95fr]">
-        <!-- Colonne texte -->
-        <div class="reveal">
-          <div class="reveal-item inline-flex items-center gap-2 rounded-full border border-border bg-background px-3.5 py-1.5 text-sm text-text">
-            <span class="inline-block h-1.5 w-1.5 rounded-full bg-cta" aria-hidden="true" />
-            Zone pilote · Carrières-sous-Poissy (78)
+    <!-- ───────────────── Hero Bento Grid (Variant C) ───────────────── -->
+    <section class="mx-auto w-full max-w-7xl px-6 pt-12 pb-24">
+      <div class="reveal grid grid-cols-1 gap-6 md:grid-cols-12">
+        <!-- Carte intro -->
+        <div class="reveal-item bento-card md:col-span-8 flex min-h-[420px] flex-col justify-between rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10">
+          <div>
+            <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-sm text-slate-600">
+              <span class="inline-block h-1.5 w-1.5 rounded-full bg-safety" aria-hidden="true" />
+              Zone pilote · Carrières-sous-Poissy (78)
+            </div>
+
+            <h1
+              class="mt-6 text-5xl font-black tracking-tight text-slate-900 md:text-7xl"
+              style="text-wrap: balance"
+            >
+              Trouvez l'artisan
+              <span class="text-slate-400">certifié pour vos travaux.</span>
+            </h1>
+
+            <p class="mt-6 max-w-md text-lg text-slate-500" style="text-wrap: pretty">
+              Chaque professionnel partenaire est vérifié manuellement : décennale en cours de validité, Kbis à jour. Vos coordonnées restent masquées jusqu'au moment du contact.
+            </p>
           </div>
 
-          <h1
-            class="reveal-item mt-6 font-heading text-5xl sm:text-6xl lg:text-7xl font-bold text-text"
-            style="text-wrap: balance"
-          >
-            Trouvez l'artisan certifié pour vos travaux.
-          </h1>
-
-          <p class="reveal-item mt-6 max-w-[42ch] text-lg leading-relaxed text-gray-700" style="text-wrap: pretty">
-            Chaque professionnel partenaire est vérifié manuellement : décennale en cours de validité, Kbis à jour. Vos coordonnées restent masquées jusqu'au moment du contact.
-          </p>
-
-          <div class="reveal-item mt-9 flex flex-col gap-3 sm:flex-row">
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
             <NuxtLink
               to="/simulateur"
-              class="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-cta px-7 text-sm font-semibold text-white transition-all hover:opacity-90 hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary cursor-pointer"
+              class="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-safety px-8 text-lg font-bold text-white shadow-lg shadow-safety/20 transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary cursor-pointer"
             >
               Décrire mon projet
               <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" /></svg>
             </NuxtLink>
             <NuxtLink
               to="/pro/claim"
-              class="inline-flex h-12 items-center justify-center rounded-md border-2 border-primary px-7 text-sm font-semibold text-primary transition-all hover:bg-background hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary cursor-pointer"
+              class="inline-flex h-14 items-center justify-center rounded-full border border-slate-200 bg-white px-8 text-lg font-semibold text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary cursor-pointer"
             >
               Je suis artisan
             </NuxtLink>
           </div>
-
-          <p class="reveal-item mt-6 flex items-center gap-2 text-sm text-gray-700">
-            <svg class="h-4 w-4 text-text" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
-            Décennale et Kbis contrôlés à la main, jamais par un algorithme.
-          </p>
         </div>
 
-        <!-- Colonne photo chantier, encadrée façon « pièce vérifiée » -->
-        <div class="reveal-item relative">
-          <div class="relative overflow-hidden rounded-lg border border-border bg-background">
-            <img
-              :src="heroPhoto"
-              alt="Chantier de rénovation en cours, mur en briques apparentes"
-              class="aspect-[4/5] w-full object-cover sm:aspect-[5/4] lg:aspect-[4/5]"
-              loading="eager"
-              fetchpriority="high"
-            >
-            <!-- Sceau de vérification -->
-            <div class="absolute bottom-4 left-4 flex items-center gap-2.5 rounded-md bg-cta px-3.5 py-2 text-white shadow-lg">
-              <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
-              <span class="text-sm font-semibold">Pro vérifié à la main</span>
-            </div>
+        <!-- Carte accent : mise en relation -->
+        <div class="reveal-item bento-card md:col-span-4 flex flex-col justify-between rounded-3xl bg-industrial p-8 text-white">
+          <div class="flex items-center gap-2 text-sm font-medium text-orange-200">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            Mise en relation
+          </div>
+          <div>
+            <div class="text-5xl font-bold">2 min</div>
+            <p class="mt-2 text-sm text-white/80">Délai moyen avant qu'un artisan de votre zone reçoive l'alerte, budget et type de chantier inclus.</p>
+          </div>
+        </div>
+
+        <!-- Carte bénéfices : critères contrôlés -->
+        <div class="reveal-item bento-card md:col-span-4 rounded-3xl border border-slate-800 bg-slate-900 p-8 text-white">
+          <div class="mb-4 text-sm text-slate-400">Contrôlés avant activation</div>
+          <div class="flex flex-wrap gap-2">
+            <span class="rounded-full bg-white/10 px-3 py-1 text-sm">Décennale valide</span>
+            <span class="rounded-full bg-white/10 px-3 py-1 text-sm">Kbis &lt; 3 mois</span>
+            <span class="rounded-full bg-white/10 px-3 py-1 text-sm">Zone confirmée</span>
+          </div>
+        </div>
+
+        <!-- Carte visuelle : photo chantier -->
+        <div class="reveal-item bento-card md:col-span-8 relative min-h-[280px] overflow-hidden rounded-3xl border border-slate-200">
+          <img
+            :src="heroPhoto"
+            alt="Chantier de rénovation en cours, mur en briques apparentes"
+            class="absolute inset-0 h-full w-full object-cover"
+            loading="eager"
+            fetchpriority="high"
+          >
+          <div class="absolute bottom-4 left-4 flex items-center gap-2.5 rounded-full bg-safety px-3.5 py-2 text-white shadow-lg">
+            <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+            <span class="text-sm font-semibold">Pro vérifié à la main</span>
           </div>
         </div>
       </div>
@@ -190,22 +207,4 @@ const heroPhoto = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?
     </section>
   </div>
 </template>
-
-<style scoped>
-/* Entrée sobre du hero — n'enrichit qu'un contenu déjà visible. */
-@media (prefers-reduced-motion: no-preference) {
-  .reveal-item {
-    animation: reveal-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-  .reveal .reveal-item:nth-child(1) { animation-delay: 0.02s; }
-  .reveal .reveal-item:nth-child(2) { animation-delay: 0.08s; }
-  .reveal .reveal-item:nth-child(3) { animation-delay: 0.14s; }
-  .reveal .reveal-item:nth-child(4) { animation-delay: 0.20s; }
-  .reveal .reveal-item:nth-child(5) { animation-delay: 0.26s; }
-}
-
-@keyframes reveal-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-</style>
+<!-- Animation .reveal-item / .bento-card mutualisée dans app/assets/css/tailwind.css (fondation plan 01) -->
