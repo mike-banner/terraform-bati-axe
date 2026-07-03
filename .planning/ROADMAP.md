@@ -123,7 +123,7 @@ Plans:
 **Note**: v1 (cyan/vert, Figtree/Noto) supersédée — plans archivés dans `.planning/legacy/04.7-v1-cyan-vert/`.
 **Plans**: 8 plans
 Plans:
-- [ ] 04.7-01-PLAN.md — Fondation CSS : tokens gris+orange, DM Sans, utilitaires .bento-card + reveal (levier token cascade)
+- [x] 04.7-01-PLAN.md — Fondation CSS : tokens gris+orange, DM Sans, utilitaires .bento-card + reveal (levier token cascade)
 - [ ] 04.7-02-PLAN.md — Landing : hero Bento Grid Variant C + sections + BeforeAfterSlider
 - [ ] 04.7-03-PLAN.md — Dashboard pro & badges : repoint Ui*, suppression doublons morts, restyle badges SIRET/décennale
 - [ ] 04.7-04-PLAN.md — Leads & messagerie espace : grille bento, fiche détail (masquage intact), LeadAge sans vert
@@ -190,7 +190,7 @@ Plans:
 | 4. Le Verrou & Stripe Billing | 7/7 | Completed | 2026-06-09 |
 | 4.5. Conversion & Qualification | 8/8 | Completed | 2026-06-09 |
 | 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
-| 4.7. Refonte UI Globale & Design System | 8/8 | Complete   | 2026-07-03 |
+| 4.7. Refonte UI Globale & Design System | 1/8 | In Progress|  |
 | 5. Intégration API État (SIRET) & Badges de Confiance | 6/6 | Complete   | 2026-06-24 |
 | 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
