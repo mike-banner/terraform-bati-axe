@@ -189,7 +189,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
     <template v-else-if="pro">
 
       <!-- Breadcrumbs -->
-      <IdentityBreadcrumbs :items="[
+      <UiIdentityBreadcrumbs :items="[
         { label: 'BÂTI-AXE' },
         { label: 'Espace Pro', to: '/espace/leads' },
         { label: 'Tableau de bord' }
@@ -199,10 +199,10 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
       <div class="mb-10">
         <div class="mb-4 space-y-2">
           <div class="flex flex-wrap gap-2">
-            <PremiumBadge v-if="pro.is_verified" />
+            <UiPremiumBadge v-if="pro.is_verified" />
             <span
               v-else
-              class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-amber-300 text-amber-700 bg-amber-50"
+              class="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 border border-amber-300 text-amber-700 bg-amber-50"
             >
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               Vérification en cours
