@@ -1,13 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn-vue/tailwind.css";
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,900&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-sans: 'Noto Sans', sans-serif;
-    --font-heading: 'Figtree', sans-serif;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+    --font-heading: 'DM Sans', system-ui, sans-serif;
     /* MASTER.md color palette — gris industriel + orange sécurité (Sketch 001) */
     --color-primary: #64748B;         /* slate — liens/CTA secondaires */
     --color-secondary: #94A3B8;       /* slate clair — hover states */
@@ -222,7 +222,7 @@
     background-color: var(--color-cta);
     color: #FFFFFF;
     padding: var(--space-sm) var(--space-lg);
-    border-radius: var(--radius-md);
+    border-radius: 9999px;
     font-weight: 600;
     transition: all 200ms ease;
     cursor: pointer;
@@ -232,7 +232,7 @@
   .btn-primary:hover {
     opacity: 0.9;
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 8px 24px -8px rgba(249, 115, 22, 0.35);
   }
 
   .btn-primary:focus {
@@ -265,7 +265,7 @@
   .card {
     background-color: var(--color-background);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    border-radius: 1.5rem;
     padding: var(--space-lg);
     box-shadow: var(--shadow-md);
     transition: all 200ms ease;
@@ -311,5 +311,42 @@
     inset: 0;
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
+  }
+
+  /* Bento card — élévation au survol (Sketch 001) */
+  .bento-card {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  }
+
+  .bento-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Reveal stagger — apparition séquentielle des grilles bento */
+  .reveal-item {
+    animation: reveal-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .reveal .reveal-item:nth-child(1) { animation-delay: 0.05s; }
+  .reveal .reveal-item:nth-child(2) { animation-delay: 0.1s; }
+  .reveal .reveal-item:nth-child(3) { animation-delay: 0.15s; }
+  .reveal .reveal-item:nth-child(4) { animation-delay: 0.2s; }
+  .reveal .reveal-item:nth-child(5) { animation-delay: 0.25s; }
+  .reveal .reveal-item:nth-child(6) { animation-delay: 0.3s; }
+}
+
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bento-card:hover {
+    transform: none;
+  }
+  .reveal-item {
+    animation: none;
+    opacity: 1;
   }
 }
