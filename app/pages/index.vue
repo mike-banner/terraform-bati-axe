@@ -93,52 +93,50 @@ const heroPhoto = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?
     </section>
 
     <!-- ───────────────── Bandeau béton plein écran (manifeste) ───────────────── -->
-    <section class="w-full bg-primary text-white">
-      <div class="mx-auto w-full max-w-[1400px] px-[clamp(1.25rem,5vw,4rem)] py-[clamp(3rem,7vw,5.5rem)]">
-        <p class="max-w-[24ch] font-heading text-4xl sm:text-5xl font-bold leading-[1.1]" style="text-wrap: balance">
+    <section class="w-full bg-slate-900 text-white">
+      <div class="mx-auto w-full max-w-7xl px-6 py-[clamp(3rem,7vw,5.5rem)]">
+        <p class="max-w-[24ch] text-4xl font-black tracking-tight leading-[1.1] sm:text-5xl" style="text-wrap: balance">
           La confiance, dans le bâtiment, ça se prouve. Pas ça s'annonce.
         </p>
-        <p class="mt-5 max-w-[52ch] text-base leading-relaxed text-white/85">
+        <p class="mt-5 max-w-[52ch] text-base leading-relaxed text-white/70">
           Un artisan non conforme n'accède jamais à vos coordonnées. Décennale expirée, Kbis manquant, zone hors secteur : c'est non. Vous parlez uniquement à des professionnels en règle.
         </p>
       </div>
     </section>
 
     <!-- ───────────────── Comment ça marche (process en 3 temps) ───────────────── -->
-    <section class="mx-auto w-full max-w-[1400px] px-[clamp(1.25rem,5vw,4rem)] py-[clamp(3.5rem,7vw,6rem)]">
-      <h2 class="font-heading text-4xl font-bold text-text" style="text-wrap: balance">Comment ça marche</h2>
-      <div class="mt-12 grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-3 md:divide-x md:divide-border">
-        <div class="md:pr-10">
-          <span class="font-heading text-5xl font-bold text-primary select-none">01</span>
-          <h3 class="mt-4 mb-2 text-lg font-semibold text-text">Décrivez votre projet</h3>
-          <p class="text-sm leading-relaxed text-gray-700">
+    <section class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
+      <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Comment ça marche</h2>
+      <div class="reveal mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div class="reveal-item bento-card rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+          <span class="text-5xl font-bold text-industrial select-none">01</span>
+          <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Décrivez votre projet</h3>
+          <p class="text-sm leading-relaxed text-slate-500">
             Simulateur en 6 étapes : type de travaux, localisation, budget estimé, délai. Moins de 3 minutes.
           </p>
         </div>
-        <div class="md:px-10">
-          <span class="font-heading text-5xl font-bold text-primary select-none">02</span>
-          <h3 class="mt-4 mb-2 text-lg font-semibold text-text">Mise en relation sous 2 min</h3>
-          <p class="text-sm leading-relaxed text-gray-700">
+        <div class="reveal-item bento-card rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+          <span class="text-5xl font-bold text-industrial select-none">02</span>
+          <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Mise en relation sous 2 min</h3>
+          <p class="text-sm leading-relaxed text-slate-500">
             Les artisans partenaires de votre zone reçoivent une alerte avec le budget et le type de chantier. Pas vos coordonnées.
           </p>
         </div>
-        <div class="md:pl-10">
-          <span class="font-heading text-5xl font-bold text-primary select-none">03</span>
-          <h3 class="mt-4 mb-2 text-lg font-semibold text-text">Contact débloqué</h3>
-          <p class="text-sm leading-relaxed text-gray-700">
+        <div class="reveal-item bento-card rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+          <span class="text-5xl font-bold text-industrial select-none">03</span>
+          <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Contact débloqué</h3>
+          <p class="text-sm leading-relaxed text-slate-500">
             Le premier artisan abonné peut vous appeler immédiatement. Pour les autres, vos coordonnées sont accessibles après 24h.
           </p>
         </div>
       </div>
     </section>
 
-    <div class="mx-auto w-full max-w-[1400px] px-[clamp(1.25rem,5vw,4rem)]"><div class="border-t border-border" /></div>
-
     <!-- ───────────────── Preuve : avant / après ───────────────── -->
-    <section class="mx-auto w-full max-w-[1400px] px-[clamp(1.25rem,5vw,4rem)] py-[clamp(3.5rem,7vw,6rem)]">
+    <section class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
       <div class="mb-10 max-w-[52ch]">
-        <h2 class="font-heading text-4xl font-bold text-text" style="text-wrap: balance">Le résultat, pas la promesse</h2>
-        <p class="mt-3 text-base leading-relaxed text-gray-700">
+        <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Le résultat, pas la promesse</h2>
+        <p class="mt-3 text-base leading-relaxed text-slate-500">
           Des chantiers menés par des artisans vérifiés de la plateforme. Glissez pour comparer.
         </p>
       </div>
@@ -152,20 +150,18 @@ const heroPhoto = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?
       />
     </section>
 
-    <div class="mx-auto w-full max-w-[1400px] px-[clamp(1.25rem,5vw,4rem)]"><div class="border-t border-border" /></div>
-
     <!-- ───────────────── Vérification (sceaux) ───────────────── -->
-    <section class="mx-auto w-full max-w-[1400px] px-[clamp(1.25rem,5vw,4rem)] py-[clamp(3.5rem,7vw,6rem)]">
-      <div class="grid grid-cols-1 items-start gap-[clamp(2rem,5vw,4rem)] md:grid-cols-2">
+    <section class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
+      <div class="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
         <div>
-          <h2 class="font-heading text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-text" style="text-wrap: balance">
+          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-black tracking-tight text-slate-900" style="text-wrap: balance">
             Chaque professionnel est vérifié à la main.
           </h2>
-          <p class="mt-4 max-w-[48ch] text-base leading-relaxed text-gray-700">
+          <p class="mt-4 max-w-[48ch] text-base leading-relaxed text-slate-500">
             Aucun algorithme. Un membre de notre équipe contrôle la décennale, le Kbis et la zone d'intervention avant toute activation. Un artisan non conforme ne peut pas accéder aux leads.
           </p>
         </div>
-        <ul class="space-y-3">
+        <ul class="reveal space-y-3">
           <li
             v-for="item in [
               { t: 'Assurance décennale valide', d: 'Attestation contrôlée avec date d\'expiration vérifiée.' },
@@ -173,14 +169,14 @@ const heroPhoto = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?
               { t: 'Zone d\'intervention confirmée', d: 'L\'artisan intervient bien dans votre secteur géographique.' },
             ]"
             :key="item.t"
-            class="flex items-start gap-4 rounded-md border border-border bg-background p-5"
+            class="reveal-item bento-card flex items-start gap-4 rounded-3xl border border-slate-200 bg-white p-5"
           >
-            <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cta text-white">
+            <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-safety text-white">
               <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
             </span>
             <div>
-              <p class="text-sm font-semibold text-text">{{ item.t }}</p>
-              <p class="mt-0.5 text-sm text-gray-700">{{ item.d }}</p>
+              <p class="text-sm font-semibold text-slate-900">{{ item.t }}</p>
+              <p class="mt-0.5 text-sm text-slate-500">{{ item.d }}</p>
             </div>
           </li>
         </ul>
@@ -188,17 +184,17 @@ const heroPhoto = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?
     </section>
 
     <!-- ───────────────── CTA final ───────────────── -->
-    <section class="w-full border-t border-border bg-background">
-      <div class="mx-auto w-full max-w-[1400px] px-[clamp(1.25rem,5vw,4rem)] py-[clamp(3.5rem,7vw,5.5rem)] text-center">
-        <h2 class="mx-auto max-w-[20ch] font-heading text-[clamp(1.75rem,3.5vw,3rem)] font-bold text-text" style="text-wrap: balance">
+    <section class="w-full border-t border-slate-200 bg-white">
+      <div class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,5.5rem)] text-center">
+        <h2 class="mx-auto max-w-[20ch] text-[clamp(1.75rem,3.5vw,3rem)] font-black tracking-tight text-slate-900" style="text-wrap: balance">
           Prêt à démarrer votre projet ?
         </h2>
-        <p class="mx-auto mt-4 max-w-[44ch] text-base text-gray-700">
+        <p class="mx-auto mt-4 max-w-[44ch] text-base text-slate-500">
           Décrivez votre besoin en 3 minutes. Nous nous occupons de la mise en relation.
         </p>
         <NuxtLink
           to="/simulateur"
-          class="mt-8 inline-flex h-12 items-center gap-2 rounded-md bg-cta px-8 text-sm font-semibold text-white transition-all hover:opacity-90 hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary cursor-pointer"
+          class="mt-8 inline-flex h-14 items-center gap-2 rounded-full bg-safety px-8 text-lg font-bold text-white shadow-lg shadow-safety/20 transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary cursor-pointer"
         >
           Commencer la simulation
           <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" /></svg>
