@@ -11,7 +11,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 4: Le Verrou & Stripe Billing** - API floutage serveur, abonnement Stripe, webhook, déblocage auto 72h.
 - [x] **Phase 4.5: Conversion & Qualification** - Verrou 3 leads gratuits, free trial 14j, plan annuel, auto-qualification, profil public éditable, ROI dashboard, copy Premium refondu, CRM Minimaliste.
 - [x] **Phase 4.6: Marché Dynamique & Multi-Catégories** - Refonte DB (categories TEXT[]), fin du push leads, pull temps réel via projects, UI sélection multiple (profil/claim).
-- [ ] **Phase 4.7: Refonte UI Globale & Application du Design System** - Application du MASTER.md, harmonisation de la typographie (Figtree/Noto) et du thème B2B/Marketplace.
+- [x] **Phase 4.7: Refonte UI Globale & Application du Design System** - Application du MASTER.md, harmonisation de la typographie (Figtree/Noto) et du thème B2B/Marketplace. (completed 2026-07-03)
 - [x] **Phase 5: Intégration API État (SIRET) & Badges de Confiance** - Récupération auto des infos légales (API Gouv/Pappers), vérification asynchrone décennale, et nouveaux copywriting labels. (completed 2026-06-24)
 - [ ] **Phase 6: SMS + Acquisition + Messagerie** - SMS différencié (Basic→upgrade / Premium→lead direct), cold outreach pros DB, dashboard particulier magic-link, messagerie in-app pro↔particulier, email onboarding (désactivé par défaut), feedback loop lead.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville.
@@ -121,13 +121,13 @@ Plans:
   5. Responsive à tous les breakpoints (375px, 768px, 1024px, 1440px) sans scroll horizontal.
 **Plans**: 7 plans
 Plans:
-- [ ] 04.7-01-PLAN.md — CSS foundation (fonts Google Figtree+Noto, couleurs MASTER.md, tokens spacing/shadow/radius)
-- [ ] 04.7-02-PLAN.md — Landing page refactor (hero, Marketplace pattern, SVG icons, responsive)
-- [ ] 04.7-03-PLAN.md — Pro forms refactor (claim, profile, input styles, labels, sections)
-- [ ] 04.7-04-PLAN.md — Pro dashboard refactor (leads grid 1→2→3 col, card layout, hover effects)
-- [ ] 04.7-05-PLAN.md — Premium + public profile (CTA hero, pricing cards, profile sections)
-- [ ] 04.7-06-PLAN.md — Admin + legal pages (table layout, text styling, heading hierarchy)
-- [ ] 04.7-07-PLAN.md — Accessibility audit, responsive test, pre-delivery checklist
+- [x] 04.7-01-PLAN.md — CSS foundation (fonts Google Figtree+Noto, couleurs MASTER.md, tokens spacing/shadow/radius)
+- [x] 04.7-02-PLAN.md — Landing page refactor (hero, Marketplace pattern, SVG icons, responsive)
+- [x] 04.7-03-PLAN.md — Pro forms refactor (claim, profile, input styles, labels, sections)
+- [x] 04.7-04-PLAN.md — Pro dashboard refactor (leads grid 1→2→3 col, card layout, hover effects)
+- [x] 04.7-05-PLAN.md — Premium + public profile (CTA hero, pricing cards, profile sections)
+- [x] 04.7-06-PLAN.md — Admin + legal pages (table layout, text styling, heading hierarchy)
+- [x] 04.7-07-PLAN.md — Accessibility audit, responsive test, pre-delivery checklist
 **UI hint**: yes
 
 ### Phase 5: Intégration API État (SIRET) & Badges de Confiance
@@ -187,7 +187,7 @@ Plans:
 | 4. Le Verrou & Stripe Billing | 7/7 | Completed | 2026-06-09 |
 | 4.5. Conversion & Qualification | 8/8 | Completed | 2026-06-09 |
 | 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
-| 4.7. Refonte UI Globale & Design System | 0/7 | Planning complete | - |
+| 4.7. Refonte UI Globale & Design System | 8/8 | Complete   | 2026-07-03 |
 | 5. Intégration API État (SIRET) & Badges de Confiance | 6/6 | Complete   | 2026-06-24 |
 | 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
