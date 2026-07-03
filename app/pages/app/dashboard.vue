@@ -220,12 +220,12 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
             </span>
           </div>
         </div>
-        <h1 class="text-3xl font-semibold tracking-tight text-foreground" style="text-wrap: balance">{{ pro.company_name }}</h1>
+        <h1 class="text-4xl font-bold tracking-tight text-foreground" style="text-wrap: balance">{{ pro.company_name }}</h1>
         <p class="text-sm text-muted-foreground mt-1">{{ pro.full_name }} · {{ pro.postal_code }}</p>
       </div>
 
       <!-- ─── Documents (toujours visible pour permettre le renouvellement) ───── -->
-      <div class="rounded-lg p-5 mb-8 border" :class="docsComplete ? 'border-border' : 'border-red-300 bg-red-50'">
+      <div class="bento-card rounded-3xl p-8 mb-8 border" :class="docsComplete ? 'border-slate-200 bg-white shadow-sm' : 'border-red-300 bg-red-50'">
         <div class="flex items-start gap-2 mb-3">
           <svg v-if="!docsComplete" class="w-4 h-4 text-red-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
           <div>
@@ -251,7 +251,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
               v-if="uploads.kbis.file"
               @click="uploadDoc('kbis')"
               :disabled="uploads.kbis.status === 'uploading'"
-              class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
+              class="h-9 px-5 bg-safety text-white text-xs font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform flex items-center gap-2 disabled:opacity-50"
             >
               <svg v-if="uploads.kbis.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
               {{ uploads.kbis.status === 'uploading' ? 'Envoi…' : 'Envoyer le KBIS' }}
@@ -314,7 +314,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                 v-if="uploads.decennale.file"
                 @click="uploadDoc('decennale')"
                 :disabled="uploads.decennale.status === 'uploading' || !uploads.decennale.policyNumber || !uploads.decennale.expirationDate"
-                class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
+                class="h-9 px-5 bg-safety text-white text-xs font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform flex items-center gap-2 disabled:opacity-50"
               >
                 <svg v-if="uploads.decennale.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
                 {{ uploads.decennale.status === 'uploading' ? 'Envoi…' : 'Envoyer la décennale' }}
@@ -350,7 +350,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
       </div>
 
       <!-- Progress checklist -->
-      <div class="border border-border rounded-lg mb-10 overflow-hidden bg-white shadow-sm">
+      <div class="bento-card border border-slate-200 rounded-3xl mb-10 overflow-hidden bg-white shadow-sm">
         <div v-for="(step, i) in steps" :key="i" class="flex items-start gap-4 px-5 py-4 border-b border-border last:border-0 hover:-translate-y-0.5 hover:shadow-md hover:bg-slate-50 transition-all duration-300 relative group">
           <div
             class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5"
@@ -390,7 +390,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
       <p class="text-sm text-muted-foreground max-w-md mx-auto">
         Votre compte existe, mais les données de votre entreprise n'ont pas pu être chargées.
       </p>
-      <NuxtLink to="/pro/claim" class="mt-6 inline-flex items-center justify-center h-10 px-6 rounded-md bg-foreground text-background font-medium text-sm hover:opacity-90 transition-opacity">
+      <NuxtLink to="/pro/claim" class="mt-6 inline-flex items-center justify-center h-11 px-6 rounded-full bg-safety text-white font-semibold text-sm hover:scale-105 shadow-safety/20 transition-transform">
         Créer ou vérifier mon profil
       </NuxtLink>
     </div>
