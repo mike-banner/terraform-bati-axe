@@ -109,25 +109,28 @@ Plans:
 **UI hint**: yes
 
 
-### Phase 4.7: Refonte UI Globale & Application du Design System
-**Goal**: Appliquer la charte graphique globale (MASTER.md) sur l'ensemble de la plateforme pour préparer le scale et la crédibilité B2B.
+### Phase 4.7: Refonte UI Globale & Application du Design System (REPLAN v2)
+**Goal**: Refonte visuelle drastique gris industriel (#64748B) + orange sécurité (#F97316), typographie massive DM Sans et Bento Grids, selon le contrat `04.7-UI-SPEC.md`. Élimination totale du vert/cyan de la v1. Restyle uniquement, invariants métier intouchables.
 **Depends on**: Phase 4.6
 **Requirements**: UI-MASTER-01, UI-LANDING-01, UI-FORMS-01, UI-DASHBOARD-01, UI-PREMIUM-01, UI-PROFILE-PUBLIC-01, UI-ADMIN-01, UI-LEGAL-01, UI-AUDIT-01
 **Success Criteria** (what must be TRUE):
-  1. Le fichier `design-system/bati-axe/MASTER.md` est appliqué aux configurations Tailwind (couleurs hex exactes, polices Figtree/Noto Google Fonts).
-  2. Toutes les pages (landing, forms, dashboard, premium, admin, legal) adoptent le style "Vibrant & Block-based" sans perte de données ou de logique.
-  3. L'expérience utilisateur (Marketplace) est unifiée : typographie cohérente, couleurs cyan/green, espacement système, ombres, transitions fluides.
-  4. Accessibilité WCAG AA : contraste 4.5:1 texte, focus visibles, navigation clavier complète.
+  1. `app/assets/css/tailwind.css` porte la palette gris industriel + orange sécurité et DM Sans ; zéro token cyan/vert.
+  2. Toutes les pages adoptent le style Bento (cartes rounded-3xl, typo massive, micro-interactions) sans perte de données ni de logique.
+  3. `grep -rE "cyan-|green-|emerald-|#22C55E|#0891B2|#22D3EE|#ECFEFF|#164E63" app/` ne retourne aucun usage décoratif (critère transversal).
+  4. Accessibilité WCAG AA : contraste 4.5:1 texte, focus visibles, prefers-reduced-motion respecté.
   5. Responsive à tous les breakpoints (375px, 768px, 1024px, 1440px) sans scroll horizontal.
-**Plans**: 7 plans
+  6. Le hero landing est le Bento Grid Variant C (sketch 001) et les doublons de composants morts sont supprimés.
+**Note**: v1 (cyan/vert, Figtree/Noto) supersédée — plans archivés dans `.planning/legacy/04.7-v1-cyan-vert/`.
+**Plans**: 8 plans
 Plans:
-- [x] 04.7-01-PLAN.md — CSS foundation (fonts Google Figtree+Noto, couleurs MASTER.md, tokens spacing/shadow/radius)
-- [x] 04.7-02-PLAN.md — Landing page refactor (hero, Marketplace pattern, SVG icons, responsive)
-- [x] 04.7-03-PLAN.md — Pro forms refactor (claim, profile, input styles, labels, sections)
-- [x] 04.7-04-PLAN.md — Pro dashboard refactor (leads grid 1→2→3 col, card layout, hover effects)
-- [x] 04.7-05-PLAN.md — Premium + public profile (CTA hero, pricing cards, profile sections)
-- [x] 04.7-06-PLAN.md — Admin + legal pages (table layout, text styling, heading hierarchy)
-- [x] 04.7-07-PLAN.md — Accessibility audit, responsive test, pre-delivery checklist
+- [ ] 04.7-01-PLAN.md — Fondation CSS : tokens gris+orange, DM Sans, utilitaires .bento-card + reveal (levier token cascade)
+- [ ] 04.7-02-PLAN.md — Landing : hero Bento Grid Variant C + sections + BeforeAfterSlider
+- [ ] 04.7-03-PLAN.md — Dashboard pro & badges : repoint Ui*, suppression doublons morts, restyle badges SIRET/décennale
+- [ ] 04.7-04-PLAN.md — Leads & messagerie espace : grille bento, fiche détail (masquage intact), LeadAge sans vert
+- [ ] 04.7-05-PLAN.md — Formulaires : claim, profil, simulateur, UploadProgress
+- [ ] 04.7-06-PLAN.md — Premium & public : pricing bento, profil public (badge sans emerald), espace particulier
+- [ ] 04.7-07-PLAN.md — Admin & légal : console (actions orange), pages légales (typo/spacing)
+- [ ] 04.7-08-PLAN.md — Audit transversal zéro vert/cyan + a11y/responsive + checkpoint validation humaine
 **UI hint**: yes
 
 ### Phase 5: Intégration API État (SIRET) & Badges de Confiance
