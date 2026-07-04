@@ -22,7 +22,7 @@
       <!-- Erreur -->
       <div v-else-if="error" class="max-w-md mx-auto px-6 py-32 text-center">
         <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-8">Erreur</p>
-        <h1 class="text-3xl font-black tracking-tight text-foreground mb-4" style="text-wrap: balance">
+        <h1 class="text-4xl font-black tracking-tight text-foreground mb-4" style="text-wrap: balance">
           Lien invalide ou expiré
         </h1>
         <p class="text-sm text-muted-foreground leading-relaxed mb-8">
@@ -30,7 +30,7 @@
         </p>
         <NuxtLink
           to="/"
-          class="inline-flex items-center gap-2 h-10 px-6 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity"
+          class="inline-flex items-center gap-2 h-11 px-6 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 transition-transform"
         >
           Retour à l'accueil
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -110,7 +110,7 @@
               <div
                 v-for="pro in data.pros"
                 :key="pro.lead_id"
-                class="border border-border rounded-lg p-5 flex flex-col gap-4"
+                class="bento-card bg-white border border-slate-200 rounded-3xl p-6 flex flex-col gap-4 shadow-sm"
                 :class="{ 'opacity-55': pro.customer_decision === 'refused' }"
               >
                 <div class="flex items-center gap-4">
@@ -134,7 +134,7 @@
                     v-if="pro.canonical_slug && pro.dept"
                     :to="`/pro/${pro.dept}/${pro.canonical_slug}`"
                     target="_blank"
-                    class="inline-flex items-center justify-center h-9 px-4 text-xs font-semibold border border-border rounded-md text-foreground hover:bg-muted transition-colors"
+                    class="inline-flex items-center justify-center h-9 px-4 text-xs font-semibold border border-slate-200 rounded-full text-foreground hover:bg-muted transition-colors"
                   >
                     Voir le profil
                   </NuxtLink>
@@ -144,7 +144,7 @@
                       type="button"
                       @click="decide(pro.lead_id, 'selected')"
                       :disabled="isDeciding === pro.lead_id"
-                      class="inline-flex items-center justify-center h-9 px-4 text-xs font-semibold bg-foreground text-background rounded-md hover:opacity-80 transition-opacity disabled:opacity-40"
+                      class="inline-flex items-center justify-center h-9 px-4 text-xs font-semibold bg-safety text-white rounded-full hover:scale-105 transition-transform disabled:opacity-40 disabled:hover:scale-100"
                     >
                       J'ai retenu celui-ci
                     </button>
@@ -152,7 +152,7 @@
                       type="button"
                       @click="decide(pro.lead_id, 'refused')"
                       :disabled="isDeciding === pro.lead_id"
-                      class="inline-flex items-center justify-center h-9 px-4 text-xs font-semibold text-muted-foreground rounded-md hover:text-foreground transition-colors disabled:opacity-40"
+                      class="inline-flex items-center justify-center h-9 px-4 text-xs font-semibold text-muted-foreground rounded-full hover:text-foreground transition-colors disabled:opacity-40"
                     >
                       Pas intéressé
                     </button>
@@ -182,7 +182,7 @@
               </div>
 
               <div class="space-y-3">
-                <div class="flex items-start gap-4 p-5 border border-border rounded-lg">
+                <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
                   <div class="w-7 h-7 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
@@ -193,7 +193,7 @@
                     <p class="text-xs text-muted-foreground mt-0.5">Attestation contrôlée à la main avant tout accès au lead.</p>
                   </div>
                 </div>
-                <div class="flex items-start gap-4 p-5 border border-border rounded-lg">
+                <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
                   <div class="w-7 h-7 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
@@ -204,7 +204,7 @@
                     <p class="text-xs text-muted-foreground mt-0.5">L'artisan vous contacte via notre messagerie. Vos données restent privées.</p>
                   </div>
                 </div>
-                <div class="flex items-start gap-4 p-5 border border-border rounded-lg">
+                <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
                   <div class="w-7 h-7 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
@@ -234,7 +234,7 @@
               <div
                 v-for="thread in groupedMessages"
                 :key="thread.leadId"
-                class="border border-border rounded-lg overflow-hidden"
+                class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm"
               >
                 <!-- En-tête du fil -->
                 <div class="px-6 py-4 border-b border-border flex items-center gap-4 bg-background">
@@ -290,7 +290,7 @@
                     />
                     <button
                       type="submit"
-                      class="inline-flex items-center gap-1.5 h-10 px-5 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+                      class="inline-flex items-center gap-1.5 h-10 px-5 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 transition-transform disabled:opacity-40 disabled:hover:scale-100 disabled:cursor-not-allowed shrink-0"
                       :disabled="!replyContent[thread.leadId]?.trim() || isSending === thread.leadId"
                     >
                       <svg v-if="isSending === thread.leadId" class="animate-spin w-3.5 h-3.5" fill="none" viewBox="0 0 24 24">
