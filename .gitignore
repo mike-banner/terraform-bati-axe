@@ -41,3 +41,11 @@ playwright-report/
 supabase/snippets/
 /A FAIREmd
 design-system/
+
+# Terraform — caches de providers (binaires lourds), état local et crash logs
+# Les .tf, .tfvars, .terraform.lock.hcl restent suivis ; seuls les caches/état sont ignorés.
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log

@@ -35,7 +35,7 @@ function onTouchMove(e: TouchEvent) { if (e.touches[0]) getPosition(e.touches[0]
 <template>
   <div
     ref="containerRef"
-    class="relative overflow-hidden rounded-xl select-none cursor-ew-resize"
+    class="relative overflow-hidden rounded-3xl border border-slate-200 select-none cursor-ew-resize"
     style="aspect-ratio: 16/9"
     role="img"
     :aria-label="`Comparaison avant/après : ${beforeAlt} et ${afterAlt}`"
@@ -73,8 +73,8 @@ function onTouchMove(e: TouchEvent) { if (e.touches[0]) getPosition(e.touches[0]
       :style="{ left: `${split}%` }"
     >
       <!-- Handle -->
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-xl flex items-center justify-center">
-        <svg class="w-4 h-4 text-neutral-700" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-safety shadow-xl flex items-center justify-center">
+        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l-4 3 4 3M16 9l4 3-4 3" />
         </svg>
       </div>

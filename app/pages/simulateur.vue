@@ -177,7 +177,7 @@ const handleSubmit = async () => {
 
 <template>
   <div class="min-h-[calc(100vh-3.5rem)] bg-page flex items-start justify-center px-4 py-12 md:py-16">
-    <div class="w-full max-w-xl">
+    <div class="w-full max-w-xl bg-white rounded-3xl border border-slate-200 shadow-sm p-8 md:p-10">
 
       <!-- ─── Success ─────────────────────────────────────────────────────── -->
       <div v-if="step === 8" class="py-8">
@@ -197,12 +197,12 @@ const handleSubmit = async () => {
           <code class="font-mono text-sm text-foreground select-all">{{ createdProjectId }}</code>
         </div>
         
-        <div v-if="createdAccessToken" class="p-5 border border-blue-200 bg-blue-50/50 rounded-lg mb-8">
-          <p class="text-sm font-semibold text-blue-900 mb-1">🛠️ Mode Dév : Tester la messagerie</p>
-          <p class="text-xs text-blue-700 mb-4">En production, ce lien est envoyé par email (Magic Link).</p>
+        <div v-if="createdAccessToken" class="p-5 border border-slate-200 bg-slate-50 rounded-2xl mb-8">
+          <p class="text-sm font-semibold text-slate-900 mb-1">🛠️ Mode Dév : Tester la messagerie</p>
+          <p class="text-xs text-slate-600 mb-4">En production, ce lien est envoyé par email (Magic Link).</p>
           <NuxtLink
             :to="`/mon-projet/${createdAccessToken}`"
-            class="inline-flex items-center justify-center h-10 px-6 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors w-full"
+            class="inline-flex items-center justify-center h-11 px-6 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform w-full"
             target="_blank"
           >
             Ouvrir l'Espace Client
@@ -226,9 +226,9 @@ const handleSubmit = async () => {
             <NuxtLink to="/" class="text-xs text-muted-foreground hover:text-foreground transition-colors">Annuler</NuxtLink>
           </div>
           <!-- Progress bar -->
-          <div class="h-0.5 w-full bg-border rounded-full overflow-hidden">
+          <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
             <div
-              class="h-full bg-foreground transition-all duration-300 ease-out"
+              class="h-full bg-safety transition-all duration-300 ease-out"
               :style="{ width: `${progress}%` }"
             />
           </div>
@@ -236,7 +236,7 @@ const handleSubmit = async () => {
 
         <!-- ─── Step 1: Category ─────────────────────────────────────────── -->
         <div v-if="step === 1" class="space-y-4">
-          <h1 class="text-2xl font-black tracking-tight text-foreground" style="text-wrap: balance">
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground" style="text-wrap: balance">
             Quel type de travaux ?
           </h1>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
@@ -244,9 +244,9 @@ const handleSubmit = async () => {
               v-for="cat in categories"
               :key="cat.id"
               @click="selectCategory(cat.id)"
-              class="flex items-center justify-between p-4 border rounded-md text-left transition-colors"
+              class="flex items-center justify-between p-4 border rounded-2xl text-left transition-colors"
               :class="form.category === cat.id
-                ? 'border-foreground bg-foreground text-background'
+                ? 'border-safety bg-safety/10 text-slate-900'
                 : 'border-border hover:border-foreground/40 hover:bg-muted'"
             >
               <div>
@@ -262,7 +262,7 @@ const handleSubmit = async () => {
 
         <!-- ─── Step 2: Description ──────────────────────────────────────── -->
         <div v-if="step === 2" class="space-y-4">
-          <h1 class="text-2xl font-black tracking-tight text-foreground" style="text-wrap: balance">
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground" style="text-wrap: balance">
             Décrivez votre projet
           </h1>
           <p class="text-sm text-muted-foreground">Type de prestation, surface approximative, contraintes éventuelles.</p>
@@ -285,15 +285,15 @@ const handleSubmit = async () => {
 
         <!-- ─── Step 3: Budget ───────────────────────────────────────────── -->
         <div v-if="step === 3" class="space-y-4">
-          <h1 class="text-2xl font-black tracking-tight text-foreground">Budget estimé</h1>
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground">Budget estimé</h1>
           <div class="space-y-2 pt-2">
             <button
               v-for="b in budgetRanges"
               :key="b.id"
               @click="selectBudget(b.id)"
-              class="w-full flex items-center justify-between p-4 border rounded-md text-left transition-colors"
+              class="w-full flex items-center justify-between p-4 border rounded-2xl text-left transition-colors"
               :class="form.budget_range === b.id
-                ? 'border-foreground bg-foreground text-background'
+                ? 'border-safety bg-safety/10 text-slate-900'
                 : 'border-border hover:border-foreground/40 hover:bg-muted text-foreground'"
             >
               <span class="text-sm font-medium">{{ b.label }}</span>
@@ -307,15 +307,15 @@ const handleSubmit = async () => {
 
         <!-- ─── Step 4: Timeline ────────────────────────────────────────── -->
         <div v-if="step === 4" class="space-y-4">
-          <h1 class="text-2xl font-black tracking-tight text-foreground">Délai souhaité</h1>
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground">Délai souhaité</h1>
           <div class="space-y-2 pt-2">
             <button
               v-for="t in timelineRanges"
               :key="t.id"
               @click="selectTimeline(t.id)"
-              class="w-full flex items-center justify-between p-4 border rounded-md text-left transition-colors"
+              class="w-full flex items-center justify-between p-4 border rounded-2xl text-left transition-colors"
               :class="form.timeline_range === t.id
-                ? 'border-foreground bg-foreground text-background'
+                ? 'border-safety bg-safety/10 text-slate-900'
                 : 'border-border hover:border-foreground/40 hover:bg-muted text-foreground'"
             >
               <span class="text-sm font-medium">{{ t.label }}</span>
@@ -329,7 +329,7 @@ const handleSubmit = async () => {
 
         <!-- ─── Step 5: Location ─────────────────────────────────────────── -->
         <div v-if="step === 5" class="space-y-4">
-          <h1 class="text-2xl font-black tracking-tight text-foreground">Où se situent les travaux ?</h1>
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground">Où se situent les travaux ?</h1>
           <p class="text-sm text-muted-foreground">
             Zone pilote actuelle : <strong class="text-foreground">Carrières-sous-Poissy (78955)</strong>.
           </p>
@@ -375,7 +375,7 @@ const handleSubmit = async () => {
 
         <!-- ─── Step 6: Contact ──────────────────────────────────────────── -->
         <div v-if="step === 6" class="space-y-4">
-          <h1 class="text-2xl font-black tracking-tight text-foreground">Vos coordonnées</h1>
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground">Vos coordonnées</h1>
           <p class="text-sm text-muted-foreground">Ces informations restent confidentielles jusqu'au moment du contact avec un artisan.</p>
           <div class="space-y-4 pt-2">
             <div>
@@ -433,7 +433,7 @@ const handleSubmit = async () => {
 
         <!-- ─── Step 7: Validation ───────────────────────────────────────── -->
         <div v-if="step === 7" class="space-y-5">
-          <h1 class="text-2xl font-black tracking-tight text-foreground">Confirmer et envoyer</h1>
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground">Confirmer et envoyer</h1>
 
           <!-- Récap -->
           <div class="border border-border rounded-md divide-y divide-border text-sm">
@@ -504,7 +504,7 @@ const handleSubmit = async () => {
             type="button"
             @click="nextStep"
             :disabled="!isStepValid"
-            class="inline-flex items-center gap-1.5 h-10 px-5 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity disabled:opacity-30 disabled:pointer-events-none"
+            class="inline-flex items-center gap-1.5 h-10 px-5 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-30 disabled:pointer-events-none"
           >
             Continuer
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -519,7 +519,7 @@ const handleSubmit = async () => {
             type="button"
             @click="handleSubmit"
             :disabled="!isStepValid || isSubmitting"
-            class="inline-flex items-center gap-2 h-10 px-5 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity disabled:opacity-30 disabled:pointer-events-none"
+            class="inline-flex items-center gap-2 h-10 px-5 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-30 disabled:pointer-events-none"
           >
             <svg v-if="isSubmitting" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
             <span>{{ isSubmitting ? 'Envoi en cours…' : 'Envoyer mon projet' }}</span>

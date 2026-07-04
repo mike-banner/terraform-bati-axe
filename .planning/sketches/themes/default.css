@@ -1,0 +1,84 @@
+:root {
+  /* Colors */
+  --bg-primary: #F8FAFC;
+  --bg-dark: #0f172a;
+  --text-primary: #334155;
+  --text-dark: #f8fafc;
+  --brand-industrial: #64748B;
+  --brand-safety: #F97316;
+  
+  /* Typography */
+  --font-heading: 'Satoshi', 'DM Sans', system-ui, sans-serif;
+  --font-body: 'General Sans', 'DM Sans', system-ui, sans-serif;
+  
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sketch-toolbar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(8px);
+  padding: 8px;
+  border-radius: 100px;
+  display: flex;
+  gap: 8px;
+  z-index: 9999;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.sketch-toolbar button {
+  background: transparent;
+  color: #94a3b8;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sketch-toolbar button:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sketch-toolbar button.active {
+  background: var(--brand-safety);
+  color: white;
+}
+
+.variant {
+  display: none;
+  min-height: 100vh;
+}
+
+.variant.active {
+  display: block;
+}
+
+/* Animations */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-1 { animation-delay: 100ms; opacity: 0; }
+.delay-2 { animation-delay: 200ms; opacity: 0; }
+.delay-3 { animation-delay: 300ms; opacity: 0; }
