@@ -17,10 +17,10 @@ const minutes   = computed(() => Math.floor((remaining.value % 3600000) / 60000)
 </script>
 
 <template>
-  <div class="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
-    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+  <div class="inline-flex items-center gap-1.5 text-xs text-slate-500 mt-1 px-2.5 py-1 rounded-full border border-slate-200 bg-white">
+    <svg class="w-3.5 h-3.5 shrink-0 text-safety" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
     </svg>
-    <span>Disponible dans <span class="font-semibold text-foreground">{{ hours }}h {{ minutes }}min</span></span>
+    <span>Disponible dans <span class="font-semibold text-slate-900">{{ hours }}h {{ minutes }}min</span></span>
   </div>
 </template>

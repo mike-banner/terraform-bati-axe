@@ -39,7 +39,7 @@ const tone = computed(() => {
 const isFresh = computed(() => tone.value === 'fresh')
 
 const toneClass = computed(() => ({
-  fresh:  'text-emerald-700 bg-emerald-50 border-emerald-200',
+  fresh:  'text-slate-700 bg-slate-100 border-slate-200',
   recent: 'text-muted-foreground bg-muted border-border',
   stale:  'text-amber-700 bg-amber-50 border-amber-300',
   old:    'text-red-700 bg-red-50 border-red-300',
@@ -48,7 +48,7 @@ const toneClass = computed(() => ({
 
 <template>
   <span
-    class="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 border rounded-full"
+    class="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 border rounded-full"
     :class="toneClass"
     :title="`Reçu ${label}`"
   >
