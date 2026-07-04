@@ -130,7 +130,7 @@ Plans:
 - [x] 04.7-05-PLAN.md — Formulaires : claim, profil, simulateur, UploadProgress
 - [x] 04.7-06-PLAN.md — Premium & public : pricing bento, profil public (badge sans emerald), espace particulier
 - [x] 04.7-07-PLAN.md — Admin & légal : console (actions orange), pages légales (typo/spacing)
-- [ ] 04.7-08-PLAN.md — Audit transversal zéro vert/cyan + a11y/responsive + checkpoint validation humaine
+- [x] 04.7-08-PLAN.md — Audit transversal zéro vert/cyan + a11y/responsive + checkpoint validation humaine
 **UI hint**: yes
 
 ### Phase 5: Intégration API État (SIRET) & Badges de Confiance
@@ -190,7 +190,7 @@ Plans:
 | 4. Le Verrou & Stripe Billing | 7/7 | Completed | 2026-06-09 |
 | 4.5. Conversion & Qualification | 8/8 | Completed | 2026-06-09 |
 | 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
-| 4.7. Refonte UI Globale & Design System | 7/8 | In Progress|  |
+| 4.7. Refonte UI Globale & Design System | 8/8 | Complete   | 2026-07-04 |
 | 5. Intégration API État (SIRET) & Badges de Confiance | 6/6 | Complete   | 2026-06-24 |
 | 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
