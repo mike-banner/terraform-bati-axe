@@ -206,7 +206,7 @@ async function saveProfile() {
       </NuxtLink>
 
       <!-- Logo upload -->
-      <div class="border-t border-border pt-8 mb-8">
+      <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8 mb-8">
         <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Logo d'entreprise</h2>
         <div class="flex items-center gap-4">
           <div class="w-20 h-20 border border-border rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0">
@@ -216,7 +216,7 @@ async function saveProfile() {
             </svg>
           </div>
           <div>
-            <label class="inline-flex items-center gap-2 h-9 px-4 border border-border text-foreground text-xs font-semibold rounded-md hover:bg-muted transition-colors cursor-pointer">
+            <label class="inline-flex items-center gap-2 h-9 px-4 border border-slate-200 bg-white text-foreground text-xs font-semibold rounded-full hover:bg-muted transition-colors cursor-pointer">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
               </svg>
@@ -242,43 +242,43 @@ async function saveProfile() {
       <form @submit.prevent="saveProfile" class="space-y-6">
 
         <!-- Bio -->
-        <div class="border-t border-border pt-8">
+        <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
           <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Présentation</h2>
           <textarea
             v-model="profile.bio"
             rows="4"
             placeholder="Décrivez votre activité, votre expérience et ce qui vous différencie…"
-            class="w-full px-4 py-3 border border-border rounded-md text-sm text-text placeholder:text-gray-500 bg-white resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-text placeholder:text-gray-500 bg-white resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             maxlength="500"
           />
           <p class="text-xs text-muted-foreground mt-1 text-right">{{ profile.bio?.length ?? 0 }}/500</p>
         </div>
 
         <!-- Categories -->
-        <div class="border-t border-border pt-8">
+        <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
           <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Catégories</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
+            <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
               <input type="checkbox" v-model="profile.categories" value="maconnerie" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
               <span class="text-sm font-medium">Maçonnerie &amp; Gros Œuvre</span>
             </label>
-            <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
+            <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
               <input type="checkbox" v-model="profile.categories" value="toiture" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
               <span class="text-sm font-medium">Charpente &amp; Toiture</span>
             </label>
-            <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
+            <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
               <input type="checkbox" v-model="profile.categories" value="electricite" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
               <span class="text-sm font-medium">Électricité</span>
             </label>
-            <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
+            <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
               <input type="checkbox" v-model="profile.categories" value="plomberie" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
               <span class="text-sm font-medium">Plomberie &amp; Chauffage</span>
             </label>
-            <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
+            <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
               <input type="checkbox" v-model="profile.categories" value="peinture" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
               <span class="text-sm font-medium">Peinture &amp; Finitions</span>
             </label>
-            <label class="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-muted/50 transition-colors">
+            <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
               <input type="checkbox" v-model="profile.categories" value="isolation" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
               <span class="text-sm font-medium">Isolation &amp; Cloisons</span>
             </label>
@@ -287,42 +287,42 @@ async function saveProfile() {
         </div>
 
         <!-- Téléphone -->
-        <div class="border-t border-border pt-8">
+        <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
           <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Téléphone</h2>
           <input
             v-model="profile.phone"
             type="tel"
             placeholder="06 11 22 33 44"
-            class="w-full px-4 py-3 border border-border rounded-md text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
+            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
           />
           <p class="text-xs text-muted-foreground mt-1">Votre numéro sera visible sur votre profil public.</p>
         </div>
 
         <!-- Zone -->
-        <div class="border-t border-border pt-8">
+        <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
           <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Zone d'intervention</h2>
           <input
             v-model="profile.zone"
             type="text"
             placeholder="Ex: Carrières-sous-Poissy, Poissy, Les Mureaux…"
-            class="w-full px-4 py-3 border border-border rounded-md text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
+            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
             maxlength="200"
           />
         </div>
 
         <!-- Submit -->
-        <div class="border-t border-border pt-8 flex items-center justify-between gap-4">
+        <div class="flex items-center justify-between gap-4 pt-2">
           <p v-if="saveSuccess" class="text-xs text-foreground font-semibold">
             Profil mis à jour. Les changements sont visibles sur votre page publique.
           </p>
           <p v-if="saveError" class="text-xs text-destructive">{{ saveError }}</p>
           <div class="ml-auto">
             <NuxtLink to="/app/dashboard"
-              class="inline-flex items-center justify-center gap-2 h-10 px-6 border border-border text-foreground text-sm font-semibold rounded-md hover:bg-muted transition-colors mr-3">
+              class="inline-flex items-center justify-center gap-2 h-11 px-6 border border-slate-200 bg-white text-foreground text-sm font-semibold rounded-full hover:bg-muted transition-colors mr-3">
               Annuler
             </NuxtLink>
             <button type="submit" :disabled="saving"
-              class="inline-flex items-center justify-center gap-2 h-10 px-6 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity disabled:opacity-50">
+              class="inline-flex items-center justify-center gap-2 h-11 px-6 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-50">
               <span v-if="!saving">Enregistrer les modifications</span>
               <span v-else>Enregistrement…</span>
             </button>

@@ -21,9 +21,9 @@ withDefaults(defineProps<{
       </span>
       <span v-if="stage === 'upload'" class="text-xs font-semibold text-foreground tabular-nums">{{ progress }}%</span>
     </div>
-    <div class="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+    <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
       <div
-        class="h-full bg-foreground rounded-full transition-all duration-200"
+        class="h-full bg-safety rounded-full transition-all duration-200"
         :class="stage === 'compress' ? 'animate-pulse w-1/3' : ''"
         :style="stage === 'upload' ? { width: progress + '%' } : undefined"
       />
