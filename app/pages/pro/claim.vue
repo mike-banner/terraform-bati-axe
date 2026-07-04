@@ -393,7 +393,7 @@ const backToStep2 = () => {
       <!-- Page title -->
       <div class="mb-10">
         <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-3">Espace artisan</p>
-        <h1 class="text-3xl font-black tracking-tight text-foreground" style="text-wrap: balance">
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight text-foreground" style="text-wrap: balance">
           {{ activeStep === 1 ? (authMode === 'register' ? 'Créer votre compte' : 'Se connecter') : activeStep === 2 ? 'Votre entreprise' : activeStep === 3 ? 'Vos documents' : 'Demande envoyée' }}
         </h1>
       </div>
@@ -444,7 +444,7 @@ const backToStep2 = () => {
                 autocomplete="name"
                 placeholder="Jean Dupont"
                 @blur="authTouched.full_name = true"
-                class="w-full px-4 py-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 :class="authErrors.full_name ? 'border-red-500' : 'border-border'"
                 :aria-invalid="!!authErrors.full_name"
                 :aria-describedby="authErrors.full_name ? 'err-name' : undefined"
@@ -463,7 +463,7 @@ const backToStep2 = () => {
               autocomplete="email"
               placeholder="contact@dupont-plomberie.fr"
               @blur="authTouched.email = true"
-              class="w-full px-4 py-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="authErrors.email ? 'border-red-500' : 'border-border'"
               :aria-invalid="!!authErrors.email"
               :aria-describedby="authErrors.email ? 'err-email' : undefined"
@@ -519,7 +519,7 @@ const backToStep2 = () => {
           <button
             type="submit"
             :disabled="isLoading"
-            class="w-full h-11 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
+            class="w-full h-12 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <svg v-if="isLoading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
             <span>{{ authMode === 'register' ? 'Créer mon compte' : 'Se connecter' }}</span>
@@ -554,7 +554,7 @@ const backToStep2 = () => {
               v-model="proForm.company_name"
               placeholder="DUPONT PLOMBERIE SARL"
               @blur="proTouched.company_name = true"
-              class="w-full px-4 py-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="proErrors.company_name ? 'border-red-500' : 'border-border'"
               :aria-invalid="!!proErrors.company_name"
             />
@@ -589,7 +589,7 @@ const backToStep2 = () => {
               type="text"
               v-model="proForm.full_name"
               @blur="proTouched.full_name = true"
-              class="w-full px-4 py-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="proErrors.full_name ? 'border-red-500' : 'border-border'"
               :aria-invalid="!!proErrors.full_name"
             />
@@ -609,7 +609,7 @@ const backToStep2 = () => {
                 maxlength="20"
                 @input="normalizePhone(($event.target as HTMLInputElement).value)"
                 @blur="proTouched.phone = true"
-                class="w-full px-4 py-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 :class="proErrors.phone ? 'border-red-500' : 'border-border'"
                 :aria-invalid="!!proErrors.phone"
               />
@@ -626,7 +626,7 @@ const backToStep2 = () => {
                 inputmode="numeric"
                 @input="normalizePostalCode(($event.target as HTMLInputElement).value)"
                 @blur="proTouched.postal_code = true"
-                class="w-full px-4 py-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 :class="proErrors.postal_code ? 'border-red-500' : 'border-border'"
                 :aria-invalid="!!proErrors.postal_code"
               />
@@ -691,7 +691,7 @@ const backToStep2 = () => {
           <button
             type="submit"
             :disabled="isLoading"
-            class="w-full h-11 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
+            class="w-full h-12 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <svg v-if="isLoading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
             <span>Valider mon profil</span>
@@ -701,7 +701,7 @@ const backToStep2 = () => {
             type="button"
             @click="logoutAndRestart"
             :disabled="isLoading"
-            class="w-full h-11 border border-border text-foreground text-sm font-semibold rounded-md hover:bg-muted transition-colors flex items-center justify-center gap-2 disabled:opacity-50 mt-3"
+            class="w-full h-12 border border-slate-200 bg-white text-foreground text-sm font-semibold rounded-full hover:bg-muted transition-colors flex items-center justify-center gap-2 disabled:opacity-50 mt-3"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
             <span>Retour (Changer d'e-mail)</span>
@@ -714,7 +714,7 @@ const backToStep2 = () => {
         <p class="text-sm text-muted-foreground">Téléversez vos justificatifs pour activer votre profil et accéder aux leads. Chaque document est contrôlé manuellement par notre équipe.</p>
 
         <!-- KBIS -->
-        <div class="border border-border rounded-lg p-5" :class="uploads.kbis.status === 'success' ? 'border-foreground/30' : ''">
+        <div class="bento-card border border-slate-200 rounded-3xl p-8" :class="uploads.kbis.status === 'success' ? 'border-foreground/30' : ''">
           <div class="flex items-center justify-between mb-4">
             <div>
               <p class="text-sm font-semibold text-foreground">Extrait KBIS</p>
@@ -749,7 +749,7 @@ const backToStep2 = () => {
         </div>
 
         <!-- Décennale -->
-        <div class="border border-border rounded-lg p-5" :class="uploads.decennale.status === 'success' ? 'border-foreground/30' : ''">
+        <div class="bento-card border border-slate-200 rounded-3xl p-8" :class="uploads.decennale.status === 'success' ? 'border-foreground/30' : ''">
           <div class="flex items-center justify-between mb-4">
             <div>
               <p class="text-sm font-semibold text-foreground">Attestation décennale</p>
