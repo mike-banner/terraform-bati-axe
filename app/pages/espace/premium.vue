@@ -36,86 +36,86 @@ const startCheckout = async () => {
 </script>
 
 <template>
-  <div class="min-h-[calc(100vh-3.5rem)] bg-white">
-    <div class="max-w-2xl mx-auto px-6 py-16">
+  <div class="min-h-[calc(100vh-3.5rem)] bg-page">
+    <div class="max-w-2xl mx-auto px-6 py-16 md:py-24">
 
       <!-- Success banner (post-checkout redirect) -->
-      <div v-if="showSuccessBanner" class="flex items-start gap-3 p-4 border border-foreground/30 rounded-lg mb-8">
-        <svg class="w-4 h-4 shrink-0 mt-0.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <div v-if="showSuccessBanner" class="flex items-start gap-3 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm mb-8">
+        <svg class="w-4 h-4 shrink-0 mt-0.5 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
         </svg>
         <div>
-          <p class="text-sm font-semibold text-foreground">Bienvenue dans BÂTI-AXE Premium !</p>
-          <p class="text-xs text-muted-foreground mt-0.5">Vos leads sont maintenant accessibles sans délai.</p>
+          <p class="text-sm font-semibold text-slate-900">Bienvenue dans BÂTI-AXE Premium !</p>
+          <p class="text-xs text-slate-500 mt-0.5">Vos leads sont maintenant accessibles sans délai.</p>
         </div>
       </div>
 
       <!-- Already Premium banner -->
-      <div v-if="isAlreadyPremium" class="flex items-start gap-3 p-4 border border-foreground/30 rounded-lg mb-8">
-        <svg class="w-4 h-4 shrink-0 mt-0.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <div v-if="isAlreadyPremium" class="flex items-start gap-3 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm mb-8">
+        <svg class="w-4 h-4 shrink-0 mt-0.5 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
         </svg>
         <div>
-          <p class="text-sm font-semibold text-foreground">Votre abonnement Premium est actif.</p>
-          <p class="text-xs text-muted-foreground mt-0.5">Vous avez accès immédiat à toutes les coordonnées.</p>
+          <p class="text-sm font-semibold text-slate-900">Votre abonnement Premium est actif.</p>
+          <p class="text-xs text-slate-500 mt-0.5">Vous avez accès immédiat à toutes les coordonnées.</p>
         </div>
       </div>
 
-      <!-- Header -->
+      <!-- Hero -->
       <div class="mb-12">
-        <p class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-6">Abonnement</p>
-        <h1 class="text-4xl sm:text-5xl font-heading font-bold tracking-tight text-text" style="text-wrap: balance">
+        <p class="text-xs font-semibold text-slate-500 tracking-widest uppercase mb-6">Abonnement</p>
+        <h1 class="text-5xl md:text-7xl font-black tracking-tight text-slate-900" style="text-wrap: balance">
           Premier contact exclusif.
         </h1>
-        <p class="text-base text-gray-700 mt-3 leading-relaxed">
+        <p class="text-base text-slate-600 mt-4 leading-relaxed">
           Accédez aux coordonnées du prospect dès la qualification — 72h avant les autres pros de votre métier.
         </p>
       </div>
 
       <!-- Trial callout -->
-      <div class="flex items-start gap-3 p-4 border border-border rounded-lg mb-4">
-        <svg class="w-4 h-4 text-muted-foreground shrink-0 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <div class="flex items-start gap-3 p-4 bg-white border border-slate-200 rounded-2xl mb-4">
+        <svg class="w-4 h-4 text-slate-500 shrink-0 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1010.058 8.4M12 4.875A2.625 2.625 0 1113.942 8.4M12 4.875V21m-9.375-9.75h18.75M6.375 8.4H3.75a1.5 1.5 0 000 3h15a1.5 1.5 0 000-3h-2.625M12 4.875a2.625 2.625 0 00-2.625 2.625h5.25A2.625 2.625 0 0012 4.875z"/>
         </svg>
-        <p class="text-sm text-foreground">
+        <p class="text-sm text-slate-900">
           <span class="font-semibold">14 jours gratuits</span>
-          <span class="text-muted-foreground"> — carte bancaire requise. Facturation automatique après 14 jours si non annulé.</span>
+          <span class="text-slate-500"> — carte bancaire requise. Facturation automatique après 14 jours si non annulé.</span>
         </p>
       </div>
 
-      <!-- Price card -->
-      <div class="border border-amber-300 bg-amber-50 rounded-lg p-6 mb-8">
+      <!-- Price card (bento, mise en avant) -->
+      <div class="bento-card border-2 border-safety bg-white rounded-3xl p-8 md:p-10 shadow-sm mb-8">
         <div class="flex items-center justify-between mb-4">
-          <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-amber-300 text-amber-700">
+          <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-safety text-white">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
             </svg>
-            Premium
+            Recommandé
           </span>
         </div>
-        <p class="text-4xl font-semibold tracking-tight text-foreground mb-1">
-          39 €<span class="text-sm font-semibold text-muted-foreground">/mois</span>
+        <p class="text-4xl font-black tracking-tight text-slate-900 mb-1">
+          39 €<span class="text-sm font-semibold text-slate-500">/mois</span>
         </p>
-        <p class="text-xs text-muted-foreground mb-6">Sans engagement · Annulable à tout moment</p>
+        <p class="text-xs text-slate-500 mb-6">Sans engagement · Annulable à tout moment</p>
 
         <div class="space-y-3 mb-6">
           <div class="flex items-start gap-3">
-            <svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
             </svg>
-            <span class="text-sm text-foreground">Accès immédiat aux coordonnées du prospect</span>
+            <span class="text-sm text-slate-900">Accès immédiat aux coordonnées du prospect</span>
           </div>
           <div class="flex items-start gap-3">
-            <svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
             </svg>
-            <span class="text-sm text-foreground">3 leads gratuits inclus en BASIC — illimités en Premium</span>
+            <span class="text-sm text-slate-900">3 leads gratuits inclus en BASIC — illimités en Premium</span>
           </div>
           <div class="flex items-start gap-3">
-            <svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
             </svg>
-            <span class="text-sm text-foreground">Exclusivité 72h avant les pros BASIC</span>
+            <span class="text-sm text-slate-900">Exclusivité 72h avant les pros BASIC</span>
           </div>
         </div>
 
@@ -124,7 +124,7 @@ const startCheckout = async () => {
           @click="startCheckout"
           :disabled="loading"
           :aria-busy="loading"
-          class="inline-flex items-center justify-center gap-2 w-full h-11 px-6 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity disabled:opacity-50"
+          class="inline-flex items-center justify-center gap-2 w-full h-12 px-8 bg-safety text-white text-sm font-semibold rounded-full shadow-safety/20 shadow-lg hover:scale-105 transition-transform disabled:opacity-50 disabled:hover:scale-100"
         >
           <span v-if="!loading">Démarrer votre essai gratuit — 14 jours offerts</span>
           <span v-else class="flex items-center gap-2">
@@ -135,10 +135,10 @@ const startCheckout = async () => {
             Redirection...
           </span>
         </button>
-        <div v-else class="w-full h-11 flex items-center justify-center text-sm font-medium text-foreground/60">
+        <div v-else class="w-full h-12 flex items-center justify-center text-sm font-medium text-slate-400">
           Abonnement actif
         </div>
-        <p class="text-xs text-muted-foreground text-center mt-3 flex items-center justify-center gap-1">
+        <p class="text-xs text-slate-500 text-center mt-3 flex items-center justify-center gap-1">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
           </svg>
@@ -147,93 +147,93 @@ const startCheckout = async () => {
       </div>
 
       <!-- Comparison table -->
-      <div class="border-t border-border pt-8 mb-8">
-        <h2 class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-4">BASIC vs Premium</h2>
-        <div class="border border-border rounded-lg divide-y divide-border">
-          <div class="grid grid-cols-3 px-5 py-3 text-xs font-medium text-muted-foreground">
+      <div class="border-t border-slate-200 pt-8 mb-8">
+        <h2 class="text-xs font-semibold text-slate-500 tracking-widest uppercase mb-4">BASIC vs Premium</h2>
+        <div class="bg-white border border-slate-200 rounded-2xl divide-y divide-slate-200">
+          <div class="grid grid-cols-3 px-5 py-3 text-xs font-medium text-slate-500">
             <span></span>
             <span class="text-center">BASIC</span>
             <span class="text-center">Premium</span>
           </div>
           <div class="grid grid-cols-3 items-center px-5 py-3">
-            <span class="text-sm text-foreground">Voir les leads</span>
+            <span class="text-sm text-slate-900">Voir les leads</span>
             <span class="flex justify-center">
-              <svg class="w-3.5 h-3.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <svg class="w-3.5 h-3.5 text-slate-900" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
             </span>
             <span class="flex justify-center">
-              <svg class="w-3.5 h-3.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-            </span>
-          </div>
-          <div class="grid grid-cols-3 items-center px-5 py-3">
-            <span class="text-sm text-foreground">Coordonnées immédiates</span>
-            <span class="text-center text-muted-foreground">—</span>
-            <span class="flex justify-center">
-              <svg class="w-3.5 h-3.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <svg class="w-3.5 h-3.5 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
             </span>
           </div>
           <div class="grid grid-cols-3 items-center px-5 py-3">
-            <span class="text-sm text-foreground">Accès après 72h</span>
+            <span class="text-sm text-slate-900">Coordonnées immédiates</span>
+            <span class="text-center text-slate-400">—</span>
             <span class="flex justify-center">
-              <svg class="w-3.5 h-3.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-            </span>
-            <span class="flex justify-center">
-              <svg class="w-3.5 h-3.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <svg class="w-3.5 h-3.5 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
             </span>
           </div>
           <div class="grid grid-cols-3 items-center px-5 py-3">
-            <span class="text-sm text-foreground">3 leads gratuits</span>
+            <span class="text-sm text-slate-900">Accès après 72h</span>
             <span class="flex justify-center">
-              <svg class="w-3.5 h-3.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <svg class="w-3.5 h-3.5 text-slate-900" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
             </span>
-            <span class="text-center text-xs font-semibold text-foreground">Illimité</span>
+            <span class="flex justify-center">
+              <svg class="w-3.5 h-3.5 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            </span>
+          </div>
+          <div class="grid grid-cols-3 items-center px-5 py-3">
+            <span class="text-sm text-slate-900">3 leads gratuits</span>
+            <span class="flex justify-center">
+              <svg class="w-3.5 h-3.5 text-slate-900" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            </span>
+            <span class="text-center text-xs font-semibold text-safety">Illimité</span>
           </div>
         </div>
       </div>
 
-      <!-- ROI section -->
-      <div class="border-t border-border pt-8 mb-8">
-        <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Retour sur investissement</h2>
-        <div class="border border-border rounded-lg p-6">
-          <p class="text-sm font-semibold text-foreground mb-2" style="text-wrap: balance">
+      <!-- ROI section (carte contrastée) -->
+      <div class="border-t border-slate-200 pt-8 mb-8">
+        <h2 class="text-xs font-semibold text-slate-500 tracking-widest uppercase mb-4">Retour sur investissement</h2>
+        <div class="bento-card bg-industrial text-white rounded-3xl p-6 md:p-8">
+          <p class="text-lg font-bold mb-2" style="text-wrap: balance">
             1 chantier signé rembourse 6 mois d'abonnement.
           </p>
-          <p class="text-sm text-muted-foreground leading-relaxed">
+          <p class="text-sm text-white/70 leading-relaxed">
             Un chantier moyen en rénovation représente 8 000 € de chiffre d'affaires. Votre abonnement : 39€/mois.
           </p>
         </div>
       </div>
 
       <!-- FAQ -->
-      <div class="border-t border-border pt-8">
-        <h2 class="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-4">Questions fréquentes</h2>
+      <div class="border-t border-slate-200 pt-8">
+        <h2 class="text-xs font-semibold text-slate-500 tracking-widest uppercase mb-4">Questions fréquentes</h2>
         <div class="space-y-2">
-          <details class="border border-border rounded-lg group">
-            <summary class="px-5 py-4 text-sm font-semibold text-foreground cursor-pointer select-none list-none flex items-center justify-between">
+          <details class="bg-white rounded-2xl border border-slate-200 group">
+            <summary class="px-5 py-4 text-sm font-semibold text-slate-900 cursor-pointer select-none list-none flex items-center justify-between">
               Puis-je annuler à tout moment ?
-              <svg class="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              <svg class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
             </summary>
-            <p class="px-5 pb-4 text-sm text-muted-foreground">Oui, sans frais et immédiatement depuis votre espace.</p>
+            <p class="px-5 pb-4 text-sm text-slate-500">Oui, sans frais et immédiatement depuis votre espace.</p>
           </details>
-          <details class="border border-border rounded-lg group">
-            <summary class="px-5 py-4 text-sm font-semibold text-foreground cursor-pointer select-none list-none flex items-center justify-between">
+          <details class="bg-white rounded-2xl border border-slate-200 group">
+            <summary class="px-5 py-4 text-sm font-semibold text-slate-900 cursor-pointer select-none list-none flex items-center justify-between">
               Que se passe-t-il si j'annule ?
-              <svg class="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              <svg class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
             </summary>
-            <p class="px-5 pb-4 text-sm text-muted-foreground">Votre accès Premium reste actif jusqu'à la fin de la période en cours.</p>
+            <p class="px-5 pb-4 text-sm text-slate-500">Votre accès Premium reste actif jusqu'à la fin de la période en cours.</p>
           </details>
-          <details class="border border-border rounded-lg group">
-            <summary class="px-5 py-4 text-sm font-semibold text-foreground cursor-pointer select-none list-none flex items-center justify-between">
+          <details class="bg-white rounded-2xl border border-slate-200 group">
+            <summary class="px-5 py-4 text-sm font-semibold text-slate-900 cursor-pointer select-none list-none flex items-center justify-between">
               Le paiement est-il sécurisé ?
-              <svg class="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              <svg class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
             </summary>
-            <p class="px-5 pb-4 text-sm text-muted-foreground">Oui, les paiements sont traités par Stripe, certifié PCI DSS.</p>
+            <p class="px-5 pb-4 text-sm text-slate-500">Oui, les paiements sont traités par Stripe, certifié PCI DSS.</p>
           </details>
-          <details class="border border-border rounded-lg group">
-            <summary class="px-5 py-4 text-sm font-semibold text-foreground cursor-pointer select-none list-none flex items-center justify-between">
+          <details class="bg-white rounded-2xl border border-slate-200 group">
+            <summary class="px-5 py-4 text-sm font-semibold text-slate-900 cursor-pointer select-none list-none flex items-center justify-between">
               Que se passe-t-il après mes 14 jours d'essai ?
-              <svg class="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              <svg class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
             </summary>
-            <p class="px-5 pb-4 text-sm text-muted-foreground">Si vous n'annulez pas pendant la période d'essai, votre abonnement est automatiquement activé à 39€/mois. Vous pouvez annuler à tout moment depuis votre espace.</p>
+            <p class="px-5 pb-4 text-sm text-slate-500">Si vous n'annulez pas pendant la période d'essai, votre abonnement est automatiquement activé à 39€/mois. Vous pouvez annuler à tout moment depuis votre espace.</p>
           </details>
         </div>
       </div>

@@ -2,21 +2,22 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: context exhaustion at 75% (2026-06-13)
-last_updated: "2026-06-24T10:37:24.732Z"
-last_activity: 2026-06-24 -- Phase 05 execution started
+status: ready_to_plan
+stopped_at: Phase 04.7 complete (8/8) — ready to discuss Phase 05
+last_updated: 2026-07-04T11:41:54.384Z
+last_activity: 2026-07-03 -- Phase 04.7 execution started
 progress:
   total_phases: 10
-  completed_phases: 2
-  total_plans: 32
-  completed_plans: 22
-  percent: 20
+  completed_phases: 3
+  total_plans: 33
+  completed_plans: 29
+  percent: 30
 ---
 
 # Project State
 
 ## 🔒 Lock & Sync Status
+
 - **Lock Type:** None
 - **Git-Pulse:** Enabled (run `scripts/git-pulse.sh` to check for Claude's activity)
 - **Vault Sync:** Enabled (run `scripts/sync-vault-to-ki.py` after Vault updates)
@@ -30,22 +31,22 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 
 ## Current Position
 
-Phase: 05 (integration-api-siret-badges) — EXECUTING
-Plan: 1 of 5
-Status: Executing Phase 05
-Last activity: 2026-06-24 -- Phase 05 execution started
-Progress: [████████░░] 77% (7/8 phases — 1, 2, 3, 4, 4.5, 4.6, 4.7 livrées ✅)
+Phase: 05
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-07-04
+Progress: [░░░░░░░░░░] 0%
 
-### Plans Phase 4.7 — COMPLETE ✅
+### Plans Phase 4.7 v2 — PLANNED (3 vagues)
 
-- [x] 04.7-01 — CSS Foundation & Design Tokens (livré)
-- [x] 04.7-02 — Landing page refactor (livré)
-- [x] 04.7-03 — Pro forms refactor (livré)
-- [x] 04.7-04 — Pro dashboard refactor (livré)
-- [x] 04.7-05 — Premium + public profile (livré)
-- [x] 04.7-06 — Admin + legal pages (livré)
-- [x] 04.7-07 — Accessibility audit (PASS)
-- [ ] 04.7-07 — Dark mode & accessibility audit
+- [ ] 04.7-01 — Fondation CSS : tokens gris/orange, DM Sans, .bento-card (vague 1)
+- [ ] 04.7-02 — Landing : hero Bento Grid Variant C (vague 2)
+- [ ] 04.7-03 — Dashboard : repoint Ui*, suppression doublons, badges (vague 2)
+- [ ] 04.7-04 — Espace leads : grille bento, fiche détail (vague 2)
+- [ ] 04.7-05 — Formulaires claim/profil/simulateur (vague 2)
+- [ ] 04.7-06 — Premium + profil public (vague 2)
+- [ ] 04.7-07 — Admin + légal (vague 2)
+- [ ] 04.7-08 — Gate zéro vert/cyan + a11y + checkpoint human-verify (vague 3)
 
 ### Plans Phase 5 (blocked/deferred)
 
@@ -78,6 +79,7 @@ Progress: [████████░░] 77% (7/8 phases — 1, 2, 3, 4, 4.5, 
 - [2026-06-13 PM]: **Timeout auto-logout** : inactivité 30 min → déconnexion automatique (composable `useIdleLogout.ts`). Appliqué au layout `dynamic.vue` pour les pages protégées.
 - [2026-06-13 PM]: **RLS Security Verified & Documented** : All 11 tables have RLS enabled. Security policies enforce: public SELECT on verified professionals only; authenticated users full access to own records; service-role-only for sensitive tables (projects, prospects, paywall_events, audit_logs). Migration `20260613000000_test_data_seeding.sql` creates 18 test leads (3 per category) with full verification documents. Architecture is reproducible for production deployment. See `.planning/RLS-SECURITY.md`.
 - [2026-06-23 PM]: **Phase 4.7 Design System Adoption** : Transition from self-hosted Clash Display + Geist Variable (Brique & Béton OKLCH palette) to Google Fonts (Figtree + Noto Sans) with MASTER.md hex color system (cyan #0891B2, green #22C55E, cream #ECFEFF, charcoal #164E63). CSS tokens for spacing, shadows, and radius defined in `app/assets/css/tailwind.css` as the foundation for all subsequent page refactors (04.7-02 through 04.7-07).
+- [Phase 04.7]: Composants PremiumBadge et IdentityBreadcrumbs bâtis sur la nouvelle charte Sketch 001 (gris industriel + orange sécurité), en attendant la refonte globale des tokens tailwind.css.
 
 ### Known Patterns (à appliquer dans les prochaines phases)
 
@@ -108,6 +110,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-13T01:44:32.217Z
+Last session: 2026-07-03T00:54:38.544Z
 Stopped at: context exhaustion at 75% (2026-06-13)
 Resume file: None

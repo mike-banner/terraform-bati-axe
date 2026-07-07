@@ -99,7 +99,7 @@ async function openDocument(fileKey: string) {
 }
 
 function statusColor(status: string) {
-  if (status === 'approved') return 'text-emerald-700 bg-emerald-50 border-emerald-200'
+  if (status === 'approved') return 'text-slate-700 bg-slate-100 border-slate-300'
   if (status === 'rejected') return 'text-red-700 bg-red-50 border-red-200'
   return 'text-amber-700 bg-amber-50 border-amber-200'
 }
@@ -139,7 +139,7 @@ useHead(() => ({
     <template v-else-if="isAdmin">
 
       <!-- Back link -->
-      <NuxtLink to="/admin" class="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-8 group">
+      <NuxtLink to="/admin" class="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors mb-8 group">
         <svg class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
         Console de modération
       </NuxtLink>
@@ -150,50 +150,50 @@ useHead(() => ({
           <div class="flex items-center gap-2 mb-2">
             <span
               class="text-xs font-semibold px-2.5 py-1 rounded-full border"
-              :class="pro.is_verified ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-amber-700 bg-amber-50 border-amber-200'"
+              :class="pro.is_verified ? 'text-slate-700 bg-slate-100 border-slate-300' : 'text-amber-700 bg-amber-50 border-amber-200'"
             >
               {{ pro.is_verified ? 'Approuvé' : 'En attente' }}
             </span>
-            <span v-if="pro.category" class="text-xs px-2.5 py-1 rounded-full border border-border text-muted-foreground">
+            <span v-if="pro.category" class="text-xs px-2.5 py-1 rounded-full border border-slate-200 text-slate-500">
               {{ CATEGORY_LABELS[pro.category] ?? pro.category }}
             </span>
           </div>
-          <h1 class="text-2xl font-black tracking-tight text-foreground">{{ pro.company_name }}</h1>
-          <p class="text-sm text-muted-foreground mt-1">{{ pro.full_name }}</p>
+          <h1 class="text-2xl font-black tracking-tight text-slate-900">{{ pro.company_name }}</h1>
+          <p class="text-sm text-slate-500 mt-1">{{ pro.full_name }}</p>
         </div>
       </div>
 
       <!-- Identity grid -->
       <div class="grid grid-cols-2 gap-3 mb-8">
-        <div v-if="pro.email" class="p-4 border border-border rounded-lg">
-          <p class="text-xs text-muted-foreground mb-1">E-mail</p>
-          <p class="text-sm font-medium text-foreground break-all">{{ pro.email }}</p>
+        <div v-if="pro.email" class="p-4 bg-white border border-slate-200 rounded-2xl">
+          <p class="text-xs text-slate-500 mb-1">E-mail</p>
+          <p class="text-sm font-medium text-slate-900 break-all">{{ pro.email }}</p>
         </div>
-        <div v-if="pro.phone" class="p-4 border border-border rounded-lg">
-          <p class="text-xs text-muted-foreground mb-1">Téléphone</p>
-          <p class="text-sm font-medium text-foreground">{{ pro.phone }}</p>
+        <div v-if="pro.phone" class="p-4 bg-white border border-slate-200 rounded-2xl">
+          <p class="text-xs text-slate-500 mb-1">Téléphone</p>
+          <p class="text-sm font-medium text-slate-900">{{ pro.phone }}</p>
         </div>
-        <div class="p-4 border border-border rounded-lg">
-          <p class="text-xs text-muted-foreground mb-1">Corps de métier</p>
-          <p class="text-sm font-medium text-foreground">
+        <div class="p-4 bg-white border border-slate-200 rounded-2xl">
+          <p class="text-xs text-slate-500 mb-1">Corps de métier</p>
+          <p class="text-sm font-medium text-slate-900">
             {{ pro.category ? (CATEGORY_LABELS[pro.category] ?? pro.category) : 'Non renseigné' }}
           </p>
         </div>
-        <div class="p-4 border border-border rounded-lg">
-          <p class="text-xs text-muted-foreground mb-1">Inscrit le</p>
-          <p class="text-sm font-medium text-foreground">{{ memberDate }}</p>
+        <div class="p-4 bg-white border border-slate-200 rounded-2xl">
+          <p class="text-xs text-slate-500 mb-1">Inscrit le</p>
+          <p class="text-sm font-medium text-slate-900">{{ memberDate }}</p>
         </div>
       </div>
 
       <!-- Documents -->
       <div class="space-y-3">
-        <h2 class="text-sm font-semibold text-foreground mb-4">Documents déposés</h2>
+        <h2 class="text-sm font-semibold text-slate-900 mb-4">Documents déposés</h2>
 
         <div v-for="docType in (['kbis', 'decennale'] as const)" :key="docType">
-          <div class="border border-border rounded-lg overflow-hidden">
+          <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden">
 
             <!-- Doc header -->
-            <div class="flex items-center justify-between px-4 py-3 bg-muted/40">
+            <div class="flex items-center justify-between px-4 py-3 bg-slate-50">
               <div class="flex items-center gap-2.5">
                 <svg class="w-4 h-4 text-muted-foreground shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
                 <span class="text-sm font-semibold text-foreground">{{ DOC_LABELS[docType] }}</span>
@@ -251,11 +251,14 @@ useHead(() => ({
 
     <!-- ── PENDING (public) ──────────────────────────────────────────────────── -->
     <div v-else-if="isPending" class="py-8 text-center">
-      <div class="flex items-center justify-center w-12 h-12 rounded-full border border-border mx-auto mb-6">
-        <svg class="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <div class="flex items-center justify-center w-12 h-12 rounded-full border border-amber-200 bg-amber-50 mx-auto mb-6">
+        <svg class="w-5 h-5 text-amber-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
       </div>
-      <h1 class="text-2xl font-black tracking-tight text-foreground mb-3">Profil en cours de vérification</h1>
-      <p class="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full text-amber-700 bg-amber-50 border-amber-200 mb-4">
+        En attente
+      </span>
+      <h1 class="text-2xl font-black tracking-tight text-slate-900 mb-3">Profil en cours de vérification</h1>
+      <p class="text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
         {{ pro.company_name }} a déposé son dossier. Notre équipe vérifie les documents (Kbis, décennale) sous 24 heures ouvrées. Le profil sera visible dès validation.
       </p>
     </div>
@@ -265,13 +268,13 @@ useHead(() => ({
 
       <!-- Badge -->
       <div class="mb-8 flex flex-wrap items-center gap-2">
-        <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border border-border rounded-full text-foreground">
+        <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full text-[#F97316] border-[#F97316]/30 bg-[#F97316]/5">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
           </svg>
           Vérifié BÂTI-AXE
         </span>
-        <span v-if="pro!.category" class="inline-flex items-center text-xs px-3 py-1.5 border border-border rounded-full text-muted-foreground">
+        <span v-if="pro!.category" class="inline-flex items-center text-xs px-3 py-1.5 border border-slate-200 rounded-full text-slate-500">
           {{ CATEGORY_LABELS[pro!.category] ?? pro!.category }}
         </span>
         <BadgeEntrepriseVerifiee v-if="pro!.siret_status === 'active'" />
@@ -279,27 +282,27 @@ useHead(() => ({
       </div>
 
       <!-- Identity -->
-      <h1 class="text-4xl md:text-5xl font-black tracking-tight text-foreground mb-3" style="text-wrap: balance">
+      <h1 class="text-4xl md:text-5xl font-black tracking-tight text-slate-900 mb-3" style="text-wrap: balance">
         {{ pro!.company_name }}
       </h1>
-      <p class="text-base text-muted-foreground mb-10">
+      <p class="text-base text-slate-500 mb-10">
         {{ pro!.full_name }}
         <template v-if="memberYear"> · Membre depuis {{ memberYear }}</template>
       </p>
 
-      <div class="border-t border-border" />
+      <div class="border-t border-slate-200" />
 
       <!-- Verified documents -->
       <div class="py-10 space-y-4">
-        <h2 class="text-sm font-semibold text-foreground mb-6">Documents vérifiés</h2>
+        <h2 class="text-sm font-semibold text-slate-900 mb-6">Documents vérifiés</h2>
 
-        <div class="flex items-start gap-4 p-5 border border-border rounded-lg">
-          <div class="w-8 h-8 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
+        <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
+          <div class="w-8 h-8 flex items-center justify-center rounded-full bg-safety text-white shrink-0 mt-0.5">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
           </div>
           <div>
-            <p class="text-sm font-semibold text-foreground">Assurance décennale</p>
-            <p class="text-xs text-muted-foreground mt-0.5">
+            <p class="text-sm font-semibold text-slate-900">Assurance décennale</p>
+            <p class="text-xs text-slate-500 mt-0.5">
               <template v-if="pro!.decennal_status === 'valid'">Attestation contrôlée, date d'expiration vérifiée.</template>
               <template v-else-if="pro!.decennal_status === 'expired'">Attestation expirée, en cours de renouvellement.</template>
               <template v-else>Vérifiée à l'inscription.</template>
@@ -307,35 +310,35 @@ useHead(() => ({
           </div>
         </div>
 
-        <div class="flex items-start gap-4 p-5 border border-border rounded-lg">
-          <div class="w-8 h-8 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
+        <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
+          <div class="w-8 h-8 flex items-center justify-center rounded-full bg-safety text-white shrink-0 mt-0.5">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
           </div>
           <div>
-            <p class="text-sm font-semibold text-foreground">Kbis de moins de 3 mois</p>
-            <p class="text-xs text-muted-foreground mt-0.5">Extrait officiel attestant de l'activité en cours.</p>
+            <p class="text-sm font-semibold text-slate-900">Kbis de moins de 3 mois</p>
+            <p class="text-xs text-slate-500 mt-0.5">Extrait officiel attestant de l'activité en cours.</p>
           </div>
         </div>
 
-        <div class="flex items-start gap-4 p-5 border border-border rounded-lg">
-          <div class="w-8 h-8 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
+        <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
+          <div class="w-8 h-8 flex items-center justify-center rounded-full bg-safety text-white shrink-0 mt-0.5">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
           </div>
           <div>
-            <p class="text-sm font-semibold text-foreground">Zone d'intervention confirmée</p>
-            <p class="text-xs text-muted-foreground mt-0.5">Secteur géographique vérifié à l'inscription.</p>
+            <p class="text-sm font-semibold text-slate-900">Zone d'intervention confirmée</p>
+            <p class="text-xs text-slate-500 mt-0.5">Secteur géographique vérifié à l'inscription.</p>
           </div>
         </div>
       </div>
 
       <!-- CTA -->
-      <div class="border-t border-border pt-10">
-        <p class="text-sm text-muted-foreground mb-6" style="text-wrap: pretty">
+      <div class="border-t border-slate-200 pt-10">
+        <p class="text-sm text-slate-500 mb-6" style="text-wrap: pretty">
           Projet de travaux dans cette zone ? Décrivez-le en 3 minutes et recevez des devis d'artisans vérifiés.
         </p>
         <NuxtLink
           to="/simulateur"
-          class="inline-flex items-center gap-2 h-11 px-6 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity"
+          class="inline-flex items-center gap-2 h-12 px-8 bg-safety text-white text-sm font-semibold rounded-full shadow-safety/20 shadow-lg hover:scale-105 transition-transform"
         >
           Décrire mon projet
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
