@@ -51,6 +51,25 @@
 2. **Le Compte "Prescripteur" (Nouveau Rôle BDD)** :
    - Un accès gratuit pour l'apporteur d'affaires. Son tableau de bord ne montre pas des "Leads", mais "Mes dossiers clients" avec le fameux pipeline de suivi (Phase 5.7).
 
-## 4. Sujets à discuter
-1. **La Rémunération du Prescripteur** : Modèle de fidélité gratuit, ou commissionnement si le chantier est signé (apport d'affaires classique) ?
-2. **Nommage et Copywriting** : Faut-il bannir le mot "Particulier" au profit de "Client Final" sur les espaces VIP ?
+## 4. Modèle Économique Hybride (Le Moteur)
+
+Faire cohabiter le B2C et le B2B sur la même plateforme maximise les revenus grâce à deux mécanismes distincts :
+
+1. **Le Flux B2C (Le "Cash-Flow" Rapide)**
+   - **Tunnel** : Calculateur-Simulateur (Phase 5.6) "Je suis un particulier".
+   - **Modèle** : Vente de Lead (15-50€) ou Abonnement Premium (Phase 4).
+   - **Avantage** : Revenus immédiats, zéro suivi complexe. Paie les frais de fonctionnement.
+
+2. **Le Flux B2B (La "Forte Marge")**
+   - **Tunnel** : Dépôt Express (Phase 5.8) "Je suis un prescripteur".
+   - **Modèle** : Commission au succès (5 à 10% du montant signé). Ex: 5000€ pour un projet d'archi à 100k€.
+   - **Avantage** : Croissance massive. L'artisan paie volontiers car le risque pour lui est nul (paiement à la signature).
+
+3. **Protection Anti-Contournement (Le "Saut de puce")**
+   - Signature obligatoire d'un **Contrat d'apport d'affaires** pour tout artisan accédant au réseau B2B.
+   - Pénalités lourdes et exclusion en cas de contractualisation en direct dans le dos de la plateforme.
+
+---
+
+## 5. Sujets à discuter
+1. **Nommage et Copywriting** : Faut-il bannir le mot "Particulier" au profit de "Client Final" sur les espaces VIP ?
