@@ -12,9 +12,13 @@
 - **Limites du modèle V1** : L'acquisition B2C est une guerre d'usure coûteuse (SEO/Ads face aux géants). Les particuliers génèrent beaucoup de demandes "curieuses" ou de bas budget.
 
 ### V2 : Le Réseau Privé (Le Pivot B2B2C)
+- **Positionnement Officiel** : "Le Hub des Artisans Certifiés" / Tiers de confiance digital. BÂTI-AXE n'est pas entreprise générale, mais **courtier**. Zéro risque opérationnel, zéro décennale BTP à souscrire, valeur basée sur la sélection et la fluidité logistique.
 - **Nouvelle Cible VIP (Apporteurs d'affaires)** : Agences immobilières, Architectes, Syndics de copropriété, Diagnostiqueurs immobiliers, Assureurs, Experts en sinistres.
-- **Le Concept** : Les apporteurs d'affaires (Prescripteurs) "injectent" des chantiers massifs sur la plateforme pour le compte de leurs clients, car notre outil leur simplifie la vie. Le tunnel B2B est un "Fast-Track" (zéro questionnaire, dépôt de plans/rapports directs, SLA de chiffrage sous 48h).
-- **L'Avantage Injuste (Moat)** : Un agent immo génère 5 à 10 gros chantiers par an. S'il adopte BÂTI-AXE comme *son* outil de chiffrage, l'acquisition de leads devient gratuite, récurrente et de très haute qualité.
+- **Le Concept (Le Fast-Track B2B)** : Tunnel chirurgical en 3 étapes :
+  1. Qualification (Archi, Syndic, Expert...).
+  2. Niveau de Risque / Lot (Gros oeuvre, Second oeuvre, Sinistre/Dépannage).
+  3. Dépôt Massif (Plans, CCTP, Rapports d'expertise) sans blabla. SLA de chiffrage sous 48h.
+- **L'Avantage Injuste (Moat)** : BÂTI-AXE filtre la charge mentale et le risque juridique pour les prescripteurs. Blocage strict et automatisé des artisans dont la décennale expire (implémenté en Phase 5). Conditions Générales (CGU) verrouillées : responsabilité portée uniquement par l'artisan.
 
 ---
 

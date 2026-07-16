@@ -178,12 +178,12 @@ Plans:
 **UI hint**: yes
 
 ### Phase 5.8: Tunnel B2B & Apporteurs d'Affaires
-**Goal**: Déployer un Fast-Track dédié aux VIPs (Architectes, Syndics, Assureurs, Experts) pour l'injection directe de dossiers qualifiés.
+**Goal**: Déployer un Fast-Track dédié aux VIPs (Architectes, Syndics, Assureurs, Experts) avec un positionnement "Tiers de confiance / Courtier".
 **Depends on**: Phase 4.7
 **Success Criteria** (what must be TRUE):
-  1. Une Landing Page dédiée "Espace Partenaires" positionne BÂTI-AXE comme un bras armé technique.
-  2. Un flux de dépôt express (sans simulateur) permet d'uploader directement des plans (PDF, DWG), notes de calcul ou rapports d'expertise.
-  3. Un SLA affiché garantit un pré-chiffrage ou accusé de réception sous 4 à 48h selon l'urgence.
+  1. Une Landing Page dédiée "Espace Partenaires" positionne BÂTI-AXE comme un Hub d'artisans certifiés sans risque opérationnel.
+  2. Un tunnel en 3 étapes : Qualification Pro → Niveau de Risque/Lot → Dépôt express (Plans, CCTP, Rapports d'expertise).
+  3. L'acceptation des CGU dans le tunnel force le consentement explicite : BÂTI-AXE est courtier, l'artisan porte la décennale.
   4. L'attestation décennale BÂTI-AXE est téléchargeable en un clic depuis cette page pour rassurer immédiatement le prescripteur.
 **Plans**: TBD
 **UI hint**: yes
