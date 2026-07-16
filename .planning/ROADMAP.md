@@ -13,6 +13,9 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 4.6: Marché Dynamique & Multi-Catégories** - Refonte DB (categories TEXT[]), fin du push leads, pull temps réel via projects, UI sélection multiple (profil/claim).
 - [x] **Phase 4.7: Refonte UI Globale & Application du Design System** - Application du MASTER.md, harmonisation de la typographie (Figtree/Noto) et du thème B2B/Marketplace. (completed 2026-07-03)
 - [x] **Phase 5: Intégration API État (SIRET) & Badges de Confiance** - Récupération auto des infos légales (API Gouv/Pappers), vérification asynchrone décennale, et nouveaux copywriting labels. (completed 2026-06-24)
+- [ ] **Phase 5.5: Portfolio Pro, Refonte Profil & Social** - Upload R2 (galerie projets), BDD completed_projects/likes, carousel landing, profil immersif pleine page (zéro menu, mobile-first).
+- [ ] **Phase 5.6: Calculateur de Prix & Refonte Simulateur** - Estimateur interactif (tuiles, type de travaux, m²), algorithme de chiffrage, et capture de leads qualifiés (résultat contre coordonnées).
+- [ ] **Phase 5.8: Tunnel B2B & Apporteurs d'Affaires** - Landing page partenaire ("Bras armé technique"), dépôt de plans/rapports expert, SLA de 4h, attestation décennale 1-clic pour syndics, archis et assureurs.
 - [ ] **Phase 6: SMS + Acquisition + Messagerie** - SMS différencié (Basic→upgrade / Premium→lead direct), cold outreach pros DB, dashboard particulier magic-link, messagerie in-app pro↔particulier, email onboarding (désactivé par défaut), feedback loop lead.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville.
 
@@ -151,6 +154,40 @@ Plans:
 - [x] 05-06-PLAN.md — Upload Décennale pro : saisie Numéro + Date d'expiration + Auto-approbation + Mécanisme blocage expiration
 **UI hint**: yes
 
+### Phase 5.5: Portfolio Pro, Refonte Profil & Social
+**Goal**: Permettre aux pros de valoriser leur travail via une galerie photo, refondre l'UI du profil public (immersif) et intégrer de la preuve sociale sur la landing page.
+**Depends on**: Phase 5, Phase 4.7
+**Success Criteria** (what must be TRUE):
+  1. L'échec de soumission du logo pro est corrigé (audit R2, CSP, RLS).
+  2. BDD : Tables `completed_projects` (photos, description, ville, is_showcased) et `likes` (compteur, prévention doublons) opérationnelles.
+  3. Backoffice Pro : Formulaire d'ajout de projet avec upload multiple vers R2. Admin : possibilité de cocher `is_showcased`.
+  4. Profil Public : Refonte Mobile First pleine page (zéro barre de menu, boutons/breadcrumb). Affichage de la galerie des réalisations avec likes.
+  5. Landing Page : Carousel/Grille SEO-friendly en Nuxt (pas d'Astro) exposant les chantiers "sélectionnés" avec likes.
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 5.6: Calculateur de Prix & Refonte Simulateur
+**Goal**: Transformer le simulateur basique en un calculateur visuel et interactif générant une estimation chiffrée, pour maximiser le taux de conversion des particuliers (Leads).
+**Depends on**: Phase 4.7
+**Success Criteria** (what must be TRUE):
+  1. L'UI du `/simulateur.vue` utilise une navigation par tuiles visuelles (choix des pièces, surface, type de rénovation).
+  2. Un moteur de calcul interne détermine une fourchette de prix (budget) selon des variables pré-définies (lourd, rafraîchissement, etc.).
+  3. L'estimation financière n'est dévoilée au prospect qu'après validation complète de ses coordonnées (Aimant à Leads).
+  4. La ligne insérée dans `projects` contient les détails avancés du calculateur pour que les pros aient un lead ultra-qualifié.
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 5.8: Tunnel B2B & Apporteurs d'Affaires
+**Goal**: Déployer un Fast-Track dédié aux VIPs (Architectes, Syndics, Assureurs, Experts) pour l'injection directe de dossiers qualifiés.
+**Depends on**: Phase 4.7
+**Success Criteria** (what must be TRUE):
+  1. Une Landing Page dédiée "Espace Partenaires" positionne BÂTI-AXE comme un bras armé technique.
+  2. Un flux de dépôt express (sans simulateur) permet d'uploader directement des plans (PDF, DWG), notes de calcul ou rapports d'expertise.
+  3. Un SLA affiché garantit un pré-chiffrage ou accusé de réception sous 4 à 48h selon l'urgence.
+  4. L'attestation décennale BÂTI-AXE est téléchargeable en un clic depuis cette page pour rassurer immédiatement le prescripteur.
+**Plans**: TBD
+**UI hint**: yes
+
 ### Phase 6: SMS + Acquisition + Messagerie
 **Goal**: Boucle complète d'acquisition, d'activation et de rétention — les pros sont notifiés, les particuliers ont un espace de suivi, et les deux communiquent sur la plateforme.
 **Depends on**: Phase 4.7 (design system) + Phase 4.5 (messaging/feedback)
@@ -192,5 +229,8 @@ Plans:
 | 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
 | 4.7. Refonte UI Globale & Design System | 8/8 | Complete   | 2026-07-04 |
 | 5. Intégration API État (SIRET) & Badges de Confiance | 6/6 | Complete   | 2026-06-24 |
+| 5.5. Portfolio Pro, Refonte Profil & Social | 0/TBD | Not started | - |
+| 5.6. Calculateur de Prix & Refonte Simulateur | 0/TBD | Not started | - |
+| 5.8. Tunnel B2B & Apporteurs d'Affaires | 0/TBD | Not started | - |
 | 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
