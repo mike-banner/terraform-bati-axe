@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: ready_to_plan
-stopped_at: Phase 04.7 complete (8/8) — ready to discuss Phase 05
-last_updated: 2026-07-04T11:41:54.384Z
-last_activity: 2026-07-03 -- Phase 04.7 execution started
+status: planning
+stopped_at: Phase 05.6 context gathered
+last_updated: "2026-07-16T22:12:36.597Z"
+last_activity: 2026-07-16
 progress:
-  total_phases: 10
-  completed_phases: 3
+  total_phases: 13
+  completed_phases: 4
   total_plans: 33
   completed_plans: 29
-  percent: 30
+  percent: 31
 ---
 
 # Project State
@@ -27,26 +27,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 5 — messagerie livrée ; reste Acquisition + Feedback loop (SMS différé)
+**Current focus**: Phase 5.5 — Portfolio Pro, Refonte Profil & Social
 
 ## Current Position
 
-Phase: 05
+Phase: 05.5
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-07-04
+Last activity: 2026-07-16
 Progress: [░░░░░░░░░░] 0%
 
-### Plans Phase 4.7 v2 — PLANNED (3 vagues)
+### Plans Phase 5.5 (Portfolio, Refonte Profil & Social) — PLANNED (0 plans)
 
-- [ ] 04.7-01 — Fondation CSS : tokens gris/orange, DM Sans, .bento-card (vague 1)
-- [ ] 04.7-02 — Landing : hero Bento Grid Variant C (vague 2)
-- [ ] 04.7-03 — Dashboard : repoint Ui*, suppression doublons, badges (vague 2)
-- [ ] 04.7-04 — Espace leads : grille bento, fiche détail (vague 2)
-- [ ] 04.7-05 — Formulaires claim/profil/simulateur (vague 2)
-- [ ] 04.7-06 — Premium + profil public (vague 2)
-- [ ] 04.7-07 — Admin + légal (vague 2)
-- [ ] 04.7-08 — Gate zéro vert/cyan + a11y + checkpoint human-verify (vague 3)
+- En attente de découpage technique (`gsd-plan-phase`).
+
+### Plans Phase 5.6 (Calculateur de Prix) — PLANNED (0 plans)
+
+- En attente de découpage technique (`gsd-plan-phase`).
 
 ### Plans Phase 5 (blocked/deferred)
 
@@ -101,7 +98,8 @@ Progress: [░░░░░░░░░░] 0%
 
 ### Pending Todos
 
-None.
+- [ ] PIVOT B2B : Re-poser la question à l'utilisateur sur le modèle de rémunération des prescripteurs (gratuit vs commission).
+- [ ] PIVOT B2B : Re-poser la question sur le remplacement du mot "Particulier" par "Client Final".
 
 ### Blockers/Concerns
 
@@ -110,6 +108,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-07-03T00:54:38.544Z
-Stopped at: context exhaustion at 75% (2026-06-13)
-Resume file: None
+Last session: 2026-07-16T22:12:36.581Z
+Stopped at: Phase 05.6 context gathered
+Resume file: .planning/phases/05.6-Calculateur-Simulateur/05.6-CONTEXT.md
