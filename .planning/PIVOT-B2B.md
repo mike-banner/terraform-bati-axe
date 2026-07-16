@@ -55,12 +55,14 @@
 
 Faire cohabiter le B2C et le B2B sur la même plateforme maximise les revenus grâce à deux mécanismes distincts :
 
-1. **Le Flux B2C (Le "Cash-Flow" Rapide)**
+1. **Le Flux B2C (Le "Cash-Flow" Rapide / MRR)**
    - **Tunnel** : Calculateur-Simulateur (Phase 5.6) "Je suis un particulier".
-   - **Modèle** : Vente de Lead (15-50€) ou Abonnement Premium (Phase 4).
-   - **Avantage** : Revenus immédiats, zéro suivi complexe. Paie les frais de fonctionnement.
+   - **Modèle** : Abonnement mensuel (150-200€ Basic / 300€ Premium).
+   - **Règle d'Exclusivité** : Vendu par "Département + Corps de métier" (ex: "Maçonnerie dans le 78").
+   - **Clause de Sauvegarde (Anti-piège de l'Illimité)** : Le forfait "Illimité" à 300€ est soumis à une jauge (ex: max 40 leads/mois). S'il y a dépassement sur 3 mois consécutifs, passage au palier supérieur pour ne pas sous-monétiser le SEO.
+   - **Avantage** : Trésorerie récurrente (MRR), paie la structure de la plateforme.
 
-2. **Le Flux B2B (La "Forte Marge")**
+2. **Le Flux B2B (La "Forte Marge" / Bonus Paydays)**
    - **Tunnel** : Dépôt Express (Phase 5.8) "Je suis un prescripteur".
    - **Modèle** : Commission au succès (5 à 10% du montant signé). Ex: 5000€ pour un projet d'archi à 100k€.
    - **Avantage** : Croissance massive. L'artisan paie volontiers car le risque pour lui est nul (paiement à la signature).
