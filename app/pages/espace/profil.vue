@@ -295,6 +295,30 @@ async function saveProfile() {
           <p class="text-xs text-muted-foreground mt-1 text-right">{{ profile.bio?.length ?? 0 }}/500</p>
         </div>
 
+        <!-- Téléphone -->
+        <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Téléphone</h2>
+          <input
+            v-model="profile.phone"
+            type="tel"
+            placeholder="06 11 22 33 44"
+            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
+          />
+          <p class="text-xs text-muted-foreground mt-1">Votre numéro sera visible sur votre profil public.</p>
+        </div>
+
+        <!-- Zone -->
+        <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Zone d'intervention</h2>
+          <input
+            v-model="profile.zone"
+            type="text"
+            placeholder="Ex: Carrières-sous-Poissy, Poissy, Les Mureaux…"
+            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
+            maxlength="200"
+          />
+        </div>
+
         <!-- Categories -->
         <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
           <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Catégories</h2>
@@ -325,30 +349,6 @@ async function saveProfile() {
             </label>
           </div>
           <p class="mt-3 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
-        </div>
-
-        <!-- Téléphone -->
-        <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
-          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Téléphone</h2>
-          <input
-            v-model="profile.phone"
-            type="tel"
-            placeholder="06 11 22 33 44"
-            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
-          />
-          <p class="text-xs text-muted-foreground mt-1">Votre numéro sera visible sur votre profil public.</p>
-        </div>
-
-        <!-- Zone -->
-        <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
-          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Zone d'intervention</h2>
-          <input
-            v-model="profile.zone"
-            type="text"
-            placeholder="Ex: Carrières-sous-Poissy, Poissy, Les Mureaux…"
-            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
-            maxlength="200"
-          />
         </div>
 
         <!-- Submit -->
