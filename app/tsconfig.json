@@ -6,9 +6,10 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "jsx": "preserve",
     "paths": {
-      "~/*": ["./*"]
+      "~/*": ["../*"]
     }
   },
-  "include": ["tests/**/*.ts", "server/utils/**/*.ts", "server/api/**/*.ts", "app/components/**/*.vue", "app/components/**/*.ts"]
+  "include": ["**/*.ts", "**/*.vue"]
 }
