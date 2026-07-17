@@ -98,10 +98,10 @@ async function saveProfile() {
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
         
-        <!-- COLONNE GAUCHE (Infos principales) -->
-        <div class="lg:col-span-7 xl:col-span-8 space-y-6">
+        <!-- COLONNE GAUCHE (Infos principales - 60%) -->
+        <div class="lg:col-span-3 space-y-6">
 
       <ProfileLogoUpload 
         :canonical-slug="profile.canonical_slug" 
@@ -204,8 +204,8 @@ async function saveProfile() {
       </form>
         </div> <!-- Fin colonne gauche -->
 
-        <!-- COLONNE DROITE (Réalisations portfolio) -->
-        <div class="lg:col-span-5 xl:col-span-4 sticky top-6">
+        <!-- COLONNE DROITE (Réalisations portfolio - 40%) -->
+        <div class="lg:col-span-2 sticky top-6">
           <ProfileRealisations :zone="profile.zone" />
         </div>
 
