@@ -47,7 +47,7 @@ const isLoading     = ref(true)
 const actionLoading = ref<string | null>(null)
 const errorMessage  = ref<string | null>(null)
 const professionals = ref<Professional[]>([])
-const activeTab       = ref<'pending' | 'all' | 'projects'>('pending')
+const activeTab       = ref<'pending' | 'all' | 'projects' | 'realisations'>('pending')
 const categoryFilter  = ref<string>('')
 const expiryDates     = ref<Record<string, string>>({})
 
@@ -65,6 +65,19 @@ interface Project {
 
 const projects        = ref<Project[]>([])
 const projectSortAsc  = ref(true)
+
+// ─── Réalisations (showcase) state ───────────────────────────────────────────
+interface Realisation {
+  id: string
+  title: string
+  city: string | null
+  image_urls: string[]
+  is_showcased: boolean
+  created_at: string
+  professionals?: { company_name: string } | null
+}
+
+const realisations = ref<Realisation[]>([])
 
 const sortedProjects = computed(() => {
   return [...projects.value].sort((a, b) => {
@@ -112,8 +125,21 @@ const fetchProjects = async () => {
   }
 }
 
+const fetchRealisations = async () => {
+  isLoading.value = true
+  errorMessage.value = null
+  try {
+    const data = await $fetch('/api/v1/admin/realisations')
+    realisations.value = (data as any)?.realisations || []
+  } catch (err: any) {
+    errorMessage.value = err.data?.statusMessage || err.message
+  } finally {
+    isLoading.value = false
+  }
+}
 
-onMounted(() => { if (isAdmin.value) { fetchQueue(); fetchProjects() } })
+
+onMounted(() => { if (isAdmin.value) { fetchQueue(); fetchProjects(); fetchRealisations() } })
 
 // ─── Actions ──────────────────────────────────────────────────────────────────
 const viewDocument = async (fileKey: string) => {
@@ -141,6 +167,19 @@ const approvePro = async (proId: string, approved: boolean) => {
   try {
     await $fetch('/api/v1/admin/approve-pro', { method: 'POST', body: { pro_id: proId, approved } })
     await fetchQueue()
+  } catch (err: any) {
+    errorMessage.value = err.data?.statusMessage || err.message
+  } finally {
+    actionLoading.value = null
+  }
+}
+
+const toggleShowcase = async (projectId: string, isShowcased: boolean) => {
+  actionLoading.value = `${projectId}-showcase`
+  errorMessage.value  = null
+  try {
+    await $fetch('/api/v1/admin/realisations-showcase', { method: 'POST', body: { project_id: projectId, is_showcased: isShowcased } })
+    await fetchRealisations()
   } catch (err: any) {
     errorMessage.value = err.data?.statusMessage || err.message
   } finally {
@@ -262,6 +301,13 @@ const statusLabel: Record<string, string> = {
           >
             Projets
           </button>
+          <button
+            @click="activeTab = 'realisations'; categoryFilter = ''"
+            class="h-9 px-4 text-sm font-medium rounded-full border transition-colors"
+            :class="activeTab === 'realisations' ? 'bg-safety text-white border-safety' : 'bg-white border-slate-200 text-muted-foreground hover:text-foreground hover:bg-muted'"
+          >
+            Réalisations
+          </button>
         </div>
       </div>
 
@@ -306,8 +352,8 @@ const statusLabel: Record<string, string> = {
           <svg class="w-6 h-6 animate-spin text-muted-foreground" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
         </div>
 
-        <!-- Pro cards (hidden when Projets tab is active) -->
-        <template v-if="activeTab !== 'projects'">
+        <!-- Pro cards (hidden when Projets/Réalisations tab is active) -->
+        <template v-if="activeTab !== 'projects' && activeTab !== 'realisations'">
         <div v-if="filtered.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-slate-200 rounded-3xl">
           <p class="text-sm text-muted-foreground">Aucun dossier {{ activeTab === 'pending' ? 'en attente' : '' }}.</p>
         </div>
@@ -531,6 +577,42 @@ const statusLabel: Record<string, string> = {
                     <span>Reçu le {{ new Date(project.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) }}</span>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- Réalisations tab -->
+        <template v-if="activeTab === 'realisations'">
+          <div v-if="realisations.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-slate-200 rounded-3xl">
+            <p class="text-sm text-muted-foreground">Aucune réalisation pour l'instant.</p>
+          </div>
+          <div v-else class="space-y-4">
+            <div
+              v-for="realisation in realisations"
+              :key="realisation.id"
+              class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm"
+            >
+              <div class="flex items-center justify-between gap-4 px-5 py-4 bg-muted/50">
+                <div class="space-y-1 flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-sm font-bold text-slate-900">{{ realisation.title }}</span>
+                    <span v-if="realisation.city" class="text-xs px-2 py-0.5 rounded-full border border-slate-200 text-muted-foreground">
+                      {{ realisation.city }}
+                    </span>
+                  </div>
+                  <p class="text-xs text-muted-foreground">{{ realisation.professionals?.company_name }}</p>
+                </div>
+                <label class="flex items-center gap-2 shrink-0 cursor-pointer select-none">
+                  <span class="text-xs font-medium text-muted-foreground">Mettre en avant sur la page d'accueil</span>
+                  <input
+                    type="checkbox"
+                    :checked="realisation.is_showcased"
+                    :disabled="actionLoading === `${realisation.id}-showcase`"
+                    @change="toggleShowcase(realisation.id, ($event.target as HTMLInputElement).checked)"
+                    class="h-5 w-5 rounded border-slate-300 text-safety focus:ring-safety accent-[#F97316] disabled:opacity-40"
+                  />
+                </label>
               </div>
             </div>
           </div>
