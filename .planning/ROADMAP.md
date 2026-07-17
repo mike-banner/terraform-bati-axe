@@ -167,8 +167,8 @@ Plans:
 Plans:
 - [x] 05.5-01-PLAN.md — Modèle de données : migration completed_projects + likes + policies RLS
 - [x] 05.5-02-PLAN.md — Fix bug presign logo R2 (Content-Length) + endpoint presign multi-fichiers + test anti-régression
-- [ ] 05.5-03-PLAN.md — API CRUD réalisations espace pro (liste/création/suppression, scoping RLS)
-- [ ] 05.5-04-PLAN.md — Endpoints publics : liste showcased + profil enrichi, like anti-spam IP-hash, toggle admin is_showcased
+- [x] 05.5-03-PLAN.md — API CRUD réalisations espace pro (liste/création/suppression, scoping RLS)
+- [x] 05.5-04-PLAN.md — Endpoints publics : liste showcased + profil enrichi, like anti-spam IP-hash, toggle admin is_showcased
 - [ ] 05.5-05-PLAN.md — Backoffice : modale RealisationForm + upload R2 parallèle + intégration /espace/profil
 - [ ] 05.5-06-PLAN.md — RealisationCard partagée (like optimiste + localStorage) + toggle showcase console admin
 - [ ] 05.5-07-PLAN.md — Refonte profil public immersif (layout:false, bouton flottant, galerie mobile-first)
@@ -238,7 +238,7 @@ Plans:
 | 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
 | 4.7. Refonte UI Globale & Design System | 8/8 | Complete   | 2026-07-04 |
 | 5. Intégration API État (SIRET) & Badges de Confiance | 6/6 | Complete   | 2026-06-24 |
-| 5.5. Portfolio Pro, Refonte Profil & Social | 2/8 | In Progress|  |
+| 5.5. Portfolio Pro, Refonte Profil & Social | 4/8 | In Progress|  |
 | 5.6. Calculateur de Prix & Refonte Simulateur | 0/TBD | Not started | - |
 | 5.8. Tunnel B2B & Apporteurs d'Affaires | 0/TBD | Not started | - |
 | 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
