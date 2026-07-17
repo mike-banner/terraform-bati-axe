@@ -63,7 +63,7 @@ async function saveProfile() {
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto px-6 py-16">
+  <div class="w-full mx-auto px-6 py-8 md:py-12">
 
     <!-- Skeleton -->
     <div v-if="loading" class="space-y-6">
@@ -84,19 +84,24 @@ async function saveProfile() {
     <template v-else>
 
       <!-- Page header -->
-      <div class="mb-12">
-        <h1 class="text-4xl font-heading font-bold tracking-tight text-text">Mon profil public</h1>
-        <p class="text-sm text-muted-foreground mt-1">Ces informations sont visibles sur votre page publique BÂTI-AXE.</p>
+      <div class="mb-8">
+        <h1 class="text-3xl md:text-4xl font-heading font-bold tracking-tight text-text">Mon profil public</h1>
+        <div class="flex flex-col sm:flex-row sm:items-center gap-3 mt-2">
+          <p class="text-sm text-muted-foreground">Ces informations sont visibles sur votre page publique BÂTI-AXE.</p>
+          <NuxtLink v-if="profile.canonical_slug" :to="`/pro/${profile.dept}/${profile.canonical_slug}`" target="_blank"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full hover:bg-primary/20 transition-colors">
+            Voir ma page publique
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+            </svg>
+          </NuxtLink>
+        </div>
       </div>
 
-      <!-- View public profile link -->
-      <NuxtLink v-if="profile.canonical_slug" :to="`/pro/${profile.dept}/${profile.canonical_slug}`" target="_blank"
-        class="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground underline underline-offset-2 hover:opacity-70 transition-opacity mb-8">
-        Voir mon profil public
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
-        </svg>
-      </NuxtLink>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- COLONNE GAUCHE (Infos principales) -->
+        <div class="lg:col-span-7 xl:col-span-8 space-y-6">
 
       <ProfileLogoUpload 
         :canonical-slug="profile.canonical_slug" 
@@ -175,7 +180,7 @@ async function saveProfile() {
           <p class="mt-3 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
         </div>
 
-        <ProfileRealisations :zone="profile.zone" />
+
 
         <!-- Submit -->
         <div class="flex items-center justify-between gap-4 pt-2">
@@ -197,6 +202,14 @@ async function saveProfile() {
         </div>
 
       </form>
+        </div> <!-- Fin colonne gauche -->
+
+        <!-- COLONNE DROITE (Réalisations portfolio) -->
+        <div class="lg:col-span-5 xl:col-span-4 sticky top-6">
+          <ProfileRealisations :zone="profile.zone" />
+        </div>
+
+      </div>
 
     </template>
   </div>
