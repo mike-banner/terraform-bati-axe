@@ -2,13 +2,12 @@ import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 import { AwsClient } from 'aws4fetch'
 
-// CNV-05 D-17: logo upload presigned URL — mirrors documents/presign.post.ts pattern
-// T-04.5-16: 5 MB content length cap; T-04.5-17: SVG in allow-list (known XSS risk — serve with CSP or proxy)
-
-const VALID_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'] as const
+// Presign R2 pour les photos de réalisations (portfolio pro). Calqué sur
+// documents/presign.post.ts. Le client (RealisationForm, plan 05) appelle cet
+// endpoint une fois par fichier — pas de fan-out serveur.
 
 const presignSchema = z.object({
-  content_type: z.enum(VALID_MIME, { message: "Format d'image non supporté." }),
+  content_type: z.string().startsWith('image/', { message: "Le fichier doit être une image." }),
   filename: z.string().min(1).max(255),
 })
 
@@ -44,16 +43,16 @@ export default defineEventHandler(async (event) => {
     const userId = (user as any).id ?? (user as any).sub ?? (user as any).user_metadata?.sub ?? null
     if (!userId) throw createError({ statusCode: 401, statusMessage: 'Identifiant utilisateur introuvable.' })
 
-    // Clé lisible et historisée : {short_id}__{slug}/logo/logo_{date}_{rand8}.{ext}
+    // Clé lisible et historisée : {short_id}__{slug}/realisation/realisation_{date}_{rand8}.{ext}
     const sb = serverSupabaseServiceRole(event) as any
     const { data: pro } = await sb.from('professionals').select('short_id, canonical_slug').eq('id', userId).maybeSingle()
-    const { fileKey } = buildStorageKey({ shortId: pro?.short_id, slug: pro?.canonical_slug, userId, type: 'logo', filename })
+    const { fileKey } = buildStorageKey({ shortId: pro?.short_id, slug: pro?.canonical_slug, userId, type: 'realisation', filename })
 
     const aws = getAwsClient(config, env)
     const url = new URL(`https://${accountId}.r2.cloudflarestorage.com/${bucket}/${fileKey}`)
 
     // On ne passe PAS de headers ici pour éviter que la signature ne soit trop stricte
-    // (T-04.5-16 : la limite 5 Mo reste appliquée côté client dans espace/profil.vue).
+    // (cf. bug SignatureDoesNotMatch corrigé sur logo-presign.post.ts).
     const request = await aws.sign(url, {
       method: 'PUT',
       aws: { signQuery: true }
@@ -63,7 +62,7 @@ export default defineEventHandler(async (event) => {
 
     return { status: 'SUCCESS', signedUrl: request.url, fileKey, publicUrl }
   } catch (err: any) {
-    console.error('[logo-presign error]', err)
+    console.error('[realisations-presign error]', err)
     throw createError({ statusCode: 400, statusMessage: 'Storage Error', message: err.message || String(err) })
   }
 })
