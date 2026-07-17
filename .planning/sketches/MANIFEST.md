@@ -1,14 +1,15 @@
 # Sketch Manifest
 
 ## Design Direction
-SaaS Construction Premium. Minimalisme exagéré, gris industriel + orange sécurité. Contraste fort, typographie imposante, vibes "Godly/Awwwards". Cible : La Landing Page principale pour prouver la valeur esthétique et accrocher l'utilisateur.
+L'espace pro doit se détacher du site grand public. Sur Desktop, on cherche un rendu "Logiciel / Desktop App" très aéré. Sur mobile, une ergonomie type application VTC avec une Bottom Bar de navigation fixe.
 
 ## Reference Points
-- designengineer.tools (micro-interactions)
-- godly (Loud minimal, typography focus)
+- Apps VTC (pour la bottom bar mobile)
+- SaaS modernes (pour l'espace aéré desktop)
 
 ## Sketches
 
 | # | Name | Design Question | Winner | Tags |
 |---|------|----------------|--------|------|
-| 001 | landing-hero | Quel style de Hero (en-tête de page) donne l'impact le plus premium ? | C (Bento) | landing, hero, typography |
+| 001 | landing-hero | [Ancien sketch si existant, ou placeholder] | | |
+| 002 | pro-navigation | Comment structurer la navigation Desktop et Mobile pour l'espace Pro ? | A | layout, navigation |
