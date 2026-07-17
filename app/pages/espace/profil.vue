@@ -26,6 +26,8 @@ const logoStage = ref<'compress' | 'upload'>('compress')
 const logoName = ref('')
 const logoVersion = ref(0)
 const logoFailed = ref(false)
+const showRealisationModal = ref(false)
+const realisations = ref<Record<string, unknown>[]>([])
 // Affichage via le proxy serveur (bucket privé) ; ?v= force le rechargement après upload.
 const logoSrc = computed(() =>
   profile.canonical_slug ? `/api/v1/pro/logo/${profile.canonical_slug}?v=${logoVersion.value}` : ''
@@ -51,8 +53,19 @@ const { refresh } = await useAsyncData('pro-profile-page', async () => {
   } finally {
     loading.value = false
   }
+  try {
+    const res = await $fetch<{ realisations: Record<string, unknown>[] }>('/api/v1/pro/realisations')
+    realisations.value = res.realisations
+  } catch {
+    // Silencieux : la liste des réalisations n'est pas bloquante pour la page profil.
+  }
   return null
 }, { server: false })
+
+function onRealisationCreated(realisation: Record<string, unknown>) {
+  realisations.value.unshift(realisation)
+  showRealisationModal.value = false
+}
 
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml']
 const MAX_SIZE = 5_242_880
@@ -204,6 +217,34 @@ async function saveProfile() {
           <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
         </svg>
       </NuxtLink>
+
+      <!-- Réalisations -->
+      <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8 mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase">Réalisations</h2>
+          <button type="button" @click="showRealisationModal = true"
+            class="inline-flex items-center justify-center gap-2 h-11 px-6 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform">
+            Ajouter une réalisation
+          </button>
+        </div>
+
+        <div v-if="realisations.length === 0" class="text-sm text-muted-foreground">
+          <p class="font-semibold text-text mb-1">Aucune réalisation pour l'instant</p>
+          <p>Ajoutez vos chantiers terminés pour rassurer les futurs clients — photos avant/après, ville, description.</p>
+        </div>
+
+        <ul v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <li v-for="r in realisations" :key="r.id as string" class="flex items-center gap-3 border border-slate-200 rounded-xl p-3">
+            <img v-if="(r.image_urls as string[])?.[0]" :src="(r.image_urls as string[])[0]" :alt="r.title as string" class="w-14 h-14 object-cover rounded-lg shrink-0" />
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-text truncate">{{ r.title }}</p>
+              <p v-if="r.city" class="text-xs text-muted-foreground truncate">{{ r.city }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <RealisationForm v-if="showRealisationModal" :zone="profile.zone" @created="onRealisationCreated" @close="showRealisationModal = false" />
 
       <!-- Logo upload -->
       <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8 mb-8">
