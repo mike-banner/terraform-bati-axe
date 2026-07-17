@@ -98,118 +98,118 @@ async function saveProfile() {
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+      <!-- Formulaire englobant tout -->
+      <form @submit.prevent="saveProfile" class="flex flex-col lg:grid lg:grid-cols-5 gap-8 items-start">
         
         <!-- COLONNE GAUCHE (Infos principales - 60%) -->
-        <div class="lg:col-span-3 space-y-6">
+        <div class="lg:col-span-3 space-y-6 order-1 w-full">
 
-      <ProfileLogoUpload 
-        :canonical-slug="profile.canonical_slug" 
-        @update:logoUrl="profile.logo_url = $event" 
-      />
-
-      <!-- Profile form -->
-      <form @submit.prevent="saveProfile" class="space-y-6">
-
-        <!-- Bio -->
-        <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
-          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Présentation</h2>
-          <textarea
-            v-model="profile.bio"
-            rows="4"
-            placeholder="Décrivez votre activité, votre expérience et ce qui vous différencie…"
-            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-text placeholder:text-gray-500 bg-white resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-            maxlength="500"
+          <ProfileLogoUpload 
+            :canonical-slug="profile.canonical_slug" 
+            @update:logoUrl="profile.logo_url = $event" 
           />
-          <p class="text-xs text-muted-foreground mt-1 text-right">{{ profile.bio?.length ?? 0 }}/500</p>
-        </div>
 
-        <!-- Téléphone -->
-        <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
-          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Téléphone</h2>
-          <input
-            v-model="profile.phone"
-            type="tel"
-            placeholder="06 11 22 33 44"
-            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
-          />
-          <p class="text-xs text-muted-foreground mt-1">Votre numéro sera visible sur votre profil public.</p>
-        </div>
-
-        <!-- Zone -->
-        <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
-          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Zone d'intervention</h2>
-          <input
-            v-model="profile.zone"
-            type="text"
-            placeholder="Ex: Carrières-sous-Poissy, Poissy, Les Mureaux…"
-            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
-            maxlength="200"
-          />
-        </div>
-
-        <!-- Categories -->
-        <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
-          <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Catégories</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
-              <input type="checkbox" v-model="profile.categories" value="maconnerie" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
-              <span class="text-sm font-medium">Maçonnerie &amp; Gros Œuvre</span>
-            </label>
-            <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
-              <input type="checkbox" v-model="profile.categories" value="toiture" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
-              <span class="text-sm font-medium">Charpente &amp; Toiture</span>
-            </label>
-            <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
-              <input type="checkbox" v-model="profile.categories" value="electricite" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
-              <span class="text-sm font-medium">Électricité</span>
-            </label>
-            <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
-              <input type="checkbox" v-model="profile.categories" value="plomberie" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
-              <span class="text-sm font-medium">Plomberie &amp; Chauffage</span>
-            </label>
-            <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
-              <input type="checkbox" v-model="profile.categories" value="peinture" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
-              <span class="text-sm font-medium">Peinture &amp; Finitions</span>
-            </label>
-            <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
-              <input type="checkbox" v-model="profile.categories" value="isolation" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
-              <span class="text-sm font-medium">Isolation &amp; Cloisons</span>
-            </label>
+          <!-- Bio -->
+          <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+            <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Présentation</h2>
+            <textarea
+              v-model="profile.bio"
+              rows="4"
+              placeholder="Décrivez votre activité, votre expérience et ce qui vous différencie…"
+              class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-text placeholder:text-gray-500 bg-white resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              maxlength="500"
+            />
+            <p class="text-xs text-muted-foreground mt-1 text-right">{{ profile.bio?.length ?? 0 }}/500</p>
           </div>
-          <p class="mt-3 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
+
+          <!-- Téléphone -->
+          <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+            <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Téléphone</h2>
+            <input
+              v-model="profile.phone"
+              type="tel"
+              placeholder="06 11 22 33 44"
+              class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
+            />
+            <p class="text-xs text-muted-foreground mt-1">Votre numéro sera visible sur votre profil public.</p>
+          </div>
+
+          <!-- Zone -->
+          <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+            <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Zone d'intervention</h2>
+            <input
+              v-model="profile.zone"
+              type="text"
+              placeholder="Ex: Carrières-sous-Poissy, Poissy, Les Mureaux…"
+              class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
+              maxlength="200"
+            />
+          </div>
+
+          <!-- Categories -->
+          <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+            <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Catégories</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
+                <input type="checkbox" v-model="profile.categories" value="maconnerie" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
+                <span class="text-sm font-medium">Maçonnerie &amp; Gros Œuvre</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
+                <input type="checkbox" v-model="profile.categories" value="toiture" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
+                <span class="text-sm font-medium">Charpente &amp; Toiture</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
+                <input type="checkbox" v-model="profile.categories" value="electricite" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
+                <span class="text-sm font-medium">Électricité</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
+                <input type="checkbox" v-model="profile.categories" value="plomberie" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
+                <span class="text-sm font-medium">Plomberie &amp; Chauffage</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
+                <input type="checkbox" v-model="profile.categories" value="peinture" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
+                <span class="text-sm font-medium">Peinture &amp; Finitions</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
+                <input type="checkbox" v-model="profile.categories" value="isolation" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
+                <span class="text-sm font-medium">Isolation &amp; Cloisons</span>
+              </label>
+            </div>
+            <p class="mt-3 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
+          </div>
+          
         </div>
 
+        <!-- COLONNE DROITE (Réalisations portfolio - 40%) -->
+        <!-- lg:row-span-2 évite que la colonne de droite pousse les boutons vers le bas si elle est très grande -->
+        <div class="lg:col-span-2 lg:row-span-2 order-2 w-full lg:sticky lg:top-6">
+          <ProfileRealisations :zone="profile.zone" />
+        </div>
 
-
-        <!-- Submit -->
-        <div class="flex items-center justify-between gap-4 pt-2">
-          <p v-if="saveSuccess" class="text-xs text-foreground font-semibold">
-            Profil mis à jour. Les changements sont visibles sur votre page publique.
-          </p>
-          <p v-if="saveError" class="text-xs text-destructive">{{ saveError }}</p>
-          <div class="ml-auto">
-            <NuxtLink to="/app/dashboard"
-              class="inline-flex items-center justify-center gap-2 h-11 px-6 border border-slate-200 bg-white text-foreground text-sm font-semibold rounded-full hover:bg-muted transition-colors mr-3">
-              Annuler
-            </NuxtLink>
-            <button type="submit" :disabled="saving"
-              class="inline-flex items-center justify-center gap-2 h-11 px-6 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-50">
-              <span v-if="!saving">Enregistrer les modifications</span>
-              <span v-else>Enregistrement…</span>
-            </button>
+        <!-- Submit Boutons -->
+        <div class="lg:col-span-3 order-3 w-full pt-2">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="min-w-0">
+              <p v-if="saveSuccess" class="text-xs text-foreground font-semibold">
+                Profil mis à jour. Les changements sont visibles sur votre page publique.
+              </p>
+              <p v-if="saveError" class="text-xs text-destructive">{{ saveError }}</p>
+            </div>
+            <div class="flex items-center justify-end shrink-0">
+              <NuxtLink to="/app/dashboard"
+                class="inline-flex items-center justify-center gap-2 h-11 px-6 border border-slate-200 bg-white text-foreground text-sm font-semibold rounded-full hover:bg-muted transition-colors mr-3">
+                Annuler
+              </NuxtLink>
+              <button type="submit" :disabled="saving"
+                class="inline-flex items-center justify-center gap-2 h-11 px-6 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-50">
+                <span v-if="!saving">Enregistrer</span>
+                <span v-else>Enregistrement…</span>
+              </button>
+            </div>
           </div>
         </div>
 
       </form>
-        </div> <!-- Fin colonne gauche -->
-
-        <!-- COLONNE DROITE (Réalisations portfolio - 40%) -->
-        <div class="lg:col-span-2 sticky top-6">
-          <ProfileRealisations :zone="profile.zone" />
-        </div>
-
-      </div>
 
     </template>
   </div>
