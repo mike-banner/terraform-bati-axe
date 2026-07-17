@@ -41,6 +41,12 @@ export default defineEventHandler(async (event) => {
     verifications = verifs || []
   }
 
+  const { data: realisations } = await supabase
+    .from('completed_projects')
+    .select('id, professional_id, title, description, city, image_urls, created_at, likes(count)')
+    .eq('professional_id', pro.id)
+    .order('created_at', { ascending: false })
+
   return {
     status: 'SUCCESS',
     needsRedirect,
@@ -62,6 +68,7 @@ export default defineEventHandler(async (event) => {
       siret_status: pro.siret_status as string | null,
       member_since: pro.created_at as string,
     },
+    realisations: realisations ?? [],
     verifications: verifications.map((v: any) => ({
       id: v.id as string,
       document_type: v.document_type as 'kbis' | 'decennale',
