@@ -19,7 +19,7 @@ const { data: headerPro } = await useAsyncData('header-pro', async () => {
   if (!user.value?.id) return null
   const { data } = await supabase.from('professionals').select('company_name').eq('id', user.value.id).maybeSingle()
   return data
-}, { server: false })
+}, { server: false, watch: [() => user.value?.id] })
 
 // On client side, fix height for mobile iOS
 onMounted(() => {
@@ -90,9 +90,16 @@ onMounted(() => {
         <!-- DESKTOP HEADER -->
         <header class="hidden md:flex h-20 flex-shrink-0 items-center justify-between px-10 border-b border-border bg-page/98 z-20">
           <div class="flex items-center gap-3">
-            <h2 class="text-xl font-black tracking-tight text-foreground">{{ route.meta.pageTitle || 'Accueil' }}</h2>
-            <template v-if="headerPro?.company_name">
-              <span class="w-1 h-1 rounded-full bg-border"></span>
+            <h2 class="text-xl font-black tracking-tight text-foreground">
+              <template v-if="route.meta.pageTitle">
+                {{ route.meta.pageTitle }}
+              </template>
+              <template v-else>
+                {{ headerPro?.company_name || 'Espace Pro' }}
+              </template>
+            </h2>
+            <template v-if="route.meta.pageTitle && headerPro?.company_name">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
               <span class="text-sm font-semibold text-muted-foreground">{{ headerPro.company_name }}</span>
             </template>
           </div>
