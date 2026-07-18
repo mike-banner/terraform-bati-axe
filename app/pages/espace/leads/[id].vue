@@ -123,7 +123,7 @@ async function copyToClipboard(text: string) {
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto px-6 py-16">
+  <div class="w-full max-w-4xl px-6 py-8 md:px-10 md:py-12">
 
     <!-- Back link -->
     <NuxtLink

@@ -63,7 +63,7 @@ async function saveProfile() {
 </script>
 
 <template>
-  <div class="w-full mx-auto px-6 py-8 md:py-12">
+  <div class="w-full max-w-[1440px] px-6 py-8 md:px-10 md:py-12">
 
     <!-- Skeleton -->
     <div v-if="loading" class="space-y-6">

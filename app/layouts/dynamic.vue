@@ -99,7 +99,7 @@ onMounted(() => {
 
         <!-- SCROLLABLE SLOT -->
         <div class="flex-1 min-h-0 overflow-y-auto scroll-smooth custom-scrollbar">
-          <div class="max-w-6xl w-full mx-auto pb-10">
+          <div class="w-full max-w-[1600px] pb-10">
             <slot />
           </div>
         </div>

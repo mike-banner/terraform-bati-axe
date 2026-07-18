@@ -121,7 +121,7 @@ async function copyToClipboard(text: string) {
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto px-6 py-16">
+  <div class="w-full max-w-[1440px] px-6 py-8 md:px-10 md:py-12">
 
     <!-- Blocker: profil non validé -->
     <div v-if="profile && !profile.is_verified" class="flex flex-col gap-4 p-6 border border-red-300 bg-red-50 rounded-lg mb-8">

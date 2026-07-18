@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full mx-auto px-6 py-8 md:py-12">
+  <div class="w-full max-w-[1440px] px-6 py-8 md:px-10 md:py-12">
     <div class="mb-8">
       <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Messagerie</h1>
       <p class="text-muted-foreground mt-2">Discutez avec les particuliers de vos chantiers débloqués.</p>
