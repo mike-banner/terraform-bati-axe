@@ -263,11 +263,22 @@ async function copyToClipboard(text: string) {
 
     <!-- Filtre catégorie + compteur -->
     <div v-else class="space-y-4">
-      <div class="flex items-center justify-between gap-3">
-        <span class="text-xs text-muted-foreground">
-          {{ filteredLeads.length }} lead{{ filteredLeads.length !== 1 ? 's' : '' }}
-          <template v-if="categoryFilter"> · {{ CATEGORY_LABELS[categoryFilter] ?? categoryFilter }}</template>
-        </span>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+            </span>
+            <span class="text-xs font-medium text-slate-600">
+              <strong class="text-foreground font-black text-sm">{{ filteredLeads.length }}</strong> opportunité{{ filteredLeads.length !== 1 ? 's' : '' }}
+            </span>
+          </div>
+          <div v-if="categoryFilter" class="h-4 w-px bg-slate-200"></div>
+          <span v-if="categoryFilter" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            {{ CATEGORY_LABELS[categoryFilter] ?? categoryFilter }}
+          </span>
+        </div>
         <div class="flex items-center gap-2">
           <select
             v-model="sortMode"
