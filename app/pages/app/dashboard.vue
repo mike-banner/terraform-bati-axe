@@ -178,7 +178,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto px-6 py-8">
+  <div class="w-full mx-auto px-6 py-8 md:py-12">
 
     <!-- Loading -->
     <div v-if="loading" class="py-12 flex justify-center">
@@ -220,13 +220,17 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
             </span>
           </div>
         </div>
-        <h1 class="text-4xl font-bold tracking-tight text-foreground" style="text-wrap: balance">{{ pro.company_name }}</h1>
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground" style="text-wrap: balance">{{ pro.company_name }}</h1>
         <p class="text-sm text-muted-foreground mt-1">{{ pro.full_name }} · {{ pro.postal_code }}</p>
       </div>
 
-      <!-- ─── Documents (toujours visible pour permettre le renouvellement) ───── -->
-      <div class="bento-card rounded-3xl p-8 mb-8 border" :class="docsComplete ? 'border-slate-200 bg-white shadow-sm' : 'border-red-300 bg-red-50'">
-        <div class="flex items-start gap-2 mb-3">
+      <div class="flex flex-col lg:grid lg:grid-cols-5 gap-8 items-start">
+        
+        <!-- COLONNE GAUCHE (Documents - 60%) -->
+        <div class="lg:col-span-3 space-y-6 order-1 w-full">
+          <!-- ─── Documents (toujours visible pour permettre le renouvellement) ───── -->
+          <div class="bento-card rounded-3xl p-8 border" :class="docsComplete ? 'border-slate-200 bg-white shadow-sm' : 'border-red-300 bg-red-50'">
+            <div class="flex items-start gap-2 mb-3">
           <svg v-if="!docsComplete" class="w-4 h-4 text-red-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
           <div>
             <p class="text-sm font-semibold" :class="docsComplete ? 'text-foreground' : 'text-red-900'">Documents requis</p>
@@ -348,10 +352,13 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
           </p>
         </div>
       </div>
+        </div>
 
-      <!-- Progress checklist -->
-      <div class="bento-card border border-slate-200 rounded-3xl mb-10 overflow-hidden bg-white shadow-sm">
-        <div v-for="(step, i) in steps" :key="i" class="flex items-start gap-4 px-5 py-4 border-b border-border last:border-0 hover:-translate-y-0.5 hover:shadow-md hover:bg-slate-50 transition-all duration-300 relative group">
+        <!-- COLONNE DROITE (Checklist - 40%) -->
+        <div class="lg:col-span-2 order-2 w-full lg:sticky lg:top-6">
+          <!-- Progress checklist -->
+          <div class="bento-card border border-slate-200 rounded-3xl overflow-hidden bg-white shadow-sm">
+            <div v-for="(step, i) in steps" :key="i" class="flex items-start gap-4 px-5 py-4 border-b border-border last:border-0 hover:-translate-y-0.5 hover:shadow-md hover:bg-slate-50 transition-all duration-300 relative group">
           <div
             class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5"
             :class="step.done ? 'bg-foreground text-background' : i === currentStepIndex ? 'border-2 border-foreground' : 'border border-border'"
@@ -376,8 +383,9 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
           </div>
         </div>
       </div>
+        </div>
 
-
+      </div>
 
     </template>
 
