@@ -196,7 +196,7 @@ async function saveProfile() {
               <p v-if="saveError" class="text-xs text-destructive">{{ saveError }}</p>
             </div>
             <div class="flex items-center justify-end shrink-0">
-              <NuxtLink to="/app/dashboard"
+              <NuxtLink to="/espace/dashboard"
                 class="inline-flex items-center justify-center gap-2 h-11 px-6 border border-slate-200 bg-white text-foreground text-sm font-semibold rounded-full hover:bg-muted transition-colors mr-3">
                 Annuler
               </NuxtLink>

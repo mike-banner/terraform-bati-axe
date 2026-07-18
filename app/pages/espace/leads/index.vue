@@ -139,7 +139,7 @@ async function copyToClipboard(text: string) {
         </div>
       </div>
       <NuxtLink
-        to="/app/dashboard"
+        to="/espace/dashboard"
         class="inline-flex items-center justify-center gap-2 h-10 px-6 bg-red-700 text-white text-sm font-semibold rounded-md hover:bg-red-800 transition-colors self-start"
       >
         Retour au dashboard pour envoyer les documents

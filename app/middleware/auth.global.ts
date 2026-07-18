@@ -4,7 +4,7 @@
 // Rules:
 //   /admin/*  → admin only (app_metadata.role === 'admin')
 //   /app/*    → any logged-in user; redirect to /pro/claim if anonymous
-//   /*        → if logged-in non-admin pro, redirect to /app/dashboard
+//   /*        → if logged-in non-admin pro, redirect to /espace/dashboard
 //              (pros have one destination when authenticated)
 // ─────────────────────────────────────────────────────────────────────────────
 

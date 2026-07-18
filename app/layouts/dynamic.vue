@@ -75,7 +75,7 @@ onMounted(() => {
         </div>
 
         <nav class="flex-1 space-y-2">
-          <NuxtLink to="/app/dashboard" class="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-colors" active-class="bg-primary/10 text-primary" :class="route.path === '/app/dashboard' ? '' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'">
+          <NuxtLink to="/espace/dashboard" class="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-colors" active-class="bg-primary/10 text-primary" :class="route.path === '/espace/dashboard' ? '' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             Accueil
           </NuxtLink>
@@ -134,7 +134,7 @@ onMounted(() => {
 
     <!-- MOBILE BOTTOM BAR (VTC STYLE) -->
     <nav v-if="!isAdminRoute" class="md:hidden flex-shrink-0 z-50 flex justify-around items-stretch bg-page/90 backdrop-blur-xl border-t border-border" style="height: calc(4rem + env(safe-area-inset-bottom, 0px)); padding-bottom: env(safe-area-inset-bottom, 0px);">
-      <NuxtLink to="/app/dashboard" class="flex flex-col items-center justify-center gap-0.5 flex-1 min-w-0 px-1 transition-colors" active-class="text-primary" :class="route.path === '/app/dashboard' ? '' : 'text-muted-foreground'">
+      <NuxtLink to="/espace/dashboard" class="flex flex-col items-center justify-center gap-0.5 flex-1 min-w-0 px-1 transition-colors" active-class="text-primary" :class="route.path === '/espace/dashboard' ? '' : 'text-muted-foreground'">
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <span class="text-[10px] font-semibold uppercase tracking-tight leading-none mt-1">Accueil</span>
       </NuxtLink>

@@ -12,7 +12,7 @@ const userInitial = computed(() =>
 )
 
 const isAdmin = computed(() => (user.value as any)?.app_metadata?.role === 'admin')
-const espaceLink = computed(() => isAdmin.value ? '/admin' : '/app/dashboard')
+const espaceLink = computed(() => isAdmin.value ? '/admin' : '/espace/dashboard')
 </script>
 
 <template>
