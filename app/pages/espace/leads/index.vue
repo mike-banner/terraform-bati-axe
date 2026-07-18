@@ -161,7 +161,7 @@ async function copyToClipboard(text: string) {
     </div>
 
     <!-- Page header -->
-    <div class="mb-12">
+    <div class="mb-12 md:hidden">
       <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Mes leads</h1>
       <p class="text-sm text-muted-foreground mt-2">Leads qualifiés pour votre métier</p>
       <NuxtLink

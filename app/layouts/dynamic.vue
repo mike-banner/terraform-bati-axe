@@ -95,11 +95,11 @@ onMounted(() => {
         <header class="hidden md:flex h-20 flex-shrink-0 items-center justify-between px-10 border-b border-border bg-page/98 z-20">
           <div class="flex items-center gap-3">
             <h2 class="text-xl font-black tracking-tight text-foreground">
-              <template v-if="route.meta.pageTitle">
-                {{ route.meta.pageTitle }}
+              <template v-if="!route.meta.pageTitle">
+                {{ headerPro?.company_name || 'BÂTI-AXE Pro' }}
               </template>
               <template v-else>
-                {{ headerPro?.company_name || 'Espace Pro' }}
+                {{ route.meta.pageTitle }}
               </template>
             </h2>
             <template v-if="route.meta.pageTitle && headerPro?.company_name">
