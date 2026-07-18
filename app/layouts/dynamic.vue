@@ -14,11 +14,16 @@ const userInitial = computed(() => user.value?.email?.charAt(0).toUpperCase() ??
 const route = useRoute()
 const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 
-const { data: headerPro } = await useAsyncData(`header-pro-${user.value?.id || 'guest'}`, async () => {
-  if (!user.value?.id) return null
-  const { data } = await supabase.from('professionals').select('company_name').eq('id', user.value.id).maybeSingle()
-  return data
-})
+const headerPro = ref<{ company_name?: string } | null>(null)
+
+watch(() => user.value?.id, async (uid) => {
+  if (uid) {
+    const { data } = await supabase.from('professionals').select('company_name').eq('id', uid).maybeSingle()
+    if (data) headerPro.value = data
+  } else {
+    headerPro.value = null
+  }
+}, { immediate: true })
 
 // On client side, fix height for mobile iOS
 onMounted(() => {
