@@ -16,14 +16,27 @@ const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 
 const headerPro = ref<{ company_name?: string } | null>(null)
 
-watch(() => user.value?.id, async (uid) => {
-  if (uid) {
-    const { data } = await supabase.from('professionals').select('company_name').eq('id', uid).maybeSingle()
-    if (data) headerPro.value = data
-  } else {
-    headerPro.value = null
+const fetchHeaderPro = async () => {
+  try {
+    const sessionRes = await supabase.auth.getSession()
+    const uid = sessionRes.data.session?.user?.id || user.value?.id
+    if (uid) {
+      const { data } = await supabase.from('professionals').select('company_name').eq('id', uid).maybeSingle()
+      if (data) headerPro.value = data
+    }
+  } catch (e) {
+    console.error(e)
   }
+}
+
+watch(() => user.value?.id, (uid: string | undefined) => {
+  if (uid) fetchHeaderPro()
+  else headerPro.value = null
 }, { immediate: true })
+
+onMounted(() => {
+  fetchHeaderPro()
+})
 
 // On client side, fix height for mobile iOS
 onMounted(() => {
@@ -96,7 +109,7 @@ onMounted(() => {
           <div class="flex items-center gap-3">
             <h2 class="text-xl font-black tracking-tight text-foreground">
               <template v-if="!route.meta.pageTitle">
-                {{ headerPro?.company_name || 'BÂTI-AXE Pro' }}
+                {{ headerPro?.company_name ? `Espace Pro - ${headerPro.company_name}` : 'Espace Pro' }}
               </template>
               <template v-else>
                 {{ route.meta.pageTitle }}
