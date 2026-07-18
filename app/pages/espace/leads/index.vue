@@ -280,6 +280,14 @@ async function copyToClipboard(text: string) {
           </span>
         </div>
         <div class="flex items-center gap-2">
+          <NuxtLink
+            v-if="!isPremium"
+            to="/espace/premium"
+            class="hidden sm:inline-flex items-center gap-1.5 h-9 px-4 bg-foreground text-background font-bold text-xs rounded-md shadow-sm hover:opacity-80 transition-opacity mr-2"
+          >
+            <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-1.012 1.09l1.242 5.385c.114.495-.417.882-.84.62l-4.757-2.937a.563.563 0 00-.594 0L5.973 21.085c-.423.262-.954-.125-.84-.62l1.242-5.385a.563.563 0 00-.182-.557L1.99 10.916c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+            Passer Premium
+          </NuxtLink>
           <select
             v-model="sortMode"
             aria-label="Trier les leads"
