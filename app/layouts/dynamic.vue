@@ -108,14 +108,9 @@ onMounted(() => {
         <header class="hidden md:flex h-20 flex-shrink-0 items-center justify-between px-10 border-b border-border bg-page/98 z-20">
           <div class="flex items-center gap-3">
             <h2 class="text-xl font-black tracking-tight text-foreground uppercase">
-              <template v-if="!route.meta.pageTitle">
-                {{ headerPro?.company_name ? `Espace Pro - ${headerPro.company_name}` : 'Espace Pro' }}
-              </template>
-              <template v-else>
-                {{ route.meta.pageTitle }}
-              </template>
+              {{ route.meta.pageTitle || 'Espace Pro' }}
             </h2>
-            <template v-if="route.meta.pageTitle && headerPro?.company_name">
+            <template v-if="headerPro?.company_name">
               <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
               <span class="text-sm font-semibold text-muted-foreground">{{ headerPro.company_name }}</span>
             </template>
