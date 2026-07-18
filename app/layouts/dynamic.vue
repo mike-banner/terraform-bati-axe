@@ -11,19 +11,13 @@ async function signOut() {
 }
 
 const userInitial = computed(() => user.value?.email?.charAt(0).toUpperCase() ?? '')
-
 const route = useRoute()
 const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 
-const headerPro = ref<{ company_name?: string } | null>(null)
-
-watchEffect(async () => {
-  if (user.value?.id) {
-    const { data } = await supabase.from('professionals').select('company_name').eq('id', user.value.id).maybeSingle()
-    if (data) headerPro.value = data
-  } else {
-    headerPro.value = null
-  }
+const { data: headerPro } = await useAsyncData(`header-pro-${user.value?.id || 'guest'}`, async () => {
+  if (!user.value?.id) return null
+  const { data } = await supabase.from('professionals').select('company_name').eq('id', user.value.id).maybeSingle()
+  return data
 })
 
 // On client side, fix height for mobile iOS
