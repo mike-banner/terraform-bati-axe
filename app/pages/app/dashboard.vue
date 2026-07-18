@@ -195,39 +195,40 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
         { label: 'Tableau de bord' }
       ]" />
 
-      <!-- Header -->
-      <div class="mb-10">
-        <div class="mb-4 space-y-2">
-          <div class="flex flex-wrap gap-2">
-            <UiPremiumBadge v-if="pro.is_verified" />
-            <span
-              v-else
-              class="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 border border-amber-300 text-amber-700 bg-amber-50"
-            >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              Vérification en cours
-            </span>
-            <BadgeEntrepriseVerifiee v-if="pro.siret_status === 'active'" />
-            <BadgeDecennaleCertifiee v-if="pro.decennal_status === 'valid'" />
-          </div>
-          <div v-if="pro.categories && pro.categories.length > 0" class="flex flex-wrap gap-1.5">
-            <span
-              v-for="cat in pro.categories"
-              :key="cat"
-              class="inline-flex items-center text-xs font-medium px-2.5 py-1 border border-border rounded-full text-muted-foreground bg-background"
-            >
-              {{ CATEGORY_LABELS[cat] || cat }}
-            </span>
-          </div>
-        </div>
-        <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground md:hidden" style="text-wrap: balance">{{ pro.company_name }}</h1>
-        <p class="text-sm text-muted-foreground mt-1">{{ pro.full_name }} · {{ pro.postal_code }}</p>
-      </div>
+      <!-- Header déplacé dans la colonne gauche -->
 
       <div class="flex flex-col lg:grid lg:grid-cols-5 gap-8 items-start">
         
         <!-- COLONNE GAUCHE (Documents - 60%) -->
-        <div class="lg:col-span-3 space-y-6 order-1 w-full">
+        <div class="lg:col-span-3 space-y-6 order-2 lg:order-1 w-full">
+          <!-- Header -->
+          <div class="mb-2">
+            <div class="mb-4 space-y-2">
+              <div class="flex flex-wrap gap-2">
+                <UiPremiumBadge v-if="pro.is_verified" />
+                <span
+                  v-else
+                  class="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 border border-amber-300 text-amber-700 bg-amber-50"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  Vérification en cours
+                </span>
+                <BadgeEntrepriseVerifiee v-if="pro.siret_status === 'active'" />
+                <BadgeDecennaleCertifiee v-if="pro.decennal_status === 'valid'" />
+              </div>
+              <div v-if="pro.categories && pro.categories.length > 0" class="flex flex-wrap gap-1.5">
+                <span
+                  v-for="cat in pro.categories"
+                  :key="cat"
+                  class="inline-flex items-center text-xs font-medium px-2.5 py-1 border border-border rounded-full text-muted-foreground bg-background"
+                >
+                  {{ CATEGORY_LABELS[cat] || cat }}
+                </span>
+              </div>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground md:hidden" style="text-wrap: balance">{{ pro.company_name }}</h1>
+            <p class="text-sm text-muted-foreground mt-1">{{ pro.full_name }} · {{ pro.postal_code }}</p>
+          </div>
           <!-- ─── Documents (toujours visible pour permettre le renouvellement) ───── -->
           <div class="bento-card rounded-3xl p-8 border" :class="docsComplete ? 'border-slate-200 bg-white shadow-sm' : 'border-red-300 bg-red-50'">
             <div class="flex items-start gap-2 mb-3">
@@ -355,7 +356,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
         </div>
 
         <!-- COLONNE DROITE (Checklist - 40%) -->
-        <div class="lg:col-span-2 order-2 w-full lg:sticky lg:top-6">
+        <div class="lg:col-span-2 order-1 lg:order-2 w-full lg:sticky lg:top-6">
           <!-- Progress checklist -->
           <div class="bento-card border border-slate-200 rounded-3xl overflow-hidden bg-white shadow-sm">
             <div v-for="(step, i) in steps" :key="i" class="flex items-start gap-4 px-5 py-4 border-b border-border last:border-0 hover:-translate-y-0.5 hover:shadow-md hover:bg-slate-50 transition-all duration-300 relative group">
