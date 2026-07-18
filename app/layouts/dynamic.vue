@@ -107,7 +107,7 @@ onMounted(() => {
         <!-- DESKTOP HEADER -->
         <header class="hidden md:flex h-20 flex-shrink-0 items-center justify-between px-10 border-b border-border bg-page/98 z-20">
           <div class="flex items-center gap-3">
-            <h2 class="text-xl font-black tracking-tight text-foreground">
+            <h2 class="text-xl font-black tracking-tight text-foreground uppercase">
               <template v-if="!route.meta.pageTitle">
                 {{ headerPro?.company_name ? `Espace Pro - ${headerPro.company_name}` : 'Espace Pro' }}
               </template>
