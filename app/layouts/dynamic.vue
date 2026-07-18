@@ -89,7 +89,13 @@ onMounted(() => {
         
         <!-- DESKTOP HEADER -->
         <header class="hidden md:flex h-20 flex-shrink-0 items-center justify-between px-10 border-b border-border bg-page/98 z-20">
-          <h2 class="text-xl font-black tracking-tight text-foreground">{{ route.meta.pageTitle || headerPro?.company_name || 'Espace Pro' }}</h2>
+          <div class="flex items-center gap-3">
+            <h2 class="text-xl font-black tracking-tight text-foreground">{{ route.meta.pageTitle || 'Accueil' }}</h2>
+            <template v-if="headerPro?.company_name">
+              <span class="w-1 h-1 rounded-full bg-border"></span>
+              <span class="text-sm font-semibold text-muted-foreground">{{ headerPro.company_name }}</span>
+            </template>
+          </div>
           <div class="flex items-center gap-4">
             <button @click="signOut" class="flex items-center justify-center w-10 h-10 rounded-full bg-foreground text-background text-sm font-bold shadow-sm hover:opacity-80 transition-opacity">
               {{ userInitial }}
