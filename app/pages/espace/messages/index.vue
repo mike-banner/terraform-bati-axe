@@ -1,6 +1,6 @@
 <template>
   <div class="w-full max-w-[1440px] px-6 py-8 md:px-10 md:py-12">
-    <div class="mb-8">
+    <div class="mb-8 md:hidden">
       <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Messagerie</h1>
       <p class="text-muted-foreground mt-2">Discutez avec les particuliers de vos chantiers débloqués.</p>
     </div>
@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ layout: 'dynamic' })
+definePageMeta({ layout: 'dynamic', pageTitle: 'Messagerie' })
 useRequireAuth()
 
 useHead({

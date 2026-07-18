@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'dynamic' })
+definePageMeta({ layout: 'dynamic', pageTitle: 'Mon profil public' })
 useHead({ title: 'Mon profil public — BÂTI-AXE' })
 
 useRequireAuth()
@@ -85,7 +85,7 @@ async function saveProfile() {
 
       <!-- Page header -->
       <div class="mb-8">
-        <h1 class="text-3xl md:text-4xl font-heading font-bold tracking-tight text-text">Mon profil public</h1>
+        <h1 class="text-3xl md:text-4xl font-heading font-bold tracking-tight text-text md:hidden">Mon profil public</h1>
         <div class="flex flex-col sm:flex-row sm:items-center gap-3 mt-2">
           <p class="text-sm text-muted-foreground">Ces informations sont visibles sur votre page publique BÂTI-AXE.</p>
           <NuxtLink v-if="profile.canonical_slug" :to="`/pro/${profile.dept}/${profile.canonical_slug}`" target="_blank"

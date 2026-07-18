@@ -220,7 +220,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
             </span>
           </div>
         </div>
-        <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground" style="text-wrap: balance">{{ pro.company_name }}</h1>
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground md:hidden" style="text-wrap: balance">{{ pro.company_name }}</h1>
         <p class="text-sm text-muted-foreground mt-1">{{ pro.full_name }} · {{ pro.postal_code }}</p>
       </div>
 
