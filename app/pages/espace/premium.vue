@@ -62,7 +62,7 @@ const startCheckout = async () => {
       </div>
 
       <!-- Hero -->
-      <div class="mb-12 md:hidden">
+      <div class="mb-12">
         <p class="text-xs font-semibold text-slate-500 tracking-widest uppercase mb-6">Abonnement</p>
         <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground" style="text-wrap: balance">
           Premier contact exclusif.
