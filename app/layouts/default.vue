@@ -13,6 +13,9 @@ const userInitial = computed(() =>
 
 const isAdmin = computed(() => (user.value as any)?.app_metadata?.role === 'admin')
 const espaceLink = computed(() => isAdmin.value ? '/admin' : '/espace/dashboard')
+
+const route = useRoute()
+const onSimulateur = computed(() => route.path === '/simulateur')
 </script>
 
 <template>
@@ -30,7 +33,11 @@ const espaceLink = computed(() => isAdmin.value ? '/admin' : '/espace/dashboard'
           </template>
           <template v-else>
             <NuxtLink to="/pro/claim" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Se connecter</NuxtLink>
-            <NuxtLink to="/simulateur" class="text-sm font-semibold bg-foreground text-background hover:opacity-80 transition-opacity px-4 py-2 rounded-md">Déposer un projet</NuxtLink>
+            <NuxtLink
+              v-if="!onSimulateur"
+              to="/simulateur"
+              class="text-sm font-semibold bg-foreground text-background hover:opacity-80 transition-opacity px-4 py-2 rounded-md"
+            >Déposer un projet</NuxtLink>
           </template>
         </nav>
       </div>

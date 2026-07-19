@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import BadgeEntrepriseVerifiee from '../app/components/ui/BadgeEntrepriseVerifiee.vue'
-import BadgeDecennaleCertifiee from '../app/components/ui/BadgeDecennaleCertifiee.vue'
+import BadgeEntrepriseVerifiee from '../app/components/BadgeEntrepriseVerifiee.vue'
+import BadgeDecennaleCertifiee from '../app/components/BadgeDecennaleCertifiee.vue'
 
 describe('BadgeEntrepriseVerifiee', () => {
   it('affiche le texte par défaut "Entreprise Vérifiée (API Gouv)"', () => {
@@ -10,9 +10,9 @@ describe('BadgeEntrepriseVerifiee', () => {
     expect(wrapper.text()).toContain('Entreprise Vérifiée (API Gouv)')
   })
 
-  it('contient la classe bg-cyan-100/80', () => {
+  it('contient la classe bg-[#F8FAFC] (palette Sketch 001)', () => {
     const wrapper = mount(BadgeEntrepriseVerifiee)
-    expect(wrapper.html()).toContain('bg-cyan-100/80')
+    expect(wrapper.html()).toContain('bg-[#F8FAFC]')
   })
 
   it('accepte un slot personnalisé', () => {
@@ -27,8 +27,8 @@ describe('BadgeDecennaleCertifiee', () => {
     expect(wrapper.text()).toContain('Décennale Certifiée BÂTI-AXE')
   })
 
-  it('contient la classe bg-green-100/80', () => {
+  it('contient la classe bg-[#F8FAFC] (palette Sketch 001)', () => {
     const wrapper = mount(BadgeDecennaleCertifiee)
-    expect(wrapper.html()).toContain('bg-green-100/80')
+    expect(wrapper.html()).toContain('bg-[#F8FAFC]')
   })
 })
