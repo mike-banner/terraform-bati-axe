@@ -11,7 +11,7 @@ INSERT INTO professionals (
   id, short_id, canonical_slug, email, company_name, siret, full_name, phone,
   postal_code, categories, is_verified, is_claimed, decennal_status, subscription_status, created_at
 ) VALUES (
-  '11111111-1111-1111-1111-111111111111'::uuid, 'MACON1', 'maconnerie-dupont',
+  '11111111-1111-1111-1111-111111111111'::uuid, 'MACON1', 'maconnerie-dupont-MACON1',
   'maconnerie@test.fr', 'Maçonnerie Dupont SARL', '12345678901111', 'Pierre Dupont', '06 11 11 11 11',
   '78955', ARRAY['maconnerie'], true, true, 'valid', 'active', NOW()
 ) ON CONFLICT (id) DO NOTHING;
@@ -21,7 +21,7 @@ INSERT INTO professionals (
   id, short_id, canonical_slug, email, company_name, siret, full_name, phone,
   postal_code, categories, is_verified, is_claimed, decennal_status, subscription_status, created_at
 ) VALUES (
-  '22222222-2222-2222-2222-222222222222'::uuid, 'TOIT1', 'toiture-martin',
+  '22222222-2222-2222-2222-222222222222'::uuid, 'TOIT01', 'toiture-martin-TOIT01',
   'toiture@test.fr', 'Couverture Martin', '12345678902222', 'Luc Martin', '06 22 22 22 22',
   '78955', ARRAY['toiture'], true, true, 'valid', 'active', NOW()
 ) ON CONFLICT (id) DO NOTHING;
@@ -31,7 +31,7 @@ INSERT INTO professionals (
   id, short_id, canonical_slug, email, company_name, siret, full_name, phone,
   postal_code, categories, is_verified, is_claimed, decennal_status, subscription_status, created_at
 ) VALUES (
-  '33333333-3333-3333-3333-333333333333'::uuid, 'ELEC1', 'electricite-bernard',
+  '33333333-3333-3333-3333-333333333333'::uuid, 'ELEC01', 'electricite-bernard-ELEC01',
   'electricite@test.fr', 'Électricité Bernard', '12345678903333', 'Jean Bernard', '06 33 33 33 33',
   '78955', ARRAY['electricite'], true, true, 'valid', 'active', NOW()
 ) ON CONFLICT (id) DO NOTHING;
@@ -41,7 +41,7 @@ INSERT INTO professionals (
   id, short_id, canonical_slug, email, company_name, siret, full_name, phone,
   postal_code, categories, is_verified, is_claimed, decennal_status, subscription_status, created_at
 ) VALUES (
-  '44444444-4444-4444-4444-444444444444'::uuid, 'PLOMB1', 'plomberie-thomas',
+  '44444444-4444-4444-4444-444444444444'::uuid, 'PLOMB1', 'plomberie-thomas-PLOMB1',
   'plomberie@test.fr', 'Plomberie Thomas', '12345678904444', 'Michel Thomas', '06 44 44 44 44',
   '78955', ARRAY['plomberie'], true, true, 'valid', 'active', NOW()
 ) ON CONFLICT (id) DO NOTHING;
@@ -51,7 +51,7 @@ INSERT INTO professionals (
   id, short_id, canonical_slug, email, company_name, siret, full_name, phone,
   postal_code, categories, is_verified, is_claimed, decennal_status, subscription_status, created_at
 ) VALUES (
-  '55555555-5555-5555-5555-555555555555'::uuid, 'PEIN1', 'peinture-robert',
+  '55555555-5555-5555-5555-555555555555'::uuid, 'PEIN01', 'peinture-robert-PEIN01',
   'peinture@test.fr', 'Peinture Robert', '12345678905555', 'Claude Robert', '06 55 55 55 55',
   '78955', ARRAY['peinture'], true, true, 'valid', 'active', NOW()
 ) ON CONFLICT (id) DO NOTHING;
@@ -61,7 +61,7 @@ INSERT INTO professionals (
   id, short_id, canonical_slug, email, company_name, siret, full_name, phone,
   postal_code, categories, is_verified, is_claimed, decennal_status, subscription_status, created_at
 ) VALUES (
-  '66666666-6666-6666-6666-666666666666'::uuid, 'ISOL1', 'isolation-laurent',
+  '66666666-6666-6666-6666-666666666666'::uuid, 'ISOL01', 'isolation-laurent-ISOL01',
   'isolation@test.fr', 'Isolation Laurent', '12345678906666', 'Alain Laurent', '06 66 66 66 66',
   '78955', ARRAY['isolation'], true, true, 'valid', 'active', NOW()
 ) ON CONFLICT (id) DO NOTHING;
