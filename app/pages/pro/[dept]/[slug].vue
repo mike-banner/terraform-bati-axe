@@ -3,6 +3,9 @@ import { ArrowLeft } from '@lucide/vue'
 
 definePageMeta({ layout: false })
 
+const currentUser = useSupabaseUser()
+const backTarget = computed(() => (currentUser.value ? '/espace/dashboard' : '/'))
+
 interface Verification {
   id: string
   document_type: 'kbis' | 'decennale'
@@ -145,9 +148,9 @@ useHead(() => ({
     <!-- Bouton flottant retour accueil (layout: false → pas de navbar générique) -->
     <button
       type="button"
-      aria-label="Retour à l'accueil"
+      :aria-label="currentUser ? 'Retour à mon espace pro' : 'Retour à l\'accueil'"
       class="fixed top-4 left-4 z-50 w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:-translate-y-0.5 transition-transform"
-      @click="navigateTo('/')"
+      @click="navigateTo(backTarget)"
     >
       <ArrowLeft class="w-6 h-6 text-slate-700" />
     </button>
