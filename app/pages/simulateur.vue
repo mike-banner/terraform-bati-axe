@@ -448,7 +448,7 @@ const handleSubmit = async () => {
                 placeholder="jean.dupont@exemple.com"
                 autocomplete="email"
                 required
-                maxlength="255"
+                maxlength="254"
                 @blur="touched.email = true"
                 class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
                 :class="contactErrors.email ? 'border-red-500' : 'border-border'"
@@ -461,7 +461,7 @@ const handleSubmit = async () => {
                 id="c-phone"
                 type="tel"
                 v-model="form.customer_phone"
-                placeholder="+33 6 12 34 56 78"
+                placeholder="06 12 34 56 78"
                 autocomplete="tel"
                 required
                 maxlength="17"

@@ -129,6 +129,8 @@ async function saveProfile() {
               v-model="profile.phone"
               type="tel"
               placeholder="06 11 22 33 44"
+              maxlength="20"
+              pattern="^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$"
               class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
             />
             <p class="text-xs text-muted-foreground mt-1">Votre numéro sera visible sur votre profil public.</p>
