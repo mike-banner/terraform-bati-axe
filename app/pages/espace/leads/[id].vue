@@ -287,11 +287,13 @@ async function copyToClipboard(text: string) {
                 <p v-if="!claimId" class="text-xs text-slate-500 text-center py-1">
                   Conversation indisponible pour ce lead.
                 </p>
-                <form v-else @submit.prevent="sendChatMessage" class="flex gap-2">
+                <form v-else @submit.prevent="sendChatMessage" class="flex flex-col gap-1">
+                  <div class="flex gap-2">
                   <input
                     v-model="chatInput"
                     type="text"
                     placeholder="Votre message..."
+                    maxlength="1000"
                     class="flex-1 h-9 rounded-full border-slate-200 text-sm px-4 focus:ring-1 focus:ring-safety/30 focus:border-safety"
                     required
                     :disabled="isSending"
@@ -303,6 +305,8 @@ async function copyToClipboard(text: string) {
                   >
                     Envoyer
                   </button>
+                  </div>
+                  <p v-if="chatInput.length > 800" class="text-xs text-muted-foreground text-right px-1">{{ chatInput.length }} / 1000</p>
                 </form>
               </div>
             </div>
