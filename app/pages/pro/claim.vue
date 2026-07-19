@@ -237,19 +237,22 @@ const handleAuth = async () => {
   globalError.value = null
 
   try {
+    const trimmedEmail = authForm.email.trim()
+    const trimmedFullName = authForm.full_name.trim()
+
     if (authMode.value === 'login') {
-      const { error } = await supabase.auth.signInWithPassword({ email: authForm.email, password: authForm.password })
+      const { error } = await supabase.auth.signInWithPassword({ email: trimmedEmail, password: authForm.password })
       if (error) throw error
     } else {
       const { error } = await supabase.auth.signUp({
-        email: authForm.email,
+        email: trimmedEmail,
         password: authForm.password,
-        options: { data: { full_name: authForm.full_name } }
+        options: { data: { full_name: trimmedFullName } }
       })
       if (error) throw error
     }
 
-    if (authForm.full_name) proForm.full_name = authForm.full_name
+    if (trimmedFullName) proForm.full_name = trimmedFullName
 
     // Fetch fresh session to get populated app_metadata (nextTick is not enough)
     const { data: { session } } = await supabase.auth.getSession()
@@ -297,9 +300,9 @@ const handleRegisterCompany = async () => {
       method: 'POST',
       body: {
         prospect_id:  prospectId.value || undefined,
-        company_name: proForm.company_name,
+        company_name: proForm.company_name.trim(),
         siret:        proForm.siret.replace(/\s/g, ''),
-        full_name:    proForm.full_name,
+        full_name:    proForm.full_name.trim(),
         phone:        proForm.phone.replace(/\s/g, ''),
         postal_code:  proForm.postal_code,
         categories:   proForm.categories,
