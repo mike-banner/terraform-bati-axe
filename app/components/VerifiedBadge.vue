@@ -1,7 +1,8 @@
 <script setup lang="ts">
-// PremiumBadge — badge "Artisan Premium" (charte Sketch 001 : gris industriel + orange sécurité).
+// VerifiedBadge — badge "Profil vérifié" (charte Sketch 001 : gris industriel + orange sécurité).
+// Indique une vérification manuelle (KBIS + décennale), sans rapport avec l'abonnement Premium payant.
 // ponytail: props minimales, le libellé est quasi toujours fixe pour ce badge.
-withDefaults(defineProps<{ label?: string }>(), { label: 'Artisan Premium' })
+withDefaults(defineProps<{ label?: string }>(), { label: 'Profil vérifié' })
 </script>
 
 <template>

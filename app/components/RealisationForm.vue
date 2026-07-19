@@ -83,6 +83,15 @@ async function submit() {
   uploading.value = false
 
   const image_urls = files.value.filter(f => f.publicUrl).map(f => f.publicUrl as string)
+  
+  if (files.value.some(f => f.failed)) {
+    // Si formError a déjà été rempli par uploadOne (ex: "L'envoi a échoué"), on ne l'écrase pas.
+    if (!formError.value) {
+      formError.value = "Certaines photos n'ont pas pu être envoyées. Veuillez vérifier."
+    }
+    return
+  }
+
   if (!title.value.trim() || image_urls.length === 0) {
     formError.value = 'Merci de renseigner un titre et au moins une photo avant de publier.'
     return
@@ -108,6 +117,7 @@ function close() {
 </script>
 
 <template>
+  <Teleport to="body">
   <div class="modal-overlay flex items-center justify-center z-50" @click.self="close">
     <div class="modal">
       <h2 class="text-xl font-heading font-bold text-text mb-6">Ajouter une réalisation</h2>
@@ -165,4 +175,5 @@ function close() {
       </div>
     </div>
   </div>
+  </Teleport>
 </template>

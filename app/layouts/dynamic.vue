@@ -14,20 +14,22 @@ const userInitial = computed(() => user.value?.email?.charAt(0).toUpperCase() ??
 const route = useRoute()
 const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 
-const headerPro = ref<{ company_name?: string } | null>(null)
+const headerPro = ref<{ company_name?: string; logo_url?: string } | null>(null)
 
 const fetchHeaderPro = async () => {
   try {
     const sessionRes = await supabase.auth.getSession()
     const uid = sessionRes.data.session?.user?.id || user.value?.id
     if (uid) {
-      const { data } = await supabase.from('professionals').select('company_name').eq('id', uid).maybeSingle()
+      const { data } = await supabase.from('professionals').select('company_name, logo_url').eq('id', uid).maybeSingle()
       if (data) headerPro.value = data
     }
   } catch (e) {
     console.error(e)
   }
 }
+
+const companyInitial = computed(() => headerPro.value?.company_name?.charAt(0).toUpperCase() ?? userInitial.value)
 
 watch(() => user.value?.id, (uid: string | undefined) => {
   if (uid) fetchHeaderPro()
@@ -105,21 +107,20 @@ onMounted(() => {
       <main class="flex-1 min-h-0 flex flex-col bg-slate-50" :class="isAdminRoute ? 'bg-slate-900' : ''">
         
         <!-- DESKTOP HEADER -->
-        <header class="hidden md:flex h-20 flex-shrink-0 items-center justify-between px-10 border-b border-border bg-page/98 z-20">
-          <div class="flex items-center gap-3">
-            <h2 class="text-xl font-black tracking-tight text-foreground uppercase">
-              {{ route.meta.pageTitle || 'Espace Pro' }}
-            </h2>
-            <template v-if="headerPro?.company_name">
-              <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-              <span class="text-sm font-semibold text-muted-foreground">{{ headerPro.company_name }}</span>
-            </template>
-          </div>
-          <div class="flex items-center gap-4">
-            <button @click="signOut" class="flex items-center justify-center w-10 h-10 rounded-full bg-foreground text-background text-sm font-bold shadow-sm hover:opacity-80 transition-opacity">
-              {{ userInitial }}
-            </button>
-          </div>
+        <header class="hidden md:flex h-16 flex-shrink-0 items-center justify-between px-10 border-b border-border bg-page/98 z-20">
+          <h2 class="text-xl font-black tracking-tight text-foreground uppercase">
+            {{ route.meta.pageTitle || 'Espace Pro' }}
+          </h2>
+          <NuxtLink to="/espace/profil" class="flex items-center gap-2.5 group" title="Voir mon profil public">
+            <span class="text-sm font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
+              {{ headerPro?.company_name || 'Mon entreprise' }}
+            </span>
+            <img v-if="headerPro?.logo_url" :src="headerPro.logo_url" :alt="headerPro.company_name"
+              class="w-10 h-10 rounded-full object-cover border border-border shrink-0" />
+            <span v-else class="flex items-center justify-center w-10 h-10 rounded-full bg-foreground text-background text-sm font-bold shrink-0">
+              {{ companyInitial }}
+            </span>
+          </NuxtLink>
         </header>
 
         <!-- SCROLLABLE SLOT -->
