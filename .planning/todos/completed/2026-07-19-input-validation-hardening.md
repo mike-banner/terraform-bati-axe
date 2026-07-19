@@ -8,7 +8,12 @@ files:
   - app/pages/simulateur*
   - app/pages/espace/messages/index.vue
   - app/pages/admin/index.vue
+superseded_by: .planning/phases/05.7-Input-Validation-Hardening/
 ---
+
+> **Remplacé** le 2026-07-19 par la Phase 5.7 (roadmap), une fois l'audit exhaustif fait —
+> voir `.planning/phases/05.7-Input-Validation-Hardening/05.7-AUDIT.md` pour le détail
+> fichier par fichier et les gaps serveur découverts en creusant ce todo.
 
 ## Problem
 
