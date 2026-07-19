@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 05.6 context gathered
-last_updated: "2026-07-17T16:45:11.164Z"
-last_activity: 2026-07-17 -- Phase 05.5 execution started
+stopped_at: Completed 05.5-07-PLAN.md
+last_updated: "2026-07-19T01:35:36.857Z"
+last_activity: 2026-07-19
 progress:
   total_phases: 13
   completed_phases: 4
   total_plans: 41
-  completed_plans: 29
+  completed_plans: 36
   percent: 31
 ---
 
@@ -32,10 +32,10 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 ## Current Position
 
 Phase: 05.5 (Portfolio-Refonte) — EXECUTING
-Plan: 1 of 8
-Status: Executing Phase 05.5
-Last activity: 2026-07-17 -- Phase 05.5 execution started
-Progress: [░░░░░░░░░░] 0%
+Plan: 2 of 8
+Status: Ready to execute
+Last activity: 2026-07-19
+Progress: [█████████░] 88%
 
 ### Plans Phase 5.5 (Portfolio, Refonte Profil & Social) — PLANNED (0 plans)
 
@@ -77,6 +77,7 @@ Progress: [░░░░░░░░░░] 0%
 - [2026-06-13 PM]: **RLS Security Verified & Documented** : All 11 tables have RLS enabled. Security policies enforce: public SELECT on verified professionals only; authenticated users full access to own records; service-role-only for sensitive tables (projects, prospects, paywall_events, audit_logs). Migration `20260613000000_test_data_seeding.sql` creates 18 test leads (3 per category) with full verification documents. Architecture is reproducible for production deployment. See `.planning/RLS-SECURITY.md`.
 - [2026-06-23 PM]: **Phase 4.7 Design System Adoption** : Transition from self-hosted Clash Display + Geist Variable (Brique & Béton OKLCH palette) to Google Fonts (Figtree + Noto Sans) with MASTER.md hex color system (cyan #0891B2, green #22C55E, cream #ECFEFF, charcoal #164E63). CSS tokens for spacing, shadows, and radius defined in `app/assets/css/tailwind.css` as the foundation for all subsequent page refactors (04.7-02 through 04.7-07).
 - [Phase 04.7]: Composants PremiumBadge et IdentityBreadcrumbs bâtis sur la nouvelle charte Sketch 001 (gris industriel + orange sécurité), en attendant la refonte globale des tokens tailwind.css.
+- [Phase 05.5-07]: Profil public pro refondu en pleine page immersive (layout: false) avec bouton flottant retour, galerie de réalisations mobile-first (RealisationCard) et likes ; test de garde source anti-régression navbar/galerie.
 
 ### Known Patterns (à appliquer dans les prochaines phases)
 
@@ -108,6 +109,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-07-16T22:12:36.581Z
-Stopped at: Phase 05.6 context gathered
-Resume file: .planning/phases/05.6-Calculateur-Simulateur/05.6-CONTEXT.md
+Last session: 2026-07-19T01:35:36.836Z
+Stopped at: Completed 05.5-07-PLAN.md
+Resume file: None
