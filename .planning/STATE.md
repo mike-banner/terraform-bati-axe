@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
+status: executing
 stopped_at: Completed 05.5-07-PLAN.md
-last_updated: "2026-07-19T02:09:50.447Z"
+last_updated: "2026-07-19T20:56:57.312Z"
 last_activity: 2026-07-19
 progress:
-  total_phases: 13
-  completed_phases: 5
-  total_plans: 41
-  completed_plans: 37
-  percent: 38
+  total_phases: 14
+  completed_phases: 6
+  total_plans: 44
+  completed_plans: 40
+  percent: 43
 ---
 
 # Project State
@@ -31,11 +31,12 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 
 ## Current Position
 
-Phase: 05.5 (Portfolio-Refonte) — COMPLETE (8/8 plans)
+Phase: 05.6 (Calculateur-Simulateur) — EXECUTING
+Plan: 3 of 3
 Next phase: 05.6 (Calculateur de Prix & Refonte Simulateur) — PLANNED (0 plans, en attente de découpage technique)
-Status: Ready to plan next phase
+Status: Ready to execute
 Last activity: 2026-07-19
-Progress: [█████████░] 90%
+Progress: [█████████░] 91%
 
 ### Plans Phase 5.5 (Portfolio, Refonte Profil & Social) — COMPLETE (8/8 plans)
 
@@ -79,6 +80,8 @@ Progress: [█████████░] 90%
 - [Phase 04.7]: Composants PremiumBadge et IdentityBreadcrumbs bâtis sur la nouvelle charte Sketch 001 (gris industriel + orange sécurité), en attendant la refonte globale des tokens tailwind.css.
 - [Phase 05.5-07]: Profil public pro refondu en pleine page immersive (layout: false) avec bouton flottant retour, galerie de réalisations mobile-first (RealisationCard) et likes ; test de garde source anti-régression navbar/galerie.
 - [Phase 05.5-08]: Section landing preuve sociale 'Chantiers Réalisés' en carousel CSS scroll-snap pur (pas d'Embla), SSR via useFetch, réutilise RealisationCard sans dupliquer le markup ; section omise entièrement si aucun projet is_showcased.
+- [Phase 05.6]: Tasks 1-3 du plan 05.6-03 livrées en un seul commit atomique (réécriture cohésive d'un fichier unique)
+- [Phase 05.6]: Transition inter-étapes simulateur : fade CSS simple plutôt que reveal-item/reveal-up (conçu pour montage, pas cycle enter/leave répété)
 
 ### Known Patterns (à appliquer dans les prochaines phases)
 
@@ -110,6 +113,6 @@ Progress: [█████████░] 90%
 
 ## Session Continuity
 
-Last session: 2026-07-19T02:09:50.433Z
+Last session: 2026-07-19T20:51:19.842Z
 Stopped at: Completed 05.5-07-PLAN.md
 Resume file: None
