@@ -1,16 +1,16 @@
 # Graph Report - bati-axe  (2026-07-19)
 
 ## Corpus Check
-- 325 files · ~601,909 words
+- 327 files · ~615,813 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2830 nodes · 5061 edges · 344 communities (277 shown, 67 thin omitted)
+- 2859 nodes · 5754 edges · 347 communities (276 shown, 71 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `fd1c75bd`
+- Built from commit: `ea3459fe`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -45,6 +45,7 @@
 - [[_COMMUNITY_Community 28|Community 28]]
 - [[_COMMUNITY_Community 29|Community 29]]
 - [[_COMMUNITY_Community 30|Community 30]]
+- [[_COMMUNITY_Community 32|Community 32]]
 - [[_COMMUNITY_Community 34|Community 34]]
 - [[_COMMUNITY_Community 40|Community 40]]
 - [[_COMMUNITY_Community 42|Community 42]]
@@ -159,6 +160,7 @@
 - [[_COMMUNITY_Community 173|Community 173]]
 - [[_COMMUNITY_Community 174|Community 174]]
 - [[_COMMUNITY_Community 175|Community 175]]
+- [[_COMMUNITY_Community 176|Community 176]]
 - [[_COMMUNITY_Community 178|Community 178]]
 - [[_COMMUNITY_Community 179|Community 179]]
 - [[_COMMUNITY_Community 180|Community 180]]
@@ -275,6 +277,7 @@
 - [[_COMMUNITY_Community 300|Community 300]]
 - [[_COMMUNITY_Community 301|Community 301]]
 - [[_COMMUNITY_Community 302|Community 302]]
+- [[_COMMUNITY_Community 303|Community 303]]
 - [[_COMMUNITY_Community 304|Community 304]]
 - [[_COMMUNITY_Community 305|Community 305]]
 - [[_COMMUNITY_Community 306|Community 306]]
@@ -292,30 +295,32 @@
 - [[_COMMUNITY_Community 320|Community 320]]
 - [[_COMMUNITY_Community 321|Community 321]]
 - [[_COMMUNITY_Community 322|Community 322]]
+- [[_COMMUNITY_Community 323|Community 323]]
 - [[_COMMUNITY_Community 324|Community 324]]
 - [[_COMMUNITY_Community 325|Community 325]]
 - [[_COMMUNITY_Community 326|Community 326]]
-- [[_COMMUNITY_Community 327|Community 327]]
 - [[_COMMUNITY_Community 328|Community 328]]
 - [[_COMMUNITY_Community 329|Community 329]]
 - [[_COMMUNITY_Community 330|Community 330]]
 - [[_COMMUNITY_Community 331|Community 331]]
-- [[_COMMUNITY_Community 339|Community 339]]
 - [[_COMMUNITY_Community 340|Community 340]]
 - [[_COMMUNITY_Community 341|Community 341]]
 - [[_COMMUNITY_Community 342|Community 342]]
+- [[_COMMUNITY_Community 344|Community 344]]
+- [[_COMMUNITY_Community 345|Community 345]]
+- [[_COMMUNITY_Community 346|Community 346]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Communities (344 total, 67 thin omitted)` - 223 edges
-2. `Communities (343 total, 67 thin omitted)` - 223 edges
-3. `Communities (342 total, 67 thin omitted)` - 222 edges
-4. `Communities (341 total, 67 thin omitted)` - 221 edges
-5. `Communities (340 total, 67 thin omitted)` - 220 edges
-6. `Communities (339 total, 66 thin omitted)` - 220 edges
-7. `Communities (312 total, 52 thin omitted)` - 214 edges
-8. `Communities (322 total, 62 thin omitted)` - 213 edges
-9. `Communities (311 total, 52 thin omitted)` - 213 edges
-10. `Communities (289 total, 51 thin omitted)` - 195 edges
+1. `Communities (345 total, 70 thin omitted)` - 223 edges
+2. `Communities (344 total, 69 thin omitted)` - 223 edges
+3. `Communities (344 total, 68 thin omitted)` - 223 edges
+4. `Communities (344 total, 67 thin omitted)` - 223 edges
+5. `Communities (343 total, 67 thin omitted)` - 223 edges
+6. `Communities (342 total, 67 thin omitted)` - 222 edges
+7. `Communities (341 total, 67 thin omitted)` - 221 edges
+8. `Communities (340 total, 67 thin omitted)` - 220 edges
+9. `Communities (339 total, 66 thin omitted)` - 220 edges
+10. `Communities (312 total, 52 thin omitted)` - 214 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -323,11 +328,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (344 total, 67 thin omitted)
+## Communities (347 total, 71 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.11
-Nodes (18): Overview, Phase 1: Foundations & Compliance, Phase 2: Data Foundation & Capture mono-ville, Phase 3: Onboarding Pro & Vérification manuelle, Phase 4.5: Conversion & Qualification, Phase 4.6: Marché Dynamique & Multi-Catégories, Phase 4.7: Refonte UI Globale & Application du Design System (REPLAN v2), Phase 4: Le Verrou & Stripe Billing (+10 more)
+Cohesion: 0.10
+Nodes (19): Overview, Phase 1: Foundations & Compliance, Phase 2: Data Foundation & Capture mono-ville, Phase 3: Onboarding Pro & Vérification manuelle, Phase 4.5: Conversion & Qualification, Phase 4.6: Marché Dynamique & Multi-Catégories, Phase 4.7: Refonte UI Globale & Application du Design System (REPLAN v2), Phase 4: Le Verrou & Stripe Billing (+11 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.15
@@ -351,7 +356,7 @@ Nodes (3): Ce qui a été fait, Résultats et Décisions, Résumé d'Exécution 
 
 ### Community 13 - "Community 13"
 Cohesion: 0.12
-Nodes (15): Accumulated Context, Blockers/Concerns, Current Position, Decisions, Deferred Ideas (hors scope, à reconsidérer plus tard), Known Patterns (à appliquer dans les prochaines phases), 🔒 Lock & Sync Status, Pending Todos (+7 more)
+Nodes (16): Accumulated Context, Blockers/Concerns, Current Position, Decisions, Deferred Ideas (hors scope, à reconsidérer plus tard), Known Patterns (à appliquer dans les prochaines phases), 🔒 Lock & Sync Status, Pending Todos (+8 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.25
@@ -450,8 +455,8 @@ Cohesion: 0.17
 Nodes (11): Accomplishments, Checkpoint, Decisions Made, Deviations from Plan, Files Created/Modified, Issues Encountered, Next Phase Readiness, Performance (+3 more)
 
 ### Community 59 - "Community 59"
-Cohesion: 0.40
-Nodes (3): companyInitial, isAdminRoute, route
+Cohesion: 0.25
+Nodes (5): companyInitial, isAdminRoute, isHeaderVisible, isProRoute, route
 
 ### Community 64 - "Community 64"
 Cohesion: 0.17
@@ -1133,6 +1138,10 @@ Nodes (17): Barrière de Conversion (Lead Wall), Canonical References, Deferred 
 Cohesion: 0.29
 Nodes (6): Barrière de Conversion (Lead Wall), Deferred Ideas, Logique de calcul, Phase 05.6: Calculateur-Simulateur - Discussion Log, Structure de persistance (Base de données), the agent's Discretion
 
+### Community 295 - "Community 295"
+Cohesion: 0.18
+Nodes (8): ALLOWED_MIME, logoError, logoFailed, logoName, logoProgress, logoSrc, logoUploading, logoVersion
+
 ### Community 296 - "Community 296"
 Cohesion: 0.15
 Nodes (12): Class inventory (must exist in `template.html`), Layout 1 — Hero, centered, Layout 2 — Hero, split (text + visual), Layout 3 — Feature triplet, Layout 4 — Stat row (data billboard), Layout 5 — Pull quote (testimonial), Layout 6 — CTA strip (closing), Layout 7 — Log list (changelog / blog index / posts) (+4 more)
@@ -1157,9 +1166,13 @@ Nodes (7): 1. Objectifs de la phase, 2. Périmètre (Scope), 3. Dépendances & I
 Cohesion: 0.33
 Nodes (5): Anti-slop spot-check, P0 — must pass, P1 — should pass, P2 — nice to have, Web prototype checklist
 
-### Community 304 - "Community 304"
+### Community 303 - "Community 303"
 Cohesion: 0.20
 Nodes (6): city, description, formError, submitting, title, uploading
+
+### Community 304 - "Community 304"
+Cohesion: 0.25
+Nodes (4): currentStepIndex, decennale, steps, uploads
 
 ### Community 305 - "Community 305"
 Cohesion: 0.22
@@ -1174,8 +1187,8 @@ Cohesion: 0.13
 Nodes (14): Additive-only migrations, `app/pages/simulateur.vue` (component, request-response) — full rewrite, `app/utils/calculateur.ts` (utility, transform) — new file, client-side pricing engine (D-01), Bento tile visual/interaction pattern, File Classification, French phone/email validation, Metadata, No Analog Found (+6 more)
 
 ### Community 311 - "Community 311"
-Cohesion: 0.10
-Nodes (238): Communities (264 total, 50 thin omitted), Communities (271 total, 50 thin omitted), Communities (289 total, 51 thin omitted), Communities (291 total, 51 thin omitted), Communities (311 total, 52 thin omitted), Communities (312 total, 52 thin omitted), Communities (322 total, 62 thin omitted), Communities (339 total, 66 thin omitted) (+230 more)
+Cohesion: 0.12
+Nodes (241): Communities (264 total, 50 thin omitted), Communities (271 total, 50 thin omitted), Communities (289 total, 51 thin omitted), Communities (291 total, 51 thin omitted), Communities (311 total, 52 thin omitted), Communities (312 total, 52 thin omitted), Communities (322 total, 62 thin omitted), Communities (339 total, 66 thin omitted) (+233 more)
 
 ### Community 312 - "Community 312"
 Cohesion: 0.14
@@ -1185,17 +1198,9 @@ Nodes (13): 1. Immersive Public Profile (`/pro/[dept]/[slug]`), 2. Backoffice �
 Cohesion: 0.08
 Nodes (25): Admin auth + audit log, `app/components/RealisationCard.vue` (new, shared between profile gallery & landing), `app/pages/admin/index.vue` — showcase toggle row, `app/pages/espace/profil.vue` (modify) + new `RealisationForm.vue` modal, `app/pages/index.vue` — new "Chantiers Réalisés" section, `app/pages/pro/[dept]/[slug].vue` — immersive refonte, `.bento-card` / `.reveal` visual system, Client-side XHR upload with progress (+17 more)
 
-### Community 322 - "Community 322"
-Cohesion: 0.18
-Nodes (8): ALLOWED_MIME, logoError, logoFailed, logoName, logoProgress, logoSrc, logoUploading, logoVersion
-
 ### Community 324 - "Community 324"
 Cohesion: 0.33
 Nodes (5): Design Question, How to View, Sketch 002: Navigation Espace Pro, Variants, What to Look For
-
-### Community 325 - "Community 325"
-Cohesion: 0.25
-Nodes (4): currentStepIndex, decennale, steps, uploads
 
 ### Community 326 - "Community 326"
 Cohesion: 0.29
@@ -1213,24 +1218,28 @@ Nodes (15): Accomplishments, Decisions Made, Dependency graph, Deviations from P
 Cohesion: 0.18
 Nodes (10): 1. Login réel + Dashboard pro, 2. Ajout d'une réalisation (modale, upload R2 réel), 3. Réalisation visible dans /espace/profil, 4. Profil public immersif (Success Criterion 4), 5. Mise en avant (showcase) admin, 6. Landing — section "Chantiers Réalisés" (Success Criterion 5), 7. Suite de tests automatisée, Gaps (+2 more)
 
+### Community 345 - "Community 345"
+Cohesion: 0.33
+Nodes (5): Audit — Validation des inputs (2026-07-19), Déjà correct (ne pas retoucher sauf régression), Gaps confirmés — client ET serveur (aucune borne haute nulle part), Gaps confirmés — client seul (le serveur a déjà la contrainte, juste la refléter), Prochaine étape (à faire en planning, pas maintenant)
+
 ## Knowledge Gaps
-- **1856 isolated node(s):** `version`, `timestamp`, `phase`, `phase_name`, `phase_dir` (+1851 more)
+- **1869 isolated node(s):** `version`, `timestamp`, `phase`, `phase_name`, `phase_dir` (+1864 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **67 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **71 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Communities (344 total, 67 thin omitted)` connect `Community 311` to `Community 142`?**
-  _High betweenness centrality (0.001) - this node is a cross-community bridge._
-- **Why does `Communities (343 total, 67 thin omitted)` connect `Community 311` to `Community 142`?**
-  _High betweenness centrality (0.001) - this node is a cross-community bridge._
 - **Why does `Communities (339 total, 66 thin omitted)` connect `Community 311` to `Community 142`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
+- **Why does `Communities (345 total, 70 thin omitted)` connect `Community 311` to `Community 142`?**
+  _High betweenness centrality (0.001) - this node is a cross-community bridge._
+- **Why does `Communities (344 total, 69 thin omitted)` connect `Community 311` to `Community 142`?**
+  _High betweenness centrality (0.001) - this node is a cross-community bridge._
 - **What connects `version`, `timestamp`, `phase` to the rest of the system?**
-  _1856 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1869 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
 - **Should `Community 10` be split into smaller, more focused modules?**
   _Cohesion score 0.1 - nodes in this community are weakly interconnected._
 - **Should `Community 11` be split into smaller, more focused modules?**

@@ -1,12 +1,16 @@
+import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
+
+const idSchema = z.string().uuid('Identifiant de lead invalide.')
 
 export default defineEventHandler(async (event) => {
   const supabaseAuth = await serverSupabaseClient(event) as any
   const { data: { user }, error: authError } = await supabaseAuth.auth.getUser()
   if (authError || !user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
 
-  const id = getRouterParam(event, 'id')
-  if (!id) throw createError({ statusCode: 400, statusMessage: 'Identifiant de lead manquant.' })
+  const parsedId = idSchema.safeParse(getRouterParam(event, 'id'))
+  if (!parsedId.success) throw createError({ statusCode: 400, statusMessage: parsedId.error.issues[0].message })
+  const id = parsedId.data
 
   const supabase = await serverSupabaseServiceRole(event) as any
 
