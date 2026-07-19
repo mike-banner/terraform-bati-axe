@@ -3,7 +3,7 @@ import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/serve
 
 const messageSchema = z.object({
   lead_id: z.string().uuid(),
-  content: z.string().min(1, 'Le message ne peut pas être vide'),
+  content: z.string().min(1, 'Le message ne peut pas être vide').max(1000, 'Le message ne peut dépasser 1000 caractères.'),
   access_token: z.string().uuid().optional() // Provided if sender is customer
 })
 
