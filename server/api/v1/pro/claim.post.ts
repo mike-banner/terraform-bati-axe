@@ -10,9 +10,9 @@ const VALID_CATEGORIES = ['maconnerie', 'toiture', 'electricite', 'plomberie', '
 
 const claimSchema = z.object({
   prospect_id: z.string().uuid().optional(),
-  company_name: z.string().min(2, 'Le nom de l\'entreprise est requis.'),
+  company_name: z.string().min(2, 'Le nom de l\'entreprise est requis.').max(100, 'Le nom de l\'entreprise ne peut dépasser 100 caractères.'),
   siret: z.string().regex(/^\d{14}$/, 'Le numéro SIRET doit faire exactement 14 chiffres.'),
-  full_name: z.string().min(2, 'Le nom du gérant est requis.'),
+  full_name: z.string().min(2, 'Le nom du gérant est requis.').max(100, 'Le nom du gérant ne peut dépasser 100 caractères.'),
   phone: z.string().regex(/^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone invalide.'),
   postal_code: z.string().regex(/^\d{5}$/, 'Code postal invalide.'),
   categories: z.array(z.enum(VALID_CATEGORIES)).min(1, 'Sélectionnez au moins un corps de métier.'),

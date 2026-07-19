@@ -3,9 +3,9 @@ import { serverSupabaseClient } from '#supabase/server'
 
 // 05.5-03: création d'une réalisation. Le champ de mise en avant est réservé admin (plan 04).
 const createSchema = z.object({
-  title: z.string().min(1, 'Le titre est requis.'),
+  title: z.string().min(1, 'Le titre est requis.').max(100, 'Le titre ne peut dépasser 100 caractères.'),
   description: z.string().max(500, 'La description ne peut dépasser 500 caractères.').nullable().optional(),
-  city: z.string().nullable().optional(),
+  city: z.string().max(100, 'La ville ne peut dépasser 100 caractères.').nullable().optional(),
   image_urls: z.array(z.string().url('URL de photo invalide.')).min(1, 'Au moins une photo est requise.'),
 }).strict()
 
