@@ -13,7 +13,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 4.6: Marché Dynamique & Multi-Catégories** - Refonte DB (categories TEXT[]), fin du push leads, pull temps réel via projects, UI sélection multiple (profil/claim).
 - [x] **Phase 4.7: Refonte UI Globale & Application du Design System** - Application du MASTER.md, harmonisation de la typographie (Figtree/Noto) et du thème B2B/Marketplace. (completed 2026-07-03)
 - [x] **Phase 5: Intégration API État (SIRET) & Badges de Confiance** - Récupération auto des infos légales (API Gouv/Pappers), vérification asynchrone décennale, et nouveaux copywriting labels. (completed 2026-06-24)
-- [ ] **Phase 5.5: Portfolio Pro, Refonte Profil & Social** - Upload R2 (galerie projets), BDD completed_projects/likes, carousel landing, profil immersif pleine page (zéro menu, mobile-first).
+- [x] **Phase 5.5: Portfolio Pro, Refonte Profil & Social** - Upload R2 (galerie projets), BDD completed_projects/likes, carousel landing, profil immersif pleine page (zéro menu, mobile-first). (completed 2026-07-19)
 - [ ] **Phase 5.6: Calculateur de Prix & Refonte Simulateur** - Estimateur interactif (tuiles, type de travaux, m²), algorithme de chiffrage, et capture de leads qualifiés (résultat contre coordonnées).
 - [ ] **Phase 5.8: Tunnel B2B & Apporteurs d'Affaires** - Landing page partenaire ("Bras armé technique"), dépôt de plans/rapports expert, SLA de 4h, attestation décennale 1-clic pour syndics, archis et assureurs.
 - [ ] **Phase 6: SMS + Acquisition + Messagerie** - SMS différencié (Basic→upgrade / Premium→lead direct), cold outreach pros DB, dashboard particulier magic-link, messagerie in-app pro↔particulier, email onboarding (désactivé par défaut), feedback loop lead.
@@ -163,7 +163,16 @@ Plans:
   3. Backoffice Pro : Formulaire d'ajout de projet avec upload multiple vers R2. Admin : possibilité de cocher `is_showcased`.
   4. Profil Public : Refonte Mobile First pleine page (zéro barre de menu, boutons/breadcrumb). Affichage de la galerie des réalisations avec likes.
   5. Landing Page : Carousel/Grille SEO-friendly en Nuxt (pas d'Astro) exposant les chantiers "sélectionnés" avec likes.
-**Plans**: TBD
+**Plans**: 8 plans
+Plans:
+- [x] 05.5-01-PLAN.md — Modèle de données : migration completed_projects + likes + policies RLS
+- [x] 05.5-02-PLAN.md — Fix bug presign logo R2 (Content-Length) + endpoint presign multi-fichiers + test anti-régression
+- [x] 05.5-03-PLAN.md — API CRUD réalisations espace pro (liste/création/suppression, scoping RLS)
+- [x] 05.5-04-PLAN.md — Endpoints publics : liste showcased + profil enrichi, like anti-spam IP-hash, toggle admin is_showcased
+- [x] 05.5-05-PLAN.md — Backoffice : modale RealisationForm + upload R2 parallèle + intégration /espace/profil
+- [x] 05.5-06-PLAN.md — RealisationCard partagée (like optimiste + localStorage) + toggle showcase console admin
+- [x] 05.5-07-PLAN.md — Refonte profil public immersif (layout:false, bouton flottant, galerie mobile-first)
+- [x] 05.5-08-PLAN.md — Section landing "Chantiers Réalisés" (carousel CSS scroll-snap SSR + likes)
 **UI hint**: yes
 
 ### Phase 5.6: Calculateur de Prix & Refonte Simulateur
@@ -229,7 +238,7 @@ Plans:
 | 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
 | 4.7. Refonte UI Globale & Design System | 8/8 | Complete   | 2026-07-04 |
 | 5. Intégration API État (SIRET) & Badges de Confiance | 6/6 | Complete   | 2026-06-24 |
-| 5.5. Portfolio Pro, Refonte Profil & Social | 0/TBD | Not started | - |
+| 5.5. Portfolio Pro, Refonte Profil & Social | 8/8 | Complete   | 2026-07-19 |
 | 5.6. Calculateur de Prix & Refonte Simulateur | 0/TBD | Not started | - |
 | 5.8. Tunnel B2B & Apporteurs d'Affaires | 0/TBD | Not started | - |
 | 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |

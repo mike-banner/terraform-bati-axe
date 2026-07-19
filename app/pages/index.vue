@@ -8,6 +8,9 @@ useHead({
 
 // Image chantier vérifiée (résout 200). À remplacer à terme par un asset projet.
 const heroPhoto = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80'
+
+const { data: showcased } = await useFetch('/api/v1/completed-projects')
+const showcasedProjects = computed(() => showcased.value?.projects ?? [])
 </script>
 
 <template>
@@ -129,6 +132,25 @@ const heroPhoto = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?
             Le premier artisan abonné peut vous appeler immédiatement. Pour les autres, vos coordonnées sont accessibles après 24h.
           </p>
         </div>
+      </div>
+    </section>
+
+    <!-- ───────────────── Chantiers Réalisés (preuve sociale) ───────────────── -->
+    <section v-if="showcasedProjects.length" class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
+      <div class="mb-10 max-w-[52ch]">
+        <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Chantiers Réalisés</h2>
+        <p class="mt-3 text-base leading-relaxed text-slate-500">
+          Découvrez les derniers travaux menés par nos artisans certifiés près de chez vous.
+        </p>
+      </div>
+      <div class="reveal flex gap-6 overflow-x-auto pb-4" style="scroll-snap-type: x mandatory;">
+        <RealisationCard
+          v-for="project in showcasedProjects"
+          :key="project.id"
+          :project="project"
+          class="reveal-item shrink-0 w-[85%] sm:w-[45%] lg:w-[30%]"
+          style="scroll-snap-align: start;"
+        />
       </div>
     </section>
 

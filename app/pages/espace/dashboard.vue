@@ -164,6 +164,9 @@ const steps = computed(() => [
   { label: 'Décennale envoyée', done: !!decennale.value,        desc: decennale.value ? `Statut : ${docStatus(decennale.value).label}` : 'Document manquant' },
   { label: 'Profil vérifié',    done: pro.value?.is_verified === true,
     desc: pro.value?.is_verified ? 'Votre profil est actif et visible.' : 'En attente de validation par notre équipe (sous 24h ouvrées).' },
+  { label: 'Abonnement Premium', done: pro.value?.subscription_status === 'active',
+    desc: pro.value?.subscription_status === 'active' ? 'Accès illimité aux chantiers exclusifs.' : 'Débloquez tous les leads en illimité.',
+    action: pro.value?.subscription_status !== 'active' ? { label: 'Devenir Premium', to: '/espace/premium' } : { label: 'Gérer mon abonnement', to: '/espace/premium' } },
   { label: 'Mon profil public', done: !!(pro.value?.bio || pro.value?.logo_url),
     desc: "Bio, logo, zone d'intervention",
     action: { label: 'Éditer mon profil', to: '/espace/profil' } },
@@ -178,7 +181,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto px-6 py-8">
+  <div class="w-full max-w-[1440px] px-6 py-5 md:px-10 md:py-6">
 
     <!-- Loading -->
     <div v-if="loading" class="py-12 flex justify-center">
@@ -188,45 +191,49 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
     <!-- Main Dashboard -->
     <template v-else-if="pro">
 
-      <!-- Breadcrumbs -->
-      <UiIdentityBreadcrumbs :items="[
-        { label: 'BÂTI-AXE' },
-        { label: 'Espace Pro', to: '/espace/leads' },
-        { label: 'Tableau de bord' }
-      ]" />
+      <div class="flex flex-col lg:grid lg:grid-cols-5 gap-6 items-start">
 
-      <!-- Header -->
-      <div class="mb-10">
-        <div class="mb-4 space-y-2">
-          <div class="flex flex-wrap gap-2">
-            <UiPremiumBadge v-if="pro.is_verified" />
-            <span
-              v-else
-              class="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 border border-amber-300 text-amber-700 bg-amber-50"
-            >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              Vérification en cours
-            </span>
-            <BadgeEntrepriseVerifiee v-if="pro.siret_status === 'active'" />
-            <BadgeDecennaleCertifiee v-if="pro.decennal_status === 'valid'" />
+        <!-- COLONNE GAUCHE (Documents - 60%) -->
+        <div class="lg:col-span-3 space-y-4 order-2 lg:order-1 w-full">
+          <!-- Header -->
+          <div class="mb-1">
+            <div class="mb-3 space-y-1.5">
+              <div class="flex flex-wrap items-center gap-2">
+                <VerifiedBadge v-if="pro.is_verified" />
+                <span
+                  v-else
+                  class="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 border border-amber-300 text-amber-700 bg-amber-50"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  Vérification en cours
+                </span>
+                <BadgeEntrepriseVerifiee v-if="pro.siret_status === 'active'" />
+                <BadgeDecennaleCertifiee v-if="pro.decennal_status === 'valid'" />
+                <NuxtLink
+                  v-if="pro.subscription_status !== 'active'"
+                  to="/espace/premium"
+                  class="cta-premium inline-flex items-center gap-1.5 h-[30px] px-3.5 text-background text-xs font-bold rounded-md"
+                >
+                  <svg class="w-3.5 h-3.5 relative text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-1.012 1.09l1.242 5.385c.114.495-.417.882-.84.62l-4.757-2.937a.563.563 0 00-.594 0L5.973 21.085c-.423.262-.954-.125-.84-.62l1.242-5.385a.563.563 0 00-.182-.557L1.99 10.916c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+                  <span class="relative">Devenir Premium</span>
+                </NuxtLink>
+              </div>
+              <div v-if="pro.categories && pro.categories.length > 0" class="flex flex-wrap gap-1.5">
+                <span
+                  v-for="cat in pro.categories"
+                  :key="cat"
+                  class="inline-flex items-center text-xs font-medium px-2.5 py-1 border border-border rounded-full text-muted-foreground bg-background"
+                >
+                  {{ CATEGORY_LABELS[cat] || cat }}
+                </span>
+              </div>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground md:hidden" style="text-wrap: balance">{{ pro.company_name }}</h1>
+            <p class="text-sm text-muted-foreground mt-1">{{ pro.full_name }} · {{ pro.postal_code }}</p>
           </div>
-          <div v-if="pro.categories && pro.categories.length > 0" class="flex flex-wrap gap-1.5">
-            <span
-              v-for="cat in pro.categories"
-              :key="cat"
-              class="inline-flex items-center text-xs font-medium px-2.5 py-1 border border-border rounded-full text-muted-foreground bg-background"
-            >
-              {{ CATEGORY_LABELS[cat] || cat }}
-            </span>
-          </div>
-        </div>
-        <h1 class="text-4xl font-bold tracking-tight text-foreground" style="text-wrap: balance">{{ pro.company_name }}</h1>
-        <p class="text-sm text-muted-foreground mt-1">{{ pro.full_name }} · {{ pro.postal_code }}</p>
-      </div>
-
-      <!-- ─── Documents (toujours visible pour permettre le renouvellement) ───── -->
-      <div class="bento-card rounded-3xl p-8 mb-8 border" :class="docsComplete ? 'border-slate-200 bg-white shadow-sm' : 'border-red-300 bg-red-50'">
-        <div class="flex items-start gap-2 mb-3">
+          <!-- ─── Documents (toujours visible pour permettre le renouvellement) ───── -->
+          <div class="bento-card rounded-3xl p-6 border" :class="docsComplete ? 'border-slate-200 bg-white shadow-sm' : 'border-red-300 bg-red-50'">
+            <div class="flex items-start gap-2 mb-3">
           <svg v-if="!docsComplete" class="w-4 h-4 text-red-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
           <div>
             <p class="text-sm font-semibold" :class="docsComplete ? 'text-foreground' : 'text-red-900'">Documents requis</p>
@@ -236,7 +243,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
         </div>
 
         <!-- KBIS -->
-        <div v-if="!kbis" class="mb-4">
+        <div v-if="!kbis" class="mb-3">
           <p class="text-xs font-semibold text-foreground mb-2">Extrait KBIS <span class="text-muted-foreground font-normal">(moins de 3 mois · PDF, JPG, PNG)</span></p>
           <div v-if="uploads.kbis.status !== 'success'" class="flex items-center gap-3 flex-wrap">
             <label class="cursor-pointer">
@@ -342,21 +349,24 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
         </div>
 
         <!-- Responsabilité -->
-        <div class="mt-4 pt-4 border-t border-border/50">
+        <div class="mt-3 pt-3 border-t border-border/50">
           <p class="text-xs text-muted-foreground leading-relaxed">
             <span class="font-semibold">⚠️ Responsabilité :</span> Vous garantissez l'authenticité et la validité des documents envoyés. Toute fausse déclaration ou document falsifié peut entraîner la fermeture de votre compte et des poursuites légales. BÂTI-AXE décline toute responsabilité en cas de fraude documentaire.
           </p>
         </div>
       </div>
+        </div>
 
-      <!-- Progress checklist -->
-      <div class="bento-card border border-slate-200 rounded-3xl mb-10 overflow-hidden bg-white shadow-sm">
-        <div v-for="(step, i) in steps" :key="i" class="flex items-start gap-4 px-5 py-4 border-b border-border last:border-0 hover:-translate-y-0.5 hover:shadow-md hover:bg-slate-50 transition-all duration-300 relative group">
+        <!-- COLONNE DROITE (Checklist - 40%) -->
+        <div class="lg:col-span-2 order-1 lg:order-2 w-full lg:sticky lg:top-6">
+          <!-- Progress checklist -->
+          <div class="bento-card border border-slate-200 rounded-3xl overflow-hidden bg-white shadow-sm">
+            <div v-for="(step, i) in steps" :key="i" class="flex items-start gap-3 px-5 py-3 border-b border-border last:border-0 hover:-translate-y-0.5 hover:shadow-md hover:bg-slate-50 transition-all duration-300 relative group">
           <div
-            class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+            class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
             :class="step.done ? 'bg-foreground text-background' : i === currentStepIndex ? 'border-2 border-foreground' : 'border border-border'"
           >
-            <svg v-if="step.done" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            <svg v-if="step.done" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
           </div>
           <div class="flex-1 min-w-0">
             <NuxtLink v-if="step.action" :to="step.action.to"
@@ -368,7 +378,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
             <NuxtLink
               v-if="step.action"
               :to="step.action.to"
-              class="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-foreground underline underline-offset-2 hover:opacity-70 transition-opacity"
+              class="inline-flex items-center gap-1 mt-1.5 text-xs font-semibold text-foreground underline underline-offset-2 hover:opacity-70 transition-opacity"
             >
               {{ step.action.label }}
               <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -376,8 +386,9 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
           </div>
         </div>
       </div>
+        </div>
 
-
+      </div>
 
     </template>
 
@@ -397,3 +408,52 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
 
   </div>
 </template>
+
+<style scoped>
+/* CTA premium : dégradé profond + relief + balayage lumineux au survol
+   (distinct du shimmer continu de VerifiedBadge, réservé à une action). */
+.cta-premium {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(155deg, #334155 0%, #1E293B 50%, #0F172A 100%);
+  box-shadow:
+    0 4px 14px -3px rgba(15, 23, 42, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.cta-premium::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.35) 50%, transparent 60%);
+  background-size: 220% 100%;
+  background-position: 150% 0;
+  transition: background-position 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cta-premium:hover {
+  transform: translateY(-1px) scale(1.04);
+  box-shadow:
+    0 6px 20px -3px rgba(15, 23, 42, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.cta-premium:hover::before {
+  background-position: -50% 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-premium {
+    transition: box-shadow 0.2s ease;
+  }
+  .cta-premium:hover {
+    transform: none;
+  }
+  .cta-premium::before {
+    transition: none;
+  }
+}
+</style>

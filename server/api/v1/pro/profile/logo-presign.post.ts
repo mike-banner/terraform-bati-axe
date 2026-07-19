@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
     const parsed = presignSchema.safeParse(body)
     if (!parsed.success) throw createError({ statusCode: 400, statusMessage: 'Validation échouée', data: parsed.error.format() })
 
-    const { content_type, filename } = parsed.data
+    const { filename } = parsed.data
 
     const accountId = config.r2AccountId || env.R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID || 'mock'
     const bucket = config.r2BucketName || env.R2_BUCKET_NAME || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
@@ -52,12 +52,10 @@ export default defineEventHandler(async (event) => {
     const aws = getAwsClient(config, env)
     const url = new URL(`https://${accountId}.r2.cloudflarestorage.com/${bucket}/${fileKey}`)
 
-    // 5 MB max (T-04.5-16) — encoded via Content-Length in signed headers
-    const MAX_SIZE = 5 * 1024 * 1024 // 5_242_880
-
+    // On ne passe PAS de headers ici pour éviter que la signature ne soit trop stricte
+    // (T-04.5-16 : la limite 5 Mo reste appliquée côté client dans espace/profil.vue).
     const request = await aws.sign(url, {
       method: 'PUT',
-      headers: { 'Content-Type': content_type, 'Content-Length': String(MAX_SIZE) },
       aws: { signQuery: true }
     })
 
