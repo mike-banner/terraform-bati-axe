@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
+import { ChefHat, Bath, Sofa, BedDouble, Trees, LayoutGrid } from 'lucide-vue-next'
+import { computeEstimate } from '~/utils/calculateur'
 
 useHead({
   title: 'Simulateur de Travaux — BÂTI-AXE',
@@ -9,53 +11,49 @@ useHead({
 })
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
-const categories = [
-  { id: 'maconnerie',  label: 'Maçonnerie & Gros Œuvre', desc: 'Murs, dalles, extensions' },
-  { id: 'toiture',    label: 'Charpente & Toiture',      desc: 'Couverture, tuiles, étanchéité' },
-  { id: 'electricite',label: 'Électricité',               desc: 'Mise aux normes, tableau, prises' },
-  { id: 'plomberie',  label: 'Plomberie & Chauffage',    desc: 'Tuyauterie, sanitaires, chaudières' },
-  { id: 'peinture',   label: 'Peinture & Finitions',     desc: 'Murs, plafonds, revêtements' },
-  { id: 'isolation',  label: 'Isolation & Cloisons',     desc: 'Placo, combles, murs' },
+const renovationTypes = [
+  { id: 'totale',  label: 'Rénovation totale', desc: 'Ensemble du logement, de A à Z' },
+  { id: 'pieces',  label: 'Pièce par pièce',   desc: 'Une ou plusieurs pièces ciblées' },
 ]
 
-const budgetRanges = [
-  { id: '< 5k',    label: 'Moins de 5 000 €' },
-  { id: '5k-15k',  label: '5 000 € à 15 000 €' },
-  { id: '15k-30k', label: '15 000 € à 30 000 €' },
-  { id: '30k-75k', label: '30 000 € à 75 000 €' },
-  { id: '> 75k',   label: 'Plus de 75 000 €' },
+const piecesList = [
+  { id: 'cuisine',       label: 'Cuisine',        icon: ChefHat },
+  { id: 'salle_de_bain', label: 'Salle de bain',  icon: Bath },
+  { id: 'salon',         label: 'Salon',          icon: Sofa },
+  { id: 'chambre',       label: 'Chambre',        icon: BedDouble },
+  { id: 'exterieur',     label: 'Extérieur',      icon: Trees },
+  { id: 'autre',         label: 'Autre',          icon: LayoutGrid },
 ]
 
-const timelineRanges = [
-  { id: '1_semaine', label: "Moins d'1 semaine" },
-  { id: '1_mois',    label: '1 mois' },
-  { id: '3_mois',    label: '3 mois' },
-  { id: '6_mois',    label: '6 mois' },
-  { id: 'flexible',  label: 'Flexible' },
+const gammes = [
+  { id: 'leger',    label: 'Rafraîchissement', desc: 'Finitions, peinture, petites réparations' },
+  { id: 'standard', label: 'Standard',         desc: 'Rénovation complète, matériaux courants' },
+  { id: 'premium',  label: 'Premium',          desc: 'Haut de gamme, matériaux nobles' },
 ]
 
 // ─── State ────────────────────────────────────────────────────────────────────
 const step         = ref(1)
-const totalSteps   = 7
+const totalSteps   = 6
 const isSubmitting = ref(false)
 const submitError  = ref<string | null>(null)
 const createdProjectId = ref<string | null>(null)
 const createdAccessToken = ref<string | null>(null)
+const revealed = ref(false)
 
 const form = reactive({
-  category:       '',
-  description:    '',
-  budget_range:   '',
-  timeline_range: '',
-  postal_code:    '',
-  customer_name:  '',
-  customer_email: '',
-  customer_phone: '',
-  cgu_accepted:   false,
-  sms_opt_in:     false,
+  renovation_type: '',
+  pieces:          [] as string[],
+  surface_m2:      0,
+  gamme:           '',
+  postal_code:     '',
+  customer_name:   '',
+  customer_email:  '',
+  customer_phone:  '',
+  cgu_accepted:    false,
+  sms_opt_in:      false,
 })
 
-// touched for step 5 contact fields
+// touched for lead wall contact fields
 const touched = reactive({ name: false, email: false, phone: false })
 
 // ─── Regex ────────────────────────────────────────────────────────────────────
@@ -65,17 +63,17 @@ const RE_PHONE_FR = /^(?:(?:\+|00)33[\s.-]?|0)[1-9](?:[\s.-]*\d{2}){4}$/
 // ─── Validation ───────────────────────────────────────────────────────────────
 const isStepValid = computed(() => {
   switch (step.value) {
-    case 1: return !!form.category
-    case 2: return form.description.trim().length >= 20
-    case 3: return !!form.budget_range
-    case 4: return !!form.timeline_range
+    case 1: return !!form.renovation_type
+    case 2: return form.renovation_type === 'totale' ? true : form.pieces.length > 0
+    case 3: return form.surface_m2 > 0
+    case 4: return !!form.gamme
     case 5: return form.postal_code === '78955'
     case 6: return (
       form.customer_name.trim().length >= 2 &&
       RE_EMAIL.test(form.customer_email) &&
-      RE_PHONE_FR.test(form.customer_phone)
+      RE_PHONE_FR.test(form.customer_phone) &&
+      form.cgu_accepted
     )
-    case 7: return form.cgu_accepted
     default: return false
   }
 })
@@ -89,23 +87,48 @@ const contactErrors = computed(() => ({
 const progress = computed(() => Math.round(((step.value - 1) / totalSteps) * 100))
 
 const stepLabels: Record<number, string> = {
-  1: 'Type de travaux',
-  2: 'Description',
-  3: 'Budget',
-  4: 'Délai souhaité',
+  1: 'Type de rénovation',
+  2: 'Pièces concernées',
+  3: 'Surface',
+  4: 'Niveau de prestation',
   5: 'Localisation',
   6: 'Vos coordonnées',
-  7: 'Validation',
 }
 
-// ─── Handlers ─────────────────────────────────────────────────────────────────
-const selectCategory  = (id: string) => { form.category = id; nextStep() }
-const selectBudget    = (id: string) => { form.budget_range = id; nextStep() }
-const selectTimeline  = (id: string) => { form.timeline_range = id; nextStep() }
+// ─── Estimation (calculée en continu, jamais affichée avant révélation) ───────
+const estimate = computed(() => computeEstimate({
+  renovation_type: form.renovation_type,
+  pieces: form.pieces,
+  surface_m2: form.surface_m2,
+  gamme: form.gamme as 'leger' | 'standard' | 'premium',
+}))
 
+const formatEuro = (n: number) => n.toLocaleString('fr-FR') + ' €'
+
+// ─── Handlers ─────────────────────────────────────────────────────────────────
 const nextStep = () => {
   if (step.value < totalSteps && isStepValid.value) {
     step.value++
+    // Rénovation totale : pas de sélection de pièces, on saute l'étape 2.
+    if (step.value === 2 && form.renovation_type === 'totale') step.value = 3
+    submitError.value = null
+  }
+}
+
+const selectRenovationType = (id: string) => { form.renovation_type = id; nextStep() }
+const selectGamme = (id: string) => { form.gamme = id; nextStep() }
+
+const togglePiece = (id: string) => {
+  const i = form.pieces.indexOf(id)
+  if (i === -1) form.pieces.push(id)
+  else form.pieces.splice(i, 1)
+}
+
+const prevStep = () => {
+  if (step.value > 1) {
+    step.value--
+    // Retour : sauter l'étape 2 si rénovation totale (pas de pièces à choisir).
+    if (step.value === 2 && form.renovation_type === 'totale') step.value = 1
     submitError.value = null
   }
 }
@@ -132,13 +155,6 @@ const normalizePostalCode = (e: Event) => {
   form.postal_code = (e.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 5)
 }
 
-const prevStep = () => {
-  if (step.value > 1) {
-    step.value--
-    submitError.value = null
-  }
-}
-
 const handleSubmit = async () => {
   touched.name = true; touched.email = true; touched.phone = true
   if (!isStepValid.value) return
@@ -149,10 +165,14 @@ const handleSubmit = async () => {
     const data = await $fetch<{ status: string; projectId: string; zoneName: string; accessToken?: string }>('/api/v1/projects', {
       method: 'POST',
       body: {
-        category:       form.category,
-        description:    form.description,
-        budget_range:   form.budget_range,
-        timeline_range: form.timeline_range,
+        calculator_data: {
+          renovation_type: form.renovation_type,
+          pieces:          form.pieces,
+          surface_m2:      form.surface_m2,
+          gamme:           form.gamme,
+          estimate_min:    estimate.value.estimate_min,
+          estimate_max:    estimate.value.estimate_max,
+        },
         postal_code:    form.postal_code,
         customer_name:  form.customer_name,
         customer_email: form.customer_email,
@@ -165,7 +185,7 @@ const handleSubmit = async () => {
     if (data?.status === 'SUCCESS') {
       createdProjectId.value = data.projectId
       if (data.accessToken) createdAccessToken.value = data.accessToken
-      step.value = 8
+      revealed.value = true
     }
   } catch (err: any) {
     submitError.value = err.data?.data?.message || err.statusMessage || err.message || 'Une erreur serveur est survenue. Veuillez réessayer.'
@@ -179,24 +199,23 @@ const handleSubmit = async () => {
   <div class="min-h-[calc(100vh-3.5rem)] bg-page flex items-start justify-center px-4 py-12 md:py-16">
     <div class="w-full max-w-xl bg-white rounded-3xl border border-slate-200 shadow-sm p-8 md:p-10">
 
-      <!-- ─── Success ─────────────────────────────────────────────────────── -->
-      <div v-if="step === 8" class="py-8">
-        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-foreground text-background mb-8">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-          </svg>
-        </div>
-        <h1 class="text-3xl font-black tracking-tight text-foreground mb-3" style="text-wrap: balance">
-          Projet enregistré.
+      <!-- ─── Révélation estimation (après Lead Wall validé) ────────────── -->
+      <div v-if="revealed" class="py-8">
+        <p class="text-xs font-semibold text-safety uppercase tracking-wide mb-3">Votre estimation</p>
+        <h1
+          class="font-black tracking-tight text-foreground mb-3"
+          style="font-size: clamp(2.5rem, 4vw + 1rem, 3.5rem); text-wrap: balance"
+        >
+          <span class="text-safety">{{ formatEuro(estimate.estimate_min) }} – {{ formatEuro(estimate.estimate_max) }}</span>
         </h1>
         <p class="text-sm text-muted-foreground leading-relaxed mb-8 max-w-sm" style="text-wrap: pretty">
-          Votre demande a été transmise aux artisans partenaires de Carrières-sous-Poissy. Vous recevrez un premier contact sous 2 minutes si un artisan abonné est disponible.
+          Cette fourchette est indicative. Votre demande a été transmise aux artisans partenaires de Carrières-sous-Poissy. Vous recevrez un premier contact sous 2 minutes si un artisan abonné est disponible.
         </p>
         <div v-if="createdProjectId" class="p-4 border border-border rounded-lg mb-8">
           <p class="text-xs text-muted-foreground mb-1">Référence de votre projet</p>
           <code class="font-mono text-sm text-foreground select-all">{{ createdProjectId }}</code>
         </div>
-        
+
         <div v-if="createdAccessToken" class="p-5 border border-slate-200 bg-slate-50 rounded-2xl mb-8">
           <p class="text-sm font-semibold text-slate-900 mb-1">🛠️ Mode Dév : Tester la messagerie</p>
           <p class="text-xs text-slate-600 mb-4">En production, ce lien est envoyé par email (Magic Link).</p>
@@ -234,70 +253,110 @@ const handleSubmit = async () => {
           </div>
         </div>
 
-        <!-- ─── Step 1: Category ─────────────────────────────────────────── -->
-        <div v-if="step === 1" class="space-y-4">
+        <Transition name="fade" mode="out-in">
+
+        <!-- ─── Step 1: Type de rénovation ──────────────────────────────── -->
+        <div v-if="step === 1" key="step1" class="space-y-4 reveal">
           <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground" style="text-wrap: balance">
-            Quel type de travaux ?
+            Quel type de rénovation ?
           </h1>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
             <button
-              v-for="cat in categories"
-              :key="cat.id"
-              @click="selectCategory(cat.id)"
-              class="flex items-center justify-between p-4 border rounded-2xl text-left transition-colors"
-              :class="form.category === cat.id
-                ? 'border-safety bg-safety/10 text-slate-900'
+              v-for="t in renovationTypes"
+              :key="t.id"
+              type="button"
+              @click="selectRenovationType(t.id)"
+              class="bento-card reveal-item flex items-center justify-between p-4 border rounded-2xl text-left transition-colors min-h-11"
+              :class="form.renovation_type === t.id
+                ? 'border-orange-500 bg-orange-50 text-slate-900'
                 : 'border-border hover:border-foreground/40 hover:bg-muted'"
             >
               <div>
-                <p class="text-sm font-semibold">{{ cat.label }}</p>
-                <p class="text-xs mt-0.5" :class="form.category === cat.id ? 'text-background/70' : 'text-muted-foreground'">{{ cat.desc }}</p>
+                <p class="text-sm font-semibold">{{ t.label }}</p>
+                <p class="text-xs mt-0.5 text-muted-foreground">{{ t.desc }}</p>
               </div>
-              <svg v-if="form.category === cat.id" class="w-4 h-4 shrink-0 ml-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <svg v-if="form.renovation_type === t.id" class="w-4 h-4 shrink-0 ml-3 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
               </svg>
             </button>
           </div>
         </div>
 
-        <!-- ─── Step 2: Description ──────────────────────────────────────── -->
-        <div v-if="step === 2" class="space-y-4">
+        <!-- ─── Step 2: Pièces concernées (multi-select) ─────────────────── -->
+        <div v-else-if="step === 2" key="step2" class="space-y-4 reveal">
           <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground" style="text-wrap: balance">
-            Décrivez votre projet
+            Quelles pièces sont concernées ?
           </h1>
-          <p class="text-sm text-muted-foreground">Type de prestation, surface approximative, contraintes éventuelles.</p>
-          <div class="relative pt-2">
-            <textarea
-              v-model="form.description"
-              rows="7"
-              minlength="20"
-              maxlength="1000"
-              required
-              placeholder="Exemple : refaire entièrement l'électricité d'un appartement de 55 m². Tableau électrique d'époque à remplacer. Environ 15 prises et 8 points lumineux à prévoir."
-              class="w-full border border-border rounded-md p-3 text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors resize-none"
+          <p class="text-sm text-muted-foreground">Sélectionnez une ou plusieurs pièces.</p>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-2 pt-2">
+            <button
+              v-for="p in piecesList"
+              :key="p.id"
+              type="button"
+              @click="togglePiece(p.id)"
+              class="bento-card reveal-item flex flex-col items-center justify-center gap-2 p-4 border rounded-2xl text-center transition-colors min-h-11"
+              :class="form.pieces.includes(p.id)
+                ? 'border-orange-500 bg-orange-50 text-slate-900'
+                : 'border-border hover:border-foreground/40 hover:bg-muted'"
+            >
+              <component :is="p.icon" class="w-5 h-5" :class="form.pieces.includes(p.id) ? 'text-safety' : 'text-muted-foreground'" />
+              <span class="text-sm font-semibold">{{ p.label }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ─── Step 3: Surface ───────────────────────────────────────────── -->
+        <div v-else-if="step === 3" key="step3" class="space-y-4 reveal">
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground" style="text-wrap: balance">
+            Quelle surface au total ?
+          </h1>
+          <p class="text-sm text-muted-foreground">Surface approximative en m².</p>
+          <div class="pt-4 space-y-4">
+            <div class="flex items-baseline gap-2">
+              <input
+                type="number"
+                v-model.number="form.surface_m2"
+                min="1"
+                max="1000"
+                step="1"
+                inputmode="numeric"
+                placeholder="50"
+                class="w-32 h-14 px-4 border border-border rounded-md text-xl font-semibold bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
+              />
+              <span class="text-sm text-muted-foreground">m²</span>
+            </div>
+            <input
+              type="range"
+              v-model.number="form.surface_m2"
+              min="1"
+              max="300"
+              step="1"
+              class="w-full accent-safety"
             />
-            <span
-              class="absolute bottom-3 right-3 text-xs"
-              :class="form.description.length >= 20 ? 'text-muted-foreground' : 'text-amber-600 font-medium'"
-            >{{ form.description.length }} / 20 min</span>
           </div>
         </div>
 
-        <!-- ─── Step 3: Budget ───────────────────────────────────────────── -->
-        <div v-if="step === 3" class="space-y-4">
-          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground">Budget estimé</h1>
+        <!-- ─── Step 4: Gamme ─────────────────────────────────────────────── -->
+        <div v-else-if="step === 4" key="step4" class="space-y-4 reveal">
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground" style="text-wrap: balance">
+            Quel niveau de prestation ?
+          </h1>
           <div class="space-y-2 pt-2">
             <button
-              v-for="b in budgetRanges"
-              :key="b.id"
-              @click="selectBudget(b.id)"
-              class="w-full flex items-center justify-between p-4 border rounded-2xl text-left transition-colors"
-              :class="form.budget_range === b.id
-                ? 'border-safety bg-safety/10 text-slate-900'
+              v-for="g in gammes"
+              :key="g.id"
+              type="button"
+              @click="selectGamme(g.id)"
+              class="bento-card reveal-item w-full flex items-center justify-between p-4 border rounded-2xl text-left transition-colors min-h-11"
+              :class="form.gamme === g.id
+                ? 'border-orange-500 bg-orange-50 text-slate-900'
                 : 'border-border hover:border-foreground/40 hover:bg-muted text-foreground'"
             >
-              <span class="text-sm font-medium">{{ b.label }}</span>
-              <svg v-if="form.budget_range === b.id" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <div>
+                <p class="text-sm font-semibold">{{ g.label }}</p>
+                <p class="text-xs mt-0.5 text-muted-foreground">{{ g.desc }}</p>
+              </div>
+              <svg v-if="form.gamme === g.id" class="w-4 h-4 shrink-0 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
               </svg>
               <div v-else class="w-4 h-4 rounded-full border border-border shrink-0" />
@@ -305,31 +364,11 @@ const handleSubmit = async () => {
           </div>
         </div>
 
-        <!-- ─── Step 4: Timeline ────────────────────────────────────────── -->
-        <div v-if="step === 4" class="space-y-4">
-          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground">Délai souhaité</h1>
-          <div class="space-y-2 pt-2">
-            <button
-              v-for="t in timelineRanges"
-              :key="t.id"
-              @click="selectTimeline(t.id)"
-              class="w-full flex items-center justify-between p-4 border rounded-2xl text-left transition-colors"
-              :class="form.timeline_range === t.id
-                ? 'border-safety bg-safety/10 text-slate-900'
-                : 'border-border hover:border-foreground/40 hover:bg-muted text-foreground'"
-            >
-              <span class="text-sm font-medium">{{ t.label }}</span>
-              <svg v-if="form.timeline_range === t.id" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-              </svg>
-              <div v-else class="w-4 h-4 rounded-full border border-border shrink-0" />
-            </button>
-          </div>
-        </div>
-
-        <!-- ─── Step 5: Location ─────────────────────────────────────────── -->
-        <div v-if="step === 5" class="space-y-4">
-          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground">Où se situent les travaux ?</h1>
+        <!-- ─── Step 5: Code postal ───────────────────────────────────────── -->
+        <div v-else-if="step === 5" key="step5" class="space-y-4 reveal">
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground" style="text-wrap: balance">
+            Où se situe le chantier ?
+          </h1>
           <p class="text-sm text-muted-foreground">
             Zone pilote actuelle : <strong class="text-foreground">Carrières-sous-Poissy (78955)</strong>.
           </p>
@@ -361,22 +400,27 @@ const handleSubmit = async () => {
               </svg>
               <div>
                 <p class="text-sm font-semibold" :class="form.postal_code === '78955' ? 'text-foreground' : 'text-red-700'">
-                  {{ form.postal_code === '78955' ? 'Zone éligible' : 'Zone non couverte' }}
+                  {{ form.postal_code === '78955' ? 'Zone éligible' : 'Cette zone n\'est pas encore couverte' }}
                 </p>
                 <p class="text-xs mt-0.5" :class="form.postal_code === '78955' ? 'text-muted-foreground' : 'text-red-600'">
                   {{ form.postal_code === '78955'
                     ? 'Le service est disponible à Carrières-sous-Poissy. Les artisans partenaires recevront votre demande.'
-                    : 'Le service est limité à Carrières-sous-Poissy (78955) pendant la phase pilote.' }}
+                    : 'BÂTI-AXE est en phase pilote sur Carrières-sous-Poissy (78955). Laissez vos coordonnées, nous vous recontactons dès l\'ouverture de votre secteur.' }}
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- ─── Step 6: Contact ──────────────────────────────────────────── -->
-        <div v-if="step === 6" class="space-y-4">
-          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground">Vos coordonnées</h1>
-          <p class="text-sm text-muted-foreground">Ces informations restent confidentielles jusqu'au moment du contact avec un artisan.</p>
+        <!-- ─── Step 6: Lead Wall ─────────────────────────────────────────── -->
+        <div v-else-if="step === 6" key="step6" class="space-y-5 reveal">
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground" style="text-wrap: balance">
+            Votre estimation est prête. À qui l'envoyons-nous ?
+          </h1>
+          <p class="text-sm text-muted-foreground">
+            Recevez votre fourchette de prix par email et soyez mis en relation avec un artisan certifié près de chez vous.
+          </p>
+
           <div class="space-y-4 pt-2">
             <div>
               <label for="c-name" class="block text-sm font-medium text-foreground mb-1.5">Nom complet</label>
@@ -388,6 +432,7 @@ const handleSubmit = async () => {
                 autocomplete="name"
                 required
                 minlength="2"
+                maxlength="100"
                 @blur="touched.name = true"
                 class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
                 :class="contactErrors.name ? 'border-red-500' : 'border-border'"
@@ -403,6 +448,7 @@ const handleSubmit = async () => {
                 placeholder="jean.dupont@exemple.com"
                 autocomplete="email"
                 required
+                maxlength="255"
                 @blur="touched.email = true"
                 class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
                 :class="contactErrors.email ? 'border-red-500' : 'border-border'"
@@ -427,31 +473,6 @@ const handleSubmit = async () => {
               />
               <p v-if="contactErrors.phone" class="mt-1.5 text-xs text-red-600">{{ contactErrors.phone }}</p>
               <p v-else class="mt-1.5 text-xs text-muted-foreground">Format français (0612345678 ou +33612345678).</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- ─── Step 7: Validation ───────────────────────────────────────── -->
-        <div v-if="step === 7" class="space-y-5">
-          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground">Confirmer et envoyer</h1>
-
-          <!-- Récap -->
-          <div class="border border-border rounded-md divide-y divide-border text-sm">
-            <div class="flex items-center justify-between px-4 py-3">
-              <span class="text-muted-foreground">Type</span>
-              <span class="font-medium text-foreground">{{ categories.find(c => c.id === form.category)?.label }}</span>
-            </div>
-            <div class="flex items-center justify-between px-4 py-3">
-              <span class="text-muted-foreground">Budget</span>
-              <span class="font-medium text-foreground">{{ budgetRanges.find(b => b.id === form.budget_range)?.label }}</span>
-            </div>
-            <div class="flex items-center justify-between px-4 py-3">
-              <span class="text-muted-foreground">Délai</span>
-              <span class="font-medium text-foreground">{{ timelineRanges.find(t => t.id === form.timeline_range)?.label }}</span>
-            </div>
-            <div class="flex items-center justify-between px-4 py-3">
-              <span class="text-muted-foreground">Zone</span>
-              <span class="font-medium text-foreground">{{ form.postal_code }}</span>
             </div>
           </div>
 
@@ -486,6 +507,8 @@ const handleSubmit = async () => {
           </div>
         </div>
 
+        </Transition>
+
         <!-- ─── Navigation ───────────────────────────────────────────────── -->
         <div class="mt-8 pt-6 border-t border-border flex items-center justify-between">
           <button
@@ -498,22 +521,22 @@ const handleSubmit = async () => {
             Retour
           </button>
 
-          <!-- Continue button (shown for steps needing explicit next; steps 1, 3, 4 auto-advance) -->
+          <!-- Continue button (steps needing explicit validation: 2, 3, 5; steps 1 and 4 auto-advance) -->
           <button
-            v-if="step < totalSteps && step !== 1 && step !== 3 && step !== 4"
+            v-if="step < totalSteps && step !== 1 && step !== 4"
             type="button"
             @click="nextStep"
             :disabled="!isStepValid"
             class="inline-flex items-center gap-1.5 h-10 px-5 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-30 disabled:pointer-events-none"
           >
-            Continuer
+            {{ step === totalSteps - 1 ? 'Voir mon estimation' : 'Suivant' }}
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
 
-          <!-- Steps 1 and 3 auto-advance on click — show passive indicator -->
+          <!-- Steps 1 and 4 auto-advance on click — show passive indicator -->
           <span v-else-if="step < totalSteps" class="text-xs text-muted-foreground">Sélectionnez une option</span>
 
-          <!-- Submit button (step 6) -->
+          <!-- Submit button (Lead Wall) -->
           <button
             v-if="step === totalSteps"
             type="button"
@@ -522,7 +545,7 @@ const handleSubmit = async () => {
             class="inline-flex items-center gap-2 h-10 px-5 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-30 disabled:pointer-events-none"
           >
             <svg v-if="isSubmitting" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-            <span>{{ isSubmitting ? 'Envoi en cours…' : 'Envoyer mon projet' }}</span>
+            <span>{{ isSubmitting ? 'Envoi en cours…' : 'Recevoir mon estimation gratuite' }}</span>
           </button>
         </div>
 
@@ -530,3 +553,14 @@ const handleSubmit = async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: ready_to_plan
-stopped_at: Phase 04.7 complete (8/8) — ready to discuss Phase 05
-last_updated: 2026-07-04T11:41:54.384Z
-last_activity: 2026-07-03 -- Phase 04.7 execution started
+status: executing
+stopped_at: Completed 05.5-07-PLAN.md
+last_updated: "2026-07-19T20:56:57.312Z"
+last_activity: 2026-07-19
 progress:
-  total_phases: 10
-  completed_phases: 3
-  total_plans: 33
-  completed_plans: 29
-  percent: 30
+  total_phases: 14
+  completed_phases: 6
+  total_plans: 44
+  completed_plans: 40
+  percent: 43
 ---
 
 # Project State
@@ -27,26 +27,24 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 5 — messagerie livrée ; reste Acquisition + Feedback loop (SMS différé)
+**Current focus**: Phase 5.6 — Calculateur de Prix & Refonte Simulateur
 
 ## Current Position
 
-Phase: 05
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-07-04
-Progress: [░░░░░░░░░░] 0%
+Phase: 05.6 (Calculateur-Simulateur) — EXECUTING
+Plan: 3 of 3
+Next phase: 05.6 (Calculateur de Prix & Refonte Simulateur) — PLANNED (0 plans, en attente de découpage technique)
+Status: Ready to execute
+Last activity: 2026-07-19
+Progress: [█████████░] 91%
 
-### Plans Phase 4.7 v2 — PLANNED (3 vagues)
+### Plans Phase 5.5 (Portfolio, Refonte Profil & Social) — COMPLETE (8/8 plans)
 
-- [ ] 04.7-01 — Fondation CSS : tokens gris/orange, DM Sans, .bento-card (vague 1)
-- [ ] 04.7-02 — Landing : hero Bento Grid Variant C (vague 2)
-- [ ] 04.7-03 — Dashboard : repoint Ui*, suppression doublons, badges (vague 2)
-- [ ] 04.7-04 — Espace leads : grille bento, fiche détail (vague 2)
-- [ ] 04.7-05 — Formulaires claim/profil/simulateur (vague 2)
-- [ ] 04.7-06 — Premium + profil public (vague 2)
-- [ ] 04.7-07 — Admin + légal (vague 2)
-- [ ] 04.7-08 — Gate zéro vert/cyan + a11y + checkpoint human-verify (vague 3)
+- Voir `.planning/phases/05.5-Portfolio-Refonte/` (01 à 08, toutes SUMMARY livrées).
+
+### Plans Phase 5.6 (Calculateur de Prix) — PLANNED (0 plans)
+
+- En attente de découpage technique (`gsd-plan-phase`).
 
 ### Plans Phase 5 (blocked/deferred)
 
@@ -80,6 +78,10 @@ Progress: [░░░░░░░░░░] 0%
 - [2026-06-13 PM]: **RLS Security Verified & Documented** : All 11 tables have RLS enabled. Security policies enforce: public SELECT on verified professionals only; authenticated users full access to own records; service-role-only for sensitive tables (projects, prospects, paywall_events, audit_logs). Migration `20260613000000_test_data_seeding.sql` creates 18 test leads (3 per category) with full verification documents. Architecture is reproducible for production deployment. See `.planning/RLS-SECURITY.md`.
 - [2026-06-23 PM]: **Phase 4.7 Design System Adoption** : Transition from self-hosted Clash Display + Geist Variable (Brique & Béton OKLCH palette) to Google Fonts (Figtree + Noto Sans) with MASTER.md hex color system (cyan #0891B2, green #22C55E, cream #ECFEFF, charcoal #164E63). CSS tokens for spacing, shadows, and radius defined in `app/assets/css/tailwind.css` as the foundation for all subsequent page refactors (04.7-02 through 04.7-07).
 - [Phase 04.7]: Composants PremiumBadge et IdentityBreadcrumbs bâtis sur la nouvelle charte Sketch 001 (gris industriel + orange sécurité), en attendant la refonte globale des tokens tailwind.css.
+- [Phase 05.5-07]: Profil public pro refondu en pleine page immersive (layout: false) avec bouton flottant retour, galerie de réalisations mobile-first (RealisationCard) et likes ; test de garde source anti-régression navbar/galerie.
+- [Phase 05.5-08]: Section landing preuve sociale 'Chantiers Réalisés' en carousel CSS scroll-snap pur (pas d'Embla), SSR via useFetch, réutilise RealisationCard sans dupliquer le markup ; section omise entièrement si aucun projet is_showcased.
+- [Phase 05.6]: Tasks 1-3 du plan 05.6-03 livrées en un seul commit atomique (réécriture cohésive d'un fichier unique)
+- [Phase 05.6]: Transition inter-étapes simulateur : fade CSS simple plutôt que reveal-item/reveal-up (conçu pour montage, pas cycle enter/leave répété)
 
 ### Known Patterns (à appliquer dans les prochaines phases)
 
@@ -101,7 +103,8 @@ Progress: [░░░░░░░░░░] 0%
 
 ### Pending Todos
 
-None.
+- [ ] PIVOT B2B : Re-poser la question à l'utilisateur sur le modèle de rémunération des prescripteurs (gratuit vs commission).
+- [ ] PIVOT B2B : Re-poser la question sur le remplacement du mot "Particulier" par "Client Final".
 
 ### Blockers/Concerns
 
@@ -110,6 +113,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-07-03T00:54:38.544Z
-Stopped at: context exhaustion at 75% (2026-06-13)
+Last session: 2026-07-19T20:51:19.842Z
+Stopped at: Completed 05.5-07-PLAN.md
 Resume file: None

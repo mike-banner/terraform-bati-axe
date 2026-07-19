@@ -1,15 +1,31 @@
 import { z } from 'zod'
 import { serverSupabaseServiceRole } from '#supabase/server'
 import { computeQualifyScore } from '../../utils/qualifyScore'
+import { deriveTrades, derivePrimaryCategory } from '../../utils/calculatorMapping'
 
 // French phone validation regex
 const phoneRegex = /^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/
 
+// Formate un montant en euros avec espace fine insécable tous les 3 chiffres (FR)
+function formatEuro(n: number): string {
+  return Math.round(n).toLocaleString('fr-FR')
+}
+
 // Input validation schema
 const createProjectSchema = z.object({
-  category: z.string().min(1, 'La catégorie est requise.'),
-  description: z.string().min(20, 'La description doit faire au moins 20 caractères.'),
-  budget_range: z.string().min(1, 'Le budget estimé est requis.'),
+  // Le calculateur est désormais l'unique producteur de leads : calculator_data requis,
+  // category/description/budget_range dérivés/composés server-side si absents.
+  calculator_data: z.object({
+    renovation_type: z.string(),
+    pieces: z.array(z.string()),
+    surface_m2: z.number().positive(),
+    gamme: z.string(),
+    estimate_min: z.number().nonnegative(),
+    estimate_max: z.number().nonnegative()
+  }),
+  category: z.string().min(1, 'La catégorie est requise.').optional(),
+  description: z.string().min(20, 'La description doit faire au moins 20 caractères.').optional(),
+  budget_range: z.string().min(1, 'Le budget estimé est requis.').optional(),
   postal_code: z.string().regex(/^\d{5}$/, 'Le code postal doit comporter 5 chiffres.'),
   customer_name: z.string().min(2, 'Le nom doit comporter au moins 2 caractères.'),
   customer_email: z.string().email('Adresse email invalide.'),
@@ -36,6 +52,15 @@ export default defineEventHandler(async (event) => {
     const data = validation.data
     const supabase = await serverSupabaseServiceRole(event) as any
 
+    // T-056-03 : category dérivée server-side (non lue du client par défaut), bornée aux 6 métiers valides
+    const { renovation_type, pieces, surface_m2, gamme, estimate_min, estimate_max } = data.calculator_data
+    const category = data.category ?? derivePrimaryCategory(renovation_type, pieces)
+    const trades = deriveTrades(renovation_type, pieces)
+    const description = data.description
+      ?? `Rénovation ${renovation_type === 'totale' ? 'totale' : 'pièce par pièce'} — ${pieces.join(', ')} — ${surface_m2} m² — gamme ${gamme}.`
+    const budgetRange = data.budget_range
+      ?? `${formatEuro(estimate_min)} € – ${formatEuro(estimate_max)} €`
+
     // D-11: compute qualification criteria (T-04.5-10: computed server-side, never read from body)
     // D-13: informational only — low scores are not rejected
     const { count: returningCount } = await supabase
@@ -43,9 +68,9 @@ export default defineEventHandler(async (event) => {
       .select('id', { count: 'exact', head: true })
       .eq('customer_email', data.customer_email)
     const { qualify_budget: qualifyBudget, qualify_phone: qualifyPhone, qualify_description: qualifyDescription, qualify_returning: qualifyReturning, qualify_score: qualifyScore } = computeQualifyScore({
-      budget_range: data.budget_range,
+      budget_range: budgetRange,
       customer_phone: data.customer_phone,
-      description: data.description,
+      description,
       returning_count: returningCount ?? 0,
     })
 
@@ -107,9 +132,10 @@ export default defineEventHandler(async (event) => {
         customer_name: data.customer_name,
         customer_email: data.customer_email,
         customer_phone: data.customer_phone,
-        category: data.category,
-        description: data.description,
-        budget_range: data.budget_range,
+        category,
+        description,
+        budget_range: budgetRange,
+        calculator_data: { ...data.calculator_data, trades },
         timeline_range: data.timeline_range ?? null,
         postal_code: data.postal_code,
         zone_id: matchedZone.id,
@@ -137,7 +163,7 @@ export default defineEventHandler(async (event) => {
     const { data: pros, error: prosError } = await supabase
       .from('professionals')
       .select('id, phone')
-      .contains('categories', [data.category])
+      .contains('categories', [category])
       .eq('is_verified', true)
 
     if (prosError) {
@@ -202,7 +228,7 @@ export default defineEventHandler(async (event) => {
         target_table: 'projects',
         target_id: project.id,
         metadata: {
-          category: data.category,
+          category,
           postal_code: data.postal_code,
           zone_name: matchedZone.name,
           qualify_score: qualifyScore

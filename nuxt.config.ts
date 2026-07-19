@@ -13,6 +13,11 @@ export default defineNuxtConfig({
     head: {
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' }
+      ],
+      link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,900&display=swap' }
       ]
     }
   },
@@ -82,8 +87,8 @@ export default defineNuxtConfig({
           "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://challenges.cloudflare.com",
           "connect-src 'self' ws: wss: http://127.0.0.1:54321 http://localhost:54321 https://*.supabase.co https://*.supabase.in https://*.r2.cloudflarestorage.com",
           "img-src 'self' data: blob:",
-          "style-src 'self' 'unsafe-inline'",
-          "font-src 'self' data:",
+          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+          "font-src 'self' data: https://fonts.gstatic.com",
           "frame-src https://challenges.cloudflare.com",
           "worker-src 'self' blob:",
           "child-src 'self' blob:"

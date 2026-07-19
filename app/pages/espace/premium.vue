@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'dynamic' })
+definePageMeta({ layout: 'dynamic', pageTitle: 'Abonnement Premium' })
 const supabase = useSupabaseClient()
 const { user } = useRequireAuth()
 const route = useRoute()
@@ -37,7 +37,7 @@ const startCheckout = async () => {
 
 <template>
   <div class="min-h-[calc(100vh-3.5rem)] bg-page">
-    <div class="max-w-2xl mx-auto px-6 py-16 md:py-24">
+    <div class="w-full max-w-4xl px-6 py-8 md:px-10 md:py-16">
 
       <!-- Success banner (post-checkout redirect) -->
       <div v-if="showSuccessBanner" class="flex items-start gap-3 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm mb-8">
@@ -62,9 +62,9 @@ const startCheckout = async () => {
       </div>
 
       <!-- Hero -->
-      <div class="mb-12">
+      <div class="mb-12 md:hidden">
         <p class="text-xs font-semibold text-slate-500 tracking-widest uppercase mb-6">Abonnement</p>
-        <h1 class="text-5xl md:text-7xl font-black tracking-tight text-slate-900" style="text-wrap: balance">
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground" style="text-wrap: balance">
           Premier contact exclusif.
         </h1>
         <p class="text-base text-slate-600 mt-4 leading-relaxed">

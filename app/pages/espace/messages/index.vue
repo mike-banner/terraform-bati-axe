@@ -1,8 +1,8 @@
 <template>
-  <div class="max-w-2xl mx-auto px-6 py-16">
-    <div class="mb-8">
-      <h1 class="text-5xl md:text-6xl font-black tracking-tighter text-slate-900">Messagerie</h1>
-      <p class="text-slate-500 mt-2">Discutez avec les particuliers de vos chantiers débloqués.</p>
+  <div class="w-full max-w-[1440px] px-6 py-8 md:px-10 md:py-12">
+    <div class="mb-8 md:hidden">
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Messagerie</h1>
+      <p class="text-muted-foreground mt-2">Discutez avec les particuliers de vos chantiers débloqués.</p>
     </div>
 
     <!-- Loading -->
@@ -55,6 +55,7 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'dynamic', pageTitle: 'Messagerie' })
 useRequireAuth()
 
 useHead({

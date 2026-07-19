@@ -170,7 +170,7 @@ const router = useRouter()
 async function routeAuthedUser(authedUser: any) {
   const { data: pro } = await supabase
     .from('professionals').select('id').eq('id', authedUser.id).maybeSingle()
-  if (pro) return router.push('/app/dashboard')
+  if (pro) return router.push('/espace/dashboard')
   if (authedUser.app_metadata?.role === 'admin') return router.push('/admin')
   if (authedUser.user_metadata?.full_name) proForm.full_name = authedUser.user_metadata.full_name
   activeStep.value = 2
@@ -268,7 +268,7 @@ const handleAuth = async () => {
         .maybeSingle() as { data: { id: string; canonical_slug: string } | null }
 
       if (existingPro) {
-        return navigateTo('/app/dashboard')
+        return navigateTo('/espace/dashboard')
       } else {
         activeStep.value = 2
       }
@@ -364,7 +364,7 @@ const uploadDocument = async (type: 'kbis' | 'decennale') => {
   }
 }
 
-const finishOnboarding = () => navigateTo('/app/dashboard')
+const finishOnboarding = () => navigateTo('/espace/dashboard')
 
 const switchMode = (mode: 'register' | 'login') => {
   authMode.value = mode

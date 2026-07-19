@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn-vue/tailwind.css";
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,900&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -273,7 +272,6 @@
 
   .card:hover {
     box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
   }
 
   /* Input */
@@ -313,14 +311,9 @@
     backdrop-filter: blur(4px);
   }
 
-  /* Bento card — élévation au survol (Sketch 001) */
+  /* Bento card — pas d'élévation au survol (supprimé sur demande) */
   .bento-card {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
-  }
-
-  .bento-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
   }
 
   /* Reveal stagger — apparition séquentielle des grilles bento */

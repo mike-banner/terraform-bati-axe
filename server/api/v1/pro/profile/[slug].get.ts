@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: pro, error } = await supabase
     .from('professionals')
-    .select('id, company_name, full_name, email, phone, canonical_slug, short_id, category, bio, zone, logo_url, is_verified, is_claimed, decennal_status, siret_status, created_at')
+    .select('id, company_name, full_name, email, phone, canonical_slug, short_id, category, categories, bio, zone, logo_url, is_verified, is_claimed, decennal_status, siret_status, created_at')
     .eq('short_id', shortId)
     .maybeSingle()
 
@@ -41,6 +41,12 @@ export default defineEventHandler(async (event) => {
     verifications = verifs || []
   }
 
+  const { data: realisations } = await supabase
+    .from('completed_projects')
+    .select('id, professional_id, title, description, city, image_urls, created_at, likes(count)')
+    .eq('professional_id', pro.id)
+    .order('created_at', { ascending: false })
+
   return {
     status: 'SUCCESS',
     needsRedirect,
@@ -53,6 +59,7 @@ export default defineEventHandler(async (event) => {
       email: isAdmin ? (pro.email as string) : null,
       phone: isAdmin ? (pro.phone as string) : null,
       category: pro.category as string | null,
+      categories: pro.categories as string[] | undefined,
       bio: pro.bio as string | null,
       zone: pro.zone as string | null,
       logo_url: pro.logo_url as string | null,
@@ -62,6 +69,7 @@ export default defineEventHandler(async (event) => {
       siret_status: pro.siret_status as string | null,
       member_since: pro.created_at as string,
     },
+    realisations: realisations ?? [],
     verifications: verifications.map((v: any) => ({
       id: v.id as string,
       document_type: v.document_type as 'kbis' | 'decennale',

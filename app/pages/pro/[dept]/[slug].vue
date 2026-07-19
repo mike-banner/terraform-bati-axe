@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import { ArrowLeft } from '@lucide/vue'
+
+definePageMeta({ layout: false })
+
+const currentUser = useSupabaseUser()
+const backTarget = computed(() => (currentUser.value ? '/espace/dashboard' : '/'))
+
 interface Verification {
   id: string
   document_type: 'kbis' | 'decennale'
@@ -16,11 +23,20 @@ interface ProProfile {
   email: string | null
   phone: string | null
   category: string | null
+  categories?: string[]
   is_verified: boolean
   is_claimed: boolean
   decennal_status: string
   siret_status: string | null
   member_since: string
+}
+
+interface Realisation {
+  id: string
+  title: string
+  city: string
+  image_urls: string[]
+  likes?: { count: number }[]
 }
 
 interface ProfileResponse {
@@ -30,6 +46,7 @@ interface ProfileResponse {
   isAdmin: boolean
   pro: ProProfile
   verifications: Verification[]
+  realisations: Realisation[]
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -56,13 +73,22 @@ if (data.value?.needsRedirect && data.value?.canonicalSlug) {
   await navigateTo(`/pro/${dept}/${data.value.canonicalSlug}`, { redirectCode: 301, replace: true })
 }
 
-if (error.value?.statusCode === 404) {
-  throw createError({ statusCode: 404, statusMessage: 'Profil introuvable.' })
+if (error.value) {
+  throw createError({ 
+    statusCode: error.value.statusCode || 404, 
+    statusMessage: error.value.statusMessage || 'Profil introuvable.',
+    fatal: true
+  })
+}
+
+if (!data.value?.pro) {
+  throw createError({ statusCode: 404, statusMessage: 'Profil introuvable.', fatal: true })
 }
 
 const pro          = computed(() => data.value?.pro)
 const isAdmin      = computed(() => data.value?.isAdmin ?? false)
 const verifications = computed(() => data.value?.verifications ?? [])
+const realisations  = computed(() => data.value?.realisations ?? [])
 const isPending    = computed(() => !!pro.value && !pro.value.is_verified)
 
 const memberYear = computed(() => {
@@ -126,10 +152,22 @@ useHead(() => ({
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto px-6 py-12 md:py-20">
+  <div>
 
-    <!-- ── SKELETON ─────────────────────────────────────────────────────────── -->
-    <div v-if="!pro" class="animate-pulse space-y-4">
+    <!-- Bouton flottant retour accueil (layout: false → pas de navbar générique) -->
+    <button
+      type="button"
+      :aria-label="currentUser ? 'Retour à mon espace pro' : 'Retour à l\'accueil'"
+      class="fixed top-4 left-4 z-50 w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:-translate-y-0.5 transition-transform"
+      @click="navigateTo(backTarget)"
+    >
+      <ArrowLeft class="w-6 h-6 text-slate-700" />
+    </button>
+
+    <div v-if="!pro || isAdmin || isPending" class="max-w-2xl mx-auto px-6 py-12 md:py-20">
+
+      <!-- ── SKELETON ─────────────────────────────────────────────────────────── -->
+      <div v-if="!pro" class="animate-pulse space-y-4">
       <div class="h-5 w-32 bg-muted rounded" />
       <div class="h-12 w-2/3 bg-muted rounded" />
       <div class="h-4 w-1/2 bg-muted rounded" />
@@ -262,89 +300,150 @@ useHead(() => ({
         {{ pro.company_name }} a déposé son dossier. Notre équipe vérifie les documents (Kbis, décennale) sous 24 heures ouvrées. Le profil sera visible dès validation.
       </p>
     </div>
+    </div>
 
     <!-- ── PUBLIC VERIFIED PROFILE ───────────────────────────────────────────── -->
-    <div v-else>
+    <div v-else class="min-h-screen bg-slate-50 pb-20">
+      
+      <!-- HERO BANNER -->
+      <div class="relative w-full h-[45vh] min-h-[380px] bg-slate-900 overflow-hidden flex items-end pb-12">
+        <!-- Abstract gradient background -->
+        <div class="absolute inset-0 bg-gradient-to-tr from-slate-950 via-slate-900 to-slate-800"></div>
+        <div class="absolute -top-40 -right-40 w-[600px] h-[600px] bg-safety/10 blur-[120px] rounded-full pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-slate-950 to-transparent"></div>
+        
+        <div class="relative z-10 w-full max-w-6xl mx-auto px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8">
+          
+          <!-- Logo Container -->
+          <div class="w-24 h-24 sm:w-36 sm:h-36 rounded-[2rem] overflow-hidden bg-white shadow-2xl shrink-0 flex items-center justify-center border-[6px] border-slate-900/50 relative z-20">
+             <img v-if="pro!.logo_url" :src="pro!.logo_url" :alt="'Logo ' + pro!.company_name" class="w-full h-full object-contain p-4" />
+             <div v-else class="text-4xl sm:text-6xl font-black text-slate-300">{{ pro!.company_name.charAt(0) }}</div>
+          </div>
 
-      <!-- Badge -->
-      <div class="mb-8 flex flex-wrap items-center gap-2">
-        <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full text-[#F97316] border-[#F97316]/30 bg-[#F97316]/5">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-          </svg>
-          Vérifié BÂTI-AXE
-        </span>
-        <span v-if="pro!.category" class="inline-flex items-center text-xs px-3 py-1.5 border border-slate-200 rounded-full text-slate-500">
-          {{ CATEGORY_LABELS[pro!.category] ?? pro!.category }}
-        </span>
-        <BadgeEntrepriseVerifiee v-if="pro!.siret_status === 'active'" />
-        <BadgeDecennaleCertifiee v-if="pro!.decennal_status === 'valid'" />
+          <div class="flex-1">
+            <!-- Badges -->
+            <div class="flex flex-wrap items-center gap-3 mb-4 sm:mb-6">
+               <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full text-white bg-safety shadow-lg shadow-safety/20">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                Vérifié BÂTI-AXE
+              </span>
+              <span v-if="pro!.category || (pro!.categories && pro!.categories.length)" class="inline-flex items-center text-xs font-semibold px-3 py-1.5 rounded-full text-slate-200 bg-white/10 backdrop-blur-md border border-white/10">
+                <template v-if="pro!.categories && pro!.categories.length">
+                  {{ pro!.categories.map(c => CATEGORY_LABELS[c] ?? c).join(' - ') }}
+                </template>
+                <template v-else>
+                  {{ CATEGORY_LABELS[pro!.category!] ?? pro!.category }}
+                </template>
+              </span>
+            </div>
+
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white mb-3 drop-shadow-sm" style="text-wrap: balance">
+            {{ pro!.company_name }}
+          </h1>
+          <p class="text-lg md:text-xl text-slate-300 font-medium flex items-center gap-2">
+            Dirigé par {{ pro!.full_name }}
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+            Membre {{ memberYear ? 'depuis ' + memberYear : 'vérifié' }}
+          </p>
+          </div>
+        </div>
       </div>
 
-      <!-- Identity -->
-      <h1 class="text-4xl md:text-5xl font-black tracking-tight text-slate-900 mb-3" style="text-wrap: balance">
-        {{ pro!.company_name }}
-      </h1>
-      <p class="text-base text-slate-500 mb-10">
-        {{ pro!.full_name }}
-        <template v-if="memberYear"> · Membre depuis {{ memberYear }}</template>
-      </p>
+      <!-- MAIN CONTENT -->
+      <div class="relative z-20 w-full max-w-6xl mx-auto px-6 lg:px-8 mt-12 sm:mt-16 space-y-12">
+        
+        <!-- À PROPOS / BIO -->
+        <div class="bento-card p-8 sm:p-12 bg-white rounded-[2.5rem] border border-slate-200 shadow-sm mt-8">
+          <h2 class="text-xs font-bold tracking-widest uppercase text-slate-400 mb-6">À propos de l'entreprise</h2>
+          <p class="text-base sm:text-lg md:text-xl text-slate-700 leading-relaxed whitespace-pre-wrap font-medium" style="text-wrap: balance">
+            {{ pro!.bio || "L'artisan n'a pas encore rédigé de description pour présenter son activité." }}
+          </p>
+        </div>
 
-      <div class="border-t border-slate-200" />
-
-      <!-- Verified documents -->
-      <div class="py-10 space-y-4">
-        <h2 class="text-sm font-semibold text-slate-900 mb-6">Documents vérifiés</h2>
-
-        <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
-          <div class="w-8 h-8 flex items-center justify-center rounded-full bg-safety text-white shrink-0 mt-0.5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+        <!-- DOMAINE D'EXPERTISE (Anti-slop, factual) -->
+        <div v-if="pro!.category || (pro!.categories && pro!.categories.length)" class="pt-2">
+          <div class="bento-card relative overflow-hidden bg-white rounded-[2.5rem] border border-slate-200 shadow-sm p-8 sm:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+            <!-- Subtle background accent -->
+            <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-slate-100/50 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+            
+            <div class="relative z-10 flex-1">
+              <h2 class="text-xs font-bold tracking-widest uppercase text-slate-400 mb-3">Domaine d'expertise</h2>
+              <p class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-slate-900 mb-6" style="text-wrap: balance">
+                <template v-if="pro!.categories && pro!.categories.length">
+                  {{ pro!.categories.map(c => CATEGORY_LABELS[c] ?? c).join(' & ') }}
+                </template>
+                <template v-else>
+                  {{ CATEGORY_LABELS[pro!.category!] ?? pro!.category }}
+                </template>
+              </p>
+              
+              <div class="flex flex-wrap gap-2">
+                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-slate-50 border border-slate-200 text-slate-700">Artisan Spécialisé</span>
+                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-slate-50 border border-slate-200 text-slate-700">Devis Détaillé</span>
+                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-slate-50 border border-slate-200 text-slate-700">Intervention sur site</span>
+              </div>
+            </div>
+            
+            <div class="relative z-10 shrink-0 hidden sm:block">
+               <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-[2rem] bg-slate-900 flex items-center justify-center text-white shadow-xl shadow-slate-900/10 transition-transform duration-700 ease-out">
+                 <svg class="w-12 h-12 text-safety" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.492-3.053c.241-.295.42-.64.516-1.011l.142-.544a4.125 4.125 0 00-3.327-5.06l-.544-.141a3.125 3.125 0 00-1.01-.516l-3.054 2.492m10.604 8.441a2.654 2.654 0 01-3.75-3.751m-1.408-1.408l-3.054 2.492m10.604 8.441a2.654 2.654 0 01-3.75-3.751m-1.408-1.408l-3.054 2.492m10.604 8.441a2.654 2.654 0 01-3.75-3.751m-1.408-1.408l-3.054 2.492" />
+                 </svg>
+               </div>
+            </div>
           </div>
-          <div>
-            <p class="text-sm font-semibold text-slate-900">Assurance décennale</p>
-            <p class="text-xs text-slate-500 mt-0.5">
-              <template v-if="pro!.decennal_status === 'valid'">Attestation contrôlée, date d'expiration vérifiée.</template>
-              <template v-else-if="pro!.decennal_status === 'expired'">Attestation expirée, en cours de renouvellement.</template>
-              <template v-else>Vérifiée à l'inscription.</template>
+        </div>
+
+
+        <!-- PORTFOLIO GRID -->
+        <div class="pt-4">
+          <div class="flex items-end justify-between mb-10">
+            <div>
+              <h2 class="text-3xl font-black tracking-tight text-slate-900">Portfolio</h2>
+              <p class="text-base text-slate-500 mt-2">Découvrez les derniers chantiers réalisés par l'entreprise.</p>
+            </div>
+          </div>
+
+          <div v-if="realisations.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <RealisationCard v-for="project in realisations" :key="project.id" :project="project" />
+          </div>
+
+          <div v-else class="bento-card flex flex-col items-center justify-center py-24 bg-white border border-slate-200 rounded-[2.5rem]">
+            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+              <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+            </div>
+            <p class="text-xl font-bold text-slate-900 mb-2">Galerie en construction</p>
+            <p class="text-base text-slate-500 max-w-sm text-center">
+              L'artisan n'a pas encore publié de photos de ses chantiers.
             </p>
           </div>
         </div>
 
-        <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
-          <div class="w-8 h-8 flex items-center justify-center rounded-full bg-safety text-white shrink-0 mt-0.5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-          </div>
-          <div>
-            <p class="text-sm font-semibold text-slate-900">Kbis de moins de 3 mois</p>
-            <p class="text-xs text-slate-500 mt-0.5">Extrait officiel attestant de l'activité en cours.</p>
+        <!-- CTA BOTTOM (Lead Magnet) -->
+        <div class="mt-8 relative overflow-hidden rounded-[2.5rem] bg-slate-900 px-6 py-20 sm:px-12 sm:py-24 text-center shadow-2xl">
+          <!-- Animated Background Glow -->
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-safety/10 blur-[120px] rounded-full pointer-events-none"></div>
+          
+          <div class="relative z-10">
+            <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full text-safety bg-safety/10 mb-6 uppercase tracking-widest">
+              Passer à l'action
+            </span>
+            <h3 class="text-3xl md:text-5xl font-black text-white tracking-tight mb-6" style="text-wrap: balance">
+              Besoin d'un professionnel comme {{ pro!.company_name }} ?
+            </h3>
+            <p class="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed" style="text-wrap: balance">
+              Décrivez votre projet en 3 minutes et recevez des propositions chiffrées d'artisans certifiés sur votre secteur.
+            </p>
+            <NuxtLink
+              to="/simulateur"
+              class="inline-flex items-center gap-3 h-14 px-8 bg-safety text-white text-base font-bold rounded-full shadow-safety/20 shadow-xl transition-all duration-300"
+            >
+              Démarrer mon projet
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+            </NuxtLink>
           </div>
         </div>
 
-        <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
-          <div class="w-8 h-8 flex items-center justify-center rounded-full bg-safety text-white shrink-0 mt-0.5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-          </div>
-          <div>
-            <p class="text-sm font-semibold text-slate-900">Zone d'intervention confirmée</p>
-            <p class="text-xs text-slate-500 mt-0.5">Secteur géographique vérifié à l'inscription.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- CTA -->
-      <div class="border-t border-slate-200 pt-10">
-        <p class="text-sm text-slate-500 mb-6" style="text-wrap: pretty">
-          Projet de travaux dans cette zone ? Décrivez-le en 3 minutes et recevez des devis d'artisans vérifiés.
-        </p>
-        <NuxtLink
-          to="/simulateur"
-          class="inline-flex items-center gap-2 h-12 px-8 bg-safety text-white text-sm font-semibold rounded-full shadow-safety/20 shadow-lg hover:scale-105 transition-transform"
-        >
-          Décrire mon projet
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </NuxtLink>
       </div>
     </div>
 

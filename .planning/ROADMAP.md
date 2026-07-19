@@ -13,6 +13,9 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 4.6: Marché Dynamique & Multi-Catégories** - Refonte DB (categories TEXT[]), fin du push leads, pull temps réel via projects, UI sélection multiple (profil/claim).
 - [x] **Phase 4.7: Refonte UI Globale & Application du Design System** - Application du MASTER.md, harmonisation de la typographie (Figtree/Noto) et du thème B2B/Marketplace. (completed 2026-07-03)
 - [x] **Phase 5: Intégration API État (SIRET) & Badges de Confiance** - Récupération auto des infos légales (API Gouv/Pappers), vérification asynchrone décennale, et nouveaux copywriting labels. (completed 2026-06-24)
+- [x] **Phase 5.5: Portfolio Pro, Refonte Profil & Social** - Upload R2 (galerie projets), BDD completed_projects/likes, carousel landing, profil immersif pleine page (zéro menu, mobile-first). (completed 2026-07-19)
+- [x] **Phase 5.6: Calculateur de Prix & Refonte Simulateur** - Estimateur interactif (tuiles, type de travaux, m²), algorithme de chiffrage, et capture de leads qualifiés (résultat contre coordonnées). (completed 2026-07-19)
+- [ ] **Phase 5.8: Tunnel B2B & Apporteurs d'Affaires** - Landing page partenaire ("Bras armé technique"), dépôt de plans/rapports expert, SLA de 4h, attestation décennale 1-clic pour syndics, archis et assureurs.
 - [ ] **Phase 6: SMS + Acquisition + Messagerie** - SMS différencié (Basic→upgrade / Premium→lead direct), cold outreach pros DB, dashboard particulier magic-link, messagerie in-app pro↔particulier, email onboarding (désactivé par défaut), feedback loop lead.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville.
 
@@ -151,6 +154,65 @@ Plans:
 - [x] 05-06-PLAN.md — Upload Décennale pro : saisie Numéro + Date d'expiration + Auto-approbation + Mécanisme blocage expiration
 **UI hint**: yes
 
+### Phase 5.5: Portfolio Pro, Refonte Profil & Social
+**Goal**: Permettre aux pros de valoriser leur travail via une galerie photo, refondre l'UI du profil public (immersif) et intégrer de la preuve sociale sur la landing page.
+**Depends on**: Phase 5, Phase 4.7
+**Success Criteria** (what must be TRUE):
+  1. L'échec de soumission du logo pro est corrigé (audit R2, CSP, RLS).
+  2. BDD : Tables `completed_projects` (photos, description, ville, is_showcased) et `likes` (compteur, prévention doublons) opérationnelles.
+  3. Backoffice Pro : Formulaire d'ajout de projet avec upload multiple vers R2. Admin : possibilité de cocher `is_showcased`.
+  4. Profil Public : Refonte Mobile First pleine page (zéro barre de menu, boutons/breadcrumb). Affichage de la galerie des réalisations avec likes.
+  5. Landing Page : Carousel/Grille SEO-friendly en Nuxt (pas d'Astro) exposant les chantiers "sélectionnés" avec likes.
+**Plans**: 8 plans
+Plans:
+- [x] 05.5-01-PLAN.md — Modèle de données : migration completed_projects + likes + policies RLS
+- [x] 05.5-02-PLAN.md — Fix bug presign logo R2 (Content-Length) + endpoint presign multi-fichiers + test anti-régression
+- [x] 05.5-03-PLAN.md — API CRUD réalisations espace pro (liste/création/suppression, scoping RLS)
+- [x] 05.5-04-PLAN.md — Endpoints publics : liste showcased + profil enrichi, like anti-spam IP-hash, toggle admin is_showcased
+- [x] 05.5-05-PLAN.md — Backoffice : modale RealisationForm + upload R2 parallèle + intégration /espace/profil
+- [x] 05.5-06-PLAN.md — RealisationCard partagée (like optimiste + localStorage) + toggle showcase console admin
+- [x] 05.5-07-PLAN.md — Refonte profil public immersif (layout:false, bouton flottant, galerie mobile-first)
+- [x] 05.5-08-PLAN.md — Section landing "Chantiers Réalisés" (carousel CSS scroll-snap SSR + likes)
+**UI hint**: yes
+
+### Phase 5.6: Calculateur de Prix & Refonte Simulateur
+**Goal**: Transformer le simulateur basique en un calculateur visuel et interactif générant une estimation chiffrée, pour maximiser le taux de conversion des particuliers (Leads).
+**Depends on**: Phase 4.7
+**Success Criteria** (what must be TRUE):
+  1. L'UI du `/simulateur.vue` utilise une navigation par tuiles visuelles (choix des pièces, surface, type de rénovation).
+  2. Un moteur de calcul interne détermine une fourchette de prix (budget) selon des variables pré-définies (lourd, rafraîchissement, etc.).
+  3. L'estimation financière n'est dévoilée au prospect qu'après validation complète de ses coordonnées (Aimant à Leads).
+  4. La ligne insérée dans `projects` contient les détails avancés du calculateur pour que les pros aient un lead ultra-qualifié.
+**Plans**: 3 plans
+Plans:
+- [x] 05.6-01-PLAN.md — Persistance backend : migration calculator_data JSONB, dérivation category (marché dynamique), API /projects
+- [x] 05.6-02-PLAN.md — Moteur de calcul client-side computeEstimate (fourchette budgétaire, TDD)
+- [x] 05.6-03-PLAN.md — Réécriture simulateur.vue : 6 étapes tuilées Bento + Lead Wall fluide + révélation estimation
+**UI hint**: yes
+
+### Phase 5.7: Durcissement Validation des Inputs (INSERTED 2026-07-19)
+**Goal**: Fermer l'écart entre validation serveur (Zod, déjà ~90% couvert) et validation client (HTML natif) sur tous les formulaires du site, pour empêcher la saisie de valeurs hors format avant l'envoi et éviter la dérive entre les deux couches.
+**Depends on**: Phase 5.6 (pour ne pas auditer un simulateur qui va être refondu entre-temps)
+**Contexte** : audit exhaustif du 2026-07-19 (grep sur `app/pages` + `app/components`) — voir `.planning/phases/05.7-Input-Validation-Hardening/05.7-AUDIT.md` pour le détail fichier par fichier. Le site n'étant pas terminé, cette phase doit aussi poser une règle durable (documentée dans CLAUDE.md) pour que les inputs créés après cet audit héritent des mêmes contraintes dès l'écriture, sans attendre un futur audit correctif.
+**Success Criteria** (what must be TRUE):
+  1. Chaque champ texte/textarea des formulaires audités a un `maxlength` cohérent avec la contrainte `.max()` du schéma Zod serveur correspondant (les deux couches reflètent la même règle).
+  2. Les schémas Zod serveur identifiés sans borne haute (`claim.post.ts`: company_name, full_name ; `projects.post.ts`: description, customer_name, customer_email) ont un `.max()` ajouté.
+  3. Les champs à format contraint (téléphone, email, mot de passe) ont le `type`/`pattern` HTML adapté en plus du `maxlength`.
+  4. Une règle est ajoutée à `CLAUDE.md` (section Patterns de code) : tout nouvel input doit porter `maxlength`/`pattern`/`type` reflétant sa contrainte serveur, dès sa création.
+**Plans**: TBD
+**UI hint**: no (durcissement de formulaires existants, pas de nouvelle UI)
+
+### Phase 5.8: Tunnel B2B & Apporteurs d'Affaires
+**Goal**: Déployer un Fast-Track dédié aux VIPs (Architectes, Syndics, Assureurs, Experts) avec un positionnement "Tiers de confiance / Courtier".
+**Depends on**: Phase 4.7
+**Success Criteria** (what must be TRUE):
+  1. Une Landing Page dédiée "Espace Partenaires" positionne BÂTI-AXE comme un Hub d'artisans certifiés sans risque opérationnel.
+  2. Un tunnel en 3 étapes : Qualification Pro → Niveau de Risque/Lot → Dépôt express (Plans, CCTP, Rapports d'expertise).
+  3. L'acceptation des CGU dans le tunnel force le consentement explicite : BÂTI-AXE est courtier, l'artisan porte la décennale.
+  4. L'attestation décennale BÂTI-AXE est téléchargeable en un clic depuis cette page pour rassurer immédiatement le prescripteur.
+**Plans**: TBD
+**UI hint**: yes
+
 ### Phase 6: SMS + Acquisition + Messagerie
 **Goal**: Boucle complète d'acquisition, d'activation et de rétention — les pros sont notifiés, les particuliers ont un espace de suivi, et les deux communiquent sur la plateforme.
 **Depends on**: Phase 4.7 (design system) + Phase 4.5 (messaging/feedback)
@@ -192,5 +254,8 @@ Plans:
 | 4.6. Marché Dynamique & Multi-Catégories | 1/1 | Completed | 2026-06-11 |
 | 4.7. Refonte UI Globale & Design System | 8/8 | Complete   | 2026-07-04 |
 | 5. Intégration API État (SIRET) & Badges de Confiance | 6/6 | Complete   | 2026-06-24 |
+| 5.5. Portfolio Pro, Refonte Profil & Social | 8/8 | Complete   | 2026-07-19 |
+| 5.6. Calculateur de Prix & Refonte Simulateur | 3/3 | Complete   | 2026-07-19 |
+| 5.8. Tunnel B2B & Apporteurs d'Affaires | 0/TBD | Not started | - |
 | 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
