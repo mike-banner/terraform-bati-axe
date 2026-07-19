@@ -27,6 +27,14 @@ interface ProProfile {
   member_since: string
 }
 
+interface Realisation {
+  id: string
+  title: string
+  city: string
+  image_urls: string[]
+  likes?: { count: number }[]
+}
+
 interface ProfileResponse {
   status: string
   needsRedirect: boolean
@@ -34,6 +42,7 @@ interface ProfileResponse {
   isAdmin: boolean
   pro: ProProfile
   verifications: Verification[]
+  realisations: Realisation[]
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -67,6 +76,7 @@ if (error.value?.statusCode === 404) {
 const pro          = computed(() => data.value?.pro)
 const isAdmin      = computed(() => data.value?.isAdmin ?? false)
 const verifications = computed(() => data.value?.verifications ?? [])
+const realisations  = computed(() => data.value?.realisations ?? [])
 const isPending    = computed(() => !!pro.value && !pro.value.is_verified)
 
 const memberYear = computed(() => {
@@ -342,6 +352,22 @@ useHead(() => ({
             <p class="text-sm font-semibold text-slate-900">Zone d'intervention confirmée</p>
             <p class="text-xs text-slate-500 mt-0.5">Secteur géographique vérifié à l'inscription.</p>
           </div>
+        </div>
+      </div>
+
+      <!-- Réalisations -->
+      <div class="py-10 border-t border-slate-200">
+        <h2 class="text-sm font-semibold text-slate-900 mb-6">Réalisations</h2>
+
+        <div v-if="realisations.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <RealisationCard v-for="project in realisations" :key="project.id" :project="project" />
+        </div>
+
+        <div v-else class="text-center py-10">
+          <p class="text-sm font-semibold text-slate-900 mb-2">Cette galerie prend forme</p>
+          <p class="text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
+            Ce professionnel n'a pas encore publié de réalisation. Revenez bientôt pour découvrir ses derniers chantiers.
+          </p>
         </div>
       </div>
 
