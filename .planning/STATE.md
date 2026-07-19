@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
+status: planning
 stopped_at: Completed 05.5-07-PLAN.md
-last_updated: "2026-07-19T01:35:36.857Z"
+last_updated: "2026-07-19T02:09:50.447Z"
 last_activity: 2026-07-19
 progress:
   total_phases: 13
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 41
-  completed_plans: 36
-  percent: 31
+  completed_plans: 37
+  percent: 38
 ---
 
 # Project State
@@ -27,19 +27,19 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 5.5 — Portfolio Pro, Refonte Profil & Social
+**Current focus**: Phase 5.6 — Calculateur de Prix & Refonte Simulateur
 
 ## Current Position
 
-Phase: 05.5 (Portfolio-Refonte) — EXECUTING
-Plan: 2 of 8
-Status: Ready to execute
+Phase: 05.5 (Portfolio-Refonte) — COMPLETE (8/8 plans)
+Next phase: 05.6 (Calculateur de Prix & Refonte Simulateur) — PLANNED (0 plans, en attente de découpage technique)
+Status: Ready to plan next phase
 Last activity: 2026-07-19
-Progress: [█████████░] 88%
+Progress: [█████████░] 90%
 
-### Plans Phase 5.5 (Portfolio, Refonte Profil & Social) — PLANNED (0 plans)
+### Plans Phase 5.5 (Portfolio, Refonte Profil & Social) — COMPLETE (8/8 plans)
 
-- En attente de découpage technique (`gsd-plan-phase`).
+- Voir `.planning/phases/05.5-Portfolio-Refonte/` (01 à 08, toutes SUMMARY livrées).
 
 ### Plans Phase 5.6 (Calculateur de Prix) — PLANNED (0 plans)
 
@@ -78,6 +78,7 @@ Progress: [█████████░] 88%
 - [2026-06-23 PM]: **Phase 4.7 Design System Adoption** : Transition from self-hosted Clash Display + Geist Variable (Brique & Béton OKLCH palette) to Google Fonts (Figtree + Noto Sans) with MASTER.md hex color system (cyan #0891B2, green #22C55E, cream #ECFEFF, charcoal #164E63). CSS tokens for spacing, shadows, and radius defined in `app/assets/css/tailwind.css` as the foundation for all subsequent page refactors (04.7-02 through 04.7-07).
 - [Phase 04.7]: Composants PremiumBadge et IdentityBreadcrumbs bâtis sur la nouvelle charte Sketch 001 (gris industriel + orange sécurité), en attendant la refonte globale des tokens tailwind.css.
 - [Phase 05.5-07]: Profil public pro refondu en pleine page immersive (layout: false) avec bouton flottant retour, galerie de réalisations mobile-first (RealisationCard) et likes ; test de garde source anti-régression navbar/galerie.
+- [Phase 05.5-08]: Section landing preuve sociale 'Chantiers Réalisés' en carousel CSS scroll-snap pur (pas d'Embla), SSR via useFetch, réutilise RealisationCard sans dupliquer le markup ; section omise entièrement si aucun projet is_showcased.
 
 ### Known Patterns (à appliquer dans les prochaines phases)
 
@@ -109,6 +110,6 @@ Progress: [█████████░] 88%
 
 ## Session Continuity
 
-Last session: 2026-07-19T01:35:36.836Z
+Last session: 2026-07-19T02:09:50.433Z
 Stopped at: Completed 05.5-07-PLAN.md
 Resume file: None
