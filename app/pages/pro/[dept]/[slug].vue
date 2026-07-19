@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { ArrowLeft } from '@lucide/vue'
+
+definePageMeta({ layout: false })
+
 interface Verification {
   id: string
   document_type: 'kbis' | 'decennale'
@@ -127,6 +131,16 @@ useHead(() => ({
 
 <template>
   <div class="max-w-2xl mx-auto px-6 py-12 md:py-20">
+
+    <!-- Bouton flottant retour accueil (layout: false → pas de navbar générique) -->
+    <button
+      type="button"
+      aria-label="Retour à l'accueil"
+      class="fixed top-4 left-4 z-50 w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:-translate-y-0.5 transition-transform"
+      @click="navigateTo('/')"
+    >
+      <ArrowLeft class="w-6 h-6 text-slate-700" />
+    </button>
 
     <!-- ── SKELETON ─────────────────────────────────────────────────────────── -->
     <div v-if="!pro" class="animate-pulse space-y-4">
