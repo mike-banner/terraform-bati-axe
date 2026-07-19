@@ -1,16 +1,16 @@
-# Graph Report - bati-axe  (2026-07-03)
+# Graph Report - bati-axe  (2026-07-19)
 
 ## Corpus Check
-- 263 files · ~496,710 words
+- 325 files · ~601,909 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2092 nodes · 2577 edges · 271 communities (221 shown, 50 thin omitted)
+- 2830 nodes · 5061 edges · 344 communities (277 shown, 67 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `35a2b529`
+- Built from commit: `fd1c75bd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -59,6 +59,7 @@
 - [[_COMMUNITY_Community 51|Community 51]]
 - [[_COMMUNITY_Community 52|Community 52]]
 - [[_COMMUNITY_Community 55|Community 55]]
+- [[_COMMUNITY_Community 56|Community 56]]
 - [[_COMMUNITY_Community 57|Community 57]]
 - [[_COMMUNITY_Community 59|Community 59]]
 - [[_COMMUNITY_Community 64|Community 64]]
@@ -158,7 +159,6 @@
 - [[_COMMUNITY_Community 173|Community 173]]
 - [[_COMMUNITY_Community 174|Community 174]]
 - [[_COMMUNITY_Community 175|Community 175]]
-- [[_COMMUNITY_Community 176|Community 176]]
 - [[_COMMUNITY_Community 178|Community 178]]
 - [[_COMMUNITY_Community 179|Community 179]]
 - [[_COMMUNITY_Community 180|Community 180]]
@@ -215,6 +215,8 @@
 - [[_COMMUNITY_Community 239|Community 239]]
 - [[_COMMUNITY_Community 240|Community 240]]
 - [[_COMMUNITY_Community 241|Community 241]]
+- [[_COMMUNITY_Community 242|Community 242]]
+- [[_COMMUNITY_Community 243|Community 243]]
 - [[_COMMUNITY_Community 244|Community 244]]
 - [[_COMMUNITY_Community 245|Community 245]]
 - [[_COMMUNITY_Community 246|Community 246]]
@@ -226,6 +228,7 @@
 - [[_COMMUNITY_Community 252|Community 252]]
 - [[_COMMUNITY_Community 253|Community 253]]
 - [[_COMMUNITY_Community 254|Community 254]]
+- [[_COMMUNITY_Community 255|Community 255]]
 - [[_COMMUNITY_Community 256|Community 256]]
 - [[_COMMUNITY_Community 257|Community 257]]
 - [[_COMMUNITY_Community 259|Community 259]]
@@ -237,20 +240,82 @@
 - [[_COMMUNITY_Community 265|Community 265]]
 - [[_COMMUNITY_Community 266|Community 266]]
 - [[_COMMUNITY_Community 267|Community 267]]
+- [[_COMMUNITY_Community 268|Community 268]]
 - [[_COMMUNITY_Community 269|Community 269]]
+- [[_COMMUNITY_Community 270|Community 270]]
+- [[_COMMUNITY_Community 271|Community 271]]
 - [[_COMMUNITY_Community 272|Community 272]]
+- [[_COMMUNITY_Community 273|Community 273]]
+- [[_COMMUNITY_Community 274|Community 274]]
+- [[_COMMUNITY_Community 275|Community 275]]
+- [[_COMMUNITY_Community 276|Community 276]]
+- [[_COMMUNITY_Community 277|Community 277]]
+- [[_COMMUNITY_Community 278|Community 278]]
+- [[_COMMUNITY_Community 279|Community 279]]
+- [[_COMMUNITY_Community 280|Community 280]]
+- [[_COMMUNITY_Community 281|Community 281]]
+- [[_COMMUNITY_Community 282|Community 282]]
+- [[_COMMUNITY_Community 283|Community 283]]
+- [[_COMMUNITY_Community 284|Community 284]]
+- [[_COMMUNITY_Community 285|Community 285]]
+- [[_COMMUNITY_Community 286|Community 286]]
+- [[_COMMUNITY_Community 287|Community 287]]
+- [[_COMMUNITY_Community 288|Community 288]]
+- [[_COMMUNITY_Community 289|Community 289]]
+- [[_COMMUNITY_Community 290|Community 290]]
+- [[_COMMUNITY_Community 291|Community 291]]
+- [[_COMMUNITY_Community 292|Community 292]]
+- [[_COMMUNITY_Community 293|Community 293]]
+- [[_COMMUNITY_Community 294|Community 294]]
+- [[_COMMUNITY_Community 295|Community 295]]
+- [[_COMMUNITY_Community 296|Community 296]]
+- [[_COMMUNITY_Community 297|Community 297]]
+- [[_COMMUNITY_Community 298|Community 298]]
+- [[_COMMUNITY_Community 299|Community 299]]
+- [[_COMMUNITY_Community 300|Community 300]]
+- [[_COMMUNITY_Community 301|Community 301]]
+- [[_COMMUNITY_Community 302|Community 302]]
+- [[_COMMUNITY_Community 304|Community 304]]
+- [[_COMMUNITY_Community 305|Community 305]]
+- [[_COMMUNITY_Community 306|Community 306]]
+- [[_COMMUNITY_Community 307|Community 307]]
+- [[_COMMUNITY_Community 308|Community 308]]
+- [[_COMMUNITY_Community 311|Community 311]]
+- [[_COMMUNITY_Community 312|Community 312]]
+- [[_COMMUNITY_Community 313|Community 313]]
+- [[_COMMUNITY_Community 314|Community 314]]
+- [[_COMMUNITY_Community 315|Community 315]]
+- [[_COMMUNITY_Community 316|Community 316]]
+- [[_COMMUNITY_Community 317|Community 317]]
+- [[_COMMUNITY_Community 318|Community 318]]
+- [[_COMMUNITY_Community 319|Community 319]]
+- [[_COMMUNITY_Community 320|Community 320]]
+- [[_COMMUNITY_Community 321|Community 321]]
+- [[_COMMUNITY_Community 322|Community 322]]
+- [[_COMMUNITY_Community 324|Community 324]]
+- [[_COMMUNITY_Community 325|Community 325]]
+- [[_COMMUNITY_Community 326|Community 326]]
+- [[_COMMUNITY_Community 327|Community 327]]
+- [[_COMMUNITY_Community 328|Community 328]]
+- [[_COMMUNITY_Community 329|Community 329]]
+- [[_COMMUNITY_Community 330|Community 330]]
+- [[_COMMUNITY_Community 331|Community 331]]
+- [[_COMMUNITY_Community 339|Community 339]]
+- [[_COMMUNITY_Community 340|Community 340]]
+- [[_COMMUNITY_Community 341|Community 341]]
+- [[_COMMUNITY_Community 342|Community 342]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Communities (273 total, 50 thin omitted)` - 177 edges
-2. `Communities (271 total, 50 thin omitted)` - 176 edges
-3. `Communities (272 total, 50 thin omitted)` - 176 edges
-4. `Communities (268 total, 50 thin omitted)` - 174 edges
-5. `Communities (264 total, 50 thin omitted)` - 170 edges
-6. `Phase 4: Le Verrou & Stripe Billing — Research` - 20 edges
-7. `Phase 5 : Intégration API État (SIRET) & Badges de Confiance — Research` - 20 edges
-8. `UI-SPEC — Phase 4: Le Verrou & Stripe Billing` - 18 edges
-9. `Page 1 — `/espace/leads` (Dashboard Leads)` - 17 edges
-10. `Phase 4.7: Refonte UI Globale & Application du Design System` - 15 edges
+1. `Communities (344 total, 67 thin omitted)` - 223 edges
+2. `Communities (343 total, 67 thin omitted)` - 223 edges
+3. `Communities (342 total, 67 thin omitted)` - 222 edges
+4. `Communities (341 total, 67 thin omitted)` - 221 edges
+5. `Communities (340 total, 67 thin omitted)` - 220 edges
+6. `Communities (339 total, 66 thin omitted)` - 220 edges
+7. `Communities (312 total, 52 thin omitted)` - 214 edges
+8. `Communities (322 total, 62 thin omitted)` - 213 edges
+9. `Communities (311 total, 52 thin omitted)` - 213 edges
+10. `Communities (289 total, 51 thin omitted)` - 195 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -258,11 +323,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (271 total, 50 thin omitted)
+## Communities (344 total, 67 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.12
-Nodes (15): Overview, Phase 1: Foundations & Compliance, Phase 2: Data Foundation & Capture mono-ville, Phase 3: Onboarding Pro & Vérification manuelle, Phase 4.5: Conversion & Qualification, Phase 4.6: Marché Dynamique & Multi-Catégories, Phase 4.7: Refonte UI Globale & Application du Design System, Phase 4: Le Verrou & Stripe Billing (+7 more)
+Cohesion: 0.11
+Nodes (18): Overview, Phase 1: Foundations & Compliance, Phase 2: Data Foundation & Capture mono-ville, Phase 3: Onboarding Pro & Vérification manuelle, Phase 4.5: Conversion & Qualification, Phase 4.6: Marché Dynamique & Multi-Catégories, Phase 4.7: Refonte UI Globale & Application du Design System (REPLAN v2), Phase 4: Le Verrou & Stripe Billing (+10 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.15
@@ -285,8 +350,8 @@ Cohesion: 0.50
 Nodes (3): Ce qui a été fait, Résultats et Décisions, Résumé d'Exécution : Plan 06
 
 ### Community 13 - "Community 13"
-Cohesion: 0.13
-Nodes (14): Accumulated Context, Blockers/Concerns, Current Position, Decisions, Deferred Ideas (hors scope, à reconsidérer plus tard), Known Patterns (à appliquer dans les prochaines phases), 🔒 Lock & Sync Status, Pending Todos (+6 more)
+Cohesion: 0.12
+Nodes (15): Accumulated Context, Blockers/Concerns, Current Position, Decisions, Deferred Ideas (hors scope, à reconsidérer plus tard), Known Patterns (à appliquer dans les prochaines phases), 🔒 Lock & Sync Status, Pending Todos (+7 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.25
@@ -341,8 +406,8 @@ Cohesion: 0.14
 Nodes (13): Administration, Capture (Simulateur Nuxt), Compliance & Légal, Infrastructure & Setup, Le Verrou (Logique de Floutage), Out of Scope, Phase 5 : Intégration API État (SIRET) & Badges de Confiance, Requirements: BÂTI-AXE (+5 more)
 
 ### Community 40 - "Community 40"
-Cohesion: 0.25
-Nodes (4): currentStepIndex, decennale, steps, uploads
+Cohesion: 0.15
+Nodes (12): Accomplishments, Auto-fixed Issues, Decisions Made, Deviations from Plan, Files Created/Modified, Issues Encountered, Next Phase Readiness, Performance (+4 more)
 
 ### Community 42 - "Community 42"
 Cohesion: 0.50
@@ -380,9 +445,13 @@ Nodes (15): Boundaries, Boundaries (reste), Falsifiable Requirements, Falsifiabl
 Cohesion: 0.18
 Nodes (10): 1. Summary, 2. Strengths, 3. Concerns, 4. Suggestions, 5. Risk Assessment, Agreed Concerns, Agreed Strengths, Consensus Summary (+2 more)
 
+### Community 56 - "Community 56"
+Cohesion: 0.17
+Nodes (11): Accomplishments, Checkpoint, Decisions Made, Deviations from Plan, Files Created/Modified, Issues Encountered, Next Phase Readiness, Performance (+3 more)
+
 ### Community 59 - "Community 59"
-Cohesion: 0.33
-Nodes (4): isAdminRoute, isHeaderVisible, isProRoute, route
+Cohesion: 0.40
+Nodes (3): companyInitial, isAdminRoute, route
 
 ### Community 64 - "Community 64"
 Cohesion: 0.17
@@ -609,12 +678,12 @@ Cohesion: 0.29
 Nodes (6): 1. Verrou Concurrentiel (Cap à 3), 2. Espace Client (Magic Link), 3. Messagerie API, 4. Interface Pro, 5. Intégration Resend, Phase 5 - Plan 01: Magic Link & Messagerie In-App
 
 ### Community 141 - "Community 141"
-Cohesion: 0.11
-Nodes (17): Before/After Section (Lines 121–127), Brand Banner (Lines 79–88), CTA Final Section (Lines 174–189), Dependency Graph, Deviations from Plan, Hero Section (Lines 19–56), Key Files, Known Limitations / Deferred Items (+9 more)
+Cohesion: 0.10
+Nodes (21): Before/After Section (Lines 121–127), Brand Banner (Lines 79–88), Ce qui a été fait, CTA Final Section (Lines 174–189), Dependency Graph, Deviations from Plan, Hero Section (Lines 19–56), Key Files (+13 more)
 
 ### Community 142 - "Community 142"
-Cohesion: 0.38
-Nodes (12): Community Hubs (Navigation), Corpus Check, God Nodes (most connected - your core abstractions), Graph Freshness, Graph Report - bati-axe  (2026-06-24), Graph Report - bati-axe  (2026-07-02), Graph Report - bati-axe  (2026-07-03), Import Cycles (+4 more)
+Cohesion: 0.50
+Nodes (15): Community Hubs (Navigation), Corpus Check, God Nodes (most connected - your core abstractions), Graph Freshness, Graph Report - bati-axe  (2026-06-24), Graph Report - bati-axe  (2026-07-03), Graph Report - bati-axe  (2026-07-04), Graph Report - bati-axe  (2026-07-17) (+7 more)
 
 ### Community 143 - "Community 143"
 Cohesion: 0.22
@@ -745,8 +814,8 @@ Cohesion: 0.43
 Nodes (5): decisionSchema, canRelaunch(), isEngaged(), LeadDecisionRow, shouldRelaunch()
 
 ### Community 205 - "Community 205"
-Cohesion: 0.12
-Nodes (16): Additional Forbidden Patterns, Anti-Patterns (Do NOT Use), Buttons, Cards, Color Palette, Component Specs, Design System Master File, Global Rules (+8 more)
+Cohesion: 0.09
+Nodes (22): Admin Console (`/admin/*`), Anti-Patterns (Do NOT Use), Buttons, Cards, Color Palette, Component Specifications, Espace Pro (`/espace/*`), Forbidden Patterns (+14 more)
 
 ### Community 206 - "Community 206"
 Cohesion: 0.09
@@ -761,60 +830,60 @@ Cohesion: 0.12
 Nodes (16): Assets Visuels & Implémentation, Direction Visuelle : "Brique & Béton", Décisions Verrouillées (2026-06-16 via /impeccable), Dépendances, Exploration Couleur (3 variantes, branche `feat/refonte-design-accueil` base), Fonts Self-Hosted (zéro Google Fonts en prod), Hors-Scope Phase 4.7, Pages Refactorisées (+8 more)
 
 ### Community 209 - "Community 209"
-Cohesion: 0.18
+Cohesion: 0.22
 Nodes (10): 1. Check Figtree is used for headings, 2. Check no emojis in template, 3. Check cursor:pointer on buttons/links, 4. Check for scale transforms (forbidden), 5. Check focus states exist, 6. Check no hardcoded font-family, 7. Check responsive classes (mobile-first), 8. Dev server test (+2 more)
 
 ### Community 210 - "Community 210"
-Cohesion: 0.18
+Cohesion: 0.22
 Nodes (10): 1. Check card layout grid classes, 2. Check card background color, 3. Check shadow hover effect, 4. Check status badge uses green, 5. Check card titles use Figtree, 6. Check no emoji status indicators, 7. Check translateY hover (no scale), 8. Dev server test (+2 more)
 
 ### Community 211 - "Community 211"
-Cohesion: 0.18
+Cohesion: 0.22
 Nodes (10): 1. Check admin table header uses Figtree, 2. Check admin table row height, 3. Check admin action buttons, 4. Check legal page h1 uses Figtree, 5. Check legal page body text uses Noto Sans, 6. Check no emoji bullets, 7. Check links have proper styling (focus ring), 8. Dev server test (+2 more)
 
 ### Community 212 - "Community 212"
-Cohesion: 0.20
+Cohesion: 0.24
 Nodes (9): 1. Check fonts load, 2. Verify color variables exist, 3. Verify MASTER.md hex codes are exact (not OKLCH), 4. Verify spacing tokens, 5. Verify shadow tokens, 6. Verify radius tokens, 7. Dev server test (npm run dev should compile without CSS errors), STRIDE Threat Register (+1 more)
 
 ### Community 213 - "Community 213"
-Cohesion: 0.20
+Cohesion: 0.24
 Nodes (9): 1. Check input elements have border-border class or equivalent, 2. Check labels use Figtree, 3. Check focus:border-primary on inputs, 4. Check no hardcoded input padding styles, 5. Check file uploads have dashed border class, 6. Check error messages exist and use red color, 7. Dev server test, STRIDE Threat Register (+1 more)
 
 ### Community 214 - "Community 214"
-Cohesion: 0.20
+Cohesion: 0.24
 Nodes (9): 1. Check premium page heading uses Figtree, 2. Check pricing cards grid, 3. Check public profile uses card styling, 4. Check avatar styling, 5. Check CTA buttons are green, 6. Check no emoji icons, 7. Dev server test, STRIDE Threat Register (+1 more)
 
 ### Community 215 - "Community 215"
-Cohesion: 0.22
+Cohesion: 0.28
 Nodes (8): 1. Check no console errors in dev server, 2. Check no emojis in any page file, 3. Check all buttons have cursor:pointer or similar, 4. Check build succeeds, 5. Check color hex codes in CSS match MASTER.md, 6. Check fonts are Figtree or Noto Sans, STRIDE Threat Register, Trust Boundaries
 
 ### Community 216 - "Community 216"
-Cohesion: 0.12
-Nodes (15): Backward Compatibility, Colors (MASTER.md Hex Palette), Commit Details, Component Base Styles (`@layer components`), Deviations from Plan, Fonts, Known Issues / Stubs, Next Steps (+7 more)
+Cohesion: 0.07
+Nodes (28): Accomplishments, Backward Compatibility, Colors (MASTER.md Hex Palette), Commit Details, Component Base Styles (`@layer components`), Decisions Made, Dependency graph, Deviations from Plan (+20 more)
 
 ### Community 217 - "Community 217"
 Cohesion: 0.17
 Nodes (11): compilerOptions, esModuleInterop, module, moduleResolution, paths, skipLibCheck, strict, target (+3 more)
 
 ### Community 218 - "Community 218"
-Cohesion: 0.50
-Nodes (3): 04.7-07 — Accessibility Audit & Pre-Delivery Checklist, Blockers, Verified
+Cohesion: 0.22
+Nodes (8): 04.7-07 — Accessibility Audit & Pre-Delivery Checklist, Blockers, Ce qui a été fait, Deviations from Plan, Phase 04.7 Plan 07 : Admin & Légal Summary, Self-Check: PASSED, Verified, Vérification
 
 ### Community 220 - "Community 220"
-Cohesion: 0.13
-Nodes (14): Dependency Graph, Deviations from Plan, Espace/Profil.vue Refactoring (Profile Management), Form Styling Applied, Key Files, Known Limitations / Deferred Items, Next Steps, Objective (+6 more)
+Cohesion: 0.11
+Nodes (18): Ce qui a été fait, Dependency Graph, Deviations from Plan, Espace/Profil.vue Refactoring (Profile Management), Form Styling Applied, Key Files, Known Limitations / Deferred Items, Next Steps (+10 more)
 
 ### Community 221 - "Community 221"
-Cohesion: 0.14
-Nodes (13): Card Grid Container (index.vue), Card Typography Updates, Dependency Graph, Deviations from Plan, Key Files, Known Limitations / Deferred Items, Next Steps, Objective (+5 more)
+Cohesion: 0.11
+Nodes (19): Auto-fixed Issues, Card Grid Container (index.vue), Card Typography Updates, Ce qui a été fait, Dependency Graph, Deviations from Plan, Key Files, Known Limitations / Deferred Items (+11 more)
 
 ### Community 222 - "Community 222"
-Cohesion: 0.15
-Nodes (12): Admin Console (`app/pages/admin/index.vue`), Dependency Graph, Deviations from Plan, Key Files, Legal Pages (Mentions Légales, CGU, Confidentialité), Next Steps (Recommended), Objective, Phase 4.7 Plan 6: Admin & Legal Pages Refactor (DEFERRED) (+4 more)
+Cohesion: 0.08
+Nodes (24): Accomplishments, Admin Console (`app/pages/admin/index.vue`), Decisions Made, Dependency graph, Deviations from Plan, Files Created/Modified, Issues Encountered, Key Files (+16 more)
 
 ### Community 223 - "Community 223"
-Cohesion: 0.17
-Nodes (11): Dependency Graph, Deviations from Plan, Key Files, Known Limitations / Deferred Items, Next Steps, Objective, Phase 4.7 Plan 5: Premium & Public Profile Refactor (Partial), Premium Page Hero Section (+3 more)
+Cohesion: 0.13
+Nodes (15): Ce qui a été fait, Dependency Graph, Deviations from Plan, Key Files, Known Limitations / Deferred Items, Next Steps, Objective, Phase 04.7 Plan 05 : Formulaires (claim, profil, simulateur) Summary (+7 more)
 
 ### Community 224 - "Community 224"
 Cohesion: 0.17
@@ -888,6 +957,14 @@ Nodes (6): 1. Base de données (`messages`), 2. Expérience Pro (Responsive Mess
 Cohesion: 0.40
 Nodes (4): Critical Anti-Patterns (do NOT repeat these), Infrastructure State, Reprise — Phase 6 (Espace Client & Messagerie), Required Reading (in order)
 
+### Community 242 - "Community 242"
+Cohesion: 0.17
+Nodes (11): Accomplissements, Auto-fixed Issues, Decisions Made, Deviations from Plan, Files Created/Modified, Issues Encountered, Next Phase Readiness, Performance (+3 more)
+
+### Community 243 - "Community 243"
+Cohesion: 0.29
+Nodes (6): Deviations from Plan, Phase 05.5 Plan 01: Schéma DB Portfolio & Likes Summary, Self-Check: PASSED, Task 1 — Écrire la migration, Task 2 — Appliquer et vérifier en local, What Was Built
+
 ### Community 249 - "Community 249"
 Cohesion: 0.22
 Nodes (8): Ce qui a été livré, Checkpoint en attente, Deviations from Plan, Known Stubs, Phase 05 Plan 01 : Migration SQL colonnes siret_* — Summary, Self-Check: PASSED, Tasks, Threat Flags
@@ -907,6 +984,10 @@ Nodes (9): Ce qui a été livré, Deviations from Plan, Infrastructure ajoutée 
 ### Community 254 - "Community 254"
 Cohesion: 0.33
 Nodes (4): ADMIN_USER, createErrorMock, mockServerSupabaseServiceRole, mockServerSupabaseUser
+
+### Community 255 - "Community 255"
+Cohesion: 0.10
+Nodes (20): Commit Strategy, Communication to User, Critical Assumptions (Coordinator Provided), Deliverables, Dependencies & Sequencing, Effort Estimates (per plan, context budget), Execution Outputs (after each plan), Key Design Decisions (Locked from CONTEXT.md) (+12 more)
 
 ### Community 256 - "Community 256"
 Cohesion: 0.22
@@ -948,32 +1029,208 @@ Nodes (5): Design Direction, Excluded Sketches, Included Sketches, Key Decisions
 Cohesion: 0.20
 Nodes (9): 1. Visual Direction, 2. Typography System, 3. Color Palette, 4. Layout & Spacing, 5. Interaction Patterns (The 21st.dev Touch), 6. CSS / Tailwind Utilities, Approved By, Phase: 04.7-UI-Refonte (+1 more)
 
+### Community 268 - "Community 268"
+Cohesion: 0.14
+Nodes (13): A. Debug Upload Logo, Architecture & UI, B. Modèle de Données (Base de Données), C. Backoffice (Espace Pro & Admin), Canonical References, D. Refonte Profil Public (UI/UX), Deferred Ideas, E. Landing Page (Accueil public) (+5 more)
+
 ### Community 269 - "Community 269"
-Cohesion: 0.05
-Nodes (181): Communities (264 total, 50 thin omitted), Communities (268 total, 50 thin omitted), Communities (271 total, 50 thin omitted), Communities (272 total, 50 thin omitted), Communities (273 total, 50 thin omitted), Community 0 - "Community 0", Community 100 - "Community 100", Community 101 - "Community 101" (+173 more)
+Cohesion: 0.17
+Nodes (11): compilerOptions, esModuleInterop, jsx, module, moduleResolution, paths, skipLibCheck, strict (+3 more)
+
+### Community 270 - "Community 270"
+Cohesion: 0.33
+Nodes (5): 1. Domain Investigation, 2. Technical Decisions & Assumptions, 3. Validation Architecture, Phase 05.5: Portfolio-Refonte - Research, RESEARCH COMPLETE
+
+### Community 271 - "Community 271"
+Cohesion: 0.11
+Nodes (17): Before/After Section (Lines 121–127), Brand Banner (Lines 79–88), CTA Final Section (Lines 174–189), Dependency Graph, Deviations from Plan, Hero Section (Lines 19–56), Key Files, Known Limitations / Deferred Items (+9 more)
 
 ### Community 272 - "Community 272"
+Cohesion: 0.13
+Nodes (14): Accomplissments, Auto-fixed Issues, Deviations from Plan, Files Created/Modified, Known Stubs, Performance, Phase 04.7 Plan 08 : Audit Transversal & Validation Humaine Summary, Phase 04.7 Plan 08: Composants Premium (Badge & Breadcrumbs) Summary (+6 more)
+
+### Community 273 - "Community 273"
+Cohesion: 0.12
+Nodes (15): Backward Compatibility, Colors (MASTER.md Hex Palette), Commit Details, Component Base Styles (`@layer components`), Deviations from Plan, Fonts, Known Issues / Stubs, Next Steps (+7 more)
+
+### Community 274 - "Community 274"
+Cohesion: 0.13
+Nodes (14): Dependency Graph, Deviations from Plan, Espace/Profil.vue Refactoring (Profile Management), Form Styling Applied, Key Files, Known Limitations / Deferred Items, Next Steps, Objective (+6 more)
+
+### Community 275 - "Community 275"
+Cohesion: 0.14
+Nodes (13): Card Grid Container (index.vue), Card Typography Updates, Dependency Graph, Deviations from Plan, Key Files, Known Limitations / Deferred Items, Next Steps, Objective (+5 more)
+
+### Community 276 - "Community 276"
+Cohesion: 0.15
+Nodes (12): Admin Console (`app/pages/admin/index.vue`), Dependency Graph, Deviations from Plan, Key Files, Legal Pages (Mentions Légales, CGU, Confidentialité), Next Steps (Recommended), Objective, Phase 4.7 Plan 6: Admin & Legal Pages Refactor (DEFERRED) (+4 more)
+
+### Community 277 - "Community 277"
+Cohesion: 0.17
+Nodes (11): Dependency Graph, Deviations from Plan, Key Files, Known Limitations / Deferred Items, Next Steps, Objective, Phase 4.7 Plan 5: Premium & Public Profile Refactor (Partial), Premium Page Hero Section (+3 more)
+
+### Community 278 - "Community 278"
+Cohesion: 0.18
+Nodes (10): 1. Check Figtree is used for headings, 2. Check no emojis in template, 3. Check cursor:pointer on buttons/links, 4. Check for scale transforms (forbidden), 5. Check focus states exist, 6. Check no hardcoded font-family, 7. Check responsive classes (mobile-first), 8. Dev server test (+2 more)
+
+### Community 279 - "Community 279"
+Cohesion: 0.18
+Nodes (10): 1. Check card layout grid classes, 2. Check card background color, 3. Check shadow hover effect, 4. Check status badge uses green, 5. Check card titles use Figtree, 6. Check no emoji status indicators, 7. Check translateY hover (no scale), 8. Dev server test (+2 more)
+
+### Community 280 - "Community 280"
+Cohesion: 0.18
+Nodes (10): 1. Check admin table header uses Figtree, 2. Check admin table row height, 3. Check admin action buttons, 4. Check legal page h1 uses Figtree, 5. Check legal page body text uses Noto Sans, 6. Check no emoji bullets, 7. Check links have proper styling (focus ring), 8. Dev server test (+2 more)
+
+### Community 281 - "Community 281"
 Cohesion: 0.18
 Nodes (10): Accomplissments, Auto-fixed Issues, Deviations from Plan, Files Created/Modified, Known Stubs, Performance, Phase 04.7 Plan 08: Composants Premium (Badge & Breadcrumbs) Summary, Self-Check: PASSED (+2 more)
 
+### Community 282 - "Community 282"
+Cohesion: 0.20
+Nodes (9): 1. Check fonts load, 2. Verify color variables exist, 3. Verify MASTER.md hex codes are exact (not OKLCH), 4. Verify spacing tokens, 5. Verify shadow tokens, 6. Verify radius tokens, 7. Dev server test (npm run dev should compile without CSS errors), STRIDE Threat Register (+1 more)
+
+### Community 283 - "Community 283"
+Cohesion: 0.20
+Nodes (9): 1. Check input elements have border-border class or equivalent, 2. Check labels use Figtree, 3. Check focus:border-primary on inputs, 4. Check no hardcoded input padding styles, 5. Check file uploads have dashed border class, 6. Check error messages exist and use red color, 7. Dev server test, STRIDE Threat Register (+1 more)
+
+### Community 284 - "Community 284"
+Cohesion: 0.20
+Nodes (9): 1. Check premium page heading uses Figtree, 2. Check pricing cards grid, 3. Check public profile uses card styling, 4. Check avatar styling, 5. Check CTA buttons are green, 6. Check no emoji icons, 7. Dev server test, STRIDE Threat Register (+1 more)
+
+### Community 285 - "Community 285"
+Cohesion: 0.22
+Nodes (8): 1. Check no console errors in dev server, 2. Check no emojis in any page file, 3. Check all buttons have cursor:pointer or similar, 4. Check build succeeds, 5. Check color hex codes in CSS match MASTER.md, 6. Check fonts are Figtree or Noto Sans, STRIDE Threat Register, Trust Boundaries
+
+### Community 286 - "Community 286"
+Cohesion: 0.50
+Nodes (3): 04.7-07 — Accessibility Audit & Pre-Delivery Checklist, Blockers, Verified
+
+### Community 288 - "Community 288"
+Cohesion: 0.14
+Nodes (13): Canonical References, Charte (VERROUILLÉ), Claude's Discretion, Deferred Ideas, Design, Existant à conserver (VERROUILLÉ), Implementation Decisions, Interactions (VERROUILLÉ) (+5 more)
+
+### Community 289 - "Community 289"
+Cohesion: 0.10
+Nodes (19): `app/assets/css/tailwind.css` (config, transform), `app/components/ui/button/Button.vue` + `index.ts` (primitive, transform), `app/components/ui/IdentityBreadcrumbs.vue` (analog de référence, déjà conforme), `app/components/ui/PremiumBadge.vue` (analog de référence, déjà conforme), `app/pages/app/dashboard.vue` (page pro, CRUD) — cas des badges dupliqués, `app/pages/index.vue` (page landing, request-response), Badge pattern (couleur sémantique + icône), Bento card hover (à créer, pas encore d'analog exact dans le code) (+11 more)
+
+### Community 290 - "Community 290"
+Cohesion: 0.18
+Nodes (10): Accomplishments, Decisions Made, Deviations from Plan, Files Created/Modified, Issues Encountered, Next Phase Readiness, Performance, Phase 05.5 Plan 04: Endpoints lecture galerie + like anti-spam + toggle admin Summary (+2 more)
+
+### Community 291 - "Community 291"
+Cohesion: 0.25
+Nodes (7): Manual-Only Verifications, Per-Task Verification Map, Phase 05.5 — Validation Strategy, Sampling Rate, Test Infrastructure, Validation Sign-Off, Wave 0 Requirements
+
+### Community 292 - "Community 292"
+Cohesion: 0.17
+Nodes (11): 1. La Scission : V1 (Fondations) vs V2 (L'Axe B2B), 2. Adaptation des Nouvelles Phases pour la V2, 3. L'Impact UI/UX (Ce qu'on doit designer), 4. Modèle Économique Hybride (Le Moteur), 5. Sujets à discuter, Phase 5.5 : Portfolio Pro (Le Dossier d'Appel d'Offres), Phase 5.6 : Calculateur de Prix (L'Outil d'Aide à la Vente), Phase 5.7 : Pipeline CRM & Tracking Translucide (+3 more)
+
+### Community 293 - "Community 293"
+Cohesion: 0.11
+Nodes (17): Barrière de Conversion (Lead Wall), Canonical References, Deferred Ideas, Design System, Established Patterns, Existing Code Insights, Implementation Decisions, Integration Points (+9 more)
+
+### Community 294 - "Community 294"
+Cohesion: 0.29
+Nodes (6): Barrière de Conversion (Lead Wall), Deferred Ideas, Logique de calcul, Phase 05.6: Calculateur-Simulateur - Discussion Log, Structure de persistance (Base de données), the agent's Discretion
+
+### Community 296 - "Community 296"
+Cohesion: 0.15
+Nodes (12): Class inventory (must exist in `template.html`), Layout 1 — Hero, centered, Layout 2 — Hero, split (text + visual), Layout 3 — Feature triplet, Layout 4 — Stat row (data billboard), Layout 5 — Pull quote (testimonial), Layout 6 — CTA strip (closing), Layout 7 — Log list (changelog / blog index / posts) (+4 more)
+
+### Community 297 - "Community 297"
+Cohesion: 0.17
+Nodes (11): Hard rules (the seed protects most of these — don't fight it), Output contract, Resource map, Step 0 — Pre-flight (do this once before writing anything), Step 1 — Prepare the artifact from the seed, Step 2 — Plan the section list, Step 3 — Paste and fill, Step 4 — Self-check (+3 more)
+
+### Community 298 - "Community 298"
+Cohesion: 0.20
+Nodes (9): 1. Objectifs de la phase, 2. Périmètre (Scope), 3. Dépendances & Skills, A. Debug Upload Logo, B. Modèle de Données (Base de Données), C. Backoffice (Espace Pro & Admin), D. Refonte Profil Public (UI/UX), E. Landing Page (Accueil public) (+1 more)
+
+### Community 299 - "Community 299"
+Cohesion: 0.20
+Nodes (9): Agent Browser, Browser Context Extraction, CDP Startup Contract, Context Hygiene, Open Design Smoke Path, Requirements, Safety Rules, Specialized Upstream Guides (+1 more)
+
+### Community 300 - "Community 300"
+Cohesion: 0.25
+Nodes (7): 1. Objectifs de la phase, 2. Périmètre (Scope), 3. Dépendances & Impacts, A. Moteur de Calcul (Backend / Logique métier), B. Interface Utilisateur (Frontend), C. Gestion du Lead (Base de Données), Spécifications Phase 5.6 : Calculateur de Prix & Refonte Simulateur
+
+### Community 301 - "Community 301"
+Cohesion: 0.33
+Nodes (5): Anti-slop spot-check, P0 — must pass, P1 — should pass, P2 — nice to have, Web prototype checklist
+
+### Community 304 - "Community 304"
+Cohesion: 0.20
+Nodes (6): city, description, formError, submitting, title, uploading
+
+### Community 305 - "Community 305"
+Cohesion: 0.22
+Nodes (8): Avoid (Anti-patterns), Colors, Design System: DASHBOARD PORTAL B2B SAAS LAYOUT ALIGNMENT DESKTOP, Key Effects, Pattern, Pre-Delivery Checklist, Style, Typography
+
+### Community 306 - "Community 306"
+Cohesion: 0.20
+Nodes (9): Checker Sign-Off, Color, Copywriting Contract, Design System, Interaction & Layout Contract (phase-specific, extends 04.7 patterns), Phase 05.6 — UI Design Contract, Registry Safety, Spacing Scale (+1 more)
+
+### Community 307 - "Community 307"
+Cohesion: 0.13
+Nodes (14): Additive-only migrations, `app/pages/simulateur.vue` (component, request-response) — full rewrite, `app/utils/calculateur.ts` (utility, transform) — new file, client-side pricing engine (D-01), Bento tile visual/interaction pattern, File Classification, French phone/email validation, Metadata, No Analog Found (+6 more)
+
+### Community 311 - "Community 311"
+Cohesion: 0.10
+Nodes (238): Communities (264 total, 50 thin omitted), Communities (271 total, 50 thin omitted), Communities (289 total, 51 thin omitted), Communities (291 total, 51 thin omitted), Communities (311 total, 52 thin omitted), Communities (312 total, 52 thin omitted), Communities (322 total, 62 thin omitted), Communities (339 total, 66 thin omitted) (+230 more)
+
+### Community 312 - "Community 312"
+Cohesion: 0.14
+Nodes (13): 1. Immersive Public Profile (`/pro/[dept]/[slug]`), 2. Backoffice — Add Realisation (`/espace/profil`), 3. Admin — Showcase Toggle, 4. Landing Page — "Chantiers Réalisés" section (`app/pages/index.vue`), Checker Sign-Off, Color, Copywriting Contract, Design System (+5 more)
+
+### Community 321 - "Community 321"
+Cohesion: 0.08
+Nodes (25): Admin auth + audit log, `app/components/RealisationCard.vue` (new, shared between profile gallery & landing), `app/pages/admin/index.vue` — showcase toggle row, `app/pages/espace/profil.vue` (modify) + new `RealisationForm.vue` modal, `app/pages/index.vue` — new "Chantiers Réalisés" section, `app/pages/pro/[dept]/[slug].vue` — immersive refonte, `.bento-card` / `.reveal` visual system, Client-side XHR upload with progress (+17 more)
+
+### Community 322 - "Community 322"
+Cohesion: 0.18
+Nodes (8): ALLOWED_MIME, logoError, logoFailed, logoName, logoProgress, logoSrc, logoUploading, logoVersion
+
+### Community 324 - "Community 324"
+Cohesion: 0.33
+Nodes (5): Design Question, How to View, Sketch 002: Navigation Espace Pro, Variants, What to Look For
+
+### Community 325 - "Community 325"
+Cohesion: 0.25
+Nodes (4): currentStepIndex, decennale, steps, uploads
+
+### Community 326 - "Community 326"
+Cohesion: 0.29
+Nodes (6): Auth Gates, Ce qui a été fait, Deviations from Plan, Phase 5.5 Plan 03: API CRUD réalisations pro Summary, Self-Check: PASSED, Tests
+
+### Community 340 - "Community 340"
+Cohesion: 0.13
+Nodes (14): Accomplishments, Decisions Made, Dependency graph, Deviations from Plan, Files Created/Modified, Issues Encountered, Metrics, Next Phase Readiness (+6 more)
+
+### Community 341 - "Community 341"
+Cohesion: 0.12
+Nodes (15): Accomplishments, Decisions Made, Dependency graph, Deviations from Plan, Files Created/Modified, Issues Encountered, Metrics, Next Phase Readiness (+7 more)
+
+### Community 342 - "Community 342"
+Cohesion: 0.18
+Nodes (10): 1. Login réel + Dashboard pro, 2. Ajout d'une réalisation (modale, upload R2 réel), 3. Réalisation visible dans /espace/profil, 4. Profil public immersif (Success Criterion 4), 5. Mise en avant (showcase) admin, 6. Landing — section "Chantiers Réalisés" (Success Criterion 5), 7. Suite de tests automatisée, Gaps (+2 more)
+
 ## Knowledge Gaps
-- **1354 isolated node(s):** `version`, `timestamp`, `phase`, `phase_name`, `phase_dir` (+1349 more)
+- **1856 isolated node(s):** `version`, `timestamp`, `phase`, `phase_name`, `phase_dir` (+1851 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **50 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **67 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Communities (273 total, 50 thin omitted)` connect `Community 269` to `Community 142`?**
-  _High betweenness centrality (0.002) - this node is a cross-community bridge._
-- **Why does `Communities (271 total, 50 thin omitted)` connect `Community 269` to `Community 142`?**
-  _High betweenness centrality (0.002) - this node is a cross-community bridge._
-- **Why does `Communities (272 total, 50 thin omitted)` connect `Community 269` to `Community 142`?**
-  _High betweenness centrality (0.002) - this node is a cross-community bridge._
+- **Why does `Communities (344 total, 67 thin omitted)` connect `Community 311` to `Community 142`?**
+  _High betweenness centrality (0.001) - this node is a cross-community bridge._
+- **Why does `Communities (343 total, 67 thin omitted)` connect `Community 311` to `Community 142`?**
+  _High betweenness centrality (0.001) - this node is a cross-community bridge._
+- **Why does `Communities (339 total, 66 thin omitted)` connect `Community 311` to `Community 142`?**
+  _High betweenness centrality (0.001) - this node is a cross-community bridge._
 - **What connects `version`, `timestamp`, `phase` to the rest of the system?**
-  _1354 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1856 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.125 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
 - **Should `Community 10` be split into smaller, more focused modules?**
   _Cohesion score 0.1 - nodes in this community are weakly interconnected._
 - **Should `Community 11` be split into smaller, more focused modules?**
