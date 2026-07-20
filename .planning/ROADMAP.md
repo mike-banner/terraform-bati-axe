@@ -154,6 +154,16 @@ Plans:
 - [x] 05-06-PLAN.md — Upload Décennale pro : saisie Numéro + Date d'expiration + Auto-approbation + Mécanisme blocage expiration
 **UI hint**: yes
 
+### Phase 05.8: Enrichissement SIRET (forme juridique, NAF, suggestion catégories) au claim (INSERTED)
+
+**Goal:** Étendre `server/utils/siretLookup.ts` pour extraire `nature_juridique` et `activite_principale` (NAF) de l'API `recherche-entreprises.api.gouv.fr`, stocker sur `professionals` (nouvelles colonnes `siret_legal_form`, `siret_naf_code`), mapper statiquement NAF→catégories BTP pour pré-cocher les catégories au claim (le pro confirme/modifie, pas d'auto-catégorisation forcée). Auto-approuver le Kbis à l'upload si `professionals.siret_status === 'active'` (même pattern que l'auto-approbation décennale dans `upload.post.ts`), pour éviter la revue admin manuelle quand l'API gouv confirme déjà l'existence/activité de l'entreprise. Scope limité au moment du `claim` uniquement — pas de resynchronisation ultérieure pour l'instant.
+**Requirements**: TBD
+**Depends on:** Phase 5
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 05.8 to break down)
+
 ### Phase 5.5: Portfolio Pro, Refonte Profil & Social
 **Goal**: Permettre aux pros de valoriser leur travail via une galerie photo, refondre l'UI du profil public (immersif) et intégrer de la preuve sociale sur la landing page.
 **Depends on**: Phase 5, Phase 4.7

@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 05.7 context gathered
-last_updated: "2026-07-19T22:18:42.247Z"
+last_updated: "2026-07-20T14:11:03.861Z"
 last_activity: 2026-07-19 -- Phase 05.7 execution started
 progress:
-  total_phases: 14
-  completed_phases: 6
+  total_phases: 15
+  completed_phases: 7
   total_plans: 46
-  completed_plans: 40
-  percent: 43
+  completed_plans: 42
+  percent: 47
 ---
 
 # Project State
@@ -62,6 +62,11 @@ Progress: [█████████░] 91%
 - Total execution time: N/A
 
 ## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 05.8 inserted after Phase 5: Enrichissement SIRET (forme juridique, NAF, suggestion catégories) au claim — étend server/utils/siretLookup.ts, ajoute siret_legal_form/siret_naf_code sur professionals, mapping statique NAF→catégories BTP, pré-cochage au claim (pro confirme). Scope claim uniquement pour l'instant.
+- Phase 05.8 edited: Ajout scope 05.8 : auto-approuver le Kbis à l'upload si professionals.siret_status === 'active' (déjà vérifié au claim), même pattern que l'auto-approbation décennale dans upload.post.ts. Évite la revue admin manuelle quand l'API gouv confirme déjà l'existence/activité de l'entreprise.
 
 ### Decisions
 

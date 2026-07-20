@@ -298,6 +298,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                   placeholder="Ex : 12345678A"
                   class="h-9 w-full px-3 border border-border rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
                 />
+                <p class="text-[10px] text-muted-foreground mt-1">Numéro figurant sur votre attestation, tel quel (l'assureur fixe le format — pas de nombre de chiffres fixe).</p>
               </div>
               <div>
                 <label class="block text-xs text-muted-foreground mb-1">Date d'expiration <span class="text-red-500">*</span></label>
