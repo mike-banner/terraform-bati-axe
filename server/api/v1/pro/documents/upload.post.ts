@@ -32,7 +32,16 @@ export default defineEventHandler(async (event) => {
 
   // La décennale est auto-approuvée : le pro engage sa responsabilité (CGU)
   const isDecennale = document_type === 'decennale'
-  const status = isDecennale ? 'approved' : 'pending'
+
+  // Le Kbis est auto-approuvé si le SIRET a déjà été confirmé actif au claim (API gouv)
+  const { data: proRow } = await supabase
+    .from('professionals')
+    .select('siret_status')
+    .eq('id', uid)
+    .maybeSingle()
+  const isKbisAutoApproved = document_type === 'kbis' && proRow?.siret_status === 'active'
+
+  const status = isDecennale || isKbisAutoApproved ? 'approved' : 'pending'
 
   const { error: insertErr } = await supabase.from('verifications').insert({
     pro_id: uid,
@@ -42,6 +51,9 @@ export default defineEventHandler(async (event) => {
     ...(isDecennale ? {
       policy_number,
       expiry_date: expiration_date,
+      reviewed_at: new Date().toISOString(),
+    } : {}),
+    ...(isKbisAutoApproved ? {
       reviewed_at: new Date().toISOString(),
     } : {}),
   })
@@ -68,5 +80,5 @@ export default defineEventHandler(async (event) => {
     if (updateErr) throw createError({ statusCode: 500, statusMessage: updateErr.message })
   }
 
-  return { error: null, status: 'SUCCESS', document_type, approved: isDecennale }
+  return { error: null, status: 'SUCCESS', document_type, approved: isDecennale || isKbisAutoApproved }
 })
