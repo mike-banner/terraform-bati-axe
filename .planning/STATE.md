@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Phase 05.7 context gathered
-last_updated: "2026-07-19T22:18:42.247Z"
-last_activity: 2026-07-19 -- Phase 05.7 execution started
+status: ready_to_plan
+stopped_at: Phase 05.8 complete (3/3) — ready to discuss Phase 06
+last_updated: 2026-07-20T16:27:49.260Z
+last_activity: 2026-07-20
 progress:
-  total_phases: 14
-  completed_phases: 6
-  total_plans: 46
-  completed_plans: 40
-  percent: 43
+  total_phases: 15
+  completed_phases: 7
+  total_plans: 49
+  completed_plans: 44
+  percent: 47
 ---
 
 # Project State
@@ -31,12 +31,12 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 
 ## Current Position
 
-Phase: 05.7 (Input-Validation-Hardening) — EXECUTING
-Plan: 1 of 2
+Phase: 06
+Plan: Not started
 Next phase: 05.6 (Calculateur de Prix & Refonte Simulateur) — PLANNED (0 plans, en attente de découpage technique)
-Status: Executing Phase 05.7
-Last activity: 2026-07-19 -- Phase 05.7 execution started
-Progress: [█████████░] 91%
+Status: Ready to plan
+Last activity: 2026-07-20
+Progress: [█████████░] 90%
 
 ### Plans Phase 5.5 (Portfolio, Refonte Profil & Social) — COMPLETE (8/8 plans)
 
@@ -62,6 +62,11 @@ Progress: [█████████░] 91%
 - Total execution time: N/A
 
 ## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 05.8 inserted after Phase 5: Enrichissement SIRET (forme juridique, NAF, suggestion catégories) au claim — étend server/utils/siretLookup.ts, ajoute siret_legal_form/siret_naf_code sur professionals, mapping statique NAF→catégories BTP, pré-cochage au claim (pro confirme). Scope claim uniquement pour l'instant.
+- Phase 05.8 edited: Ajout scope 05.8 : auto-approuver le Kbis à l'upload si professionals.siret_status === 'active' (déjà vérifié au claim), même pattern que l'auto-approbation décennale dans upload.post.ts. Évite la revue admin manuelle quand l'API gouv confirme déjà l'existence/activité de l'entreprise.
 
 ### Decisions
 
@@ -113,6 +118,6 @@ Progress: [█████████░] 91%
 
 ## Session Continuity
 
-Last session: 2026-07-19T21:22:57.075Z
+Last session: 2026-07-20T14:47:09.966Z
 Stopped at: Phase 05.7 context gathered
-Resume file: .planning/phases/05.7-Input-Validation-Hardening/05.7-CONTEXT.md
+Resume file: None

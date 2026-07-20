@@ -215,7 +215,9 @@ export default defineEventHandler(async (event) => {
         siret_status: siretLookup.status,
         siret_verified_at: siretLookup.verified_at,
         siret_company_name: siretLookup.company_name ?? null,
-        siret_address: siretLookup.address ?? null
+        siret_address: siretLookup.address ?? null,
+        siret_legal_form: siretLookup.legal_form ?? null,
+        siret_naf_code: siretLookup.naf_code ?? null
       }, { onConflict: 'id' })
       .select('id')
       .single()
