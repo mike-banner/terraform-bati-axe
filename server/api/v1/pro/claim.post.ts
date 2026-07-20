@@ -15,7 +15,7 @@ const claimSchema = z.object({
   full_name: z.string().min(2, 'Le nom du gérant est requis.').max(100, 'Le nom du gérant ne peut dépasser 100 caractères.'),
   phone: z.string().regex(/^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone invalide.'),
   postal_code: z.string().regex(/^\d{5}$/, 'Code postal invalide.'),
-  categories: z.array(z.enum(VALID_CATEGORIES)).min(1, 'Sélectionnez au moins un corps de métier.'),
+  categories: z.array(z.enum(VALID_CATEGORIES)).min(1, 'Sélectionnez au moins un corps de métier.').max(VALID_CATEGORIES.length, 'Trop de catégories sélectionnées.'),
   sms_opt_in: z.boolean().default(false)
 })
 

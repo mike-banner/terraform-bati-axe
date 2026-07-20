@@ -6,7 +6,7 @@ const createSchema = z.object({
   title: z.string().min(1, 'Le titre est requis.').max(100, 'Le titre ne peut dépasser 100 caractères.'),
   description: z.string().max(500, 'La description ne peut dépasser 500 caractères.').nullable().optional(),
   city: z.string().max(100, 'La ville ne peut dépasser 100 caractères.').nullable().optional(),
-  image_urls: z.array(z.string().url('URL de photo invalide.')).min(1, 'Au moins une photo est requise.'),
+  image_urls: z.array(z.string().url('URL de photo invalide.')).min(1, 'Au moins une photo est requise.').max(20, 'Vous ne pouvez pas ajouter plus de 20 photos.'),
 }).strict()
 
 export default defineEventHandler(async (event) => {
