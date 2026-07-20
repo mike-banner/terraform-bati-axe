@@ -101,7 +101,7 @@ async function submit() {
   try {
     const res = await $fetch<{ status: string; realisation: Record<string, unknown> }>(
       '/api/v1/pro/realisations',
-      { method: 'POST', body: { title: title.value, description: description.value || null, city: city.value || null, image_urls } }
+      { method: 'POST', body: { title: title.value.trim(), description: description.value?.trim() || null, city: city.value?.trim() || null, image_urls } }
     )
     emit('created', res.realisation)
   } catch (e: any) {

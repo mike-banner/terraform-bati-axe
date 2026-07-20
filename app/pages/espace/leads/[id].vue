@@ -75,7 +75,7 @@ async function sendChatMessage() {
       method: 'POST',
       body: {
         lead_id: claimId.value,
-        content: chatInput.value
+        content: chatInput.value.trim()
       }
     })
     chatInput.value = ''
