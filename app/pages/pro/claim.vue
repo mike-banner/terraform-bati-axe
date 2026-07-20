@@ -141,11 +141,30 @@ const isProFormValid = computed(() =>
   proForm.cgu_accepted
 )
 
+const categoriesTouched = ref(false)
+
 const toggleCategory = (id: string) => {
+  categoriesTouched.value = true
   if (proForm.categories.includes(id)) {
     proForm.categories = proForm.categories.filter(c => c !== id)
   } else {
     proForm.categories.push(id)
+  }
+}
+
+// Pre-cochage UX : suggere des categories depuis le SIRET, sans jamais ecraser un choix manuel.
+async function fetchSuggestedCategories() {
+  if (!RE_SIRET.test(proForm.siret)) return
+  try {
+    const res = await $fetch<{ suggested_categories: string[] }>('/api/v1/pro/siret-preview', {
+      method: 'POST',
+      body: { siret: proForm.siret.replace(/\s/g, '') }
+    })
+    if (res.suggested_categories?.length && !categoriesTouched.value && proForm.categories.length === 0) {
+      proForm.categories = [...res.suggested_categories]
+    }
+  } catch {
+    // Suggestion UX uniquement : une erreur reseau ne doit jamais bloquer le formulaire.
   }
 }
 
@@ -572,7 +591,7 @@ const backToStep2 = () => {
               maxlength="19"
               inputmode="numeric"
               @input="normalizeSiret(($event.target as HTMLInputElement).value)"
-              @blur="proTouched.siret = true"
+              @blur="proTouched.siret = true; fetchSuggestedCategories()"
               class="w-full h-11 px-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 font-mono tracking-wider transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="proErrors.siret ? 'border-red-500' : 'border-border'"
               :aria-invalid="!!proErrors.siret"
