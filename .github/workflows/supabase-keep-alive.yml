@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Requête Keep-Alive Supabase
         run: |
-          curl -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          curl -X GET "${{ secrets.TF_VAR_SUPABASE_URL }}/rest/v1/" \
+            -H "apikey: ${{ secrets.TF_VAR_SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.TF_VAR_SUPABASE_ANON_KEY }}" \
             -w "\n✅ Ping effectué avec succès (Code: %{http_code})\n"
