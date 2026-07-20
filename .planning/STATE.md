@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Phase 05.7 context gathered
-last_updated: "2026-07-20T14:48:20.156Z"
+status: ready_to_plan
+stopped_at: Phase 05.8 complete (3/3) — ready to discuss Phase 06
+last_updated: 2026-07-20T16:27:49.260Z
 last_activity: 2026-07-20
 progress:
   total_phases: 15
@@ -31,10 +31,10 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 
 ## Current Position
 
-Phase: 05.8 (enrichissement-siret-forme-juridique-naf-suggestion-cat-gori) — EXECUTING
-Plan: 2 of 3
+Phase: 06
+Plan: Not started
 Next phase: 05.6 (Calculateur de Prix & Refonte Simulateur) — PLANNED (0 plans, en attente de découpage technique)
-Status: Ready to execute
+Status: Ready to plan
 Last activity: 2026-07-20
 Progress: [█████████░] 90%
 
