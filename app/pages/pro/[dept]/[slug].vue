@@ -28,6 +28,7 @@ interface ProProfile {
   is_claimed: boolean
   decennal_status: string
   siret_status: string | null
+  siret_legal_form: string | null
   member_since: string
 }
 
@@ -344,6 +345,10 @@ useHead(() => ({
             Dirigé par {{ pro!.full_name }}
             <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
             Membre {{ memberYear ? 'depuis ' + memberYear : 'vérifié' }}
+            <template v-if="legalFormLabel(pro!.siret_legal_form)">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+              {{ legalFormLabel(pro!.siret_legal_form) }}
+            </template>
           </p>
           </div>
         </div>

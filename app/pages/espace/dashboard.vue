@@ -8,6 +8,8 @@ interface Pro {
   categories: string[]; subscription_status: string; bio?: string; logo_url?: string
   siret_status?: string | null
   siret_company_name?: string | null
+  siret_legal_form?: string | null
+  siret_naf_code?: string | null
 }
 interface Verif {
   document_type: string; status: string; expiry_date: string | null; created_at: string
@@ -43,7 +45,7 @@ async function loadProData() {
     }
     const [{ data: proData, error: proErr }, { data: verifData, error: verifErr }] = await Promise.all([
       supabase.from('professionals')
-        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, created_at, categories, subscription_status, bio, logo_url')
+        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, siret_legal_form, siret_naf_code, created_at, categories, subscription_status, bio, logo_url')
         .eq('id', uid).maybeSingle(),
       supabase.from('verifications')
         .select('document_type, status, expiry_date, created_at, file_key, reviewed_at')
@@ -229,7 +231,11 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
               </div>
             </div>
             <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground md:hidden" style="text-wrap: balance">{{ pro.company_name }}</h1>
-            <p class="text-sm text-muted-foreground mt-1">{{ pro.full_name }} · {{ pro.postal_code }}</p>
+            <p class="text-sm text-muted-foreground mt-1">
+              {{ pro.full_name }} · {{ pro.postal_code }}
+              <template v-if="legalFormLabel(pro.siret_legal_form)"> · {{ legalFormLabel(pro.siret_legal_form) }}</template>
+              <template v-if="pro.siret_naf_code"> · NAF {{ pro.siret_naf_code }}</template>
+            </p>
           </div>
           <!-- ─── Documents (toujours visible pour permettre le renouvellement) ───── -->
           <div class="bento-card rounded-3xl p-6 border" :class="docsComplete ? 'border-slate-200 bg-white shadow-sm' : 'border-red-300 bg-red-50'">

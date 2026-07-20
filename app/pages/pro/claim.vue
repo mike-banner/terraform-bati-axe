@@ -152,19 +152,27 @@ const toggleCategory = (id: string) => {
   }
 }
 
-// Pre-cochage UX : suggere des categories depuis le SIRET, sans jamais ecraser un choix manuel.
+// Preview rapide : confirmation visuelle du nom d'entreprise + pre-cochage categories.
+const siretPreview = reactive({ loading: false, companyName: '' as string | null, status: '' })
+
 async function fetchSuggestedCategories() {
-  if (!RE_SIRET.test(proForm.siret)) return
+  if (!RE_SIRET.test(proForm.siret)) { siretPreview.companyName = null; return }
+  siretPreview.loading = true
+  siretPreview.companyName = null
   try {
-    const res = await $fetch<{ suggested_categories: string[] }>('/api/v1/pro/siret-preview', {
+    const res = await $fetch<{ status: string; company_name?: string | null; suggested_categories: string[] }>('/api/v1/pro/siret-preview', {
       method: 'POST',
       body: { siret: proForm.siret.replace(/\s/g, '') }
     })
+    siretPreview.status = res.status
+    siretPreview.companyName = res.company_name ?? null
     if (res.suggested_categories?.length && !categoriesTouched.value && proForm.categories.length === 0) {
       proForm.categories = [...res.suggested_categories]
     }
   } catch {
     // Suggestion UX uniquement : une erreur reseau ne doit jamais bloquer le formulaire.
+  } finally {
+    siretPreview.loading = false
   }
 }
 
@@ -597,6 +605,8 @@ const backToStep2 = () => {
               :aria-invalid="!!proErrors.siret"
             />
             <p v-if="proErrors.siret" class="mt-2 text-xs text-red-600 font-500">{{ proErrors.siret }}</p>
+            <p v-else-if="siretPreview.loading" class="mt-1.5 text-xs text-muted-foreground">Recherche...</p>
+            <p v-else-if="siretPreview.companyName" class="mt-1.5 text-xs text-green-700 font-500">✓ {{ siretPreview.companyName }}</p>
             <p v-else class="mt-1.5 text-xs text-muted-foreground">14 chiffres, sans espace.</p>
           </div>
 
