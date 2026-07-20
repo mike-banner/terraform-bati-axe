@@ -7,6 +7,7 @@ const VALID_CATEGORIES = ['maconnerie', 'toiture', 'electricite', 'plomberie', '
 const patchSchema = z.object({
   bio: z.string().max(500, 'La présentation ne peut dépasser 500 caractères.').nullable().optional(),
   zone: z.string().max(200, "La zone d'intervention ne peut dépasser 200 caractères.").nullable().optional(),
+  phone: z.string().regex(/^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone français invalide.').max(20).nullable().optional(),
   categories: z.array(z.enum(VALID_CATEGORIES, { message: 'Catégorie invalide.' })).optional(),
   logo_url: z.string().url('URL de logo invalide.').nullable().optional(),
 }).strict()
@@ -20,6 +21,7 @@ export default defineEventHandler(async (event) => {
   if (body.bio === '') body.bio = null
   if (body.zone === '') body.zone = null
   if (body.logo_url === '') body.logo_url = null
+  if (body.phone === '') body.phone = null
   
   // Backwards compatibility during transition
   if (body.category !== undefined && body.categories === undefined) {

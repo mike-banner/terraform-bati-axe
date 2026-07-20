@@ -237,19 +237,22 @@ const handleAuth = async () => {
   globalError.value = null
 
   try {
+    const trimmedEmail = authForm.email.trim()
+    const trimmedFullName = authForm.full_name.trim()
+
     if (authMode.value === 'login') {
-      const { error } = await supabase.auth.signInWithPassword({ email: authForm.email, password: authForm.password })
+      const { error } = await supabase.auth.signInWithPassword({ email: trimmedEmail, password: authForm.password })
       if (error) throw error
     } else {
       const { error } = await supabase.auth.signUp({
-        email: authForm.email,
+        email: trimmedEmail,
         password: authForm.password,
-        options: { data: { full_name: authForm.full_name } }
+        options: { data: { full_name: trimmedFullName } }
       })
       if (error) throw error
     }
 
-    if (authForm.full_name) proForm.full_name = authForm.full_name
+    if (trimmedFullName) proForm.full_name = trimmedFullName
 
     // Fetch fresh session to get populated app_metadata (nextTick is not enough)
     const { data: { session } } = await supabase.auth.getSession()
@@ -297,9 +300,9 @@ const handleRegisterCompany = async () => {
       method: 'POST',
       body: {
         prospect_id:  prospectId.value || undefined,
-        company_name: proForm.company_name,
+        company_name: proForm.company_name.trim(),
         siret:        proForm.siret.replace(/\s/g, ''),
-        full_name:    proForm.full_name,
+        full_name:    proForm.full_name.trim(),
         phone:        proForm.phone.replace(/\s/g, ''),
         postal_code:  proForm.postal_code,
         categories:   proForm.categories,
@@ -443,6 +446,7 @@ const backToStep2 = () => {
                 v-model="authForm.full_name"
                 autocomplete="name"
                 placeholder="Jean Dupont"
+                maxlength="100"
                 @blur="authTouched.full_name = true"
                 class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 :class="authErrors.full_name ? 'border-red-500' : 'border-border'"
@@ -462,6 +466,7 @@ const backToStep2 = () => {
               v-model="authForm.email"
               autocomplete="email"
               placeholder="contact@dupont-plomberie.fr"
+              maxlength="254"
               @blur="authTouched.email = true"
               class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="authErrors.email ? 'border-red-500' : 'border-border'"
@@ -486,6 +491,8 @@ const backToStep2 = () => {
                 v-model="authForm.password"
                 autocomplete="current-password"
                 placeholder="••••••••"
+                minlength="8"
+                maxlength="72"
                 @blur="authTouched.password = true"
                 class="w-full h-11 px-3 pr-10 border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 :class="authErrors.password ? 'border-red-500' : 'border-border'"
@@ -553,6 +560,7 @@ const backToStep2 = () => {
               type="text"
               v-model="proForm.company_name"
               placeholder="DUPONT PLOMBERIE SARL"
+              maxlength="100"
               @blur="proTouched.company_name = true"
               class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="proErrors.company_name ? 'border-red-500' : 'border-border'"
@@ -588,6 +596,8 @@ const backToStep2 = () => {
               id="pro-name"
               type="text"
               v-model="proForm.full_name"
+              placeholder="Jean Dupont"
+              maxlength="100"
               @blur="proTouched.full_name = true"
               class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="proErrors.full_name ? 'border-red-500' : 'border-border'"

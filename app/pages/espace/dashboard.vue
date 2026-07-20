@@ -296,6 +296,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                   v-model="uploads.decennale.policyNumber"
                   type="text"
                   placeholder="Ex : 12345678A"
+                  maxlength="50"
                   class="h-9 w-full px-3 border border-border rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
                 />
               </div>
