@@ -5,7 +5,7 @@ const schema = z.object({
   document_type: z.enum(['kbis', 'decennale']),
   file_key: z.string().min(1),
   // Champs obligatoires pour la décennale (auto-approbation sous responsabilité du pro)
-  policy_number: z.string().optional(),
+  policy_number: z.string().max(50, 'Le numéro de police ne peut pas dépasser 50 caractères.').optional(),
   expiration_date: z.string().optional(), // format YYYY-MM-DD
 })
 

@@ -210,7 +210,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                   Vérification en cours
                 </span>
                 <BadgeEntrepriseVerifiee v-if="pro.siret_status === 'active'" />
-                <BadgeDecennaleCertifiee v-if="pro.decennal_status === 'valid'" />
+                <BadgeDecennaleCertifiee v-if="decennale?.status === 'approved'" />
                 <NuxtLink
                   v-if="pro.subscription_status !== 'active'"
                   to="/espace/premium"
@@ -302,6 +302,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                   v-model="uploads.decennale.policyNumber"
                   type="text"
                   placeholder="Ex : 12345678A"
+                  maxlength="50"
                   class="h-9 w-full px-3 border border-border rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
                 />
                 <p class="text-[10px] text-muted-foreground mt-1">Numéro figurant sur votre attestation, tel quel (l'assureur fixe le format — pas de nombre de chiffres fixe).</p>
