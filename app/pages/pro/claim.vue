@@ -141,11 +141,45 @@ const isProFormValid = computed(() =>
   proForm.cgu_accepted
 )
 
+const categoriesTouched = ref(false)
+
 const toggleCategory = (id: string) => {
+  categoriesTouched.value = true
   if (proForm.categories.includes(id)) {
     proForm.categories = proForm.categories.filter(c => c !== id)
   } else {
     proForm.categories.push(id)
+  }
+}
+
+// Preview rapide : confirmation visuelle du nom d'entreprise + pre-cochage categories.
+const siretPreview = reactive({ loading: false, companyName: '' as string | null, status: '' })
+// Suit si proForm.company_name vient du dernier auto-remplissage (donc écrasable par un nouveau SIRET)
+// ou d'une saisie manuelle (donc protégée).
+const companyNameAutoFilled = ref(false)
+
+async function fetchSuggestedCategories() {
+  if (!RE_SIRET.test(proForm.siret)) { siretPreview.companyName = null; return }
+  siretPreview.loading = true
+  siretPreview.companyName = null
+  try {
+    const res = await $fetch<{ status: string; company_name?: string | null; suggested_categories: string[] }>('/api/v1/pro/siret-preview', {
+      method: 'POST',
+      body: { siret: proForm.siret.replace(/\s/g, '') }
+    })
+    siretPreview.status = res.status
+    siretPreview.companyName = res.company_name ?? null
+    if (siretPreview.companyName && (companyNameAutoFilled.value || !proForm.company_name)) {
+      proForm.company_name = siretPreview.companyName
+      companyNameAutoFilled.value = true
+    }
+    if (res.suggested_categories?.length && !categoriesTouched.value && proForm.categories.length === 0) {
+      proForm.categories = [...res.suggested_categories]
+    }
+  } catch {
+    // Suggestion UX uniquement : une erreur reseau ne doit jamais bloquer le formulaire.
+  } finally {
+    siretPreview.loading = false
   }
 }
 
@@ -208,7 +242,8 @@ if (prospectId.value) {
 const files = reactive({ kbis: null as File | null, decennale: null as File | null })
 const uploads = reactive({
   kbis:      { status: 'idle' as 'idle' | 'uploading' | 'success' | 'error', error: '' },
-  decennale: { status: 'idle' as 'idle' | 'uploading' | 'success' | 'error', error: '' }
+  decennale: { status: 'idle' as 'idle' | 'uploading' | 'success' | 'error', error: '',
+    policyNumber: '', expirationDate: '' }
 })
 
 // ─── Handlers ─────────────────────────────────────────────────────────────────
@@ -237,19 +272,22 @@ const handleAuth = async () => {
   globalError.value = null
 
   try {
+    const trimmedEmail = authForm.email.trim()
+    const trimmedFullName = authForm.full_name.trim()
+
     if (authMode.value === 'login') {
-      const { error } = await supabase.auth.signInWithPassword({ email: authForm.email, password: authForm.password })
+      const { error } = await supabase.auth.signInWithPassword({ email: trimmedEmail, password: authForm.password })
       if (error) throw error
     } else {
       const { error } = await supabase.auth.signUp({
-        email: authForm.email,
+        email: trimmedEmail,
         password: authForm.password,
-        options: { data: { full_name: authForm.full_name } }
+        options: { data: { full_name: trimmedFullName } }
       })
       if (error) throw error
     }
 
-    if (authForm.full_name) proForm.full_name = authForm.full_name
+    if (trimmedFullName) proForm.full_name = trimmedFullName
 
     // Fetch fresh session to get populated app_metadata (nextTick is not enough)
     const { data: { session } } = await supabase.auth.getSession()
@@ -297,9 +335,9 @@ const handleRegisterCompany = async () => {
       method: 'POST',
       body: {
         prospect_id:  prospectId.value || undefined,
-        company_name: proForm.company_name,
+        company_name: proForm.company_name.trim(),
         siret:        proForm.siret.replace(/\s/g, ''),
-        full_name:    proForm.full_name,
+        full_name:    proForm.full_name.trim(),
         phone:        proForm.phone.replace(/\s/g, ''),
         postal_code:  proForm.postal_code,
         categories:   proForm.categories,
@@ -337,6 +375,7 @@ const handleFileSelect = (event: Event, type: 'kbis' | 'decennale') => {
 const uploadDocument = async (type: 'kbis' | 'decennale') => {
   const file = files[type]
   if (!file) return
+  if (type === 'decennale' && (!uploads.decennale.policyNumber || !uploads.decennale.expirationDate)) return
 
   uploads[type].status = 'uploading'
   uploads[type].error  = ''
@@ -355,12 +394,17 @@ const uploadDocument = async (type: 'kbis' | 'decennale') => {
     const uploadRes = await fetch(signedUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file })
     if (!uploadRes.ok) throw new Error('Échec du transfert. Vérifiez votre connexion et réessayez.')
 
-    await (supabase as any).from('verifications').insert({ pro_id: user.value?.id, document_type: type, file_key: fileKey, status: 'pending' })
+    const uploadBody: Record<string, string> = { document_type: type, file_key: fileKey }
+    if (type === 'decennale') {
+      uploadBody.policy_number   = uploads.decennale.policyNumber
+      uploadBody.expiration_date = uploads.decennale.expirationDate
+    }
+    await $fetch('/api/v1/pro/documents/upload', { method: 'POST', body: uploadBody })
 
     uploads[type].status = 'success'
   } catch (err: any) {
     uploads[type].status = 'error'
-    uploads[type].error  = err.message || 'Erreur de transfert.'
+    uploads[type].error  = err.data?.statusMessage || err.message || 'Erreur de transfert.'
   }
 }
 
@@ -443,6 +487,7 @@ const backToStep2 = () => {
                 v-model="authForm.full_name"
                 autocomplete="name"
                 placeholder="Jean Dupont"
+                maxlength="100"
                 @blur="authTouched.full_name = true"
                 class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 :class="authErrors.full_name ? 'border-red-500' : 'border-border'"
@@ -462,6 +507,7 @@ const backToStep2 = () => {
               v-model="authForm.email"
               autocomplete="email"
               placeholder="contact@dupont-plomberie.fr"
+              maxlength="254"
               @blur="authTouched.email = true"
               class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="authErrors.email ? 'border-red-500' : 'border-border'"
@@ -486,6 +532,8 @@ const backToStep2 = () => {
                 v-model="authForm.password"
                 autocomplete="current-password"
                 placeholder="••••••••"
+                minlength="8"
+                maxlength="72"
                 @blur="authTouched.password = true"
                 class="w-full h-11 px-3 pr-10 border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 :class="authErrors.password ? 'border-red-500' : 'border-border'"
@@ -545,21 +593,6 @@ const backToStep2 = () => {
 
         <form @submit.prevent="handleRegisterCompany" novalidate class="space-y-5">
 
-          <!-- Company name -->
-          <div>
-            <label for="pro-company" class="block text-sm font-heading font-500 text-text mb-2">Raison sociale</label>
-            <input
-              id="pro-company"
-              type="text"
-              v-model="proForm.company_name"
-              placeholder="DUPONT PLOMBERIE SARL"
-              @blur="proTouched.company_name = true"
-              class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-              :class="proErrors.company_name ? 'border-red-500' : 'border-border'"
-              :aria-invalid="!!proErrors.company_name"
-            />
-            <p v-if="proErrors.company_name" class="mt-2 text-xs text-red-600 font-500">{{ proErrors.company_name }}</p>
-          </div>
 
           <!-- SIRET -->
           <div>
@@ -572,13 +605,32 @@ const backToStep2 = () => {
               maxlength="19"
               inputmode="numeric"
               @input="normalizeSiret(($event.target as HTMLInputElement).value)"
-              @blur="proTouched.siret = true"
+              @blur="proTouched.siret = true; fetchSuggestedCategories()"
               class="w-full h-11 px-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 font-mono tracking-wider transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="proErrors.siret ? 'border-red-500' : 'border-border'"
               :aria-invalid="!!proErrors.siret"
             />
             <p v-if="proErrors.siret" class="mt-2 text-xs text-red-600 font-500">{{ proErrors.siret }}</p>
+            <p v-else-if="siretPreview.loading" class="mt-1.5 text-xs text-muted-foreground">Recherche...</p>
+            <p v-else-if="siretPreview.companyName" class="mt-1.5 text-xs text-green-700 font-500">✓ {{ siretPreview.companyName }}</p>
             <p v-else class="mt-1.5 text-xs text-muted-foreground">14 chiffres, sans espace.</p>
+          </div>
+
+          <!-- Company name -->
+          <div>
+            <label for="pro-company" class="block text-sm font-heading font-500 text-text mb-2">Raison sociale</label>
+            <input
+              id="pro-company"
+              type="text"
+              v-model="proForm.company_name"
+              placeholder="DUPONT PLOMBERIE SARL"
+              maxlength="100"
+              @blur="proTouched.company_name = true; companyNameAutoFilled = false"
+              class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              :class="proErrors.company_name ? 'border-red-500' : 'border-border'"
+              :aria-invalid="!!proErrors.company_name"
+            />
+            <p v-if="proErrors.company_name" class="mt-2 text-xs text-red-600 font-500">{{ proErrors.company_name }}</p>
           </div>
 
           <!-- Manager name -->
@@ -588,6 +640,8 @@ const backToStep2 = () => {
               id="pro-name"
               type="text"
               v-model="proForm.full_name"
+              placeholder="Jean Dupont"
+              maxlength="100"
               @blur="proTouched.full_name = true"
               class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="proErrors.full_name ? 'border-red-500' : 'border-border'"
@@ -720,7 +774,7 @@ const backToStep2 = () => {
               <p class="text-sm font-semibold text-foreground">Extrait KBIS</p>
               <p class="text-xs text-muted-foreground mt-0.5">Moins de 3 mois · PDF, JPG ou PNG</p>
             </div>
-            <div v-if="uploads.kbis.status === 'success'" class="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+            <div v-if="uploads.kbis.status === 'success'" class="flex items-center gap-1.5 text-xs font-semibold text-green-700">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
               Envoyé
             </div>
@@ -755,13 +809,32 @@ const backToStep2 = () => {
               <p class="text-sm font-semibold text-foreground">Attestation décennale</p>
               <p class="text-xs text-muted-foreground mt-0.5">Date d'expiration vérifiée · PDF, JPG ou PNG</p>
             </div>
-            <div v-if="uploads.decennale.status === 'success'" class="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+            <div v-if="uploads.decennale.status === 'success'" class="flex items-center gap-1.5 text-xs font-semibold text-green-700">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
               Envoyée
             </div>
           </div>
 
           <div v-if="uploads.decennale.status !== 'success'" class="space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-muted-foreground mb-1">Numéro de police <span class="text-red-500">*</span></label>
+                <input
+                  v-model="uploads.decennale.policyNumber"
+                  type="text"
+                  placeholder="Ex : 12345678A"
+                  class="h-9 w-full px-3 border border-border rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-muted-foreground mb-1">Date d'expiration <span class="text-red-500">*</span></label>
+                <input
+                  v-model="uploads.decennale.expirationDate"
+                  type="date"
+                  class="h-9 w-full px-3 border border-border rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
+                />
+              </div>
+            </div>
             <label class="flex items-center gap-3 cursor-pointer text-sm">
               <input type="file" @change="handleFileSelect($event, 'decennale')" accept=".pdf,image/*" class="sr-only" />
               <span class="h-9 px-4 border border-border rounded-md text-xs font-medium hover:bg-muted transition-colors flex items-center gap-2">
@@ -774,7 +847,7 @@ const backToStep2 = () => {
             <button
               v-if="files.decennale"
               @click="uploadDocument('decennale')"
-              :disabled="uploads.decennale.status === 'uploading'"
+              :disabled="uploads.decennale.status === 'uploading' || !uploads.decennale.policyNumber || !uploads.decennale.expirationDate"
               class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
             >
               <svg v-if="uploads.decennale.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>

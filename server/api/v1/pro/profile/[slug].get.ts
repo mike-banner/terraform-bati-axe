@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: pro, error } = await supabase
     .from('professionals')
-    .select('id, company_name, full_name, email, phone, canonical_slug, short_id, category, categories, bio, zone, logo_url, is_verified, is_claimed, decennal_status, siret_status, created_at')
+    .select('id, company_name, full_name, email, phone, canonical_slug, short_id, category, categories, bio, zone, logo_url, is_verified, is_claimed, decennal_status, siret_status, siret_legal_form, created_at')
     .eq('short_id', shortId)
     .maybeSingle()
 
@@ -67,6 +67,7 @@ export default defineEventHandler(async (event) => {
       is_claimed: pro.is_claimed as boolean,
       decennal_status: pro.decennal_status as string,
       siret_status: pro.siret_status as string | null,
+      siret_legal_form: pro.siret_legal_form as string | null,
       member_since: pro.created_at as string,
     },
     realisations: realisations ?? [],

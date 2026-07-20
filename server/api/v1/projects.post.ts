@@ -17,7 +17,7 @@ const createProjectSchema = z.object({
   // category/description/budget_range dérivés/composés server-side si absents.
   calculator_data: z.object({
     renovation_type: z.string().max(100),
-    pieces: z.array(z.string().max(100)),
+    pieces: z.array(z.string().max(100)).max(50, 'Trop de pièces sélectionnées.'),
     surface_m2: z.number().positive(),
     gamme: z.string().max(100),
     estimate_min: z.number().nonnegative(),

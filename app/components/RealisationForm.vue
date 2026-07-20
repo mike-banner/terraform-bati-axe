@@ -101,7 +101,7 @@ async function submit() {
   try {
     const res = await $fetch<{ status: string; realisation: Record<string, unknown> }>(
       '/api/v1/pro/realisations',
-      { method: 'POST', body: { title: title.value, description: description.value || null, city: city.value || null, image_urls } }
+      { method: 'POST', body: { title: title.value.trim(), description: description.value?.trim() || null, city: city.value?.trim() || null, image_urls } }
     )
     emit('created', res.realisation)
   } catch (e: any) {
@@ -125,17 +125,18 @@ function close() {
       <div class="space-y-4">
         <div>
           <label class="text-xs font-semibold text-text uppercase tracking-widest mb-1.5 block">Titre</label>
-          <input v-model="title" type="text" class="input w-full" placeholder="Ex: Rénovation toiture complète" />
+          <input v-model="title" type="text" class="input w-full" placeholder="Ex: Rénovation toiture complète" maxlength="100" />
         </div>
 
         <div>
           <label class="text-xs font-semibold text-text uppercase tracking-widest mb-1.5 block">Description</label>
-          <textarea v-model="description" rows="3" class="input w-full resize-none" placeholder="Décrivez le chantier réalisé…" />
+          <textarea v-model="description" rows="3" class="input w-full resize-none" placeholder="Décrivez le chantier réalisé…" maxlength="500" />
+          <p class="text-xs text-muted-foreground mt-1 text-right">{{ description.length }} / 500</p>
         </div>
 
         <div>
           <label class="text-xs font-semibold text-text uppercase tracking-widest mb-1.5 block">Ville</label>
-          <input v-model="city" type="text" class="input w-full" placeholder="Ex: Carrières-sous-Poissy" />
+          <input v-model="city" type="text" class="input w-full" placeholder="Ex: Carrières-sous-Poissy" maxlength="100" />
         </div>
 
         <div>
