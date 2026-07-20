@@ -57,7 +57,7 @@ onMounted(() => {
     <!-- MOBILE HEADER -->
     <header class="md:hidden flex-shrink-0 h-14 z-[60] bg-page/98 border-b border-border flex items-center justify-between px-5">
       <h1 class="text-sm font-black tracking-tight text-foreground flex items-center gap-2">
-        BÂTI-AXE
+        <NuxtLink to="/" class="hover:opacity-80 transition-opacity">BÂTI-AXE</NuxtLink>
         <span v-if="isAdminRoute" class="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-sm bg-red-500/10 text-red-500 border border-red-500/20">Admin</span>
         <span v-else class="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-sm bg-primary/10 text-primary border border-primary/20">Pro</span>
       </h1>
@@ -71,7 +71,7 @@ onMounted(() => {
       <aside class="hidden md:flex w-72 flex-shrink-0 bg-page border-r border-border flex-col p-6 overflow-y-auto custom-scrollbar" :class="isAdminRoute ? 'border-slate-800' : ''">
         
         <div class="flex items-center gap-2 mb-8 px-2">
-          <span class="text-xl font-black tracking-tight">BÂTI-AXE</span>
+          <NuxtLink to="/" class="text-xl font-black tracking-tight hover:opacity-80 transition-opacity">BÂTI-AXE</NuxtLink>
           <span v-if="isAdminRoute" class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-md bg-red-500/10 text-red-500 border border-red-500/20">Admin</span>
           <span v-else class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20">Pro</span>
         </div>
