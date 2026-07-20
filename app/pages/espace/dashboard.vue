@@ -208,7 +208,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                   Vérification en cours
                 </span>
                 <BadgeEntrepriseVerifiee v-if="pro.siret_status === 'active'" />
-                <BadgeDecennaleCertifiee v-if="pro.decennal_status === 'valid'" />
+                <BadgeDecennaleCertifiee v-if="decennale?.status === 'approved'" />
                 <NuxtLink
                   v-if="pro.subscription_status !== 'active'"
                   to="/espace/premium"
