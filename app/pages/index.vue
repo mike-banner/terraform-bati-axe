@@ -56,15 +56,15 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
           </div>
         </div>
 
-        <!-- Carte accent : mise en relation -->
+        <!-- Carte accent : Gratuit et sans engagement -->
         <div class="reveal-item bento-card md:col-span-4 flex flex-col justify-between rounded-3xl bg-industrial p-8 text-white">
           <div class="flex items-center gap-2 text-sm font-medium text-orange-200">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            Mise en relation
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            100% Gratuit
           </div>
           <div>
-            <div class="text-5xl font-bold">2 min</div>
-            <p class="mt-2 text-sm text-white/80">Délai moyen avant qu'un artisan de votre zone reçoive l'alerte, budget et type de chantier inclus.</p>
+            <div class="text-3xl font-bold leading-tight">Sans engagement</div>
+            <p class="mt-3 text-sm text-white/80">Notre service est entièrement gratuit pour les particuliers. Comparez les artisans et restez libre de votre choix.</p>
           </div>
         </div>
 
@@ -89,7 +89,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
           >
           <div class="absolute bottom-4 left-4 flex items-center gap-2.5 rounded-full bg-safety px-3.5 py-2 text-white shadow-lg">
             <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
-            <span class="text-sm font-semibold">Pro vérifié à la main</span>
+            <span class="text-sm font-semibold">Entreprise Vérifiée (API Gouv)</span>
           </div>
         </div>
       </div>
@@ -163,8 +163,8 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </p>
       </div>
       <BeforeAfterSlider
-        before-src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1400&q=80"
-        after-src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1400&q=80"
+        before-src="/images/avant.jpg"
+        after-src="/images/apres.jpg"
         before-label="Avant travaux"
         after-label="Après travaux"
         before-alt="Chantier de rénovation en cours"
