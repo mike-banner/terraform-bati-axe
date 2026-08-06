@@ -18,6 +18,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 5.8: Tunnel B2B & Apporteurs d'Affaires** - Landing page partenaire ("Bras armé technique"), dépôt de plans/rapports expert, SLA de 4h, attestation décennale 1-clic pour syndics, archis et assureurs. (completed 2026-07-20)
 - [ ] **Phase 6: SMS + Acquisition + Messagerie** - SMS différencié (Basic→upgrade / Premium→lead direct), cold outreach pros DB, dashboard particulier magic-link, messagerie in-app pro↔particulier, email onboarding (désactivé par défaut), feedback loop lead.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville.
+- [ ] **Phase 8: Architecture PWA Mobile-First & Packaging Stores (Capacitor 6)** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell, wrapper Capacitor 6 pour déploiement App Store & Play Store.
 
 ## Phase Details
 
@@ -254,6 +255,17 @@ Plans:
 **Plans**: TBD
 **UI hint**: yes
 
+### Phase 8: Architecture PWA Mobile-First & Packaging Stores (Capacitor 6)
+**Goal**: Transformer Bâti-Axe en une Web App autonome ultrarapide résiliente hors-ligne (Offline-Resilient) et préparer la publication sur iOS App Store et Android Play Store.
+**Depends on**: Phase 4.7, Phase 6
+**Success Criteria** (what must be TRUE):
+  1. `@vite-pwa/nuxt` est intégré avec stratégie *StaleWhileRevalidate* et Web App Manifest standalone.
+  2. L'UI propose un Shell Mobile-First natif (Bottom Navigation Bar sur `< 768px`, Safe Area Insets iOS).
+  3. L'application gère la mise en cache locale des données et la ré-essai asynchrone des mutations en cas de perte de réseau.
+  4. Capacitor 6 est initialisé avec accès aux API natives (Appareil photo, Biométrie, Push, Haptics) pour les builds iOS (`.xcworkspace`) et Android (`.aab`).
+**Plans**: TBD
+**UI hint**: yes
+
 ## Progress
 
 | Phase | Plans Complete | Status | Completed |
@@ -271,3 +283,4 @@ Plans:
 | 5.8. Tunnel B2B & Apporteurs d'Affaires | 3/3 | Complete   | 2026-07-20 |
 | 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
+| 8. Architecture PWA Mobile-First & Packaging Stores | 0/TBD | Not started | - |
