@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: in_progress
-stopped_at: Phase 06 en cours — plan 06-01 (Magic Link & Messagerie) vérifié et SUMMARY rédigé rétroactivement ; 06-02/06-03 restent à planifier, 06-04 (SMS) différé volontairement
-last_updated: 2026-08-06T14:30:00.000Z
-last_activity: 2026-08-06
+milestone: v0.9.0-experience-pro
+milestone_name: Experience & Growth Pro
+status: ready_to_plan_v0.9.1
+stopped_at: Phase 5.9 context gathered, prête à planifier
+last_updated: "2026-08-18T00:00:00.000Z"
+last_activity: 2026-08-18
 progress:
-  total_phases: 15
-  completed_phases: 12
+  total_phases: 13
+  completed_phases: 10
   total_plans: 49
-  completed_plans: 46
-  percent: 94
+  completed_plans: 44
+  percent: 77
 ---
 
 # Project State
@@ -27,17 +27,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 06 — SMS + Acquisition + Messagerie
+**Current focus**: Phase 5.9 — Extension Simulateur (API Mes Aides Réno), puis Phase 8 — PWA Mobile-First (scope réduit). Phase 06 différée (décision utilisateur 2026-08-18).
 
 ## Current Position
 
-Phase: 06 (sms-acquisition-messagerie)
-Plan: 06-01 complete (rétroactif), 06-02/06-03 à planifier, 06-04 différé
-Status: In progress
-Last activity: 2026-08-06
-Progress: [██████████████████░░] 46/49 plans (94%)
+Phase: 5.9 (extension-simulateur-mes-aides-reno) — à planifier
+Ensuite: Phase 8 (pwa-mobile-first, scope réduit sans Capacitor)
+Status: Not started — Phase 06 mise en pause (06-01 seul livré)
+Last activity: 2026-08-18
 
-### Plans Phase 06 (SMS + Acquisition + Messagerie)
+### Plans Phase 06 (SMS + Acquisition + Messagerie) — DIFFÉRÉE
 
 - [x] 06-01 — Magic Link & Messagerie In-App (codé et mergé dans `dev` le 2026-06-15, hors flux GSD ; vérifié via `06-UAT.md` status complete 4/5 PASS + 1 fixed ; `06-01-SUMMARY.md` rédigé rétroactivement le 2026-08-06). Bug majeur trouvé et corrigé : verrou de déblocage manquant côté messagerie pro (ADR-004), fix sur `fix/messaging-unlock-guard`.
 - [ ] 06-02 — Acquisition Pros (cold email) — 🔴 bloqué : pas de liste de pros (CSV à fournir)
@@ -121,6 +120,6 @@ Dette connue héritée du plan 06-01 : passe visuelle Playwright jamais faite (M
 
 ## Session Continuity
 
-Last session: 2026-08-06T14:30:00.000Z
-Stopped at: STATE.md resynchronisé via /gsd:progress — Phase 06 in_progress, plan 06-01 vérifié rétroactivement
-Resume file: .planning/phases/06-sms-acquisition-messagerie/.continue-here.md (daté 2026-06-15, partiellement obsolète — le merge et une partie de la dette qu'il liste ont déjà été traités depuis)
+Last session: 2026-08-17T23:21:33.239Z
+Stopped at: Phase 5.9 context gathered
+Resume file: .planning/phases/05.9-extension-simulateur-mes-aides-reno/05.9-CONTEXT.md
