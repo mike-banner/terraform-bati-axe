@@ -323,6 +323,7 @@ const handleSubmit = async () => {
             :cout-travaux-min="estimate.estimate_min"
             :cout-travaux-max="estimate.estimate_max"
             :code-postal-initial="form.postal_code"
+            :surface="form.surface_m2"
             @complete="onAidesComplete"
             @skip="onAidesSkip"
           />

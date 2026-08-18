@@ -8,6 +8,7 @@ const schema = z.object({
     logement_type: z.string().max(30),
     statut_proprietaire: z.string().max(30),
     periode_construction: z.string().max(30),
+    surface: z.number().positive().max(10000),
     code_postal: z.string().regex(/^\d{5}$/),
   }),
   cout_travaux_min: z.number().nonnegative(),

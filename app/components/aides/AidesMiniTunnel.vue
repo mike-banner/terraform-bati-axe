@@ -5,7 +5,8 @@ const props = withDefaults(defineProps<{
   coutTravauxMin: number
   coutTravauxMax: number
   codePostalInitial?: string
-}>(), { codePostalInitial: '' })
+  surface?: number
+}>(), { codePostalInitial: '', surface: 0 })
 
 const emit = defineEmits<{
   (e: 'complete', p: { aides_estimees: number; reste_a_charge_min: number; reste_a_charge_max: number }): void
@@ -46,6 +47,7 @@ const form = reactive({
   logement_type: '',
   periode_construction: '',
   statut_proprietaire: '',
+  surface: props.surface ?? 0,
   revenu_classe: '',
   code_postal: props.codePostalInitial,
 })
@@ -53,9 +55,11 @@ const result = ref<null | { aides_total: number; reste_a_charge_min: number; res
 const unavailable = ref(false)
 const isLoading = ref(false)
 
+const hasSurface = computed(() => (props.surface ?? 0) > 0)
+
 const isStepValid = computed(() => {
   if (step.value === 1) {
-    return !!form.logement_type && !!form.periode_construction && !!form.statut_proprietaire
+    return !!form.logement_type && !!form.periode_construction && !!form.statut_proprietaire && form.surface > 0
   }
   return !!form.revenu_classe && /^\d{5}$/.test(form.code_postal)
 })
@@ -82,6 +86,7 @@ const submit = async () => {
           logement_type: form.logement_type,
           statut_proprietaire: form.statut_proprietaire,
           periode_construction: form.periode_construction,
+          surface: form.surface,
           code_postal: form.code_postal,
         },
         cout_travaux_min: props.coutTravauxMin,
@@ -183,6 +188,21 @@ const finish = () => {
             <span class="text-sm font-semibold">{{ s.label }}</span>
           </button>
         </div>
+      </div>
+
+      <div v-if="!hasSurface">
+        <label for="aid-surface" class="block text-sm font-medium text-foreground mb-1.5">Surface du logement (m²)</label>
+        <input
+          id="aid-surface"
+          type="number"
+          v-model.number="form.surface"
+          min="1"
+          max="10000"
+          step="1"
+          inputmode="numeric"
+          placeholder="100"
+          class="w-32 h-11 px-3 border border-border rounded-sm text-base font-semibold bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
+        />
       </div>
 
     </div>

@@ -5,6 +5,7 @@ export interface AidesRenoSituation {
   logement_type: string
   statut_proprietaire: string
   periode_construction: string
+  surface: number
 }
 
 /**
@@ -22,6 +23,8 @@ export function buildSituationQuery(situation: AidesRenoSituation, inseeCode: st
     // ✅ Validé 2026-08-18 par appel réel : cette clé fait disparaître « logement . période de construction » des missingVariables.
     // NB : « résidence principale » et « nb personnes » ne sont PAS consommés par `eligibilite` (testés : aucune incidence sur missingVariables) → non envoyés.
     'logement.période de construction': `'${situation.periode_construction}'`,
+    // ✅ Validé 2026-08-18 par appel réel : accepte un nombre simple (ex. '100').
+    'logement.surface': String(situation.surface),
   }
 }
 
