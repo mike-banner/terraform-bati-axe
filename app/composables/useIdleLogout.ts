@@ -13,7 +13,6 @@ export function useIdleLogout(timeoutMinutes = 30) {
     if (!user.value) return
 
     idleTimer = setTimeout(async () => {
-      console.log(`[Idle] ${timeoutMinutes}min inactivité — déconnexion...`)
       try {
         await supabase.auth.signOut()
         await router.push('/')

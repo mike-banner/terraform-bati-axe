@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     .eq('professional_id', user.id)
     .order('created_at', { ascending: false })
 
-  if (error) throw createError({ statusCode: 500, statusMessage: error.message })
+  if (error) serverError('realisations.index.get', error)
 
   return { status: 'SUCCESS', realisations: data ?? [] }
 })

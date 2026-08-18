@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     .select()
     .single()
 
-  if (error) throw createError({ statusCode: 500, statusMessage: error.message })
+  if (error) serverError('realisations.index.post', error)
 
   return { status: 'SUCCESS', realisation: data }
 })

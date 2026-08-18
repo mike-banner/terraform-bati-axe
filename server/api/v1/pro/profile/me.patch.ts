@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
     .update(parsed.data)
     .eq('id', user.id)
 
-  if (error) throw createError({ statusCode: 500, statusMessage: error.message })
+  if (error) serverError('profile.me.patch', error)
 
   const { data: pro } = await supabase
     .from('professionals')
