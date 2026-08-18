@@ -15,7 +15,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
 <template>
   <div>
     <!-- ───────────────── Hero Bento Grid (Variant C) ───────────────── -->
-    <section class="mx-auto w-full max-w-7xl px-6 pt-12 pb-24">
+    <section class="mx-auto w-full max-w-7xl px-6 pt-6 pb-12">
       <div class="reveal grid grid-cols-1 gap-6 md:grid-cols-12">
         <!-- Carte intro -->
         <div class="reveal-item bento-card md:col-span-8 flex min-h-[420px] flex-col justify-between rounded-sm border border-slate-200 bg-white p-8 shadow-lg md:p-10">
@@ -70,7 +70,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </div>
 
         <!-- Carte visuelle : photo chantier -->
-        <div class="reveal-item bento-card md:col-span-12 relative min-h-[280px] overflow-hidden rounded-sm border border-slate-200 shadow-lg">
+        <div class="reveal-item bento-card md:col-span-12 relative mt-8 min-h-[240px] overflow-hidden rounded-sm border border-slate-200 shadow-lg">
           <img
             :src="heroPhoto"
             alt="Chantier de rénovation en cours, mur en briques apparentes"
@@ -88,15 +88,15 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
 
     <!-- ───────────────── Teaser aides (Phase 05.9 — visuel, aucun calcul) ───────────────── -->
     <section class="mx-auto w-full max-w-7xl px-6 pb-24">
-      <div class="reveal-item bento-card rounded-sm bg-safety p-8 md:p-12 shadow-lg">
+      <div class="reveal-item bento-card rounded-sm border border-slate-200 bg-white p-8 md:p-12 shadow-lg">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div class="max-w-2xl">
-            <h2 class="text-3xl md:text-4xl font-black tracking-tight text-white" style="text-wrap: balance">Estimez vos aides en 30 secondes</h2>
-            <p class="mt-3 text-base font-semibold leading-relaxed text-white">MaPrimeRénov', CEE, Éco-PTZ : découvrez votre reste à charge réel avant de choisir votre artisan.</p>
+            <h2 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Estimez vos aides en <span class="text-safety">30 secondes</span></h2>
+            <p class="mt-3 text-base leading-relaxed text-slate-500">MaPrimeRénov', CEE, Éco-PTZ : découvrez votre reste à charge réel avant de choisir votre artisan.</p>
           </div>
           <NuxtLink
             to="/calculateur-aides"
-            class="inline-flex h-14 shrink-0 items-center gap-2 rounded-full bg-white px-8 text-lg font-bold text-safety shadow-lg transition-transform hover:scale-105"
+            class="inline-flex h-14 shrink-0 items-center gap-2 rounded-full bg-safety px-8 text-lg font-bold text-white shadow-lg shadow-safety/20 transition-transform hover:scale-105"
           >
             Calculer mes aides
             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
