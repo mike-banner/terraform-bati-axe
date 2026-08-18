@@ -8,7 +8,15 @@ useHead({
 
 const heroPhoto = '/images/avant.jpg'
 
-const { data: showcased } = await useFetch('/api/v1/completed-projects')
+interface ShowcasedProject {
+  id: string
+  title: string
+  city: string
+  image_urls: string[]
+  likes?: { count: number }[]
+}
+
+const { data: showcased } = await useFetch<{ status: string; projects: ShowcasedProject[] }>('/api/v1/completed-projects')
 const showcasedProjects = computed(() => showcased.value?.projects ?? [])
 </script>
 

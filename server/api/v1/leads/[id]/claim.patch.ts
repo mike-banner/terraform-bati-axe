@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   if (authError || !user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
 
   const parsedId = idSchema.safeParse(getRouterParam(event, 'id'))
-  if (!parsedId.success) throw createError({ statusCode: 400, statusMessage: parsedId.error.issues[0].message })
+  if (!parsedId.success) throw createError({ statusCode: 400, statusMessage: parsedId.error.issues[0]?.message ?? 'Identifiant de lead invalide.' })
   const id = parsedId.data
 
   const supabase = await serverSupabaseServiceRole(event) as any
