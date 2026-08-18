@@ -14,7 +14,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
 
 <template>
   <div>
-    <!-- ───────────────── Hero Bento Grid (Variant C) ───────────────── -->
+    <!-- ───────────────── Hero Bento Grid ───────────────── -->
     <section class="mx-auto w-full max-w-7xl px-6 pt-6 pb-12">
       <div class="reveal grid grid-cols-1 gap-6 md:grid-cols-12">
         <!-- Carte intro -->
@@ -57,7 +57,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </div>
 
         <!-- Carte bénéfices : critères contrôlés -->
-        <div class="reveal-item bento-card md:col-span-4 flex flex-col justify-center gap-5 rounded-sm bg-slate-900 p-8 text-white shadow-lg">
+        <div class="reveal-item bento-card md:col-span-4 flex flex-col justify-center gap-5 rounded-sm bg-slate-800 p-8 text-white shadow-lg">
           <div>
             <p class="text-sm font-semibold text-slate-300">Contrôlés avant activation</p>
             <p class="mt-2 text-sm leading-relaxed text-slate-400">Chaque artisan passe ces vérifications avant de pouvoir vous contacter.</p>
@@ -86,13 +86,27 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
       </div>
     </section>
 
-    <!-- ───────────────── Teaser aides (Phase 05.9 — visuel, aucun calcul) ───────────────── -->
+    <!-- ───────────────── Teaser aides ───────────────── -->
     <section class="mx-auto w-full max-w-7xl px-6 pb-24">
       <div class="reveal-item bento-card rounded-sm border border-slate-200 bg-white p-8 md:p-12 shadow-lg">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div class="max-w-2xl">
             <h2 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Estimez vos aides en <span class="text-safety">30 secondes</span></h2>
-            <p class="mt-3 text-base leading-relaxed text-slate-500">MaPrimeRénov', CEE, Éco-PTZ : découvrez votre reste à charge réel avant de choisir votre artisan.</p>
+            <div class="mt-4 flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-sm font-semibold text-slate-700">
+                <svg class="h-3.5 w-3.5 shrink-0 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                MaPrimeRénov'
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-sm font-semibold text-slate-700">
+                <svg class="h-3.5 w-3.5 shrink-0 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                CEE
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-sm font-semibold text-slate-700">
+                <svg class="h-3.5 w-3.5 shrink-0 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                Éco-PTZ
+              </span>
+            </div>
+            <p class="mt-4 text-base leading-relaxed text-slate-500">Découvrez votre reste à charge réel avant de choisir votre artisan.</p>
           </div>
           <NuxtLink
             to="/calculateur-aides"
@@ -105,8 +119,8 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
       </div>
     </section>
 
-    <!-- ───────────────── Bandeau béton plein écran (manifeste) ───────────────── -->
-    <section class="w-full bg-slate-900 text-white">
+    <!-- ───────────────── Bandeau manifeste ───────────────── -->
+    <section class="w-full bg-slate-800 text-white">
       <div class="mx-auto w-full max-w-7xl px-6 py-[clamp(3rem,7vw,5.5rem)]">
         <p class="max-w-[24ch] text-4xl font-black tracking-tight leading-[1.1] sm:text-5xl" style="text-wrap: balance">
           Vos coordonnées restent masquées jusqu'au contact.
@@ -117,7 +131,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
       </div>
     </section>
 
-    <!-- ───────────────── Comment ça marche (process en 3 temps) ───────────────── -->
+    <!-- ───────────────── Comment ça marche ───────────────── -->
     <section class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
       <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Comment ça marche</h2>
       <div class="reveal mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -130,7 +144,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </div>
         <div class="reveal-item bento-card rounded-sm border border-slate-200 bg-white p-8 shadow-lg">
           <span class="text-5xl font-bold text-industrial select-none">02</span>
-          <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Mise en relation sous 2 min</h3>
+          <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Mise en relation</h3>
           <p class="text-sm leading-relaxed text-slate-500">
             Les artisans partenaires de votre zone reçoivent une alerte avec le budget et le type de chantier. Pas vos coordonnées.
           </p>
@@ -139,13 +153,13 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
           <span class="text-5xl font-bold text-industrial select-none">03</span>
           <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Contact débloqué</h3>
           <p class="text-sm leading-relaxed text-slate-500">
-            Le premier artisan abonné peut vous appeler immédiatement. Pour les autres, vos coordonnées sont accessibles après 24h.
+            Échangez directement avec les artisans : devis, visite, planning. Vous choisissez avec qui avancer.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- ───────────────── Chantiers Réalisés (preuve sociale) ───────────────── -->
+    <!-- ───────────────── Chantiers Réalisés ───────────────── -->
     <section v-if="showcasedProjects.length" class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
       <div class="mb-10 max-w-[52ch]">
         <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Chantiers Réalisés</h2>
@@ -166,29 +180,36 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
 
     <!-- ───────────────── Preuve : avant / après ───────────────── -->
     <section class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
-      <div class="mb-10 max-w-[52ch]">
-        <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Avant et après, sur de vrais chantiers</h2>
-        <p class="mt-3 text-base leading-relaxed text-slate-500">
-          Glissez pour comparer des travaux menés par des artisans vérifiés.
-        </p>
+      <div class="mb-10 text-center">
+        <h2 class="mx-auto max-w-[52ch] text-5xl md:text-6xl font-black tracking-tight text-slate-900" style="text-wrap: balance">
+          La preuve par l'image.
+        </h2>
+      </div>
+      <div class="mb-5 flex items-center justify-between">
+        <span class="inline-flex items-center gap-2.5 text-2xl font-black tracking-tight text-slate-500">
+          <span class="inline-block h-3 w-3 rounded-full bg-slate-400" aria-hidden="true"></span>
+          Avant
+        </span>
+        <span class="inline-flex items-center gap-2.5 text-2xl font-black tracking-tight text-safety">
+          <span class="inline-block h-3 w-3 rounded-full bg-safety" aria-hidden="true"></span>
+          Après
+        </span>
       </div>
       <BeforeAfterSlider
         before-src="/images/avant.jpg"
         after-src="/images/apres.jpg"
-        before-label="Avant travaux"
-        after-label="Après travaux"
         before-alt="Chantier de rénovation en cours"
         after-alt="Rénovation terminée"
       />
     </section>
 
     <!-- ───────────────── CTA final ───────────────── -->
-    <section class="w-full border-t border-slate-200 bg-white">
+    <section class="w-full bg-slate-800">
       <div class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,5.5rem)] text-center">
-        <h2 class="mx-auto max-w-[20ch] text-[clamp(1.75rem,3.5vw,3rem)] font-black tracking-tight text-slate-900" style="text-wrap: balance">
+        <h2 class="mx-auto max-w-[20ch] text-[clamp(1.75rem,3.5vw,3rem)] font-black tracking-tight text-white" style="text-wrap: balance">
           Prêt à démarrer votre projet ?
         </h2>
-        <p class="mx-auto mt-4 max-w-[44ch] text-base text-slate-500">
+        <p class="mx-auto mt-4 max-w-[44ch] text-base text-slate-300">
           Décrivez votre besoin en 3 minutes. Nous nous occupons de la mise en relation.
         </p>
         <NuxtLink

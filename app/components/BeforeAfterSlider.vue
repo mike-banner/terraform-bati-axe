@@ -2,13 +2,9 @@
 withDefaults(defineProps<{
   beforeSrc: string
   afterSrc: string
-  beforeLabel?: string
-  afterLabel?: string
   beforeAlt?: string
   afterAlt?: string
 }>(), {
-  beforeLabel: 'Avant',
-  afterLabel: 'Après',
   beforeAlt: 'Image avant',
   afterAlt: 'Image après',
 })
@@ -79,14 +75,6 @@ function onTouchMove(e: TouchEvent) { if (e.touches[0]) getPosition(e.touches[0]
         </svg>
       </div>
     </div>
-
-    <!-- Labels -->
-    <span class="absolute bottom-3 left-3 text-[11px] font-semibold px-2.5 py-1 rounded bg-black/55 text-white backdrop-blur-sm pointer-events-none">
-      {{ beforeLabel }}
-    </span>
-    <span class="absolute bottom-3 right-3 text-[11px] font-semibold px-2.5 py-1 rounded bg-black/55 text-white backdrop-blur-sm pointer-events-none">
-      {{ afterLabel }}
-    </span>
 
     <!-- Hint (fades on hover) -->
     <div
