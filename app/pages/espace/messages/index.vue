@@ -8,13 +8,13 @@
     <!-- Loading -->
     <template v-if="pending">
       <div class="space-y-4">
-        <div v-for="i in 3" :key="i" class="h-24 bg-slate-100 rounded-3xl animate-pulse" />
+        <div v-for="i in 3" :key="i" class="h-24 bg-slate-100 rounded-sm animate-pulse" />
       </div>
     </template>
 
     <!-- Content -->
     <template v-else>
-      <div v-if="conversations.length === 0" class="text-center py-16 border border-slate-200 rounded-3xl bg-white">
+      <div v-if="conversations.length === 0" class="text-center py-16 border border-slate-200 rounded-sm bg-white">
         <svg class="w-12 h-12 text-slate-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
         </svg>
@@ -30,7 +30,7 @@
           v-for="conv in conversations"
           :key="conv.lead_id"
           :to="`/espace/leads/${conv.lead_id}`"
-          class="reveal-item bento-card block p-6 bg-white border border-slate-200 rounded-3xl shadow-sm"
+          class="reveal-item bento-card block p-6 bg-white border border-slate-200 rounded-sm shadow-sm"
         >
           <div class="flex items-start justify-between gap-4">
             <div>

@@ -106,7 +106,7 @@ async function handleLogoUpload(event: Event) {
 </script>
 
 <template>
-  <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8 mb-8">
+  <div class="bento-card bg-white rounded-sm border border-slate-200 shadow-sm p-8 mb-8">
     <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Logo d'entreprise</h2>
     <div class="flex items-center gap-4">
       <div class="w-20 h-20 border border-border rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0">

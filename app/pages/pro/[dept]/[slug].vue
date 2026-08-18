@@ -204,21 +204,21 @@ useHead(() => ({
 
       <!-- Identity grid -->
       <div class="grid grid-cols-2 gap-3 mb-8">
-        <div v-if="pro.email" class="p-4 bg-white border border-slate-200 rounded-2xl">
+        <div v-if="pro.email" class="p-4 bg-white border border-slate-200 rounded-sm">
           <p class="text-xs text-slate-500 mb-1">E-mail</p>
           <p class="text-sm font-medium text-slate-900 break-all">{{ pro.email }}</p>
         </div>
-        <div v-if="pro.phone" class="p-4 bg-white border border-slate-200 rounded-2xl">
+        <div v-if="pro.phone" class="p-4 bg-white border border-slate-200 rounded-sm">
           <p class="text-xs text-slate-500 mb-1">Téléphone</p>
           <p class="text-sm font-medium text-slate-900">{{ pro.phone }}</p>
         </div>
-        <div class="p-4 bg-white border border-slate-200 rounded-2xl">
+        <div class="p-4 bg-white border border-slate-200 rounded-sm">
           <p class="text-xs text-slate-500 mb-1">Corps de métier</p>
           <p class="text-sm font-medium text-slate-900">
             {{ pro.category ? (CATEGORY_LABELS[pro.category] ?? pro.category) : 'Non renseigné' }}
           </p>
         </div>
-        <div class="p-4 bg-white border border-slate-200 rounded-2xl">
+        <div class="p-4 bg-white border border-slate-200 rounded-sm">
           <p class="text-xs text-slate-500 mb-1">Inscrit le</p>
           <p class="text-sm font-medium text-slate-900">{{ memberDate }}</p>
         </div>
@@ -229,7 +229,7 @@ useHead(() => ({
         <h2 class="text-sm font-semibold text-slate-900 mb-4">Documents déposés</h2>
 
         <div v-for="docType in (['kbis', 'decennale'] as const)" :key="docType">
-          <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+          <div class="bg-white border border-slate-200 rounded-sm overflow-hidden">
 
             <!-- Doc header -->
             <div class="flex items-center justify-between px-4 py-3 bg-slate-50">
@@ -266,7 +266,7 @@ useHead(() => ({
                 <button
                   @click="openDocument(docFor(docType)!.file_key)"
                   :disabled="docViewLoading === docFor(docType)!.file_key"
-                  class="inline-flex items-center gap-1.5 h-8 px-3 border border-border rounded-md text-xs font-medium hover:bg-muted transition-colors disabled:opacity-50"
+                  class="inline-flex items-center gap-1.5 h-8 px-3 border border-border rounded-sm text-xs font-medium hover:bg-muted transition-colors disabled:opacity-50"
                 >
                   <svg v-if="docViewLoading === docFor(docType)!.file_key" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
                   <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>

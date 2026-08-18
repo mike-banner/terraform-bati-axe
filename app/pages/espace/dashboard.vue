@@ -214,7 +214,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                 <NuxtLink
                   v-if="pro.subscription_status !== 'active'"
                   to="/espace/premium"
-                  class="cta-premium inline-flex items-center gap-1.5 h-[30px] px-3.5 text-background text-xs font-bold rounded-md"
+                  class="cta-premium inline-flex items-center gap-1.5 h-[30px] px-3.5 text-background text-xs font-bold rounded-sm"
                 >
                   <svg class="w-3.5 h-3.5 relative text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-1.012 1.09l1.242 5.385c.114.495-.417.882-.84.62l-4.757-2.937a.563.563 0 00-.594 0L5.973 21.085c-.423.262-.954-.125-.84-.62l1.242-5.385a.563.563 0 00-.182-.557L1.99 10.916c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
                   <span class="relative">Devenir Premium</span>
@@ -238,7 +238,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
             </p>
           </div>
           <!-- ─── Documents (toujours visible pour permettre le renouvellement) ───── -->
-          <div class="bento-card rounded-3xl p-6 border" :class="docsComplete ? 'border-slate-200 bg-white shadow-sm' : 'border-red-300 bg-red-50'">
+          <div class="bento-card rounded-sm p-6 border" :class="docsComplete ? 'border-slate-200 bg-white shadow-sm' : 'border-red-300 bg-red-50'">
             <div class="flex items-start gap-2 mb-3">
           <svg v-if="!docsComplete" class="w-4 h-4 text-red-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
           <div>
@@ -254,7 +254,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
           <div v-if="uploads.kbis.status !== 'success'" class="flex items-center gap-3 flex-wrap">
             <label class="cursor-pointer">
               <input type="file" @change="onFileSelect($event, 'kbis')" accept=".pdf,image/*" class="sr-only" />
-              <span class="h-9 px-4 border border-border rounded-md text-xs font-medium bg-white hover:bg-muted transition-colors flex items-center gap-2">
+              <span class="h-9 px-4 border border-border rounded-sm text-xs font-medium bg-white hover:bg-muted transition-colors flex items-center gap-2">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
                 Choisir
               </span>
@@ -303,7 +303,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                   type="text"
                   placeholder="Ex : 12345678A"
                   maxlength="50"
-                  class="h-9 w-full px-3 border border-border rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
+                  class="h-9 w-full px-3 border border-border rounded-sm text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
                 />
                 <p class="text-[10px] text-muted-foreground mt-1">Numéro figurant sur votre attestation, tel quel (l'assureur fixe le format — pas de nombre de chiffres fixe).</p>
               </div>
@@ -312,14 +312,14 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                 <input
                   v-model="uploads.decennale.expirationDate"
                   type="date"
-                  class="h-9 w-full px-3 border border-border rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
+                  class="h-9 w-full px-3 border border-border rounded-sm text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
                 />
               </div>
             </div>
             <div class="flex items-center gap-3 flex-wrap">
               <label class="cursor-pointer">
                 <input type="file" @change="onFileSelect($event, 'decennale')" accept=".pdf,image/*" class="sr-only" />
-                <span class="h-9 px-4 border border-border rounded-md text-xs font-medium bg-white hover:bg-muted transition-colors flex items-center gap-2">
+                <span class="h-9 px-4 border border-border rounded-sm text-xs font-medium bg-white hover:bg-muted transition-colors flex items-center gap-2">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
                   Choisir
                 </span>
@@ -357,7 +357,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
         </div>
 
         <!-- Responsabilité -->
-        <div class="mt-3 pt-3 border-t border-border/50">
+        <div class="mt-3 pt-3 border-t border-border/50 bg-yellow-100">
           <p class="text-xs text-muted-foreground leading-relaxed">
             <span class="font-semibold">⚠️ Responsabilité :</span> Vous garantissez l'authenticité et la validité des documents envoyés. Toute fausse déclaration ou document falsifié peut entraîner la fermeture de votre compte et des poursuites légales. BÂTI-AXE décline toute responsabilité en cas de fraude documentaire.
           </p>
@@ -368,7 +368,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
         <!-- COLONNE DROITE (Checklist - 40%) -->
         <div class="lg:col-span-2 order-1 lg:order-2 w-full lg:sticky lg:top-6">
           <!-- Progress checklist -->
-          <div class="bento-card border border-slate-200 rounded-3xl overflow-hidden bg-white shadow-sm">
+          <div class="bento-card border border-slate-200 rounded-sm overflow-hidden bg-white shadow-sm">
             <div v-for="(step, i) in steps" :key="i" class="flex items-start gap-3 px-5 py-3 border-b border-border last:border-0 hover:-translate-y-0.5 hover:shadow-md hover:bg-slate-50 transition-all duration-300 relative group">
           <div
             class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
