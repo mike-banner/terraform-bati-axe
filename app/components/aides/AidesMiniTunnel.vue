@@ -136,18 +136,18 @@ const finish = () => {
     </div>
 
     <!-- ─── Étape 1 : Votre logement ─────────────────────────────────────────── -->
-    <div v-if="step === 1" class="space-y-5">
+    <div v-if="step === 1" class="space-y-4">
       <h1 class="text-2xl md:text-3xl font-black tracking-tight text-foreground" style="text-wrap: balance">Votre logement</h1>
 
       <div>
-        <p class="text-sm font-semibold text-foreground mb-2">Type de logement</p>
+        <p class="text-sm font-semibold text-foreground mb-1.5">Type de logement</p>
         <div class="grid grid-cols-2 gap-2">
           <button
             v-for="t in logementTypes"
             :key="t.id"
             type="button"
             @click="form.logement_type = t.id"
-            class="bento-card min-h-11 flex items-center justify-between p-4 border rounded-sm text-left transition-colors"
+            class="bento-card min-h-10 flex items-center justify-between px-3 py-2.5 border rounded-sm text-left transition-colors"
             :class="form.logement_type === t.id ? 'border-orange-500 bg-orange-50 text-slate-900' : 'border-border hover:border-foreground/40 hover:bg-muted'"
           >
             <span class="text-sm font-semibold">{{ t.label }}</span>
@@ -159,14 +159,14 @@ const finish = () => {
       </div>
 
       <div>
-        <p class="text-sm font-semibold text-foreground mb-2">Période de construction</p>
-        <div class="grid grid-cols-2 gap-2">
+        <p class="text-sm font-semibold text-foreground mb-1.5">Période de construction</p>
+        <div class="grid grid-cols-3 gap-2">
           <button
             v-for="p in periodesConstruction"
             :key="p.id"
             type="button"
             @click="form.periode_construction = p.id"
-            class="bento-card min-h-11 flex items-center p-3 border rounded-sm text-left transition-colors"
+            class="bento-card min-h-10 flex items-center justify-center px-3 py-2.5 border rounded-sm text-center transition-colors"
             :class="form.periode_construction === p.id ? 'border-orange-500 bg-orange-50 text-slate-900' : 'border-border hover:border-foreground/40 hover:bg-muted'"
           >
             <span class="text-sm font-semibold">{{ p.label }}</span>
@@ -175,14 +175,14 @@ const finish = () => {
       </div>
 
       <div>
-        <p class="text-sm font-semibold text-foreground mb-2">Vous êtes</p>
+        <p class="text-sm font-semibold text-foreground mb-1.5">Vous êtes</p>
         <div class="grid grid-cols-2 gap-2">
           <button
             v-for="s in statutsProprietaire"
             :key="s.id"
             type="button"
             @click="form.statut_proprietaire = s.id"
-            class="bento-card min-h-11 flex items-center p-4 border rounded-sm text-left transition-colors"
+            class="bento-card min-h-10 flex items-center px-3 py-2.5 border rounded-sm text-left transition-colors"
             :class="form.statut_proprietaire === s.id ? 'border-orange-500 bg-orange-50 text-slate-900' : 'border-border hover:border-foreground/40 hover:bg-muted'"
           >
             <span class="text-sm font-semibold">{{ s.label }}</span>
@@ -201,10 +201,9 @@ const finish = () => {
           step="1"
           inputmode="numeric"
           placeholder="100"
-          class="w-32 h-11 px-3 border border-border rounded-sm text-base font-semibold bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
+          class="w-32 h-10 px-3 border border-border rounded-sm text-base font-semibold bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
         />
       </div>
-
     </div>
 
     <!-- ─── Étape 2 : Votre foyer & revenus ──────────────────────────────────── -->
@@ -277,7 +276,7 @@ const finish = () => {
     <!-- ─── Navigation bas de tunnel ─────────────────────────────────────────── -->
     <div v-if="!unavailable" class="pt-5 border-t border-border flex items-center justify-between">
       <button
-        v-if="step > 1 && step < 3"
+        v-if="step === 2"
         type="button"
         @click="prev"
         class="inline-flex items-center gap-1.5 h-10 px-4 border border-border text-sm font-medium text-foreground rounded-sm hover:bg-muted transition-colors"
@@ -285,7 +284,24 @@ const finish = () => {
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M12 5l-7 7 7 7"/></svg>
         Retour
       </button>
-      <span v-else-if="step === 1" />
+      <button
+        v-else-if="step === 1"
+        type="button"
+        @click="skip"
+        class="inline-flex items-center gap-1.5 h-10 px-4 border border-border text-sm font-medium text-foreground rounded-sm hover:bg-muted transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Retour
+      </button>
+      <button
+        v-else-if="step === 3"
+        type="button"
+        @click="step = 2"
+        class="inline-flex items-center gap-1.5 h-10 px-4 border border-border text-sm font-medium text-foreground rounded-sm hover:bg-muted transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Retour
+      </button>
 
       <button
         v-if="step === 1"
