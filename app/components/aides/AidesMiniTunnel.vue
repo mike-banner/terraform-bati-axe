@@ -46,8 +46,6 @@ const form = reactive({
   logement_type: '',
   periode_construction: '',
   statut_proprietaire: '',
-  residence_principale: true,
-  nb_personnes: 2,
   revenu_classe: '',
   code_postal: props.codePostalInitial,
 })
@@ -59,7 +57,7 @@ const isStepValid = computed(() => {
   if (step.value === 1) {
     return !!form.logement_type && !!form.periode_construction && !!form.statut_proprietaire
   }
-  return form.nb_personnes >= 1 && form.nb_personnes <= 12 && !!form.revenu_classe && /^\d{5}$/.test(form.code_postal)
+  return !!form.revenu_classe && /^\d{5}$/.test(form.code_postal)
 })
 
 const formatEuro = (n: number) => n.toLocaleString('fr-FR') + ' €'
@@ -84,8 +82,6 @@ const submit = async () => {
           logement_type: form.logement_type,
           statut_proprietaire: form.statut_proprietaire,
           periode_construction: form.periode_construction,
-          residence_principale: form.residence_principale,
-          nb_personnes: form.nb_personnes,
           code_postal: form.code_postal,
         },
         cout_travaux_min: props.coutTravauxMin,
@@ -189,23 +185,6 @@ const finish = () => {
         </div>
       </div>
 
-      <div>
-        <p class="text-sm font-semibold text-foreground mb-2">Résidence principale ?</p>
-        <div class="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            @click="form.residence_principale = true"
-            class="bento-card min-h-11 flex items-center p-4 border rounded-sm text-left transition-colors"
-            :class="form.residence_principale ? 'border-orange-500 bg-orange-50 text-slate-900' : 'border-border hover:border-foreground/40 hover:bg-muted'"
-          ><span class="text-sm font-semibold">Oui</span></button>
-          <button
-            type="button"
-            @click="form.residence_principale = false"
-            class="bento-card min-h-11 flex items-center p-4 border rounded-sm text-left transition-colors"
-            :class="!form.residence_principale ? 'border-orange-500 bg-orange-50 text-slate-900' : 'border-border hover:border-foreground/40 hover:bg-muted'"
-          ><span class="text-sm font-semibold">Non</span></button>
-        </div>
-      </div>
     </div>
 
     <!-- ─── Étape 2 : Votre foyer & revenus ──────────────────────────────────── -->
@@ -213,18 +192,6 @@ const finish = () => {
       <h1 class="text-2xl md:text-3xl font-black tracking-tight text-foreground" style="text-wrap: balance">Votre foyer & revenus</h1>
       <p class="text-sm text-muted-foreground">Ces informations servent uniquement à estimer vos aides MaPrimeRénov' / CEE / Éco-PTZ.</p>
 
-      <div>
-        <label for="aid-nb" class="block text-sm font-medium text-foreground mb-1.5">Nombre de personnes au foyer</label>
-        <input
-          id="aid-nb"
-          type="number"
-          v-model.number="form.nb_personnes"
-          min="1"
-          max="12"
-          inputmode="numeric"
-          class="w-32 h-11 px-3 border border-border rounded-sm text-base font-semibold bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
-        />
-      </div>
 
       <div>
         <p class="text-sm font-semibold text-foreground mb-2">Revenu du foyer</p>
