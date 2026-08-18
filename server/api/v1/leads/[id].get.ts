@@ -23,6 +23,16 @@ export default defineEventHandler(async (event) => {
 
   const isPremium = pro.subscription_status === 'active'
 
+  // Règle produit : les leads gratuits exigent d'avoir déposé ses documents
+  // (Kbis + décennale). Sans documents, pas de free-grant — le lead reste masqué.
+  const { data: proDocs } = await supabase
+    .from('verifications')
+    .select('document_type')
+    .eq('pro_id', user.id)
+    .in('document_type', ['kbis', 'decennale'])
+  const docTypes = new Set((proDocs ?? []).map((d: any) => d.document_type))
+  const hasDocuments = docTypes.size >= 2
+
   // 1. Check if project exists
   const { data: project, error: projectError } = await supabase
     .from('projects')
@@ -55,8 +65,8 @@ export default defineEventHandler(async (event) => {
   const now = new Date()
   const alreadyTimeUnlocked = virtualLead.unlocked_at !== null && new Date(virtualLead.unlocked_at) <= now
 
-  // Handle free grant logic
-  if (!isPremium && !alreadyTimeUnlocked) {
+  // Handle free grant logic (documents requis — Kbis + décennale déposés)
+  if (!isPremium && !alreadyTimeUnlocked && hasDocuments) {
     if (lead) {
       // Lead exists, check for existing grant
       const { data: existingGrant } = await supabase
@@ -115,5 +125,13 @@ export default defineEventHandler(async (event) => {
 
   const masked = maskLead(virtualLead, isPremium, now, isFreeGranted)
 
-  return { lead: { ...masked, id: project.id, claim_id: lead?.id || null } }
+  return {
+    lead: {
+      ...masked,
+      id: project.id,
+      claim_id: lead?.id || null,
+      // Signale à l'UI pourquoi le free-grant n'a pas eu lieu (règle documents requis)
+      requiresDocuments: !isPremium && !alreadyTimeUnlocked && !hasDocuments && (pro.free_leads_used ?? 0) < 3
+    }
+  }
 })
