@@ -134,6 +134,23 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
       </div>
     </section>
 
+    <!-- ───────────────── Teaser aides (Phase 05.9 — visuel, aucun calcul) ───────────────── -->
+    <section class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
+      <div class="reveal-item bento-card flex flex-col md:flex-row md:items-center justify-between gap-6 rounded-sm border border-slate-200 bg-white p-8 shadow-lg">
+        <div>
+          <h2 class="text-3xl font-black tracking-tight text-slate-900">Estimez vos aides en 30 secondes</h2>
+          <p class="mt-2 max-w-xl text-slate-500 leading-relaxed">MaPrimeRénov', CEE, Éco-PTZ : découvrez les aides d'État et votre reste à charge réel avant de choisir votre artisan.</p>
+        </div>
+        <NuxtLink
+          to="/calculateur-aides"
+          class="inline-flex h-14 items-center gap-2 rounded-full bg-safety px-8 text-lg font-bold text-white shadow-lg shadow-safety/20 transition-transform hover:scale-105"
+        >
+          Calculer mes aides
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </NuxtLink>
+      </div>
+    </section>
+
     <!-- ───────────────── Chantiers Réalisés (preuve sociale) ───────────────── -->
     <section v-if="showcasedProjects.length" class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
       <div class="mb-10 max-w-[52ch]">
