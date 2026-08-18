@@ -40,7 +40,7 @@ const startCheckout = async () => {
     <div class="w-full max-w-4xl px-6 py-8 md:px-10 md:py-16">
 
       <!-- Success banner (post-checkout redirect) -->
-      <div v-if="showSuccessBanner" class="flex items-start gap-3 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm mb-8">
+      <div v-if="showSuccessBanner" class="flex items-start gap-3 p-5 bg-white border border-slate-200 rounded-sm shadow-sm mb-8">
         <svg class="w-4 h-4 shrink-0 mt-0.5 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
         </svg>
@@ -51,7 +51,7 @@ const startCheckout = async () => {
       </div>
 
       <!-- Already Premium banner -->
-      <div v-if="isAlreadyPremium" class="flex items-start gap-3 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm mb-8">
+      <div v-if="isAlreadyPremium" class="flex items-start gap-3 p-5 bg-white border border-slate-200 rounded-sm shadow-sm mb-8">
         <svg class="w-4 h-4 shrink-0 mt-0.5 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
         </svg>
@@ -73,7 +73,7 @@ const startCheckout = async () => {
       </div>
 
       <!-- Trial callout -->
-      <div class="flex items-start gap-3 p-4 bg-white border border-slate-200 rounded-2xl mb-4">
+      <div class="flex items-start gap-3 p-4 bg-white border border-slate-200 rounded-sm mb-4">
         <svg class="w-4 h-4 text-slate-500 shrink-0 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1010.058 8.4M12 4.875A2.625 2.625 0 1113.942 8.4M12 4.875V21m-9.375-9.75h18.75M6.375 8.4H3.75a1.5 1.5 0 000 3h15a1.5 1.5 0 000-3h-2.625M12 4.875a2.625 2.625 0 00-2.625 2.625h5.25A2.625 2.625 0 0012 4.875z"/>
         </svg>
@@ -84,7 +84,7 @@ const startCheckout = async () => {
       </div>
 
       <!-- Price card (bento, mise en avant) -->
-      <div class="bento-card border-2 border-safety bg-white rounded-3xl p-8 md:p-10 shadow-sm mb-8">
+      <div class="bento-card border-2 border-safety bg-white rounded-sm p-8 md:p-10 shadow-sm mb-8">
         <div class="flex items-center justify-between mb-4">
           <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-safety text-white">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -149,7 +149,7 @@ const startCheckout = async () => {
       <!-- Comparison table -->
       <div class="border-t border-slate-200 pt-8 mb-8">
         <h2 class="text-xs font-semibold text-slate-500 tracking-widest uppercase mb-4">BASIC vs Premium</h2>
-        <div class="bg-white border border-slate-200 rounded-2xl divide-y divide-slate-200">
+        <div class="bg-white border border-slate-200 rounded-sm divide-y divide-slate-200">
           <div class="grid grid-cols-3 px-5 py-3 text-xs font-medium text-slate-500">
             <span></span>
             <span class="text-center">BASIC</span>
@@ -193,7 +193,7 @@ const startCheckout = async () => {
       <!-- ROI section (carte contrastée) -->
       <div class="border-t border-slate-200 pt-8 mb-8">
         <h2 class="text-xs font-semibold text-slate-500 tracking-widest uppercase mb-4">Retour sur investissement</h2>
-        <div class="bento-card bg-industrial text-white rounded-3xl p-6 md:p-8">
+        <div class="bento-card bg-industrial text-white rounded-sm p-6 md:p-8">
           <p class="text-lg font-bold mb-2" style="text-wrap: balance">
             1 chantier signé rembourse 6 mois d'abonnement.
           </p>
@@ -207,28 +207,28 @@ const startCheckout = async () => {
       <div class="border-t border-slate-200 pt-8">
         <h2 class="text-xs font-semibold text-slate-500 tracking-widest uppercase mb-4">Questions fréquentes</h2>
         <div class="space-y-2">
-          <details class="bg-white rounded-2xl border border-slate-200 group">
+          <details class="bg-white rounded-sm border border-slate-200 group">
             <summary class="px-5 py-4 text-sm font-semibold text-slate-900 cursor-pointer select-none list-none flex items-center justify-between">
               Puis-je annuler à tout moment ?
               <svg class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
             </summary>
             <p class="px-5 pb-4 text-sm text-slate-500">Oui, sans frais et immédiatement depuis votre espace.</p>
           </details>
-          <details class="bg-white rounded-2xl border border-slate-200 group">
+          <details class="bg-white rounded-sm border border-slate-200 group">
             <summary class="px-5 py-4 text-sm font-semibold text-slate-900 cursor-pointer select-none list-none flex items-center justify-between">
               Que se passe-t-il si j'annule ?
               <svg class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
             </summary>
             <p class="px-5 pb-4 text-sm text-slate-500">Votre accès Premium reste actif jusqu'à la fin de la période en cours.</p>
           </details>
-          <details class="bg-white rounded-2xl border border-slate-200 group">
+          <details class="bg-white rounded-sm border border-slate-200 group">
             <summary class="px-5 py-4 text-sm font-semibold text-slate-900 cursor-pointer select-none list-none flex items-center justify-between">
               Le paiement est-il sécurisé ?
               <svg class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
             </summary>
             <p class="px-5 pb-4 text-sm text-slate-500">Oui, les paiements sont traités par Stripe, certifié PCI DSS.</p>
           </details>
-          <details class="bg-white rounded-2xl border border-slate-200 group">
+          <details class="bg-white rounded-sm border border-slate-200 group">
             <summary class="px-5 py-4 text-sm font-semibold text-slate-900 cursor-pointer select-none list-none flex items-center justify-between">
               Que se passe-t-il après mes 14 jours d'essai ?
               <svg class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>

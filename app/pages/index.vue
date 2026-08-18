@@ -6,8 +6,7 @@ useHead({
   ]
 })
 
-// Image chantier vérifiée (résout 200). À remplacer à terme par un asset projet.
-const heroPhoto = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80'
+const heroPhoto = '/images/avant.jpg'
 
 const { data: showcased } = await useFetch('/api/v1/completed-projects')
 const showcasedProjects = computed(() => showcased.value?.projects ?? [])
@@ -19,7 +18,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
     <section class="mx-auto w-full max-w-7xl px-6 pt-12 pb-24">
       <div class="reveal grid grid-cols-1 gap-6 md:grid-cols-12">
         <!-- Carte intro -->
-        <div class="reveal-item bento-card md:col-span-8 flex min-h-[420px] flex-col justify-between rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10">
+        <div class="reveal-item bento-card md:col-span-8 flex min-h-[420px] flex-col justify-between rounded-sm border border-slate-200 bg-white p-8 shadow-lg md:p-10">
           <div>
             <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-sm text-slate-600">
               <span class="inline-block h-1.5 w-1.5 rounded-full bg-safety" aria-hidden="true" />
@@ -57,7 +56,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </div>
 
         <!-- Carte accent : Gratuit et sans engagement -->
-        <div class="reveal-item bento-card md:col-span-4 flex flex-col justify-between rounded-3xl bg-industrial p-8 text-white">
+        <div class="reveal-item bento-card md:col-span-4 flex flex-col justify-between rounded-sm bg-industrial p-8 text-white">
           <div class="flex items-center gap-2 text-sm font-medium text-orange-200">
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             100% Gratuit
@@ -69,7 +68,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </div>
 
         <!-- Carte bénéfices : critères contrôlés -->
-        <div class="reveal-item bento-card md:col-span-4 rounded-3xl border border-slate-800 bg-slate-900 p-8 text-white">
+        <div class="reveal-item bento-card md:col-span-4 rounded-sm border border-slate-800 bg-slate-900 p-8 text-white shadow-lg">
           <div class="mb-4 text-sm text-slate-400">Contrôlés avant activation</div>
           <div class="flex flex-wrap gap-2">
             <span class="rounded-full bg-white/10 px-3 py-1 text-sm">Décennale valide</span>
@@ -79,7 +78,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </div>
 
         <!-- Carte visuelle : photo chantier -->
-        <div class="reveal-item bento-card md:col-span-8 relative min-h-[280px] overflow-hidden rounded-3xl border border-slate-200">
+        <div class="reveal-item bento-card md:col-span-8 relative min-h-[280px] overflow-hidden rounded-sm border border-slate-200 shadow-lg">
           <img
             :src="heroPhoto"
             alt="Chantier de rénovation en cours, mur en briques apparentes"
@@ -111,21 +110,21 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
     <section class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
       <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Comment ça marche</h2>
       <div class="reveal mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-        <div class="reveal-item bento-card rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <div class="reveal-item bento-card rounded-sm border border-slate-200 bg-white p-8 shadow-lg">
           <span class="text-5xl font-bold text-industrial select-none">01</span>
           <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Décrivez votre projet</h3>
           <p class="text-sm leading-relaxed text-slate-500">
             Simulateur en 6 étapes : type de travaux, localisation, budget estimé, délai. Moins de 3 minutes.
           </p>
         </div>
-        <div class="reveal-item bento-card rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <div class="reveal-item bento-card rounded-sm border border-slate-200 bg-white p-8 shadow-lg">
           <span class="text-5xl font-bold text-industrial select-none">02</span>
           <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Mise en relation sous 2 min</h3>
           <p class="text-sm leading-relaxed text-slate-500">
             Les artisans partenaires de votre zone reçoivent une alerte avec le budget et le type de chantier. Pas vos coordonnées.
           </p>
         </div>
-        <div class="reveal-item bento-card rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <div class="reveal-item bento-card rounded-sm border border-slate-200 bg-white p-8 shadow-lg">
           <span class="text-5xl font-bold text-industrial select-none">03</span>
           <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Contact débloqué</h3>
           <p class="text-sm leading-relaxed text-slate-500">
@@ -191,7 +190,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
               { t: 'Zone d\'intervention confirmée', d: 'L\'artisan intervient bien dans votre secteur géographique.' },
             ]"
             :key="item.t"
-            class="reveal-item bento-card flex items-start gap-4 rounded-3xl border border-slate-200 bg-white p-5"
+            class="reveal-item bento-card flex items-start gap-4 rounded-sm border border-slate-200 bg-white p-5 shadow-lg"
           >
             <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-safety text-white">
               <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>

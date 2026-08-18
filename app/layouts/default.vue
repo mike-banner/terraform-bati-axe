@@ -26,7 +26,7 @@ const onSimulateur = computed(() => route.path === '/simulateur')
         <nav class="flex items-center gap-2">
           <template v-if="user">
             <NuxtLink :to="espaceLink" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Mon espace</NuxtLink>
-            <button class="flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-md border border-border hover:bg-muted transition-colors" @click="signOut">
+            <button class="flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-sm border border-border hover:bg-muted transition-colors" @click="signOut">
               <span class="flex items-center justify-center w-6 h-6 rounded-full bg-foreground text-background text-xs font-bold">{{ userInitial }}</span>
               <span class="text-muted-foreground">Déconnexion</span>
             </button>
@@ -36,7 +36,7 @@ const onSimulateur = computed(() => route.path === '/simulateur')
             <NuxtLink
               v-if="!onSimulateur"
               to="/simulateur"
-              class="text-sm font-semibold bg-foreground text-background hover:opacity-80 transition-opacity px-4 py-2 rounded-md"
+              class="text-sm font-semibold bg-foreground text-background hover:opacity-80 transition-opacity px-4 py-2 rounded-sm"
             >Déposer un projet</NuxtLink>
           </template>
         </nav>

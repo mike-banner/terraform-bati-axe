@@ -72,8 +72,8 @@ onMounted(() => {
         
         <div class="flex items-center gap-2 mb-8 px-2">
           <NuxtLink to="/" class="text-xl font-black tracking-tight hover:opacity-80 transition-opacity">BÂTI-AXE</NuxtLink>
-          <span v-if="isAdminRoute" class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-md bg-red-500/10 text-red-500 border border-red-500/20">Admin</span>
-          <span v-else class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20">Pro</span>
+          <span v-if="isAdminRoute" class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm bg-red-500/10 text-red-500 border border-red-500/20">Admin</span>
+          <span v-else class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm bg-primary/10 text-primary border border-primary/20">Pro</span>
         </div>
 
         <nav class="flex-1 space-y-2">

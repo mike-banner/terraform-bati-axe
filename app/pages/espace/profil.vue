@@ -110,7 +110,7 @@ async function saveProfile() {
           />
 
           <!-- Bio -->
-          <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+          <div class="bento-card bg-white rounded-sm border border-slate-200 shadow-sm p-8">
             <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Présentation</h2>
             <textarea
               v-model="profile.bio"
@@ -123,7 +123,7 @@ async function saveProfile() {
           </div>
 
           <!-- Téléphone -->
-          <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+          <div class="bento-card bg-white rounded-sm border border-slate-200 shadow-sm p-8">
             <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Téléphone</h2>
             <input
               v-model="profile.phone"
@@ -137,7 +137,7 @@ async function saveProfile() {
           </div>
 
           <!-- Zone -->
-          <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+          <div class="bento-card bg-white rounded-sm border border-slate-200 shadow-sm p-8">
             <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Zone d'intervention</h2>
             <input
               v-model="profile.zone"
@@ -149,30 +149,30 @@ async function saveProfile() {
           </div>
 
           <!-- Categories -->
-          <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+          <div class="bento-card bg-white rounded-sm border border-slate-200 shadow-sm p-8">
             <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Catégories</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
+              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
                 <input type="checkbox" v-model="profile.categories" value="maconnerie" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
                 <span class="text-sm font-medium">Maçonnerie &amp; Gros Œuvre</span>
               </label>
-              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
+              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
                 <input type="checkbox" v-model="profile.categories" value="toiture" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
                 <span class="text-sm font-medium">Charpente &amp; Toiture</span>
               </label>
-              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
+              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
                 <input type="checkbox" v-model="profile.categories" value="electricite" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
                 <span class="text-sm font-medium">Électricité</span>
               </label>
-              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
+              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
                 <input type="checkbox" v-model="profile.categories" value="plomberie" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
                 <span class="text-sm font-medium">Plomberie &amp; Chauffage</span>
               </label>
-              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
+              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
                 <input type="checkbox" v-model="profile.categories" value="peinture" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
                 <span class="text-sm font-medium">Peinture &amp; Finitions</span>
               </label>
-              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors">
+              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
                 <input type="checkbox" v-model="profile.categories" value="isolation" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
                 <span class="text-sm font-medium">Isolation &amp; Cloisons</span>
               </label>

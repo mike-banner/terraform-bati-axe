@@ -197,7 +197,7 @@ const handleSubmit = async () => {
 
 <template>
   <div class="min-h-[calc(100vh-3.5rem)] bg-page flex items-start justify-center px-4 py-12 md:py-16">
-    <div class="w-full max-w-xl bg-white rounded-3xl border border-slate-200 shadow-sm p-8 md:p-10">
+    <div class="w-full max-w-xl bg-white rounded-sm border border-slate-200 shadow-sm p-8 md:p-10">
 
       <!-- ─── Révélation estimation (après Lead Wall validé) ────────────── -->
       <div v-if="revealed" class="py-8">
@@ -216,7 +216,7 @@ const handleSubmit = async () => {
           <code class="font-mono text-sm text-foreground select-all">{{ createdProjectId }}</code>
         </div>
 
-        <div v-if="createdAccessToken" class="p-5 border border-slate-200 bg-slate-50 rounded-2xl mb-8">
+        <div v-if="createdAccessToken" class="p-5 border border-slate-200 bg-slate-50 rounded-sm mb-8">
           <p class="text-sm font-semibold text-slate-900 mb-1">🛠️ Mode Dév : Tester la messagerie</p>
           <p class="text-xs text-slate-600 mb-4">En production, ce lien est envoyé par email (Magic Link).</p>
           <NuxtLink
@@ -229,7 +229,7 @@ const handleSubmit = async () => {
         </div>
         <NuxtLink
           to="/"
-          class="inline-flex items-center justify-center h-11 px-6 border border-border text-foreground text-sm font-medium rounded-md hover:bg-muted transition-colors"
+          class="inline-flex items-center justify-center h-11 px-6 border border-border text-foreground text-sm font-medium rounded-sm hover:bg-muted transition-colors"
         >
           Retour à l'accueil
         </NuxtLink>
@@ -266,7 +266,7 @@ const handleSubmit = async () => {
               :key="t.id"
               type="button"
               @click="selectRenovationType(t.id)"
-              class="bento-card reveal-item flex items-center justify-between p-4 border rounded-2xl text-left transition-colors min-h-11"
+              class="bento-card reveal-item flex items-center justify-between p-4 border rounded-sm text-left transition-colors min-h-11"
               :class="form.renovation_type === t.id
                 ? 'border-orange-500 bg-orange-50 text-slate-900'
                 : 'border-border hover:border-foreground/40 hover:bg-muted'"
@@ -294,7 +294,7 @@ const handleSubmit = async () => {
               :key="p.id"
               type="button"
               @click="togglePiece(p.id)"
-              class="bento-card reveal-item flex flex-col items-center justify-center gap-2 p-4 border rounded-2xl text-center transition-colors min-h-11"
+              class="bento-card reveal-item flex flex-col items-center justify-center gap-2 p-4 border rounded-sm text-center transition-colors min-h-11"
               :class="form.pieces.includes(p.id)
                 ? 'border-orange-500 bg-orange-50 text-slate-900'
                 : 'border-border hover:border-foreground/40 hover:bg-muted'"
@@ -321,7 +321,7 @@ const handleSubmit = async () => {
                 step="1"
                 inputmode="numeric"
                 placeholder="50"
-                class="w-32 h-14 px-4 border border-border rounded-md text-xl font-semibold bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
+                class="w-32 h-14 px-4 border border-border rounded-sm text-xl font-semibold bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
               />
               <span class="text-sm text-muted-foreground">m²</span>
             </div>
@@ -347,7 +347,7 @@ const handleSubmit = async () => {
               :key="g.id"
               type="button"
               @click="selectGamme(g.id)"
-              class="bento-card reveal-item w-full flex items-center justify-between p-4 border rounded-2xl text-left transition-colors min-h-11"
+              class="bento-card reveal-item w-full flex items-center justify-between p-4 border rounded-sm text-left transition-colors min-h-11"
               :class="form.gamme === g.id
                 ? 'border-orange-500 bg-orange-50 text-slate-900'
                 : 'border-border hover:border-foreground/40 hover:bg-muted text-foreground'"
@@ -383,11 +383,11 @@ const handleSubmit = async () => {
               required
               inputmode="numeric"
               @input="normalizePostalCode"
-              class="w-full h-14 px-4 border border-border rounded-md text-xl font-semibold tracking-widest bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
+              class="w-full h-14 px-4 border border-border rounded-sm text-xl font-semibold tracking-widest bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
             />
             <div
               v-if="form.postal_code.length === 5"
-              class="flex items-start gap-3 p-4 border rounded-md"
+              class="flex items-start gap-3 p-4 border rounded-sm"
               :class="form.postal_code === '78955'
                 ? 'border-foreground/30 bg-muted'
                 : 'border-red-200 bg-red-50'"
@@ -434,7 +434,7 @@ const handleSubmit = async () => {
                 minlength="2"
                 maxlength="100"
                 @blur="touched.name = true"
-                class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
+                class="w-full h-11 px-3 border rounded-sm text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
                 :class="contactErrors.name ? 'border-red-500' : 'border-border'"
               />
               <p v-if="contactErrors.name" class="mt-1.5 text-xs text-red-600">{{ contactErrors.name }}</p>
@@ -450,7 +450,7 @@ const handleSubmit = async () => {
                 required
                 maxlength="254"
                 @blur="touched.email = true"
-                class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
+                class="w-full h-11 px-3 border rounded-sm text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
                 :class="contactErrors.email ? 'border-red-500' : 'border-border'"
               />
               <p v-if="contactErrors.email" class="mt-1.5 text-xs text-red-600">{{ contactErrors.email }}</p>
@@ -468,7 +468,7 @@ const handleSubmit = async () => {
                 pattern="^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$"
                 @input="normalizePhone"
                 @blur="touched.phone = true"
-                class="w-full h-11 px-3 border rounded-md text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
+                class="w-full h-11 px-3 border rounded-sm text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
                 :class="contactErrors.phone ? 'border-red-500' : 'border-border'"
               />
               <p v-if="contactErrors.phone" class="mt-1.5 text-xs text-red-600">{{ contactErrors.phone }}</p>
@@ -499,7 +499,7 @@ const handleSubmit = async () => {
             </label>
           </div>
 
-          <div v-if="submitError" role="alert" class="flex items-start gap-2.5 p-3 border border-red-200 bg-red-50 rounded-md text-sm text-red-700">
+          <div v-if="submitError" role="alert" class="flex items-start gap-2.5 p-3 border border-red-200 bg-red-50 rounded-sm text-sm text-red-700">
             <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
             </svg>
@@ -515,7 +515,7 @@ const handleSubmit = async () => {
             type="button"
             @click="prevStep"
             :disabled="step === 1 || isSubmitting"
-            class="inline-flex items-center gap-1.5 h-10 px-4 border border-border text-sm font-medium text-foreground rounded-md hover:bg-muted transition-colors disabled:opacity-30 disabled:pointer-events-none"
+            class="inline-flex items-center gap-1.5 h-10 px-4 border border-border text-sm font-medium text-foreground rounded-sm hover:bg-muted transition-colors disabled:opacity-30 disabled:pointer-events-none"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M12 5l-7 7 7 7"/></svg>
             Retour

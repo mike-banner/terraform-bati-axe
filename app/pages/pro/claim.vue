@@ -535,7 +535,7 @@ const backToStep2 = () => {
                 minlength="8"
                 maxlength="72"
                 @blur="authTouched.password = true"
-                class="w-full h-11 px-3 pr-10 border rounded-md text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                class="w-full h-11 px-3 pr-10 border rounded-sm text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 :class="authErrors.password ? 'border-red-500' : 'border-border'"
                 :aria-invalid="!!authErrors.password"
                 :aria-describedby="authErrors.password ? 'err-password' : undefined"
@@ -559,7 +559,7 @@ const backToStep2 = () => {
           </div>
 
           <!-- Global error -->
-          <div v-if="globalError" role="alert" class="flex items-start gap-2.5 p-3 border border-red-200 bg-red-50 rounded-md text-sm text-red-700">
+          <div v-if="globalError" role="alert" class="flex items-start gap-2.5 p-3 border border-red-200 bg-red-50 rounded-sm text-sm text-red-700">
             <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
             <span>{{ globalError }}</span>
           </div>
@@ -606,7 +606,7 @@ const backToStep2 = () => {
               inputmode="numeric"
               @input="normalizeSiret(($event.target as HTMLInputElement).value)"
               @blur="proTouched.siret = true; fetchSuggestedCategories()"
-              class="w-full h-11 px-3 border border-border rounded-md text-sm bg-white text-text placeholder:text-gray-500 font-mono tracking-wider transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              class="w-full h-11 px-3 border border-border rounded-sm text-sm bg-white text-text placeholder:text-gray-500 font-mono tracking-wider transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               :class="proErrors.siret ? 'border-red-500' : 'border-border'"
               :aria-invalid="!!proErrors.siret"
             />
@@ -697,7 +697,7 @@ const backToStep2 = () => {
                 :key="cat.id"
                 type="button"
                 @click="toggleCategory(cat.id)"
-                class="h-10 px-3 rounded-md border text-sm font-medium text-left transition-colors"
+                class="h-10 px-3 rounded-sm border text-sm font-medium text-left transition-colors"
                 :class="proForm.categories.includes(cat.id)
                   ? 'bg-foreground text-background border-foreground'
                   : 'border-border text-foreground hover:bg-muted'"
@@ -737,7 +737,7 @@ const backToStep2 = () => {
           </div>
 
           <!-- Global error -->
-          <div v-if="globalError" role="alert" class="flex items-start gap-2.5 p-3 border border-red-200 bg-red-50 rounded-md text-sm text-red-700">
+          <div v-if="globalError" role="alert" class="flex items-start gap-2.5 p-3 border border-red-200 bg-red-50 rounded-sm text-sm text-red-700">
             <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
             <span>{{ globalError }}</span>
           </div>
@@ -768,7 +768,7 @@ const backToStep2 = () => {
         <p class="text-sm text-muted-foreground">Téléversez vos justificatifs pour activer votre profil et accéder aux leads. Chaque document est contrôlé manuellement par notre équipe.</p>
 
         <!-- KBIS -->
-        <div class="bento-card border border-slate-200 rounded-3xl p-8" :class="uploads.kbis.status === 'success' ? 'border-foreground/30' : ''">
+        <div class="bento-card border border-slate-200 rounded-sm p-8" :class="uploads.kbis.status === 'success' ? 'border-foreground/30' : ''">
           <div class="flex items-center justify-between mb-4">
             <div>
               <p class="text-sm font-semibold text-foreground">Extrait KBIS</p>
@@ -783,7 +783,7 @@ const backToStep2 = () => {
           <div v-if="uploads.kbis.status !== 'success'" class="space-y-3">
             <label class="flex items-center gap-3 cursor-pointer text-sm">
               <input type="file" @change="handleFileSelect($event, 'kbis')" accept=".pdf,image/*" class="sr-only" />
-              <span class="h-9 px-4 border border-border rounded-md text-xs font-medium hover:bg-muted transition-colors flex items-center gap-2">
+              <span class="h-9 px-4 border border-border rounded-sm text-xs font-medium hover:bg-muted transition-colors flex items-center gap-2">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
                 Choisir un fichier
               </span>
@@ -794,7 +794,7 @@ const backToStep2 = () => {
               v-if="files.kbis"
               @click="uploadDocument('kbis')"
               :disabled="uploads.kbis.status === 'uploading'"
-              class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
+              class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-sm hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
             >
               <svg v-if="uploads.kbis.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
               {{ uploads.kbis.status === 'uploading' ? 'Envoi en cours…' : 'Envoyer le KBIS' }}
@@ -803,7 +803,7 @@ const backToStep2 = () => {
         </div>
 
         <!-- Décennale -->
-        <div class="bento-card border border-slate-200 rounded-3xl p-8" :class="uploads.decennale.status === 'success' ? 'border-foreground/30' : ''">
+        <div class="bento-card border border-slate-200 rounded-sm p-8" :class="uploads.decennale.status === 'success' ? 'border-foreground/30' : ''">
           <div class="flex items-center justify-between mb-4">
             <div>
               <p class="text-sm font-semibold text-foreground">Attestation décennale</p>
@@ -823,7 +823,7 @@ const backToStep2 = () => {
                   v-model="uploads.decennale.policyNumber"
                   type="text"
                   placeholder="Ex : 12345678A"
-                  class="h-9 w-full px-3 border border-border rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
+                  class="h-9 w-full px-3 border border-border rounded-sm text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
                 />
               </div>
               <div>
@@ -831,13 +831,13 @@ const backToStep2 = () => {
                 <input
                   v-model="uploads.decennale.expirationDate"
                   type="date"
-                  class="h-9 w-full px-3 border border-border rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
+                  class="h-9 w-full px-3 border border-border rounded-sm text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
                 />
               </div>
             </div>
             <label class="flex items-center gap-3 cursor-pointer text-sm">
               <input type="file" @change="handleFileSelect($event, 'decennale')" accept=".pdf,image/*" class="sr-only" />
-              <span class="h-9 px-4 border border-border rounded-md text-xs font-medium hover:bg-muted transition-colors flex items-center gap-2">
+              <span class="h-9 px-4 border border-border rounded-sm text-xs font-medium hover:bg-muted transition-colors flex items-center gap-2">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
                 Choisir un fichier
               </span>
@@ -848,7 +848,7 @@ const backToStep2 = () => {
               v-if="files.decennale"
               @click="uploadDocument('decennale')"
               :disabled="uploads.decennale.status === 'uploading' || !uploads.decennale.policyNumber || !uploads.decennale.expirationDate"
-              class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
+              class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-sm hover:opacity-80 transition-opacity flex items-center gap-2 disabled:opacity-50"
             >
               <svg v-if="uploads.decennale.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
               {{ uploads.decennale.status === 'uploading' ? 'Envoi en cours…' : 'Envoyer la décennale' }}
@@ -859,7 +859,7 @@ const backToStep2 = () => {
         <div class="flex flex-col gap-3">
           <button
             @click="finishOnboarding"
-            class="w-full h-11 bg-foreground text-background text-sm font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center justify-center gap-2"
+            class="w-full h-11 bg-foreground text-background text-sm font-semibold rounded-sm hover:opacity-80 transition-opacity flex items-center justify-center gap-2"
           >
             <span>Finaliser mon inscription</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -868,7 +868,7 @@ const backToStep2 = () => {
           <button
             type="button"
             @click="backToStep2"
-            class="w-full h-11 border border-border text-foreground text-sm font-semibold rounded-md hover:bg-muted transition-colors flex items-center justify-center gap-2"
+            class="w-full h-11 border border-border text-foreground text-sm font-semibold rounded-sm hover:bg-muted transition-colors flex items-center justify-center gap-2"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
             <span>Retour aux infos de l'entreprise</span>
@@ -896,7 +896,7 @@ const backToStep2 = () => {
 
         <NuxtLink
           to="/"
-          class="inline-flex items-center justify-center h-11 px-6 border border-border text-foreground text-sm font-medium rounded-md hover:bg-muted transition-colors"
+          class="inline-flex items-center justify-center h-11 px-6 border border-border text-foreground text-sm font-medium rounded-sm hover:bg-muted transition-colors"
         >
           Retour à l'accueil
         </NuxtLink>

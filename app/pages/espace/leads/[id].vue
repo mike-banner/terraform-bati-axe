@@ -181,9 +181,9 @@ async function copyToClipboard(text: string) {
       </div>
 
       <!-- Project details (always visible) -->
-      <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm mb-8">
+      <div class="bg-white rounded-sm p-8 border border-slate-200 shadow-sm mb-8">
         <h2 class="text-xs font-medium text-slate-500 tracking-widest uppercase mb-4">Détails du projet</h2>
-        <div class="border border-slate-200 rounded-2xl divide-y divide-slate-200">
+        <div class="border border-slate-200 rounded-sm divide-y divide-slate-200">
           <div class="flex justify-between items-center px-5 py-3">
             <span class="text-sm text-slate-500">Budget</span>
             <span class="text-sm font-semibold text-slate-900">{{ lead.budget_range }}</span>
@@ -201,7 +201,7 @@ async function copyToClipboard(text: string) {
       </div>
 
       <!-- Contact section (conditional on status) -->
-      <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
+      <div class="bg-white rounded-sm p-8 border border-slate-200 shadow-sm">
         <h2 class="text-xs font-medium text-slate-500 tracking-widest uppercase mb-4">Contact prospect</h2>
 
         <!-- Unlocked: show real contact data -->
@@ -264,7 +264,7 @@ async function copyToClipboard(text: string) {
           <div class="mt-8 border-t border-slate-200 pt-8">
             <h2 class="text-xs font-medium text-slate-500 tracking-widest uppercase mb-4">Messages avec le client</h2>
 
-            <div class="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden flex flex-col h-96">
+            <div class="bg-slate-50 border border-slate-200 rounded-sm overflow-hidden flex flex-col h-96">
               <!-- Message list -->
               <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
                 <div v-if="messages.length === 0" class="text-center text-sm text-slate-500 my-auto">
@@ -330,7 +330,7 @@ async function copyToClipboard(text: string) {
 
         <!-- Locked: masked + countdown + Premium CTA -->
         <template v-else-if="isLocked">
-          <div class="p-5 border border-amber-300 bg-amber-50 rounded-2xl">
+          <div class="p-5 border border-amber-300 bg-amber-50 rounded-sm">
             <p class="text-sm text-amber-700 font-semibold mb-1">Coordonnées non disponibles</p>
             <LeadCountdown v-if="lead.unlocked_at" :unlocked-at="lead.unlocked_at" />
             <p v-else class="text-xs text-amber-700 mb-4">Disponible sous 72h — ou immédiatement avec Premium.</p>
@@ -348,7 +348,7 @@ async function copyToClipboard(text: string) {
 
         <!-- Claimed -->
         <template v-else>
-          <div class="border border-slate-200 rounded-2xl p-5">
+          <div class="border border-slate-200 rounded-sm p-5">
             <p class="text-sm text-slate-500 text-center">Ce lead a déjà été attribué à un autre professionnel.</p>
           </div>
         </template>

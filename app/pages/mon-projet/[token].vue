@@ -110,7 +110,7 @@
               <div
                 v-for="pro in data.pros"
                 :key="pro.lead_id"
-                class="bento-card bg-white border border-slate-200 rounded-3xl p-6 flex flex-col gap-4 shadow-sm"
+                class="bento-card bg-white border border-slate-200 rounded-sm p-6 flex flex-col gap-4 shadow-sm"
                 :class="{ 'opacity-55': pro.customer_decision === 'refused' }"
               >
                 <div class="flex items-center gap-4">
@@ -182,7 +182,7 @@
               </div>
 
               <div class="space-y-3">
-                <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
+                <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-sm shadow-sm">
                   <div class="w-7 h-7 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
@@ -193,7 +193,7 @@
                     <p class="text-xs text-muted-foreground mt-0.5">Attestation contrôlée à la main avant tout accès au lead.</p>
                   </div>
                 </div>
-                <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
+                <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-sm shadow-sm">
                   <div class="w-7 h-7 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
@@ -204,7 +204,7 @@
                     <p class="text-xs text-muted-foreground mt-0.5">L'artisan vous contacte via notre messagerie. Vos données restent privées.</p>
                   </div>
                 </div>
-                <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
+                <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-sm shadow-sm">
                   <div class="w-7 h-7 flex items-center justify-center rounded-full bg-foreground text-background shrink-0 mt-0.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
@@ -234,7 +234,7 @@
               <div
                 v-for="thread in groupedMessages"
                 :key="thread.leadId"
-                class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm"
+                class="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-sm"
               >
                 <!-- En-tête du fil -->
                 <div class="px-6 py-4 border-b border-border flex items-center gap-4 bg-background">
@@ -284,7 +284,7 @@
                       v-model="replyContent[thread.leadId]"
                       type="text"
                       placeholder="Votre réponse..."
-                      class="flex-1 h-10 px-4 text-sm border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/15 focus:border-foreground transition-all"
+                      class="flex-1 h-10 px-4 text-sm border border-border rounded-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/15 focus:border-foreground transition-all"
                       required
                       :disabled="isSending === thread.leadId"
                     />

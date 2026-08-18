@@ -23,7 +23,7 @@ function onRealisationCreated(realisation: Record<string, unknown>) {
 </script>
 
 <template>
-  <div class="bento-card bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+  <div class="bento-card bg-white rounded-sm border border-slate-200 shadow-sm p-8">
     <div class="flex flex-col gap-3 mb-6">
       <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase">Réalisations</h2>
       <button type="button" @click="showRealisationModal = true"
@@ -38,7 +38,7 @@ function onRealisationCreated(realisation: Record<string, unknown>) {
     </div>
 
     <ul v-else class="grid grid-cols-1 gap-3">
-      <li v-for="r in realisations" :key="r.id as string" class="flex items-center gap-3 border border-slate-200 rounded-xl p-3">
+      <li v-for="r in realisations" :key="r.id as string" class="flex items-center gap-3 border border-slate-200 rounded-sm p-3">
         <img v-if="(r.image_urls as string[])?.[0]" :src="(r.image_urls as string[])[0]" :alt="r.title as string" class="w-12 h-12 object-cover rounded-lg shrink-0" />
         <div class="min-w-0">
           <p class="text-xs font-semibold text-text truncate">{{ r.title }}</p>

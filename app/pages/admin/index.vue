@@ -315,7 +315,7 @@ const statusLabel: Record<string, string> = {
       <div v-if="isAdmin && activeTab === 'all'" class="flex items-center justify-end">
         <select
           v-model="categoryFilter"
-          class="h-9 px-3 pr-8 border border-slate-200 rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
+          class="h-9 px-3 pr-8 border border-slate-200 rounded-sm text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
         >
           <option value="">Toutes catégories</option>
           <option v-for="cat in availableCategories" :key="cat" :value="cat">
@@ -333,7 +333,7 @@ const statusLabel: Record<string, string> = {
         <p class="text-xs text-muted-foreground">
           {{ user?.email || 'Non connecté' }} — ce compte n'a pas les droits d'administration.
         </p>
-        <NuxtLink to="/pro/claim" class="inline-flex items-center h-9 px-4 border border-border text-sm font-medium rounded-md hover:bg-muted transition-colors">
+        <NuxtLink to="/pro/claim" class="inline-flex items-center h-9 px-4 border border-border text-sm font-medium rounded-sm hover:bg-muted transition-colors">
           Se connecter
         </NuxtLink>
       </div>
@@ -342,7 +342,7 @@ const statusLabel: Record<string, string> = {
       <div v-else class="space-y-6">
 
         <!-- Error -->
-        <div v-if="errorMessage" role="alert" class="flex items-start gap-2.5 p-3 border border-red-200 bg-red-50 rounded-md text-sm text-red-700">
+        <div v-if="errorMessage" role="alert" class="flex items-start gap-2.5 p-3 border border-red-200 bg-red-50 rounded-sm text-sm text-red-700">
           <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
           <span>{{ errorMessage }}</span>
         </div>
@@ -354,14 +354,14 @@ const statusLabel: Record<string, string> = {
 
         <!-- Pro cards (hidden when Projets/Réalisations tab is active) -->
         <template v-if="activeTab !== 'projects' && activeTab !== 'realisations'">
-        <div v-if="filtered.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-slate-200 rounded-3xl">
+        <div v-if="filtered.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-slate-200 rounded-sm">
           <p class="text-sm text-muted-foreground">Aucun dossier {{ activeTab === 'pending' ? 'en attente' : '' }}.</p>
         </div>
         <div v-else-if="filtered.length > 0" class="space-y-4">
           <div
             v-for="pro in filtered"
             :key="pro.id"
-            class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm"
+            class="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-sm"
           >
             <!-- Pro header row -->
             <div class="flex items-start justify-between gap-4 px-5 py-4 bg-muted/50">
@@ -464,7 +464,7 @@ const statusLabel: Record<string, string> = {
                       <button
                         @click="moderateDocument(pro.id, docType, 'approved')"
                         :disabled="actionLoading === `${pro.id}-${docType}`"
-                        class="h-8 px-3 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity disabled:opacity-40 flex items-center gap-1.5"
+                        class="h-8 px-3 bg-foreground text-background text-xs font-semibold rounded-sm hover:opacity-80 transition-opacity disabled:opacity-40 flex items-center gap-1.5"
                       >
                         <svg v-if="actionLoading === `${pro.id}-${docType}`" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
                         <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
@@ -486,7 +486,7 @@ const statusLabel: Record<string, string> = {
                         <button
                           @click="uploadAdminDoc(pro.id, docType)"
                           :disabled="uploadState[`${pro.id}-${docType}`]?.status === 'uploading'"
-                          class="h-8 px-3 bg-foreground text-background text-xs font-semibold rounded-md hover:opacity-80 transition-opacity flex items-center gap-1.5 disabled:opacity-40"
+                          class="h-8 px-3 bg-foreground text-background text-xs font-semibold rounded-sm hover:opacity-80 transition-opacity flex items-center gap-1.5 disabled:opacity-40"
                         >
                            <svg v-if="uploadState[`${pro.id}-${docType}`]?.status === 'uploading'" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
                            Envoyer
@@ -511,7 +511,7 @@ const statusLabel: Record<string, string> = {
                   <input
                     type="date"
                     v-model="expiryDates[`${pro.id}-decennale`]"
-                    class="h-9 px-3 border border-slate-200 rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    class="h-9 px-3 border border-slate-200 rounded-sm text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20"
                   />
                 </div>
               </div>
@@ -536,14 +536,14 @@ const statusLabel: Record<string, string> = {
             </button>
           </div>
 
-          <div v-if="projects.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-slate-200 rounded-3xl">
+          <div v-if="projects.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-slate-200 rounded-sm">
             <p class="text-sm text-muted-foreground">Aucun projet trouvé.</p>
           </div>
           <div v-else class="space-y-4">
             <div
               v-for="project in sortedProjects"
               :key="project.id"
-              class="bg-white border rounded-3xl overflow-hidden shadow-sm transition-colors"
+              class="bg-white border rounded-sm overflow-hidden shadow-sm transition-colors"
               :class="leadAge(project.created_at).days >= 3 ? 'border-red-200' : 'border-slate-200'"
             >
               <div class="flex items-start justify-between gap-4 px-5 py-4 bg-muted/50">
@@ -584,14 +584,14 @@ const statusLabel: Record<string, string> = {
 
         <!-- Réalisations tab -->
         <template v-if="activeTab === 'realisations'">
-          <div v-if="realisations.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-slate-200 rounded-3xl">
+          <div v-if="realisations.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-slate-200 rounded-sm">
             <p class="text-sm text-muted-foreground">Aucune réalisation pour l'instant.</p>
           </div>
           <div v-else class="space-y-4">
             <div
               v-for="realisation in realisations"
               :key="realisation.id"
-              class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm"
+              class="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-sm"
             >
               <div class="flex items-center justify-between gap-4 px-5 py-4 bg-muted/50">
                 <div class="space-y-1 flex-1 min-w-0">

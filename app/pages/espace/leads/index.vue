@@ -121,28 +121,24 @@ async function copyToClipboard(text: string) {
 </script>
 
 <template>
-  <div class="w-full max-w-[1440px] px-6 py-8 md:px-10 md:py-12">
+  <div class="flex flex-col w-full max-w-[1440px] px-6 py-3 md:px-10 md:py-8">
 
     <!-- Blocker: profil non validé -->
-    <div v-if="profile && !profile.is_verified" class="flex flex-col gap-4 p-6 border border-red-300 bg-red-50 rounded-lg mb-8">
-      <div class="flex items-start gap-3">
+    <div v-if="profile && !profile.is_verified" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border border-red-300 bg-red-50 rounded-lg mb-3">
+      <div class="flex items-start gap-3 flex-1">
         <svg class="w-5 h-5 text-red-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
         </svg>
         <div>
           <p class="text-sm font-semibold text-red-900">Accès aux leads bloqué</p>
-          <p class="text-xs text-red-700 mt-1">Votre profil doit être validé pour accéder aux leads. Cela nécessite :</p>
-          <ul class="text-xs text-red-700 list-disc list-inside mt-2 space-y-1">
-            <li>Avoir envoyé vos documents (KBIS + Décennale)</li>
-            <li>Que nos équipes aient vérifié vos documents (sous 24h ouvrées)</li>
-          </ul>
+          <p class="text-xs text-red-700 mt-1">Envoyez vos documents (KBIS + Décennale) : accès débloqué sous 24h ouvrées après vérification.</p>
         </div>
       </div>
       <NuxtLink
         to="/espace/dashboard"
-        class="inline-flex items-center justify-center gap-2 h-10 px-6 bg-red-700 text-white text-sm font-semibold rounded-md hover:bg-red-800 transition-colors self-start"
+        class="inline-flex items-center justify-center gap-2 h-10 px-6 bg-red-700 text-white text-sm font-semibold rounded-sm hover:bg-red-800 transition-colors shrink-0"
       >
-        Retour au dashboard pour envoyer les documents
+        Envoyer mes documents
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
         </svg>
@@ -150,7 +146,7 @@ async function copyToClipboard(text: string) {
     </div>
 
     <!-- Success banner (?upgrade=success) -->
-    <div v-if="showSuccessBanner" class="flex items-start gap-3 p-4 border border-foreground/30 rounded-lg mb-8">
+    <div v-if="showSuccessBanner" class="flex items-start gap-3 p-4 border border-foreground/30 rounded-lg mb-4">
       <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
       </svg>
@@ -161,21 +157,10 @@ async function copyToClipboard(text: string) {
     </div>
 
     <!-- Page header -->
-    <div class="mb-12 md:hidden">
-      <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Mes leads</h1>
-      <p class="text-sm text-muted-foreground mt-2">Leads qualifiés pour votre métier</p>
+    <div class="mb-4 md:hidden">
+      <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Mes leads</h1>
       <NuxtLink
-        v-if="!isPremium"
-        to="/espace/premium"
-        class="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mt-2"
-      >
-        Passer Premium pour débloquer tous les contacts
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
-      </NuxtLink>
-      <NuxtLink
-        v-else
+        v-if="isPremium"
         to="/espace/premium"
         class="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mt-2"
       >
@@ -190,7 +175,7 @@ async function copyToClipboard(text: string) {
     </div>
 
     <!-- Marché local widget (shown only when data available) -->
-    <div v-if="marketData" class="bg-white rounded-3xl border border-slate-200 shadow-sm divide-y divide-slate-200 mb-8">
+    <div v-if="marketData" class="bg-white rounded-sm border border-slate-200 shadow-sm divide-y divide-slate-200 mb-4">
       <div class="flex items-center justify-between px-6 py-3">
         <p class="text-xs font-semibold text-muted-foreground tracking-widest uppercase">Marché local</p>
         <span class="text-xs text-muted-foreground">Ce mois</span>
@@ -212,7 +197,7 @@ async function copyToClipboard(text: string) {
     </div>
 
     <!-- Free leads counter banner (BASIC, used < 3) -->
-    <div v-if="showFreeLeadsBanner" class="flex items-center gap-3 p-4 bg-white border border-slate-200 rounded-3xl mb-8">
+    <div v-if="showFreeLeadsBanner" class="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-sm mb-3">
       <svg class="w-4 h-4 shrink-0 text-muted-foreground" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1010.058 8.4M12 4.875A2.625 2.625 0 1113.942 8.4M12 4.875V21m-9.375-9.75h18.75M6.375 8.4H3.75a1.5 1.5 0 000 3h15a1.5 1.5 0 000-3h-2.625M12 4.875a2.625 2.625 0 00-2.625 2.625h5.25A2.625 2.625 0 0012 4.875z"/>
       </svg>
@@ -227,7 +212,7 @@ async function copyToClipboard(text: string) {
     </div>
 
     <!-- Paywall banner (BASIC, used >= 3 + has locked lead) -->
-    <div v-if="showPaywallBanner" class="flex items-center gap-3 p-4 border border-amber-300 bg-amber-50 rounded-3xl mb-8">
+    <div v-if="showPaywallBanner" class="flex items-center gap-3 p-4 border border-amber-300 bg-amber-50 rounded-sm mb-4">
       <svg class="w-4 h-4 shrink-0 text-amber-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
       </svg>
@@ -283,7 +268,7 @@ async function copyToClipboard(text: string) {
           <NuxtLink
             v-if="!isPremium"
             to="/espace/premium"
-            class="hidden md:inline-flex items-center gap-1.5 h-9 px-4 bg-foreground text-background font-bold text-xs rounded-md shadow-sm hover:opacity-80 transition-opacity mr-2"
+            class="hidden md:inline-flex items-center gap-1.5 h-9 px-4 bg-foreground text-background font-bold text-xs rounded-sm shadow-sm hover:opacity-80 transition-opacity mr-2"
           >
             <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-1.012 1.09l1.242 5.385c.114.495-.417.882-.84.62l-4.757-2.937a.563.563 0 00-.594 0L5.973 21.085c-.423.262-.954-.125-.84-.62l1.242-5.385a.563.563 0 00-.182-.557L1.99 10.916c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
             Passer Premium
@@ -291,7 +276,7 @@ async function copyToClipboard(text: string) {
           <select
             v-model="sortMode"
             aria-label="Trier les leads"
-            class="h-9 px-3 pr-8 border border-border rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
+            class="h-9 px-3 pr-8 border border-border rounded-sm text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
           >
             <option value="urgent">Plus urgents</option>
             <option value="recent">Plus récents</option>
@@ -299,7 +284,7 @@ async function copyToClipboard(text: string) {
           <select
             v-model="categoryFilter"
             aria-label="Filtrer par catégorie"
-            class="h-9 px-3 pr-8 border border-border rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
+            class="h-9 px-3 pr-8 border border-border rounded-sm text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
           >
             <option value="">Toutes catégories</option>
             <option v-for="cat in availableCategories" :key="cat" :value="cat">
@@ -315,16 +300,16 @@ async function copyToClipboard(text: string) {
       </div>
 
     <!-- Lead grid -->
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 reveal">
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 reveal">
       <div
         v-for="lead in paginatedLeads"
         :key="lead.id"
-        class="reveal-item bento-card bg-white rounded-3xl border border-slate-200 shadow-sm cursor-pointer overflow-hidden"
+        class="reveal-item bento-card bg-white rounded-sm border border-slate-200 shadow-sm cursor-pointer overflow-hidden"
       >
 
         <!-- ── Variant A: Locked ── -->
         <template v-if="lead.status === 'locked'">
-          <div class="flex items-center justify-between px-6 py-5">
+          <div class="flex items-center justify-between px-6 py-4">
             <div class="space-y-1.5">
               <p class="text-sm font-bold text-slate-900">{{ CATEGORY_LABELS[lead.category] ?? lead.category }}</p>
               <LeadAge v-if="lead.created_at" :created-at="lead.created_at" />
@@ -336,7 +321,7 @@ async function copyToClipboard(text: string) {
               Flouté
             </span>
           </div>
-          <div class="px-5 py-4 space-y-2">
+          <div class="px-5 py-3 space-y-2">
             <div class="flex items-center gap-2 text-sm">
               <span class="text-muted-foreground">Budget</span>
               <span class="text-foreground font-semibold">{{ lead.budget_range }}</span>
@@ -375,7 +360,7 @@ async function copyToClipboard(text: string) {
               <span class="ml-1 text-xs text-muted-foreground">{{ lead.qualify_score }}/4</span>
             </div>
           </div>
-          <div class="px-5 py-4">
+          <div class="px-5 py-3">
             <NuxtLink
               v-if="freeRemaining > 0"
               :to="`/espace/leads/${lead.id}`"
@@ -399,7 +384,7 @@ async function copyToClipboard(text: string) {
 
         <!-- ── Variant B: Unlocked ── -->
         <template v-else-if="lead.status === 'unlocked'">
-          <div class="flex items-center justify-between px-5 py-4">
+          <div class="flex items-center justify-between px-5 py-3">
             <div class="space-y-1.5">
               <p class="text-sm font-bold text-slate-900">{{ CATEGORY_LABELS[lead.category] ?? lead.category }}</p>
               <LeadAge v-if="lead.created_at" :created-at="lead.created_at" />
@@ -411,7 +396,7 @@ async function copyToClipboard(text: string) {
               Débloqué
             </span>
           </div>
-          <div class="px-5 py-4 space-y-2">
+          <div class="px-5 py-3 space-y-2">
             <div class="flex items-center gap-2 text-sm">
               <span class="text-muted-foreground">Budget</span>
               <span class="text-foreground font-semibold">{{ lead.budget_range }}</span>
@@ -469,7 +454,7 @@ async function copyToClipboard(text: string) {
                 <select
                   :value="lead.db_status"
                   @change="updateLeadStatus(lead, ($event.target as HTMLSelectElement).value)"
-                  class="w-full h-9 px-3 border border-border rounded-md text-xs font-semibold text-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20 appearance-none cursor-pointer"
+                  class="w-full h-9 px-3 border border-border rounded-sm text-xs font-semibold text-foreground bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20 appearance-none cursor-pointer"
                 >
                   <option value="new">Nouveau lead</option>
                   <option value="contacted">Déjà contacté</option>
@@ -480,7 +465,7 @@ async function copyToClipboard(text: string) {
               <div class="flex gap-2 shrink-0">
                 <a
                   :href="`tel:${lead.customer_phone}`"
-                  class="inline-flex items-center justify-center w-9 h-9 border border-border text-foreground rounded-md hover:bg-muted transition-colors"
+                  class="inline-flex items-center justify-center w-9 h-9 border border-border text-foreground rounded-sm hover:bg-muted transition-colors"
                   title="Appeler"
                 >
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -489,7 +474,7 @@ async function copyToClipboard(text: string) {
                 </a>
                 <a
                   :href="`mailto:${lead.customer_email}`"
-                  class="inline-flex items-center justify-center w-9 h-9 border border-border text-foreground rounded-md hover:bg-muted transition-colors"
+                  class="inline-flex items-center justify-center w-9 h-9 border border-border text-foreground rounded-sm hover:bg-muted transition-colors"
                   title="Envoyer un email"
                 >
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -501,7 +486,7 @@ async function copyToClipboard(text: string) {
             <div class="px-5 pb-4">
               <NuxtLink
                 :to="`/espace/leads/${lead.id}`"
-                class="inline-flex items-center justify-center gap-2 w-full h-9 px-4 text-muted-foreground text-xs font-semibold rounded-md hover:text-foreground transition-colors"
+                class="inline-flex items-center justify-center gap-2 w-full h-9 px-4 text-muted-foreground text-xs font-semibold rounded-sm hover:text-foreground transition-colors"
               >
                 Voir les détails du projet
               </NuxtLink>
@@ -510,13 +495,13 @@ async function copyToClipboard(text: string) {
 
         <!-- ── Variant C: Claimed ── -->
         <template v-else>
-          <div class="flex items-center justify-between px-5 py-4">
+          <div class="flex items-center justify-between px-5 py-3">
             <p class="text-sm font-semibold text-muted-foreground">{{ CATEGORY_LABELS[lead.projects?.category ?? lead.category] ?? (lead.projects?.category ?? lead.category) }}</p>
             <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-border text-muted-foreground">
               Déjà attribué
             </span>
           </div>
-          <div class="px-5 py-4 space-y-2">
+          <div class="px-5 py-3 space-y-2">
             <div class="flex items-center gap-2 text-sm">
               <span class="text-muted-foreground">Budget</span>
               <span class="text-muted-foreground">{{ lead.projects?.budget_range ?? lead.budget_range }}</span>
@@ -526,7 +511,7 @@ async function copyToClipboard(text: string) {
               <span class="text-muted-foreground font-mono select-none" aria-hidden="true">*** *** ***</span>
             </div>
           </div>
-          <div class="px-5 py-4">
+          <div class="px-5 py-3">
             <p class="text-xs text-muted-foreground text-center py-1">Ce lead a déjà été attribué</p>
           </div>
         </template>
@@ -539,7 +524,7 @@ async function copyToClipboard(text: string) {
       <button
         @click="currentPage--"
         :disabled="currentPage === 1"
-        class="h-9 px-4 border border-border rounded-md text-sm font-medium text-foreground hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        class="h-9 px-4 border border-border rounded-sm text-sm font-medium text-foreground hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
       >
         ← Précédent
       </button>
@@ -547,7 +532,7 @@ async function copyToClipboard(text: string) {
       <button
         @click="currentPage++"
         :disabled="currentPage === totalPages"
-        class="h-9 px-4 border border-border rounded-md text-sm font-medium text-foreground hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        class="h-9 px-4 border border-border rounded-sm text-sm font-medium text-foreground hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
       >
         Suivant →
       </button>

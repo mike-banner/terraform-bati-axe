@@ -35,7 +35,7 @@ function onTouchMove(e: TouchEvent) { if (e.touches[0]) getPosition(e.touches[0]
 <template>
   <div
     ref="containerRef"
-    class="relative overflow-hidden rounded-3xl border border-slate-200 select-none cursor-ew-resize"
+    class="relative overflow-hidden rounded-sm border border-slate-200 select-none cursor-ew-resize"
     style="aspect-ratio: 16/9"
     role="img"
     :aria-label="`Comparaison avant/après : ${beforeAlt} et ${afterAlt}`"

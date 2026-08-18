@@ -38,7 +38,7 @@ async function toggleLike() {
 </script>
 
 <template>
-  <div class="bento-card rounded-3xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+  <div class="bento-card rounded-sm border border-slate-200 bg-white overflow-hidden shadow-sm">
     <div class="relative aspect-[4/3]">
       <img
         :src="project.image_urls[0]"
