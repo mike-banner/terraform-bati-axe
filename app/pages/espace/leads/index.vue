@@ -121,28 +121,24 @@ async function copyToClipboard(text: string) {
 </script>
 
 <template>
-  <div class="flex flex-col min-h-screen w-full max-w-[1440px] px-6 py-4 md:px-10 md:py-8">
+  <div class="flex flex-col w-full max-w-[1440px] px-6 py-3 md:px-10 md:py-8">
 
     <!-- Blocker: profil non validé -->
-    <div v-if="profile && !profile.is_verified" class="flex flex-col gap-4 p-6 border border-red-300 bg-red-50 rounded-lg mb-4">
-      <div class="flex items-start gap-3">
+    <div v-if="profile && !profile.is_verified" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border border-red-300 bg-red-50 rounded-lg mb-3">
+      <div class="flex items-start gap-3 flex-1">
         <svg class="w-5 h-5 text-red-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
         </svg>
         <div>
           <p class="text-sm font-semibold text-red-900">Accès aux leads bloqué</p>
-          <p class="text-xs text-red-700 mt-1">Votre profil doit être validé pour accéder aux leads. Cela nécessite :</p>
-          <ul class="text-xs text-red-700 list-disc list-inside mt-2 space-y-1">
-            <li>Avoir envoyé vos documents (KBIS + Décennale)</li>
-            <li>Que nos équipes aient vérifié vos documents (sous 24h ouvrées)</li>
-          </ul>
+          <p class="text-xs text-red-700 mt-1">Envoyez vos documents (KBIS + Décennale) : accès débloqué sous 24h ouvrées après vérification.</p>
         </div>
       </div>
       <NuxtLink
         to="/espace/dashboard"
-        class="inline-flex items-center justify-center gap-2 h-10 px-6 bg-red-700 text-white text-sm font-semibold rounded-sm hover:bg-red-800 transition-colors self-start"
+        class="inline-flex items-center justify-center gap-2 h-10 px-6 bg-red-700 text-white text-sm font-semibold rounded-sm hover:bg-red-800 transition-colors shrink-0"
       >
-        Retour au dashboard pour envoyer les documents
+        Envoyer mes documents
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
         </svg>
@@ -163,19 +159,8 @@ async function copyToClipboard(text: string) {
     <!-- Page header -->
     <div class="mb-4 md:hidden">
       <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Mes leads</h1>
-      <p class="text-sm text-muted-foreground mt-2">Leads qualifiés pour votre métier</p>
       <NuxtLink
-        v-if="!isPremium"
-        to="/espace/premium"
-        class="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mt-2"
-      >
-        Passer Premium pour débloquer tous les contacts
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
-      </NuxtLink>
-      <NuxtLink
-        v-else
+        v-if="isPremium"
         to="/espace/premium"
         class="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mt-2"
       >
@@ -212,7 +197,7 @@ async function copyToClipboard(text: string) {
     </div>
 
     <!-- Free leads counter banner (BASIC, used < 3) -->
-    <div v-if="showFreeLeadsBanner" class="flex items-center gap-3 p-4 bg-white border border-slate-200 rounded-sm mb-4">
+    <div v-if="showFreeLeadsBanner" class="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-sm mb-3">
       <svg class="w-4 h-4 shrink-0 text-muted-foreground" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1010.058 8.4M12 4.875A2.625 2.625 0 1113.942 8.4M12 4.875V21m-9.375-9.75h18.75M6.375 8.4H3.75a1.5 1.5 0 000 3h15a1.5 1.5 0 000-3h-2.625M12 4.875a2.625 2.625 0 00-2.625 2.625h5.25A2.625 2.625 0 0012 4.875z"/>
       </svg>
@@ -315,7 +300,7 @@ async function copyToClipboard(text: string) {
       </div>
 
     <!-- Lead grid -->
-    <div v-else class="flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 reveal">
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 reveal">
       <div
         v-for="lead in paginatedLeads"
         :key="lead.id"
@@ -324,7 +309,7 @@ async function copyToClipboard(text: string) {
 
         <!-- ── Variant A: Locked ── -->
         <template v-if="lead.status === 'locked'">
-          <div class="flex items-center justify-between px-6 py-5">
+          <div class="flex items-center justify-between px-6 py-4">
             <div class="space-y-1.5">
               <p class="text-sm font-bold text-slate-900">{{ CATEGORY_LABELS[lead.category] ?? lead.category }}</p>
               <LeadAge v-if="lead.created_at" :created-at="lead.created_at" />
@@ -336,7 +321,7 @@ async function copyToClipboard(text: string) {
               Flouté
             </span>
           </div>
-          <div class="px-5 py-4 space-y-2">
+          <div class="px-5 py-3 space-y-2">
             <div class="flex items-center gap-2 text-sm">
               <span class="text-muted-foreground">Budget</span>
               <span class="text-foreground font-semibold">{{ lead.budget_range }}</span>
@@ -375,7 +360,7 @@ async function copyToClipboard(text: string) {
               <span class="ml-1 text-xs text-muted-foreground">{{ lead.qualify_score }}/4</span>
             </div>
           </div>
-          <div class="px-5 py-4">
+          <div class="px-5 py-3">
             <NuxtLink
               v-if="freeRemaining > 0"
               :to="`/espace/leads/${lead.id}`"
@@ -399,7 +384,7 @@ async function copyToClipboard(text: string) {
 
         <!-- ── Variant B: Unlocked ── -->
         <template v-else-if="lead.status === 'unlocked'">
-          <div class="flex items-center justify-between px-5 py-4">
+          <div class="flex items-center justify-between px-5 py-3">
             <div class="space-y-1.5">
               <p class="text-sm font-bold text-slate-900">{{ CATEGORY_LABELS[lead.category] ?? lead.category }}</p>
               <LeadAge v-if="lead.created_at" :created-at="lead.created_at" />
@@ -411,7 +396,7 @@ async function copyToClipboard(text: string) {
               Débloqué
             </span>
           </div>
-          <div class="px-5 py-4 space-y-2">
+          <div class="px-5 py-3 space-y-2">
             <div class="flex items-center gap-2 text-sm">
               <span class="text-muted-foreground">Budget</span>
               <span class="text-foreground font-semibold">{{ lead.budget_range }}</span>
@@ -510,13 +495,13 @@ async function copyToClipboard(text: string) {
 
         <!-- ── Variant C: Claimed ── -->
         <template v-else>
-          <div class="flex items-center justify-between px-5 py-4">
+          <div class="flex items-center justify-between px-5 py-3">
             <p class="text-sm font-semibold text-muted-foreground">{{ CATEGORY_LABELS[lead.projects?.category ?? lead.category] ?? (lead.projects?.category ?? lead.category) }}</p>
             <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border rounded-full border-border text-muted-foreground">
               Déjà attribué
             </span>
           </div>
-          <div class="px-5 py-4 space-y-2">
+          <div class="px-5 py-3 space-y-2">
             <div class="flex items-center gap-2 text-sm">
               <span class="text-muted-foreground">Budget</span>
               <span class="text-muted-foreground">{{ lead.projects?.budget_range ?? lead.budget_range }}</span>
@@ -526,7 +511,7 @@ async function copyToClipboard(text: string) {
               <span class="text-muted-foreground font-mono select-none" aria-hidden="true">*** *** ***</span>
             </div>
           </div>
-          <div class="px-5 py-4">
+          <div class="px-5 py-3">
             <p class="text-xs text-muted-foreground text-center py-1">Ce lead a déjà été attribué</p>
           </div>
         </template>

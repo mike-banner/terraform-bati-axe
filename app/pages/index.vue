@@ -6,8 +6,7 @@ useHead({
   ]
 })
 
-// Image chantier vérifiée (résout 200). À remplacer à terme par un asset projet.
-const heroPhoto = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80'
+const heroPhoto = '/images/avant.jpg'
 
 const { data: showcased } = await useFetch('/api/v1/completed-projects')
 const showcasedProjects = computed(() => showcased.value?.projects ?? [])
@@ -163,8 +162,8 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </p>
       </div>
       <BeforeAfterSlider
-        before-src="/images/apres.jpg"
-        after-src="/images/avant.jpg"
+        before-src="/images/avant.jpg"
+        after-src="/images/apres.jpg"
         before-label="Avant travaux"
         after-label="Après travaux"
         before-alt="Chantier de rénovation en cours"
