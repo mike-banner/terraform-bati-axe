@@ -6,12 +6,15 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event)
   if (!user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
 
+  const userId = resolveSupabaseUserId(user)
+  if (!userId) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
+
   const supabase = await serverSupabaseServiceRole(event) as any
 
   const { data: pro } = await supabase
     .from('professionals')
     .select('id, zone_id')
-    .eq('id', user.id)
+    .eq('id', userId)
     .single()
 
   if (!pro?.zone_id) return { data: null }

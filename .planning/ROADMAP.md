@@ -1,5 +1,19 @@
 # Roadmap: BÂTI-AXE
 
+## Milestones
+
+### ✅ Milestone v0.9.0 « Experience & Growth Pro » — CLÔTURÉ le 2026-08-19
+
+**Verdict : v1 livrable pour le pilote mono-ville (Carrières-sous-Poissy / 78).** Toutes les phases du périmètre livrées : capture (2), onboarding/vérification (3), verrou & billing (4), conversion (4.5), marché (4.6), design system (4.7), SIRET/badges (5, 5.8), portfolio (5.5), calculateur (5.6), durcissement (5.7), tunnel B2B (5.8), messagerie/espace client + onboarding email (6), aides rénovation (05.9).
+
+**Conditions de livraison v1 (à valider avant mise en prod réelle avec vrais utilisateurs) :**
+- [ ] Déploiement Cloudflare Pages vérifié au vert (Node 22 via `.nvmrc` — sinon poser `NODE_VERSION=22` en var de build)
+- [ ] Paiement Stripe re-testé de bout en bout (checkout + webhook, Phase 4) et cron pg_cron 72h vérifié (Phase 4) — non re-testés le 2026-08-19
+- [ ] Admin minimal validé opérationnel pour le pilote (revue documents OK ; analytics/audit hors UI → Phase 06.1)
+- [ ] Dette test connue : passe Playwright jamais câblée (blocage navigateur sandbox) — à traiter dans le prochain milestone
+
+**Reporté au prochain milestone** : Phase 06.1 (Console Admin), Phase 7 (Réputation & Scale), Phase 8 (PWA Mobile-First) + tout le bloc Deferred ci-dessous.
+
 ## Overview
 Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-Poissy / 78). Chaque phase livre une capacité vérifiable et autonome. La Phase 5 est une validation business sans code nouveau — elle conditionne le scale géographique.
 
@@ -15,8 +29,10 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 5: Intégration API État (SIRET) & Badges de Confiance** - Récupération auto des infos légales (API Gouv/Pappers), vérification asynchrone décennale, et nouveaux copywriting labels. (completed 2026-06-24)
 - [x] **Phase 5.5: Portfolio Pro, Refonte Profil & Social** - Upload R2 (galerie projets), BDD completed_projects/likes, carousel landing, profil immersif pleine page (zéro menu, mobile-first). (completed 2026-07-19)
 - [x] **Phase 5.6: Calculateur de Prix & Refonte Simulateur** - Estimateur interactif (tuiles, type de travaux, m²), algorithme de chiffrage, et capture de leads qualifiés (résultat contre coordonnées). (completed 2026-07-19)
+- [x] **Phase 5.7: Durcissement Validation des Inputs** - Bornes maxlength/pattern alignées serveur (Zod) ↔ client (HTML) sur tous les formulaires + CHECK constraints DB. (completed 2026-07-20)
 - [x] **Phase 5.8: Tunnel B2B & Apporteurs d'Affaires** - Landing page partenaire ("Bras armé technique"), dépôt de plans/rapports expert, SLA de 4h, attestation décennale 1-clic pour syndics, archis et assureurs. (completed 2026-07-20)
-- [ ] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement.
+- [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
+- [ ] **Phase 06.1: Console Admin Opérationnelle** - Consolider et compléter l'admin : revue documents, gestion pros, projets/leads, analytics paywall, audit log. UI/UX de l'admin → passe design dédiée plus tard (voir Deferred).
 - [x] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
 - [ ] **Phase 8: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
@@ -251,10 +267,19 @@ Plans:
   2. [DONE] Un pro peut envoyer un message à un particulier depuis `/espace/leads/[id]` ; le particulier reçoit une notification email avec lien de réponse.
   3. [DONE] Le particulier peut répondre et poser des questions depuis son espace ; le pro reçoit une notification.
   4. [DONE] Feedback loop : le particulier peut écarter/retenir un artisan ; si tous les pros engagés sont refusés, le projet repart automatiquement sur le marché.
-  5. Les emails d'onboarding pro (J+0 / J+1 / J+3) sont implémentés mais inactifs par défaut (`ONBOARDING_EMAILS=false`).
+  5. [DONE] Les emails d'onboarding pro sont implémentés mais inactifs par défaut (`NUXT_ONBOARDING_EMAILS=false`) — REQ-07 livré le 2026-08-19 (flag, migration `onboarding_email_sent_at`, envoi au claim, idempotence, livraison Resend vérifiée).
   6. Un pro peut marquer un lead "Chantier décroché" depuis la fiche lead ; le taux de conversion s'affiche dans le bloc ROI.
-**Plans**: 4 plans (06-01 livré en prod ; 06-02 acquisition retiré → post-lancement ; 06-03 feedback/onboarding — REQ-06/09 livrés, REQ-07 reste ; 06-04 SMS différé)
+**Plans**: 4 plans — 06-01 (messagerie) ✅ livré en prod ; 06-02 (acquisition) retiré → post-lancement ; 06-03 (feedback loop REQ-06/09 + email onboarding REQ-07) ✅ livrés ; 06-04 (SMS) différé → post-lancement. **Phase complète** (2 livrés / 2 différés).
 **UI hint**: yes
+
+### Phase 06.1: Console Admin Opérationnelle (INSERTED 2026-08-19)
+
+**Goal:** Consolider et compléter la console admin existante (`app/pages/admin/index.vue`, 624 lignes monolithiques + 9 endpoints Nitro) pour la rendre opérationnelle au quotidien : revue des documents de vérification (Kbis/décennale), gestion des pros (vérifier/promouvoir/statut), pilotage projets & leads, analytics paywall, audit log consultable.
+**Contexte**: l'admin fonctionne (4 onglets : queue documents, pros, projets, réalisations) mais reste un monolithe sans composants dédiés et sans vue d'ensemble (KPIs). L'UI/UX de l'admin sera traitée **plus tard** dans une passe design dédiée (cf. Deferred « passe design totale ») — cette phase ne fait que la consolidation fonctionnelle.
+**Requirements**: ADM-01 (Phase 3), 05.5-04 (showcase), 04.5-04 (paywall analytics)
+**Depends on:** Phase 6
+**Plans**: TBD
+**UI hint**: no (fonctionnel d'abord, design dédié plus tard)
 
 ### Phase 7: Réputation & Scale
 **Goal**: Pérenniser la croissance par la preuve sociale et l'expansion géographique conditionnée aux métriques pilote.
@@ -293,11 +318,32 @@ Plans:
 | 5. Intégration API État (SIRET) & Badges de Confiance | 6/6 | Complete   | 2026-06-24 |
 | 5.5. Portfolio Pro, Refonte Profil & Social | 8/8 | Complete   | 2026-07-19 |
 | 5.6. Calculateur de Prix & Refonte Simulateur | 3/3 | Complete   | 2026-07-19 |
+| 5.7. Durcissement Validation des Inputs | 2/2 | Complete   | 2026-07-20 |
 | 5.8. Tunnel B2B & Apporteurs d'Affaires | 3/3 | Complete   | 2026-07-20 |
-| 6. Messagerie & Espace Client | 1/4 | In progress (06-01 livré ; acquisition retirée, SMS différé) | - |
+| 6. Messagerie & Espace Client | 2/2 livrés (2 différés) | Complete | 2026-08-19 |
 | 05.9 Extension Simulateur Mes Aides Réno | 4/4 | Complete | 2026-08-18 |
+| 06.1 Console Admin Opérationnelle | 0/TBD | Planned | - |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
 | 8. Architecture PWA Mobile-First | 0/TBD | Not started | - |
+
+## Priorités pilote v1 — Backlog (items manquants identifiés le 2026-08-19)
+
+Items hors roadmap détectés en relisant les specs client (18/08 Arti-Box, 06/08 PWA) + PIVOT-B2B + avis mentor. Ordre recommandé pour valider le pilote — à trancher :
+
+| # | Item | Source | Pourquoi | Statut |
+|---|---|---|---|---|
+| P1 | **Analytics de conversion** (simulateur → lead → contact → chantier signé). **Décidé le 2026-08-19 : Matomo** (open-source, GDPR, données souveraines — fit marché FR). Déploiement : cloud Matomo au départ ; si Matomo doit couvrir plusieurs projets, **self-host sur le VPS du porteur de projet** (partie prenante). Axiom écarté (gestion de logs, pas analytics) | Avis mentor + décision utilisateur | Sans mesure, impossible de savoir si le pilote fonctionne — plus critique que l'admin | ✅ décidé — à implémenter |
+| P2 | **Anti-spam capture** — Turnstile (Cloudflare) sur `POST /projects` public | Checklist sécurité (optionnel → obligatoire) | Un bot flood tue la qualité du marché + la délivrabilité email | ❌ à faire |
+| P3 | **Stripe (checkout + webhook) + cron pg_cron 72h re-testés en prod** | Condition de livraison v0.9 | Jamais re-testés depuis Phase 4/4.5 ; vérifier que le job pg_cron existe bien en prod | ❌ à faire en premier |
+| P4 | **Notif pro nouveaux leads** — 2 temps : (1) email dès maintenant (léger, zéro install), (2) **Web Push API natif via la PWA** (Phase 8, `@vite-pwa/nuxt` + `web-push`/VAPID depuis Nitro — pas de service tiers) quand le pro opt-in + installe la PWA. Email = filet universel, push = expérience | Avis mentor | Active les pros du pilote sans les obliger à surveiller la liste | ❌ à faire (email) + Phase 8 (push) |
+| P5 | **Feedback loop refus → remise au marché** : testé ? | Avis mentor | Messagerie testée, ce chemin-là non | ❌ à tester |
+| P6 | **US-PAR-02 : étude de financement courtier partenaire** (1 CTA + envoi) | Spec 18/08 | Levier de monétisation simple | ❌ absent |
+| P7 | **Packs zonés** (Zone Unique / Département + engagement 12 mois, §6.1) | Spec 18/08 | Pricing actuel plat (mensuel/annuel) | ❌ absent |
+| P8 | **Compte Prescripteur** (rôle BDD, « Mes dossiers clients », pipeline translucide, landing splitée, jauge anti-piège « Illimité » 40 leads/mois) | PIVOT-B2B v2 | Le pivot B2B n'est pas implémenté | ❌ absent |
+| P9 | **Mobile QA landing + simulateur + états vides** (dashboard sans leads, espace client sans messages, erreurs/offline) | Spec 06/08 + avis mentor | 80% de la première impression d'un nouveau user | ❌ à faire |
+| P12 | **Page pro public « digne de ce nom »** — vitrine commerciale du pro (héro, preuve sociale, avis une fois Phase 7, CTA contact). Base Phase 5.5 existe (immersif, galerie, likes) mais à élever | Décision utilisateur 2026-08-19 | C'est ce que voient les particuliers avant de contacter un pro | ❌ à faire |
+| P10 | **Commission dégressive 8→2,5% + Stripe Connect** (§6.3/6.4) | Spec 18/08 / PIVOT-B2B | Documenté mais pas implémenté | 📝 doc only |
+| P11 | **Signature eIDAS** (Yousign/DocuSign, verrou commission) + **codes privilèges fournisseurs** (US-ART-03/04) + **workspace architecte** (§7) | Spec 18/08 | Différenciateurs Phase 7+ | ❌ Phase 7+ |
 
 ## Deferred (post-lancement)
 
