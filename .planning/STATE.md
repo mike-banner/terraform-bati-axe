@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v0.9.0-experience-pro
 milestone_name: Experience & Growth Pro
 status: ready_to_plan_v0.9.1
-stopped_at: Phase 5.9 context gathered, prête à planifier
+stopped_at: Phase 5.9 exécutée (4/4 plans) — prochaine étape Phase 8
 last_updated: "2026-08-18T00:00:00.000Z"
 last_activity: 2026-08-18
 progress:
   total_phases: 13
-  completed_phases: 10
+  completed_phases: 11
   total_plans: 49
-  completed_plans: 44
-  percent: 77
+  completed_plans: 48
+  percent: 98
 ---
 
 # Project State
@@ -27,20 +27,20 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 5.9 — Extension Simulateur (API Mes Aides Réno), puis Phase 8 — PWA Mobile-First (scope réduit). Phase 06 différée (décision utilisateur 2026-08-18).
+**Current focus**: Phase 8 — PWA Mobile-First (scope réduit). Phase 05.9 livrée (aides rénovation), Phase 06 différée (décision utilisateur 2026-08-18).
 
 ## Current Position
 
-Phase: 5.9 (extension-simulateur-mes-aides-reno) — à planifier
+Phase: 5.9 (extension-simulateur-mes-aides-reno) — exécutée (4/4 plans livrés : 01 proxy, 02 composant, 03 fork simulateur, 04 standalone/home/espace client)
 Ensuite: Phase 8 (pwa-mobile-first, scope réduit sans Capacitor)
-Status: Not started — Phase 06 mise en pause (06-01 seul livré)
+Status: Complete (4/4 plans livrés) — Phase 06 mise en pause (06-01 seul livré)
 Last activity: 2026-08-18
 
-### Plans Phase 06 (SMS + Acquisition + Messagerie) — DIFFÉRÉE
+### Plans Phase 06 (Messagerie & Espace Client) — acquisition retirée, SMS différé
 
 - [x] 06-01 — Magic Link & Messagerie In-App (codé et mergé dans `dev` le 2026-06-15, hors flux GSD ; vérifié via `06-UAT.md` status complete 4/5 PASS + 1 fixed ; `06-01-SUMMARY.md` rédigé rétroactivement le 2026-08-06). Bug majeur trouvé et corrigé : verrou de déblocage manquant côté messagerie pro (ADR-004), fix sur `fix/messaging-unlock-guard`.
-- [ ] 06-02 — Acquisition Pros (cold email) — 🔴 bloqué : pas de liste de pros (CSV à fournir)
-- [ ] 06-03 — Feedback loop lead + Email onboarding (flag off par défaut) — non planifié
+- [ ] 06-02 — Acquisition Pros (cold email) — ⏸ RETIRÉ de la Phase 6 (décision 2026-08-18) : pas prioritaire tant que le site se construit. Reporté post-lancement, source (CSV/seed/scrape) à trancher le moment venu.
+- [~] 06-03 — Feedback loop lead (REQ-06) + profil public espace particulier (REQ-09) livrés hors-plan (commit `b4970a9`) ; Email onboarding (REQ-07, flag off par défaut) reste à faire.
 - [ ] 06-04 — SMS différencié — ⏸ DIFFÉRÉ volontairement en tout dernier (décision utilisateur 2026-06-16 : aucune dépense fournisseur SMS sans feu vert explicite)
 
 Dette connue héritée du plan 06-01 : passe visuelle Playwright jamais faite (MCP bloqué sur Chrome système, fix identifié mais non appliqué), 10 erreurs typecheck préexistantes dans `server/api/v1/leads/index.get.ts`, angle mort d'observabilité sur la notification mock-email client→pro.
@@ -69,6 +69,8 @@ Dette connue héritée du plan 06-01 : passe visuelle Playwright jamais faite (M
 - Phase 05.8 edited: Ajout scope 05.8 : auto-approuver le Kbis à l'upload si professionals.siret_status === 'active' (déjà vérifié au claim), même pattern que l'auto-approbation décennale dans upload.post.ts. Évite la revue admin manuelle quand l'API gouv confirme déjà l'existence/activité de l'entreprise.
 - [2026-08-06] Phase 8 ajoutée à ROADMAP.md : Architecture PWA Mobile-First & Packaging Stores (Capacitor 6) — @vite-pwa/nuxt offline-resilient, Bottom Bar Shell mobile, wrapper Capacitor 6 pour App Store/Play Store. Dépend de Phase 4.7 et Phase 6.
 - [2026-08-06] Resynchronisation STATE.md via /gsd:progress : le plan 06-01 (Magic Link & Messagerie) était déjà codé, vérifié et mergé dans `dev` depuis le 2026-06-15 mais hors flux GSD (pas de SUMMARY.md) — STATE.md affichait encore Phase 06 "Not started" avant cette mise à jour. SUMMARY rédigé rétroactivement à partir de `06-UAT.md`.
+- [2026-08-18] Décision utilisateur : l'acquisition pros (cold outreach, REQ-05 / plan 06-02) est retirée de la Phase 6 et reportée post-lancement — le site se construit d'abord, l'acquisition n'est pas une priorité. La Phase 6 ne conserve que messagerie/espace client (livré) + email onboarding (flag off) ; SMS déjà différé. ROADMAP.md resynchronisé en conséquence (ajout Phase 05.9 + réduction Phase 8 sans Capacitor).
+- [2026-08-18] Décision Phase 05.9 : le mini-tunnel aides devient un **embranchement optionnel avant le lead wall** (fork Oui/Non après l'étape localisation) — un seul `POST /projects`, révélation « bilan complet » unique (estimation + aides + reste à charge). Route standalone `/calculateur-aides` conservée. Le revenu n'est demandé qu'en opt-in.
 
 ### Decisions
 
@@ -89,6 +91,7 @@ Dette connue héritée du plan 06-01 : passe visuelle Playwright jamais faite (M
 - [Phase 05.5-08]: Section landing preuve sociale 'Chantiers Réalisés' en carousel CSS scroll-snap pur (pas d'Embla), SSR via useFetch, réutilise RealisationCard sans dupliquer le markup ; section omise entièrement si aucun projet is_showcased.
 - [Phase 05.6]: Tasks 1-3 du plan 05.6-03 livrées en un seul commit atomique (réécriture cohésive d'un fichier unique)
 - [Phase 05.6]: Transition inter-étapes simulateur : fade CSS simple plutôt que reveal-item/reveal-up (conçu pour montage, pas cycle enter/leave répété)
+- [2026-08-18] Terminologie pro-centrique : « client » = professionnel abonné (payeur), « particulier » = porteur de projet (demande). « Client Final » écarté (ambigu). Rémunération prescripteurs = commission dégressive 8→2,5% + Stripe Connect (spec 18/08).
 
 ### Known Patterns (à appliquer dans les prochaines phases)
 
@@ -102,6 +105,8 @@ Dette connue héritée du plan 06-01 : passe visuelle Playwright jamais faite (M
 
 ### Deferred Ideas (hors scope, à reconsidérer plus tard)
 
+**Acquisition pros (cold outreach / source prospects)** — Retiré de la Phase 6 le 2026-08-18. Import prospects + invitation email + funnel admin (REQ-05, plan 06-02) reportés à la toute fin : le site se construit d'abord, l'acquisition sortante n'est pas une priorité. Source (CSV/seed/scrape) à trancher le moment venu.
+
 **Upload photos/plans sur les projets** — Idée écartée à Phase 4.
 
 - Problème bloquant : une photo de façade ou de chantier contient des informations géolocalisables qui court-circuitent ADR-004 (masquage serveur). Un pro BASIC verrait la maison du prospect avant déverrouillage.
@@ -110,8 +115,8 @@ Dette connue héritée du plan 06-01 : passe visuelle Playwright jamais faite (M
 
 ### Pending Todos
 
-- [ ] PIVOT B2B : Re-poser la question à l'utilisateur sur le modèle de rémunération des prescripteurs (gratuit vs commission).
-- [ ] PIVOT B2B : Re-poser la question sur le remplacement du mot "Particulier" par "Client Final".
+- [x] PIVOT B2B (2026-08-18) : rémunération des prescripteurs = commission au succès dégressive (8% ≤25k → 6% → 4% → 2,5% >200k) + split Stripe Connect (spec client 18/08 §4.3-4.4).
+- [x] PIVOT B2B (2026-08-18) : **ne pas** remplacer "Particulier" par "Client Final" — modèle pro-centrique : le client payeur est le pro abonné, le particulier est la demande (porteur de projet).
 
 ### Blockers/Concerns
 

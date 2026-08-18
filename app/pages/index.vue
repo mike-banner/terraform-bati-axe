@@ -14,8 +14,8 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
 
 <template>
   <div>
-    <!-- ───────────────── Hero Bento Grid (Variant C) ───────────────── -->
-    <section class="mx-auto w-full max-w-7xl px-6 pt-12 pb-24">
+    <!-- ───────────────── Hero Bento Grid ───────────────── -->
+    <section class="mx-auto w-full max-w-7xl px-6 pt-6 pb-12">
       <div class="reveal grid grid-cols-1 gap-6 md:grid-cols-12">
         <!-- Carte intro -->
         <div class="reveal-item bento-card md:col-span-8 flex min-h-[420px] flex-col justify-between rounded-sm border border-slate-200 bg-white p-8 shadow-lg md:p-10">
@@ -34,7 +34,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
             </h1>
 
             <p class="mt-6 max-w-md text-lg text-slate-500" style="text-wrap: pretty">
-              Chaque professionnel partenaire est vérifié manuellement : décennale en cours de validité, Kbis à jour. Vos coordonnées restent masquées jusqu'au moment du contact.
+              Décrivez votre projet et recevez des contacts d'artisans certifiés de votre zone. Vos coordonnées restent masquées jusqu'au contact.
             </p>
           </div>
 
@@ -53,23 +53,15 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
               Je suis artisan
             </NuxtLink>
           </div>
-        </div>
-
-        <!-- Carte accent : Gratuit et sans engagement -->
-        <div class="reveal-item bento-card md:col-span-4 flex flex-col justify-between rounded-sm bg-industrial p-8 text-white">
-          <div class="flex items-center gap-2 text-sm font-medium text-orange-200">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            100% Gratuit
-          </div>
-          <div>
-            <div class="text-3xl font-bold leading-tight">Sans engagement</div>
-            <p class="mt-3 text-sm text-white/80">Notre service est entièrement gratuit pour les particuliers. Comparez les artisans et restez libre de votre choix.</p>
-          </div>
+          <p class="mt-4 text-sm text-slate-500">Gratuit pour les particuliers, sans engagement.</p>
         </div>
 
         <!-- Carte bénéfices : critères contrôlés -->
-        <div class="reveal-item bento-card md:col-span-4 rounded-sm border border-slate-800 bg-slate-900 p-8 text-white shadow-lg">
-          <div class="mb-4 text-sm text-slate-400">Contrôlés avant activation</div>
+        <div class="reveal-item bento-card md:col-span-4 flex flex-col justify-center gap-5 rounded-sm bg-slate-800 p-8 text-white shadow-lg">
+          <div>
+            <p class="text-sm font-semibold text-slate-300">Contrôlés avant activation</p>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400">Chaque artisan passe ces vérifications avant de pouvoir vous contacter.</p>
+          </div>
           <div class="flex flex-wrap gap-2">
             <span class="rounded-full bg-white/10 px-3 py-1 text-sm">Décennale valide</span>
             <span class="rounded-full bg-white/10 px-3 py-1 text-sm">Kbis &lt; 3 mois</span>
@@ -78,7 +70,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </div>
 
         <!-- Carte visuelle : photo chantier -->
-        <div class="reveal-item bento-card md:col-span-8 relative min-h-[280px] overflow-hidden rounded-sm border border-slate-200 shadow-lg">
+        <div class="reveal-item bento-card md:col-span-12 relative mt-8 min-h-[240px] overflow-hidden rounded-sm border border-slate-200 shadow-lg">
           <img
             :src="heroPhoto"
             alt="Chantier de rénovation en cours, mur en briques apparentes"
@@ -94,19 +86,52 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
       </div>
     </section>
 
-    <!-- ───────────────── Bandeau béton plein écran (manifeste) ───────────────── -->
-    <section class="w-full bg-slate-900 text-white">
+    <!-- ───────────────── Teaser aides ───────────────── -->
+    <section class="mx-auto w-full max-w-7xl px-6 pb-24">
+      <div class="reveal-item bento-card rounded-sm border border-slate-200 bg-white p-8 md:p-12 shadow-lg">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div class="max-w-2xl">
+            <h2 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Estimez vos aides en <span class="text-safety">30 secondes</span></h2>
+            <div class="mt-4 flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-sm font-semibold text-slate-700">
+                <svg class="h-3.5 w-3.5 shrink-0 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                MaPrimeRénov'
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-sm font-semibold text-slate-700">
+                <svg class="h-3.5 w-3.5 shrink-0 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                CEE
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-sm font-semibold text-slate-700">
+                <svg class="h-3.5 w-3.5 shrink-0 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                Éco-PTZ
+              </span>
+            </div>
+            <p class="mt-4 text-base leading-relaxed text-slate-500">Découvrez votre reste à charge réel avant de choisir votre artisan.</p>
+          </div>
+          <NuxtLink
+            to="/calculateur-aides"
+            class="inline-flex h-14 shrink-0 items-center gap-2 rounded-full bg-safety px-8 text-lg font-bold text-white shadow-lg shadow-safety/20 transition-transform hover:scale-105"
+          >
+            Calculer mes aides
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────── Bandeau manifeste ───────────────── -->
+    <section class="w-full bg-slate-800 text-white">
       <div class="mx-auto w-full max-w-7xl px-6 py-[clamp(3rem,7vw,5.5rem)]">
         <p class="max-w-[24ch] text-4xl font-black tracking-tight leading-[1.1] sm:text-5xl" style="text-wrap: balance">
-          La confiance, dans le bâtiment, ça se prouve. Pas ça s'annonce.
+          Vos coordonnées restent masquées jusqu'au contact.
         </p>
         <p class="mt-5 max-w-[52ch] text-base leading-relaxed text-white/70">
-          Un artisan non conforme n'accède jamais à vos coordonnées. Décennale expirée, Kbis manquant, zone hors secteur : c'est non. Vous parlez uniquement à des professionnels en règle.
+          L'artisan vous écrit via la plateforme, sans voir votre numéro. Vous décidez qui peut vous joindre, et quand.
         </p>
       </div>
     </section>
 
-    <!-- ───────────────── Comment ça marche (process en 3 temps) ───────────────── -->
+    <!-- ───────────────── Comment ça marche ───────────────── -->
     <section class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
       <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Comment ça marche</h2>
       <div class="reveal mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -119,7 +144,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </div>
         <div class="reveal-item bento-card rounded-sm border border-slate-200 bg-white p-8 shadow-lg">
           <span class="text-5xl font-bold text-industrial select-none">02</span>
-          <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Mise en relation sous 2 min</h3>
+          <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Mise en relation</h3>
           <p class="text-sm leading-relaxed text-slate-500">
             Les artisans partenaires de votre zone reçoivent une alerte avec le budget et le type de chantier. Pas vos coordonnées.
           </p>
@@ -128,13 +153,13 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
           <span class="text-5xl font-bold text-industrial select-none">03</span>
           <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Contact débloqué</h3>
           <p class="text-sm leading-relaxed text-slate-500">
-            Le premier artisan abonné peut vous appeler immédiatement. Pour les autres, vos coordonnées sont accessibles après 24h.
+            Échangez directement avec les artisans : devis, visite, planning. Vous choisissez avec qui avancer.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- ───────────────── Chantiers Réalisés (preuve sociale) ───────────────── -->
+    <!-- ───────────────── Chantiers Réalisés ───────────────── -->
     <section v-if="showcasedProjects.length" class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
       <div class="mb-10 max-w-[52ch]">
         <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Chantiers Réalisés</h2>
@@ -155,62 +180,36 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
 
     <!-- ───────────────── Preuve : avant / après ───────────────── -->
     <section class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
-      <div class="mb-10 max-w-[52ch]">
-        <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Le résultat, pas la promesse</h2>
-        <p class="mt-3 text-base leading-relaxed text-slate-500">
-          Des chantiers menés par des artisans vérifiés de la plateforme. Glissez pour comparer.
-        </p>
+      <div class="mb-10 text-center">
+        <h2 class="mx-auto max-w-[52ch] text-5xl md:text-6xl font-black tracking-tight text-slate-900" style="text-wrap: balance">
+          La preuve par l'image.
+        </h2>
+      </div>
+      <div class="mb-5 flex items-center justify-between">
+        <span class="inline-flex items-center gap-2.5 text-2xl font-black tracking-tight text-slate-500">
+          <span class="inline-block h-3 w-3 rounded-full bg-slate-400" aria-hidden="true"></span>
+          Avant
+        </span>
+        <span class="inline-flex items-center gap-2.5 text-2xl font-black tracking-tight text-safety">
+          <span class="inline-block h-3 w-3 rounded-full bg-safety" aria-hidden="true"></span>
+          Après
+        </span>
       </div>
       <BeforeAfterSlider
         before-src="/images/avant.jpg"
         after-src="/images/apres.jpg"
-        before-label="Avant travaux"
-        after-label="Après travaux"
         before-alt="Chantier de rénovation en cours"
         after-alt="Rénovation terminée"
       />
     </section>
 
-    <!-- ───────────────── Vérification (sceaux) ───────────────── -->
-    <section class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
-      <div class="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
-        <div>
-          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-black tracking-tight text-slate-900" style="text-wrap: balance">
-            Chaque professionnel est vérifié à la main.
-          </h2>
-          <p class="mt-4 max-w-[48ch] text-base leading-relaxed text-slate-500">
-            Aucun algorithme. Un membre de notre équipe contrôle la décennale, le Kbis et la zone d'intervention avant toute activation. Un artisan non conforme ne peut pas accéder aux leads.
-          </p>
-        </div>
-        <ul class="reveal space-y-3">
-          <li
-            v-for="item in [
-              { t: 'Assurance décennale valide', d: 'Attestation contrôlée avec date d\'expiration vérifiée.' },
-              { t: 'Kbis de moins de 3 mois', d: 'Extrait officiel attestant de l\'activité en cours.' },
-              { t: 'Zone d\'intervention confirmée', d: 'L\'artisan intervient bien dans votre secteur géographique.' },
-            ]"
-            :key="item.t"
-            class="reveal-item bento-card flex items-start gap-4 rounded-sm border border-slate-200 bg-white p-5 shadow-lg"
-          >
-            <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-safety text-white">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
-            </span>
-            <div>
-              <p class="text-sm font-semibold text-slate-900">{{ item.t }}</p>
-              <p class="mt-0.5 text-sm text-slate-500">{{ item.d }}</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </section>
-
     <!-- ───────────────── CTA final ───────────────── -->
-    <section class="w-full border-t border-slate-200 bg-white">
+    <section class="w-full bg-slate-800">
       <div class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,5.5rem)] text-center">
-        <h2 class="mx-auto max-w-[20ch] text-[clamp(1.75rem,3.5vw,3rem)] font-black tracking-tight text-slate-900" style="text-wrap: balance">
+        <h2 class="mx-auto max-w-[20ch] text-[clamp(1.75rem,3.5vw,3rem)] font-black tracking-tight text-white" style="text-wrap: balance">
           Prêt à démarrer votre projet ?
         </h2>
-        <p class="mx-auto mt-4 max-w-[44ch] text-base text-slate-500">
+        <p class="mx-auto mt-4 max-w-[44ch] text-base text-slate-300">
           Décrivez votre besoin en 3 minutes. Nous nous occupons de la mise en relation.
         </p>
         <NuxtLink

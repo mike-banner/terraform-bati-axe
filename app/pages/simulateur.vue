@@ -40,6 +40,11 @@ const createdProjectId = ref<string | null>(null)
 const createdAccessToken = ref<string | null>(null)
 const revealed = ref(false)
 
+// ─── Fork aides (Phase 05.9) — embranchement optionnel avant le lead wall ───
+const atAidesFork     = ref(false)          // affiche le choix Oui/Non
+const showAidesTunnel = ref(false)          // affiche <AidesMiniTunnel>
+const aidesResult     = ref<null | { aides_estimees: number; reste_a_charge_min: number; reste_a_charge_max: number }>(null)
+
 const form = reactive({
   renovation_type: '',
   pieces:          [] as string[],
@@ -108,6 +113,12 @@ const formatEuro = (n: number) => n.toLocaleString('fr-FR') + ' €'
 // ─── Handlers ─────────────────────────────────────────────────────────────────
 const nextStep = () => {
   if (step.value < totalSteps && isStepValid.value) {
+    // Phase 05.9 : l'étape 5 ouvre le fork aides au lieu de sauter au lead wall.
+    if (step.value === 5) {
+      atAidesFork.value = true
+      submitError.value = null
+      return
+    }
     step.value++
     // Rénovation totale : pas de sélection de pièces, on saute l'étape 2.
     if (step.value === 2 && form.renovation_type === 'totale') step.value = 3
@@ -117,6 +128,16 @@ const nextStep = () => {
 
 const selectRenovationType = (id: string) => { form.renovation_type = id; nextStep() }
 const selectGamme = (id: string) => { form.gamme = id; nextStep() }
+
+// ─── Fork aides (Phase 05.9) ─────────────────────────────────────────────────
+const chooseNoAides = () => { atAidesFork.value = false; step.value = 6 }
+const chooseYesAides = () => { atAidesFork.value = false; showAidesTunnel.value = true }
+const onAidesComplete = (p: { aides_estimees: number; reste_a_charge_min: number; reste_a_charge_max: number }) => {
+  aidesResult.value = p
+  showAidesTunnel.value = false
+  step.value = 6
+}
+const onAidesSkip = () => { showAidesTunnel.value = false; step.value = 6 }
 
 const togglePiece = (id: string) => {
   const i = form.pieces.indexOf(id)
@@ -172,6 +193,7 @@ const handleSubmit = async () => {
           gamme:           form.gamme,
           estimate_min:    estimate.value.estimate_min,
           estimate_max:    estimate.value.estimate_max,
+          ...(aidesResult.value ?? {}),
         },
         postal_code:    form.postal_code,
         customer_name:  form.customer_name.trim(),
@@ -208,6 +230,20 @@ const handleSubmit = async () => {
         >
           <span class="text-safety">{{ formatEuro(estimate.estimate_min) }} – {{ formatEuro(estimate.estimate_max) }}</span>
         </h1>
+        <div v-if="aidesResult" class="p-5 border border-slate-200 bg-slate-50 rounded-sm mb-8">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Bilan financier estimé</p>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-xs text-muted-foreground mb-1">Aides estimées</p>
+              <p class="text-sm font-semibold text-foreground">{{ formatEuro(aidesResult.aides_estimees) }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-muted-foreground mb-1">Reste à charge</p>
+              <p class="text-sm font-semibold text-foreground">{{ formatEuro(aidesResult.reste_a_charge_min) }} – {{ formatEuro(aidesResult.reste_a_charge_max) }}</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate-500 mt-3">Estimation indicative basée sur les barèmes d'État en vigueur. Un artisan certifié vous confirmera les montants exacts.</p>
+        </div>
         <p class="text-sm text-muted-foreground leading-relaxed mb-8 max-w-sm" style="text-wrap: pretty">
           Cette fourchette est indicative. Votre demande a été transmise aux artisans partenaires de Carrières-sous-Poissy. Vous recevrez un premier contact sous 2 minutes si un artisan abonné est disponible.
         </p>
@@ -255,8 +291,46 @@ const handleSubmit = async () => {
 
         <Transition name="fade" mode="out-in">
 
+        <!-- ─── Fork aides (Phase 05.9) : Oui/Non avant le lead wall ───── -->
+        <div v-if="atAidesFork" key="aidesFork" class="space-y-4 reveal">
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground" style="text-wrap: balance">
+            Connaissez-vous vos aides au financement ?
+          </h1>
+          <p class="text-sm text-muted-foreground">
+            MaPrimeRénov' · CEE · Éco-PTZ — estimez le reste à charge réel de votre projet.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+            <button
+              type="button"
+              @click="chooseYesAides"
+              class="bento-card reveal-item min-h-11 flex items-center justify-center gap-2 p-4 bg-safety text-white border border-transparent rounded-sm text-left transition-transform hover:scale-[1.02]"
+            >
+              <span class="text-sm font-semibold">Oui, estimer mes aides</span>
+            </button>
+            <button
+              type="button"
+              @click="chooseNoAides"
+              class="bento-card reveal-item min-h-11 flex items-center justify-center gap-2 p-4 border border-border rounded-sm text-left transition-colors hover:bg-muted"
+            >
+              <span class="text-sm font-semibold">Non, voir mon estimation</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ─── Mini-tunnel aides (Phase 05.9) ───────────────────────────── -->
+        <div v-else-if="showAidesTunnel" key="aidesTunnel">
+          <AidesMiniTunnel
+            :cout-travaux-min="estimate.estimate_min"
+            :cout-travaux-max="estimate.estimate_max"
+            :code-postal-initial="form.postal_code"
+            :surface="form.surface_m2"
+            @complete="onAidesComplete"
+            @skip="onAidesSkip"
+          />
+        </div>
+
         <!-- ─── Step 1: Type de rénovation ──────────────────────────────── -->
-        <div v-if="step === 1" key="step1" class="space-y-4 reveal">
+        <div v-else-if="step === 1" key="step1" class="space-y-4 reveal">
           <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground" style="text-wrap: balance">
             Quel type de rénovation ?
           </h1>
@@ -510,7 +584,7 @@ const handleSubmit = async () => {
         </Transition>
 
         <!-- ─── Navigation ───────────────────────────────────────────────── -->
-        <div class="mt-8 pt-6 border-t border-border flex items-center justify-between">
+        <div v-if="!atAidesFork && !showAidesTunnel" class="mt-8 pt-6 border-t border-border flex items-center justify-between">
           <button
             type="button"
             @click="prevStep"
@@ -529,7 +603,7 @@ const handleSubmit = async () => {
             :disabled="!isStepValid"
             class="inline-flex items-center gap-1.5 h-10 px-5 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-30 disabled:pointer-events-none"
           >
-            {{ step === totalSteps - 1 ? 'Voir mon estimation' : 'Suivant' }}
+            {{ step === 5 ? 'Continuer' : 'Suivant' }}
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
 

@@ -50,9 +50,84 @@
 
 ---
 
-## 📋 4. Plan d'Action & Phasage Technique
+## 👤 4. Personas Cibles
+- **L'Artisan / Entreprise du BTP ("Marc le Menuisier")** – besoin de leads qualifiés, remise fournisseurs, visibilité.
+- **L'Architecte / Maître d'Œuvre ("Sophie l'Archi")** – besoin de planification, IA de réagencement, coordination.
+- **Le Diagnostiqueur Immobilier ("Julien le Diag")** – automatisation de rapports DPE, fiches préconisations.
+- **Le Particulier / Acheteur ("Thomas le Propriétaire")** – estimation du budget, obtention de devis, financement.
+
+## 📜 5. User Stories (Par Périmètre)
+### 🛠️ Module Artisan
+- **US‑ART‑01** : Afficher le label "Artisan Vérifié & Assuré Bati‑Axe" sur le profil et les devis.
+- **US‑ART‑02** : Souscrire un abonnement sectorisé (Zone Unique ou Département Complet).
+- **US‑ART‑03** : Débloquer des codes privilèges chez les fournisseurs (Hilti, Berner, Foussier, Kiloutou).
+- **US‑ART‑04** : Envoyer un lien d’invitation à son agence fournisseur pour intégrer le réseau.
+
+### 📐 Module Architecte & Maître d'Œuvre
+- **US‑ARC‑01** : Créer un planning GANTT interactif partagé avec les artisans.
+- **US‑ARC‑02** : Utiliser l’Assistant IA Réagencement (crédits IA) pour générer 3 propositions 2D/3D.
+- **US‑ARC‑03** : Déposer un projet de chantier pour obtenir +10 crédits IA offerts.
+- **US‑ARC‑04** : Signer électroniquement des Ordres de Service (OS) et avenants depuis mobile.
+
+### 🔍 Module Diagnostiqueur Immobilier
+- **US‑DIA‑01** : Dictée de mémos + photos via le Dictaphone IA Terrain → relevé d’anomalies automatique.
+- **US‑DIA‑02** : Éditer une Fiche de Préconisation Travaux chiffrée et proposer l’envoi de devis en 1 clic.
+
+### 🏠 Module Particulier & Financement
+- **US‑PAR‑01** : Calculer le "Reste à charge réel" en saisissant le projet (intégration MaPrimeRénov', CEE, Éco‑PTZ).
+- **US‑PAR‑02** : Demander une étude de financement auprès du courtier partenaire.
+
+## ⚖️ 6. Règles Métier & Modèle Économique
+### 6.1. Découpage Territorial & Abonnements Artisans
+- **Découpage** : Chaque département découpé en 2 sous‑zones (ex : 95‑Nord / 95‑Sud) via codes postaux.
+- **Packs d'Accès** :
+  * *Pack Zone Unique* – tarif de base.
+  * *Pack Département Complet* – tarif premium.
+- **Engagement** : 12 mois obligatoire pour tarif préférentiel.
+- **CAC & Rémunération Freelance** : 50 % du 1er mois d’abonnement versé au commercial freelance apporteur.
+
+### 6.2. Monétisation des Outils SaaS (Freemium IA)
+- **Assistant IA Réagencement** :
+  * Quota gratuit : 3 générations de plans/esquisses 3D/mois.
+  * Incentive : +10 crédits IA pour chaque projet/chantier publié.
+  * Paywall : packs de crédits supplémentaires ou abonnement "Tools Only".
+
+### 6.3. Grille de Commissionnement B2B Dégressive (Par Paliers)
+| Plafond HT | Commission Bati‑Axe |
+|------------|----------------------|
+| ≤ 25 000 € | 8 % |
+| 25 001 € – 75 000 € | 6 % |
+| 75 001 € – 200 000 € | 4 % |
+| > 200 000 € | 2,5 % |
+
+### 6.4. Automatisation Financière (Stripe Connect)
+- Split automatique des flux : Bati‑Axe ↔ Commercial freelance ↔ Apporteur d’affaires (prescripteur/agent immo).
+
+### 6.5. Module de Transaction & Signature
+- Intégration d’une API de signature électronique conforme eIDAS (Yousign / DocuSign).
+- Verrouillage juridique de la commission dès l’apposition de la signature sur le contrat/OS.
+
+---
+
+## 🖥️ 7. Cartographie des Écrans Principaux
+1. **Écran A – Dashboard Artisan** – carnet de commandes, affichage des leads géolocalisés, onglet Avantages & Remises Fournisseurs.
+2. **Écran B – Workspace Architecte (Gantt & IA)** – calendrier/Gantt collaboratif, import de plan 2D, IA Réagencement, signature d’OS.
+3. **Écran C – App Mobile Diagnostiqueur (DPE‑to‑Lead)** – dictée vocale terrain, capture photos, génération fiche préconisation.
+4. **Écran D – Portail Particulier (Simulateur Reste à Charge)** – formulaire projet, simulation aides d’État, CTA vers courtier crédit.
+
+---
+
+## 🚫 8. Hors‑Scope (Out of Scope – V1)
+- **Édition / Génération de Devis Artisans** – laissée aux professionnels.
+- **Gestion des stocks en temps réel des fournisseurs** – réservée à la Phase 3 (National).
+- **Paiement des acomptes travaux sur la plateforme** – non géré en V1.
+- **Recrutement d’une force de vente salariée interne** – uniquement réseau freelance.
+
+---
+
+## 📋 9. Plan d'Action & Phasage Technique
 
 1. **Extension Phase 5.6 (Simulateur)** :
-   - Brancher l'API `mesaides.france-renov.gouv.fr/api/v1/` dans `app/utils/calculateur.ts` pour enrichir les estimations avec les barèmes d'État.
+   - Brancher l'API `mesaides.france-renov.gouv.fr/api/v1/` via un proxy Nitro `/api/v1/aides-reno` (pas d'appel client direct, ne pas modifier `computeEstimate()`) pour enrichir les estimations avec les barèmes d'État.
 2. **Préparation Schema BDD (Phase 7 - Pivot B2B)** :
    - Ajouter la table Supabase `documents_artisan` et les colonnes `is_available_subcontracting` et `workforce_size` sur `professionals`.

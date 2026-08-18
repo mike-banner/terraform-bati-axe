@@ -21,8 +21,10 @@ const onSimulateur = computed(() => route.path === '/simulateur')
 <template>
   <div class="min-h-screen bg-page text-foreground flex flex-col font-sans antialiased">
     <header class="sticky top-0 z-40 border-b border-border bg-page/95 backdrop-blur-sm">
-      <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        <NuxtLink to="/" class="text-base font-bold tracking-tight text-foreground hover:opacity-70 transition-opacity">BÂTI-AXE</NuxtLink>
+      <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <NuxtLink to="/" class="flex items-end self-end hover:opacity-80 transition-opacity" aria-label="BÂTI-AXE — Accueil">
+          <img src="/images/logo.png" alt="BÂTI-AXE" class="h-16 w-auto object-contain" />
+        </NuxtLink>
         <nav class="flex items-center gap-2">
           <template v-if="user">
             <NuxtLink :to="espaceLink" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Mon espace</NuxtLink>
@@ -47,13 +49,13 @@ const onSimulateur = computed(() => route.path === '/simulateur')
       <slot />
     </main>
 
-    <footer class="border-t border-border mt-auto">
-      <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-        <p>&copy; 2026 BÂTI-AXE. Tous droits réservés. Conforme RGPD.</p>
+    <footer class="border-t border-white/10 bg-slate-800 mt-auto">
+      <div class="max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+        <p class="text-slate-400">&copy; 2026 BÂTI-AXE. Tous droits réservés. Conforme RGPD.</p>
         <nav class="flex items-center gap-5">
-          <NuxtLink to="/legal/mentions-legales" class="hover:text-foreground transition-colors">Mentions légales</NuxtLink>
-          <NuxtLink to="/legal/confidentialite" class="hover:text-foreground transition-colors">Confidentialité</NuxtLink>
-          <NuxtLink to="/legal/cgu" class="hover:text-foreground transition-colors">CGU</NuxtLink>
+          <NuxtLink to="/legal/mentions-legales" class="text-slate-400 hover:text-white transition-colors">Mentions légales</NuxtLink>
+          <NuxtLink to="/legal/confidentialite" class="text-slate-400 hover:text-white transition-colors">Confidentialité</NuxtLink>
+          <NuxtLink to="/legal/cgu" class="text-slate-400 hover:text-white transition-colors">CGU</NuxtLink>
         </nav>
       </div>
     </footer>

@@ -95,6 +95,27 @@
           </div>
         </section>
 
+        <!-- Bilan financier (Phase 05.9 — aides rénovation) -->
+        <section v-if="data.project.calculator_data?.reste_a_charge_min != null" class="border-b border-border">
+          <div class="max-w-6xl mx-auto px-6 py-12">
+            <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-5">Bilan financier estimé</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div>
+                <p class="text-xs text-muted-foreground mb-1.5">Estimation travaux</p>
+                <p class="text-sm font-semibold text-foreground">{{ data.project.budget_range }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-muted-foreground mb-1.5">Aides estimées</p>
+                <p class="text-sm font-semibold text-foreground">{{ formatEuro(data.project.calculator_data.aides_estimees) }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-muted-foreground mb-1.5">Reste à charge</p>
+                <p class="text-sm font-semibold text-foreground">{{ formatEuro(data.project.calculator_data.reste_a_charge_min) }} – {{ formatEuro(data.project.calculator_data.reste_a_charge_max) }}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- Section artisans engagés — profil public + décision (REQ-06 / REQ-09) -->
         <section v-if="data.pros && data.pros.length" class="border-b border-border">
           <div class="max-w-6xl mx-auto px-6 py-16 md:py-20">
@@ -326,6 +347,8 @@
 <script setup>
 const route = useRoute()
 const token = route.params.token
+
+const formatEuro = (n) => n.toLocaleString('fr-FR') + ' €'
 
 definePageMeta({
   layout: false

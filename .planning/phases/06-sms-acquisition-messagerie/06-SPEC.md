@@ -50,23 +50,24 @@
 
 # SPEC — Reste de Phase 6 (post-messagerie)
 
-> Addendum 2026-06-16. La partie « Espace Client & Messagerie » ci-dessus est **livrée** (plan 06-01, validée en prod). Cette section cadre le reste de la Phase 6 ROADMAP : **Acquisition (cold outreach)**, **Feedback loop lead**, **Email onboarding**, et **SMS différencié (différé)**.
+> Addendum 2026-06-16, révisé 2026-08-18. La partie « Espace Client & Messagerie » ci-dessus est **livrée** (plan 06-01, validée en prod). Cette section cadre le reste de la Phase 6 ROADMAP : **Email onboarding** (à faire), **Feedback loop lead** (livré), et — **reportés post-lancement** — **Acquisition (cold outreach)** (REQ-05 retiré le 2026-08-18) et **SMS différencié** (REQ-08).
 
 ## Boundaries (reste)
 
-**In Scope:**
-- Acquisition pros par **email gratuit** (Resend) : import de prospects, envoi d'invitation à revendiquer (`/pro/claim?prospect=<id>`), suivi du funnel (envoyé → ouvert → claim).
-- Feedback loop côté particulier : bouton « relancer ma recherche » qui remet le projet sur le marché pour 3 nouveaux pros.
+**In Scope (reste) :**
 - Email onboarding pro (bienvenue post-claim / post-validation), derrière un flag **désactivé par défaut**.
 
-**Out of Scope (différé en fin de Phase 6) :**
+**Déjà livré (feedback loop) :**
+- REQ-06 (refus → remise au marché auto) et REQ-09 (profil public depuis l'espace particulier) — livrés hors-plan le 2026-06-16 (commit `b4970a9`).
+
+**Out of Scope (reporté post-lancement) :**
+- **Acquisition pros (cold outreach)** — REQ-05 **retiré** de la Phase 6 le 2026-08-18 : pas prioritaire tant que le site se construit. Import prospects + invitation email + funnel admin reportés à la toute fin. Source (CSV/seed/scrape) à trancher le moment venu.
 - **SMS différencié** (Basic→upgrade / Premium→lead direct). *Décision utilisateur : aucun paiement fournisseur tant que non prêt, même pour tester.* Spec posée (REQ-08), exécution repoussée à la toute fin.
-- Scraping automatique de la base prospects. *Source de données à trancher au moment de l'exécution (REQ-05).* 
 - Design visuel des emails/pages. *Centralisé dans la phase design finale.*
 
 ## Falsifiable Requirements (reste)
 
-### REQ-05: Acquisition — import & cold email pros
+### REQ-05: Acquisition — import & cold email pros — ⏸ RETIRÉ de Phase 6 (2026-08-18) → post-lancement
 - **Current State:** La table `prospects` existe (source, raw_data, email, siret, zip_code, `optin_status`, `optin_email_sent_at`, `converted_professional_id`) mais aucun moyen de l'alimenter ni d'envoyer les invitations. L'endpoint `prospects/[id].get.ts` et le `prospect_id` du claim sont déjà câblés.
 - **Target State:** On peut importer une liste de prospects (source à décider : CSV/seed/scrape) et déclencher l'envoi d'emails d'invitation respectant le consentement.
 - **Acceptance Criteria:**

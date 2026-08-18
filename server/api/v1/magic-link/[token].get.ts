@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   // Get project by token
   const { data: project, error } = await supabase
     .from('projects')
-    .select('id, category, description, budget_range, timeline_range, status, created_at')
+    .select('id, category, description, budget_range, timeline_range, status, created_at, calculator_data')
     .eq('access_token', token)
     .single()
 

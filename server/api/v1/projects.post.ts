@@ -21,7 +21,11 @@ const createProjectSchema = z.object({
     surface_m2: z.number().positive(),
     gamme: z.string().max(100),
     estimate_min: z.number().nonnegative(),
-    estimate_max: z.number().nonnegative()
+    estimate_max: z.number().nonnegative(),
+    // Phase 05.9 — aides rénovation (présents uniquement si le particulier a choisi "Oui" au fork)
+    aides_estimees: z.number().nonnegative().optional(),
+    reste_a_charge_min: z.number().nonnegative().optional(),
+    reste_a_charge_max: z.number().nonnegative().optional(),
   }),
   category: z.string().min(1, 'La catégorie est requise.').max(100, 'La catégorie ne peut dépasser 100 caractères.').optional(),
   description: z.string().min(20, 'La description doit faire au moins 20 caractères.').max(1000, 'La description ne peut dépasser 1000 caractères.').optional(),
