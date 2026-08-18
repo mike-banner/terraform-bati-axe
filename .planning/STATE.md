@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v0.9.0-experience-pro
 milestone_name: Experience & Growth Pro
 status: ready_to_plan_v0.9.1
-stopped_at: Phase 5.9 context gathered, prête à planifier
+stopped_at: Phase 5.9 exécutée (4/4 plans) — prochaine étape Phase 8
 last_updated: "2026-08-18T00:00:00.000Z"
 last_activity: 2026-08-18
 progress:
   total_phases: 13
-  completed_phases: 10
+  completed_phases: 11
   total_plans: 49
-  completed_plans: 44
-  percent: 77
+  completed_plans: 48
+  percent: 98
 ---
 
 # Project State
@@ -27,13 +27,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 5.9 — Extension Simulateur (API Mes Aides Réno), puis Phase 8 — PWA Mobile-First (scope réduit). Phase 06 différée (décision utilisateur 2026-08-18).
+**Current focus**: Phase 8 — PWA Mobile-First (scope réduit). Phase 05.9 livrée (aides rénovation), Phase 06 différée (décision utilisateur 2026-08-18).
 
 ## Current Position
 
-Phase: 5.9 (extension-simulateur-mes-aides-reno) — planifiée (4 plans : 01 proxy, 02 composant, 03 fork simulateur, 04 standalone/home/espace client)
+Phase: 5.9 (extension-simulateur-mes-aides-reno) — exécutée (4/4 plans livrés : 01 proxy, 02 composant, 03 fork simulateur, 04 standalone/home/espace client)
 Ensuite: Phase 8 (pwa-mobile-first, scope réduit sans Capacitor)
-Status: Ready to execute (4 plans) — Phase 06 mise en pause (06-01 seul livré)
+Status: Complete (4/4 plans livrés) — Phase 06 mise en pause (06-01 seul livré)
 Last activity: 2026-08-18
 
 ### Plans Phase 06 (Messagerie & Espace Client) — acquisition retirée, SMS différé

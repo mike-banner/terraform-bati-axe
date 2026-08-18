@@ -17,7 +17,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 5.6: Calculateur de Prix & Refonte Simulateur** - Estimateur interactif (tuiles, type de travaux, m²), algorithme de chiffrage, et capture de leads qualifiés (résultat contre coordonnées). (completed 2026-07-19)
 - [x] **Phase 5.8: Tunnel B2B & Apporteurs d'Affaires** - Landing page partenaire ("Bras armé technique"), dépôt de plans/rapports expert, SLA de 4h, attestation décennale 1-clic pour syndics, archis et assureurs. (completed 2026-07-20)
 - [ ] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement.
-- [ ] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
+- [x] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
 - [ ] **Phase 8: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
 
@@ -236,10 +236,10 @@ Plans:
   3. Dégradation propre : API indisponible → bloc aides masqué + message court, `computeEstimate()` continue de s'afficher, aucun blocage.
 **Plans**: 4 plans
 Plans:
-- [ ] 05.9-01-PLAN.md — Proxy Nitro `/api/v1/aides-reno` + resolver CP→INSEE + persistance calculator_data
-- [ ] 05.9-02-PLAN.md — Composant réutilisable AidesMiniTunnel (logement + foyer/revenu)
-- [ ] 05.9-03-PLAN.md — Fork Oui/Non avant le lead wall dans simulateur.vue + révélation bilan complet
-- [ ] 05.9-04-PLAN.md — Route standalone `/calculateur-aides` + teaser home + restitution espace client
+- [x] 05.9-01-PLAN.md — Proxy Nitro `/api/v1/aides-reno` + resolver CP→INSEE + persistance calculator_data
+- [x] 05.9-02-PLAN.md — Composant réutilisable AidesMiniTunnel (logement + foyer/revenu)
+- [x] 05.9-03-PLAN.md — Fork Oui/Non avant le lead wall dans simulateur.vue + révélation bilan complet
+- [x] 05.9-04-PLAN.md — Route standalone `/calculateur-aides` + teaser home + restitution espace client
 **UI hint**: yes
 
 ### Phase 6: Messagerie & Espace Client (acquisition + SMS reportés post-lancement)
@@ -295,7 +295,7 @@ Plans:
 | 5.6. Calculateur de Prix & Refonte Simulateur | 3/3 | Complete   | 2026-07-19 |
 | 5.8. Tunnel B2B & Apporteurs d'Affaires | 3/3 | Complete   | 2026-07-20 |
 | 6. Messagerie & Espace Client | 1/4 | In progress (06-01 livré ; acquisition retirée, SMS différé) | - |
-| 05.9 Extension Simulateur Mes Aides Réno | 0/4 | Planned | - |
+| 05.9 Extension Simulateur Mes Aides Réno | 4/4 | Complete | 2026-08-18 |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
 | 8. Architecture PWA Mobile-First | 0/TBD | Not started | - |
 
