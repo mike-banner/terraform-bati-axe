@@ -307,3 +307,4 @@ Reportés en toute fin — exécuter seulement après que le produit soit constr
 - **SMS différencié** (REQ-08, plan 06-04) — aucune dépense fournisseur sans feu vert explicite. Reco Brevo, alt OVH/Twilio.
 - **Packaging stores (Capacitor)** — hors scope Phase 8, à reconsidérer via ADR dédié si besoin terrain documenté.
 - **Design final email + passe design totale** (ux-pro-max → impeccable → taste-skill).
+- **Compléter le calcul aides 05.9 (précision max)** — `DPE.actuel` / `projet.DPE visé` (classes A→G, valeurs validées le 2026-08-18 par appel réel) + `parcours d'aide` (enum à identifier dans `betagouv/reno`). Non bloquant : dégradation propre déjà en place (D-04).
