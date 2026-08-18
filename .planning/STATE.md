@@ -103,6 +103,10 @@ Dette connue héritée du plan 06-01 : passe visuelle Playwright jamais faite (M
 
 **Variable d'env manquante** : documenter dans `.env.example` immédiatement après ajout dans le code. C'est le seul endroit committé qui liste toutes les vars requises.
 
+### Backlog pilote v1 (ajouté le 2026-08-19, voir ROADMAP § Priorités pilote v1)
+
+Items manquants identifiés en relisant les specs client + PIVOT-B2B + avis mentor : **P1 analytics de conversion** (trou n°1 — mesurer sans ça, impossible de valider le pilote), **P2 anti-spam Turnstile sur POST /projects**, **P3 Stripe + cron 72h re-testés en prod**, **P4 notif pro nouveaux leads**, **P5 feedback loop refus→marché à tester**, **P6 étude de financement courtier (US-PAR-02)**, **P7 packs zonés**, **P8 compte Prescripteur PIVOT-B2B**, **P9 mobile QA + états vides**, **P10 commission dégressive + Stripe Connect (doc only)**, **P11 signature eIDAS / codes fournisseurs / workspace archi (Phase 7+)**.
+
 ### Deferred Ideas (hors scope, à reconsidérer plus tard)
 
 **Acquisition pros (cold outreach / source prospects)** — Retiré de la Phase 6 le 2026-08-18. Import prospects + invitation email + funnel admin (REQ-05, plan 06-02) reportés à la toute fin : le site se construit d'abord, l'acquisition sortante n'est pas une priorité. Source (CSV/seed/scrape) à trancher le moment venu.

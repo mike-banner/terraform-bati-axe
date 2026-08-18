@@ -326,6 +326,24 @@ Plans:
 | 7. Réputation & Scale | 0/TBD | Not started | - |
 | 8. Architecture PWA Mobile-First | 0/TBD | Not started | - |
 
+## Priorités pilote v1 — Backlog (items manquants identifiés le 2026-08-19)
+
+Items hors roadmap détectés en relisant les specs client (18/08 Arti-Box, 06/08 PWA) + PIVOT-B2B + avis mentor. Ordre recommandé pour valider le pilote — à trancher :
+
+| # | Item | Source | Pourquoi | Statut |
+|---|---|---|---|---|
+| P1 | **Analytics de conversion** (simulateur → lead → contact → chantier signé). Plausible/PostHog ou events maison | Avis mentor | Sans mesure, impossible de savoir si le pilote fonctionne — plus critique que l'admin | ❌ à faire |
+| P2 | **Anti-spam capture** — Turnstile (Cloudflare) sur `POST /projects` public | Checklist sécurité (optionnel → obligatoire) | Un bot flood tue la qualité du marché + la délivrabilité email | ❌ à faire |
+| P3 | **Stripe (checkout + webhook) + cron pg_cron 72h re-testés en prod** | Condition de livraison v0.9 | Jamais re-testés depuis Phase 4/4.5 ; vérifier que le job pg_cron existe bien en prod | ❌ à faire en premier |
+| P4 | **Notif pro nouveaux leads** (email/job) — aujourd'hui c'est du pull | Avis mentor | Active les pros du pilote sans les obliger à surveiller la liste | ❌ à faire |
+| P5 | **Feedback loop refus → remise au marché** : testé ? | Avis mentor | Messagerie testée, ce chemin-là non | ❌ à tester |
+| P6 | **US-PAR-02 : étude de financement courtier partenaire** (1 CTA + envoi) | Spec 18/08 | Levier de monétisation simple | ❌ absent |
+| P7 | **Packs zonés** (Zone Unique / Département + engagement 12 mois, §6.1) | Spec 18/08 | Pricing actuel plat (mensuel/annuel) | ❌ absent |
+| P8 | **Compte Prescripteur** (rôle BDD, « Mes dossiers clients », pipeline translucide, landing splitée, jauge anti-piège « Illimité » 40 leads/mois) | PIVOT-B2B v2 | Le pivot B2B n'est pas implémenté | ❌ absent |
+| P9 | **Mobile QA landing + simulateur + états vides** (dashboard sans leads, espace client sans messages, erreurs/offline) | Spec 06/08 + avis mentor | 80% de la première impression d'un nouveau user | ❌ à faire |
+| P10 | **Commission dégressive 8→2,5% + Stripe Connect** (§6.3/6.4) | Spec 18/08 / PIVOT-B2B | Documenté mais pas implémenté | 📝 doc only |
+| P11 | **Signature eIDAS** (Yousign/DocuSign, verrou commission) + **codes privilèges fournisseurs** (US-ART-03/04) + **workspace architecte** (§7) | Spec 18/08 | Différenciateurs Phase 7+ | ❌ Phase 7+ |
+
 ## Deferred (post-lancement)
 
 Reportés en toute fin — exécuter seulement après que le produit soit construit et validé :
