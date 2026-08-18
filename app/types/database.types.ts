@@ -281,6 +281,7 @@ export type Database = {
           is_verified: boolean | null
           labels: Json | null
           logo_url: string | null
+          onboarding_email_sent_at: string | null
           phone: string
           postal_code: string | null
           short_id: string
@@ -314,6 +315,7 @@ export type Database = {
           is_verified?: boolean | null
           labels?: Json | null
           logo_url?: string | null
+          onboarding_email_sent_at?: string | null
           phone: string
           postal_code?: string | null
           short_id: string
@@ -347,6 +349,7 @@ export type Database = {
           is_verified?: boolean | null
           labels?: Json | null
           logo_url?: string | null
+          onboarding_email_sent_at?: string | null
           phone?: string
           postal_code?: string | null
           short_id?: string
