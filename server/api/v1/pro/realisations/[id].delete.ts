@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     .delete()
     .eq('id', parsed.data)
 
-  if (error) throw createError({ statusCode: 500, statusMessage: error.message })
+  if (error) serverError('realisations.delete', error)
 
   return { status: 'SUCCESS' }
 })

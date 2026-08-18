@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     .select('id, title, city, image_urls, is_showcased, created_at, professionals(company_name)')
     .order('created_at', { ascending: false })
 
-  if (error) throw createError({ statusCode: 500, statusMessage: error.message })
+  if (error) serverError('admin.realisations.get', error)
 
   return { status: 'SUCCESS', realisations: data ?? [] }
 })

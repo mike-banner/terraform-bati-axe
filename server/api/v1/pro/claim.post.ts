@@ -298,9 +298,6 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     log(`ERROR caught: ${error.message}`)
     if (error.statusCode) throw error
-    throw createError({
-      statusCode: 500,
-      statusMessage: error.message || 'Internal Server Error'
-    })
+    serverError('claim.post', error)
   }
 })

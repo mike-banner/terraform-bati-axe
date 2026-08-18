@@ -223,7 +223,7 @@ const uploadAdminDoc = async (proId: string, docType: 'kbis' | 'decennale') => {
   try {
     const presign = await $fetch<{ status: string; signedUrl: string; fileKey: string }>(
       '/api/v1/pro/documents/presign',
-      { method: 'POST', body: { document_type: docType, filename: state.file.name, pro_id: proId } }
+      { method: 'POST', body: { document_type: docType, content_type: state.file.type, filename: state.file.name, pro_id: proId } }
     )
     if (presign.status !== 'SUCCESS') throw new Error('Erreur de signature.')
     const res = await fetch(presign.signedUrl, { method: 'PUT', headers: { 'Content-Type': state.file.type }, body: state.file })

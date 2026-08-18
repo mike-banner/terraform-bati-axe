@@ -41,6 +41,6 @@ export default defineEventHandler(async (event) => {
     return { url: session.url }
   } catch (error: any) {
     if (error.statusCode) throw error
-    throw createError({ statusCode: 500, statusMessage: error.message || 'Internal Server Error' })
+    serverError('stripe.checkout', error, { fallback: 'Erreur lors de la création du paiement. Réessayez.' })
   }
 })

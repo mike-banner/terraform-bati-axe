@@ -217,12 +217,16 @@ export default defineEventHandler(async (event) => {
       console.error('Failed to log consent status:', consentError)
     }
 
-    // Mock Email for Magic Link (Phase 5)
-    console.log('\n=============================================')
-    console.log('MOCK EMAIL: Nouveau projet BÂTI-AXE créé !')
-    console.log(`À: ${data.customer_email}`)
-    console.log(`Lien magique (Espace Client): http://localhost:3000/mon-projet/${project.access_token}`)
-    console.log('=============================================\n')
+    // Mock Email for Magic Link (Phase 5) — dev only : le lien contient
+    // l'access_token du projet, un secret d'accès qui ne doit jamais
+    // apparaître dans les logs de production.
+    if (import.meta.dev) {
+      console.log('\n=============================================')
+      console.log('MOCK EMAIL: Nouveau projet BÂTI-AXE créé !')
+      console.log(`À: ${data.customer_email}`)
+      console.log(`Lien magique (Espace Client): http://localhost:3000/mon-projet/${project.access_token}`)
+      console.log('=============================================\n')
+    }
 
     // 7. Log audit entry for tracking
     await supabase
@@ -251,9 +255,6 @@ export default defineEventHandler(async (event) => {
     if (error.statusCode) {
       throw error
     }
-    throw createError({
-      statusCode: 500,
-      statusMessage: error.message || 'Internal Server Error'
-    })
+    serverError('projects.post', error)
   }
 })

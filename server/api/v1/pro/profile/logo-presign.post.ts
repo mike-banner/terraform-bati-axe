@@ -63,7 +63,6 @@ export default defineEventHandler(async (event) => {
 
     return { status: 'SUCCESS', signedUrl: request.url, fileKey, publicUrl }
   } catch (err: any) {
-    console.error('[logo-presign error]', err)
-    throw createError({ statusCode: 400, statusMessage: 'Storage Error', message: err.message || String(err) })
+    serverError('logo.presign', err, { statusCode: 400, fallback: 'Erreur de stockage. Réessayez.' })
   }
 })

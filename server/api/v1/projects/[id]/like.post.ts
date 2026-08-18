@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
   // Doublon (code Postgres 23505) = déjà liké, pas une erreur
   if (error && error.code !== '23505') {
-    throw createError({ statusCode: 500, statusMessage: error.message })
+    serverError('projects.like', error)
   }
 
   const { count } = await supabase

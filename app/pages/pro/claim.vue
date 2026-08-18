@@ -383,7 +383,7 @@ const uploadDocument = async (type: 'kbis' | 'decennale') => {
   try {
     const presignData = await $fetch<{ status: string; signedUrl: string; fileKey: string }>('/api/v1/pro/documents/presign', {
       method: 'POST',
-      body: { document_type: type, filename: file.name }
+      body: { document_type: type, content_type: file.type, filename: file.name }
     })
 
     if (presignData?.status !== 'SUCCESS') {
