@@ -14,7 +14,7 @@ const userInitial = computed(() => user.value?.email?.charAt(0).toUpperCase() ??
 const route = useRoute()
 const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 
-const headerPro = ref<{ company_name?: string; logo_url?: string } | null>(null)
+const headerPro = ref<{ company_name?: string; logo_url?: string | null } | null>(null)
 
 const fetchHeaderPro = async () => {
   try {

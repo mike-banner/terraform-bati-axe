@@ -5,14 +5,14 @@ const props = defineProps<{
 
 const showRealisationModal = ref(false)
 
-const { data: realisations } = await useAsyncData('pro-realisations', async () => {
+const { data: realisations } = await useAsyncData<Record<string, unknown>[]>('pro-realisations', async () => {
   try {
     const res = await $fetch<{ realisations: Record<string, unknown>[] }>('/api/v1/pro/realisations')
     return res.realisations
   } catch {
     return []
   }
-}, { server: false, default: () => [] })
+}, { server: false, default: () => [] as Record<string, unknown>[] })
 
 function onRealisationCreated(realisation: Record<string, unknown>) {
   if (realisations.value) {

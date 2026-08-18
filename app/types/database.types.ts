@@ -285,6 +285,10 @@ export type Database = {
           postal_code: string | null
           short_id: string
           siret: string
+          siret_company_name: string | null
+          siret_legal_form: string | null
+          siret_naf_code: string | null
+          siret_status: string | null
           stripe_customer_id: string | null
           subscription_status:
             | Database["public"]["Enums"]["subscription_status"]
@@ -314,6 +318,10 @@ export type Database = {
           postal_code?: string | null
           short_id: string
           siret: string
+          siret_company_name?: string | null
+          siret_legal_form?: string | null
+          siret_naf_code?: string | null
+          siret_status?: string | null
           stripe_customer_id?: string | null
           subscription_status?:
             | Database["public"]["Enums"]["subscription_status"]
@@ -343,6 +351,10 @@ export type Database = {
           postal_code?: string | null
           short_id?: string
           siret?: string
+          siret_company_name?: string | null
+          siret_legal_form?: string | null
+          siret_naf_code?: string | null
+          siret_status?: string | null
           stripe_customer_id?: string | null
           subscription_status?:
             | Database["public"]["Enums"]["subscription_status"]

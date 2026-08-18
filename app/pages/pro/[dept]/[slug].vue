@@ -29,6 +29,8 @@ interface ProProfile {
   decennal_status: string
   siret_status: string | null
   siret_legal_form: string | null
+  bio: string | null
+  logo_url: string | null
   member_since: string
 }
 

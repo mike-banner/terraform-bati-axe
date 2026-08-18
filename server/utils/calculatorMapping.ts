@@ -42,7 +42,7 @@ export function derivePrimaryCategory(renovation_type: string, pieces: string[])
     }
   }
 
-  let best: Trade = PRIORITY_ORDER[0]
+  let best: Trade = PRIORITY_ORDER[0]!
   let bestCount = 0
   for (const trade of PRIORITY_ORDER) {
     const count = counts.get(trade) ?? 0
