@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: ready_to_plan
-stopped_at: Phase 05.8 complete (3/3) — ready to discuss Phase 06
-last_updated: 2026-07-20T16:27:49.260Z
-last_activity: 2026-07-20
+milestone: v0.9.0-experience-pro
+milestone_name: Experience & Growth Pro
+status: ready_to_plan_v0.9.1
+stopped_at: Phase 5.9 context gathered, prête à planifier
+last_updated: "2026-08-18T00:00:00.000Z"
+last_activity: 2026-08-18
 progress:
-  total_phases: 15
-  completed_phases: 7
+  total_phases: 13
+  completed_phases: 10
   total_plans: 49
   completed_plans: 44
-  percent: 47
+  percent: 77
 ---
 
 # Project State
@@ -27,31 +27,31 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 5.6 — Calculateur de Prix & Refonte Simulateur
+**Current focus**: Phase 5.9 — Extension Simulateur (API Mes Aides Réno), puis Phase 8 — PWA Mobile-First (scope réduit). Phase 06 différée (décision utilisateur 2026-08-18).
 
 ## Current Position
 
-Phase: 06
-Plan: Not started
-Next phase: 05.6 (Calculateur de Prix & Refonte Simulateur) — PLANNED (0 plans, en attente de découpage technique)
-Status: Ready to plan
-Last activity: 2026-07-20
-Progress: [█████████░] 90%
+Phase: 5.9 (extension-simulateur-mes-aides-reno) — à planifier
+Ensuite: Phase 8 (pwa-mobile-first, scope réduit sans Capacitor)
+Status: Not started — Phase 06 mise en pause (06-01 seul livré)
+Last activity: 2026-08-18
+
+### Plans Phase 06 (SMS + Acquisition + Messagerie) — DIFFÉRÉE
+
+- [x] 06-01 — Magic Link & Messagerie In-App (codé et mergé dans `dev` le 2026-06-15, hors flux GSD ; vérifié via `06-UAT.md` status complete 4/5 PASS + 1 fixed ; `06-01-SUMMARY.md` rédigé rétroactivement le 2026-08-06). Bug majeur trouvé et corrigé : verrou de déblocage manquant côté messagerie pro (ADR-004), fix sur `fix/messaging-unlock-guard`.
+- [ ] 06-02 — Acquisition Pros (cold email) — 🔴 bloqué : pas de liste de pros (CSV à fournir)
+- [ ] 06-03 — Feedback loop lead + Email onboarding (flag off par défaut) — non planifié
+- [ ] 06-04 — SMS différencié — ⏸ DIFFÉRÉ volontairement en tout dernier (décision utilisateur 2026-06-16 : aucune dépense fournisseur SMS sans feu vert explicite)
+
+Dette connue héritée du plan 06-01 : passe visuelle Playwright jamais faite (MCP bloqué sur Chrome système, fix identifié mais non appliqué), 10 erreurs typecheck préexistantes dans `server/api/v1/leads/index.get.ts`, angle mort d'observabilité sur la notification mock-email client→pro.
 
 ### Plans Phase 5.5 (Portfolio, Refonte Profil & Social) — COMPLETE (8/8 plans)
 
 - Voir `.planning/phases/05.5-Portfolio-Refonte/` (01 à 08, toutes SUMMARY livrées).
 
-### Plans Phase 5.6 (Calculateur de Prix) — PLANNED (0 plans)
+### Plans Phase 5.6 (Calculateur de Prix) — COMPLETE (3/3 plans)
 
-- En attente de découpage technique (`gsd-plan-phase`).
-
-### Plans Phase 5 (blocked/deferred)
-
-- [x] 05-01 — Magic Link & Messagerie in-app (livré, validé prod)
-- [x] 05-03 — Feedback loop (refus→remise auto) + profil public espace particulier (livré, validé prod 2026-06-16, merge b4970a9). Partie B onboarding emails (REQ-07) NON faite.
-- [ ] 05-02 — Acquisition Pros (cold email) — 🔴 bloqué : pas de liste de pros (CSV à fournir)
-- [ ] 05-04 — SMS différencié — ⏸ DIFFÉRÉ (aucune dépense sans feu vert)
+- Voir `.planning/phases/05.6-Calculateur-Simulateur/`.
 
 ## Performance Metrics
 
@@ -67,6 +67,8 @@ Progress: [█████████░] 90%
 
 - Phase 05.8 inserted after Phase 5: Enrichissement SIRET (forme juridique, NAF, suggestion catégories) au claim — étend server/utils/siretLookup.ts, ajoute siret_legal_form/siret_naf_code sur professionals, mapping statique NAF→catégories BTP, pré-cochage au claim (pro confirme). Scope claim uniquement pour l'instant.
 - Phase 05.8 edited: Ajout scope 05.8 : auto-approuver le Kbis à l'upload si professionals.siret_status === 'active' (déjà vérifié au claim), même pattern que l'auto-approbation décennale dans upload.post.ts. Évite la revue admin manuelle quand l'API gouv confirme déjà l'existence/activité de l'entreprise.
+- [2026-08-06] Phase 8 ajoutée à ROADMAP.md : Architecture PWA Mobile-First & Packaging Stores (Capacitor 6) — @vite-pwa/nuxt offline-resilient, Bottom Bar Shell mobile, wrapper Capacitor 6 pour App Store/Play Store. Dépend de Phase 4.7 et Phase 6.
+- [2026-08-06] Resynchronisation STATE.md via /gsd:progress : le plan 06-01 (Magic Link & Messagerie) était déjà codé, vérifié et mergé dans `dev` depuis le 2026-06-15 mais hors flux GSD (pas de SUMMARY.md) — STATE.md affichait encore Phase 06 "Not started" avant cette mise à jour. SUMMARY rédigé rétroactivement à partir de `06-UAT.md`.
 
 ### Decisions
 
@@ -118,6 +120,6 @@ Progress: [█████████░] 90%
 
 ## Session Continuity
 
-Last session: 2026-07-20T14:47:09.966Z
-Stopped at: Phase 05.7 context gathered
-Resume file: None
+Last session: 2026-08-17T23:21:33.239Z
+Stopped at: Phase 5.9 context gathered
+Resume file: .planning/phases/05.9-extension-simulateur-mes-aides-reno/05.9-CONTEXT.md
