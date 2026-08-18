@@ -1,5 +1,19 @@
 # Roadmap: BÂTI-AXE
 
+## Milestones
+
+### ✅ Milestone v0.9.0 « Experience & Growth Pro » — CLÔTURÉ le 2026-08-19
+
+**Verdict : v1 livrable pour le pilote mono-ville (Carrières-sous-Poissy / 78).** Toutes les phases du périmètre livrées : capture (2), onboarding/vérification (3), verrou & billing (4), conversion (4.5), marché (4.6), design system (4.7), SIRET/badges (5, 5.8), portfolio (5.5), calculateur (5.6), durcissement (5.7), tunnel B2B (5.8), messagerie/espace client + onboarding email (6), aides rénovation (05.9).
+
+**Conditions de livraison v1 (à valider avant mise en prod réelle avec vrais utilisateurs) :**
+- [ ] Déploiement Cloudflare Pages vérifié au vert (Node 22 via `.nvmrc` — sinon poser `NODE_VERSION=22` en var de build)
+- [ ] Paiement Stripe re-testé de bout en bout (checkout + webhook, Phase 4) et cron pg_cron 72h vérifié (Phase 4) — non re-testés le 2026-08-19
+- [ ] Admin minimal validé opérationnel pour le pilote (revue documents OK ; analytics/audit hors UI → Phase 06.1)
+- [ ] Dette test connue : passe Playwright jamais câblée (blocage navigateur sandbox) — à traiter dans le prochain milestone
+
+**Reporté au prochain milestone** : Phase 06.1 (Console Admin), Phase 7 (Réputation & Scale), Phase 8 (PWA Mobile-First) + tout le bloc Deferred ci-dessous.
+
 ## Overview
 Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-Poissy / 78). Chaque phase livre une capacité vérifiable et autonome. La Phase 5 est une validation business sans code nouveau — elle conditionne le scale géographique.
 

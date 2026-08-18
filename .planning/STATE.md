@@ -1,9 +1,9 @@
 ---
 gsd_state_version: 1.0
-milestone: v0.9.0-experience-pro
-milestone_name: Experience & Growth Pro
+milestone: v1.0-lancement-pilote
+milestone_name: Lancement v1 — Pilote Carrières-sous-Poissy
 status: ready_to_plan_06.1
-stopped_at: Phase 6 complétée (messagerie + onboarding REQ-07) — prochaine étape Phase 06.1 Console Admin
+stopped_at: Milestone v0.9.0 clôturé (v1 livrable) — prochain chantier Phase 06.1 Console Admin
 last_updated: "2026-08-19T00:00:00.000Z"
 last_activity: 2026-08-19
 progress:
@@ -27,13 +27,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 06.1 — Console Admin Opérationnelle (fonctionnel d'abord, UI/UX dédiée plus tard). Phase 6 complétée (messagerie + feedback + onboarding REQ-07), Phase 05.9 livrée (aides rénovation).
+**Current focus**: Milestone v0.9.0 clôturé (v1 livrable pilote). Prochain chantier : Phase 06.1 — Console Admin Opérationnelle (fonctionnel d'abord, UI/UX dédiée plus tard), puis Phase 7 (Réputation & Scale) et Phase 8 (PWA).
 
 ## Current Position
 
 Phase: 6 (messagerie-espace-client) — COMPLETE (06-01 messagerie ✅, 06-03 feedback loop REQ-06/09 + email onboarding REQ-07 ✅ livré le 2026-08-19 ; 06-02 acquisition et 06-04 SMS différés post-lancement)
-Ensuite: Phase 06.1 (console-admin-operationnelle) puis Phase 7/8
-Status: Complete — Phase 06.1 planifiée au ROADMAP (pas encore de plans)
+Ensuite: Phase 06.1 (console-admin-operationnelle) puis Phase 7/8 — **nouveau milestone v1.0**
+Status: Milestone v0.9.0 CLÔTURÉ le 2026-08-19 (v1 livrable, conditions de livraison documentées au ROADMAP)
 Last activity: 2026-08-19
 
 ### Plans Phase 06 (Messagerie & Espace Client) — acquisition retirée, SMS différé
