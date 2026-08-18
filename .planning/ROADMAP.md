@@ -16,9 +16,10 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 5.5: Portfolio Pro, Refonte Profil & Social** - Upload R2 (galerie projets), BDD completed_projects/likes, carousel landing, profil immersif pleine page (zéro menu, mobile-first). (completed 2026-07-19)
 - [x] **Phase 5.6: Calculateur de Prix & Refonte Simulateur** - Estimateur interactif (tuiles, type de travaux, m²), algorithme de chiffrage, et capture de leads qualifiés (résultat contre coordonnées). (completed 2026-07-19)
 - [x] **Phase 5.8: Tunnel B2B & Apporteurs d'Affaires** - Landing page partenaire ("Bras armé technique"), dépôt de plans/rapports expert, SLA de 4h, attestation décennale 1-clic pour syndics, archis et assureurs. (completed 2026-07-20)
-- [ ] **Phase 6: SMS + Acquisition + Messagerie** - SMS différencié (Basic→upgrade / Premium→lead direct), cold outreach pros DB, dashboard particulier magic-link, messagerie in-app pro↔particulier, email onboarding (désactivé par défaut), feedback loop lead.
-- [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville.
-- [ ] **Phase 8: Architecture PWA Mobile-First & Packaging Stores (Capacitor 6)** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell, wrapper Capacitor 6 pour déploiement App Store & Play Store.
+- [ ] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement.
+- [ ] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
+- [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
+- [ ] **Phase 8: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
 
 ## Phase Details
 
@@ -226,22 +227,33 @@ Plans:
 **Plans**: TBD
 **UI hint**: yes
 
-### Phase 6: SMS + Acquisition + Messagerie
-**Goal**: Boucle complète d'acquisition, d'activation et de rétention — les pros sont notifiés, les particuliers ont un espace de suivi, et les deux communiquent sur la plateforme.
-**Depends on**: Phase 4.7 (design system) + Phase 4.5 (messaging/feedback)
-**Requirements**: SMS-01, SMS-02, SMS-04, ACQ-01, MSG-01, MSG-02, MSG-03, EML-01, FDB-01
+### Phase 05.9: Extension Simulateur — API Mes Aides Réno
+**Goal**: Brancher l'API officielle d'État `mesaides.france-renov.gouv.fr/api/v1/` (moteur Publicodes) pour afficher les aides (MaPrimeRénov'/CEE/Éco-PTZ) et un reste à charge réel, afin de qualifier financièrement le lead. Les 6 étapes du tunnel principal (Phase 5.6) restent inchangées — le calcul des aides est proposé via un embranchement optionnel avant le lead wall.
+**Depends on**: Phase 5.6
 **Success Criteria** (what must be TRUE):
-  1. Un nouveau projet qualifié déclenche un SMS immédiat aux pros Premium de la zone (opt-in) avec lien direct vers le lead.
-  2. Les pros Basic reçoivent un SMS avec CTA direct vers `/espace/premium` ("Coordonnées disponibles pour les abonnés Premium").
-  3. Le webhook STOP Twilio bascule le consent en `revoked` et stoppe les envois.
-  4. Une campagne SMS sortante peut être déclenchée depuis l'admin vers les pros DB non inscrits (cold outreach acquisition).
-  5. Un particulier ayant déposé un projet reçoit un magic link et peut accéder à `/mon-projet/[token]` pour voir le statut, les pros consultants, et ses messages.
-  6. Un pro peut envoyer un message à un particulier depuis `/espace/leads/[id]` ; le particulier reçoit une notification email avec lien de réponse.
-  7. Le particulier peut répondre et poser des questions depuis son espace ; le pro reçoit une notification.
-  8. Les emails d'onboarding pro (J+0 / J+1 / J+3) sont implémentés mais inactifs par défaut (`EMAIL_NOTIFICATIONS_ENABLED=false`).
-  9. Un pro peut marquer un lead "Chantier décroché" depuis la fiche lead ; le taux de conversion s'affiche dans le bloc ROI.
-  10. L'administrateur dispose d'un tableau de modération des leads et d'un rapport de performance SMS.
-**Plans**: TBD
+  1. Le simulateur interroge l'API via un proxy Nitro `/api/v1/aides-reno` et affiche aides + reste à charge dans un mini-tunnel dédié (un composant, deux points d'entrée : fork optionnel avant le lead wall dans `/simulateur.vue` + route standalone `/calculateur-aides`), avec révélation « bilan complet » unique pour le parcours « Oui ».
+  2. `projects.calculator_data` capture les champs aides (`aides_estimees`, `reste_a_charge_min`, `reste_a_charge_max`) — pas de nouvelle migration.
+  3. Dégradation propre : API indisponible → bloc aides masqué + message court, `computeEstimate()` continue de s'afficher, aucun blocage.
+**Plans**: 4 plans
+Plans:
+- [ ] 05.9-01-PLAN.md — Proxy Nitro `/api/v1/aides-reno` + resolver CP→INSEE + persistance calculator_data
+- [ ] 05.9-02-PLAN.md — Composant réutilisable AidesMiniTunnel (logement + foyer/revenu)
+- [ ] 05.9-03-PLAN.md — Fork Oui/Non avant le lead wall dans simulateur.vue + révélation bilan complet
+- [ ] 05.9-04-PLAN.md — Route standalone `/calculateur-aides` + teaser home + restitution espace client
+**UI hint**: yes
+
+### Phase 6: Messagerie & Espace Client (acquisition + SMS reportés post-lancement)
+**Goal**: Boucle d'activation et de rétention — le particulier a un espace de suivi (magic link), et le pro↔particulier communiquent sur la plateforme. L'acquisition sortante (cold outreach) est **retirée** de cette phase et le SMS est **différé** : tous deux reportés post-lancement (décision 2026-08-18).
+**Depends on**: Phase 4.7 (design system) + Phase 4.5 (messaging/feedback)
+**Requirements**: MSG-01, MSG-02, MSG-03, EML-01, FDB-01 (SMS-01/02/04 et ACQ-01 retirés → post-lancement)
+**Success Criteria** (what must be TRUE):
+  1. [DONE] Un particulier ayant déposé un projet reçoit un magic link et accède à `/mon-projet/[token]` (statut, pros consultants, messages).
+  2. [DONE] Un pro peut envoyer un message à un particulier depuis `/espace/leads/[id]` ; le particulier reçoit une notification email avec lien de réponse.
+  3. [DONE] Le particulier peut répondre et poser des questions depuis son espace ; le pro reçoit une notification.
+  4. [DONE] Feedback loop : le particulier peut écarter/retenir un artisan ; si tous les pros engagés sont refusés, le projet repart automatiquement sur le marché.
+  5. Les emails d'onboarding pro (J+0 / J+1 / J+3) sont implémentés mais inactifs par défaut (`ONBOARDING_EMAILS=false`).
+  6. Un pro peut marquer un lead "Chantier décroché" depuis la fiche lead ; le taux de conversion s'affiche dans le bloc ROI.
+**Plans**: 4 plans (06-01 livré en prod ; 06-02 acquisition retiré → post-lancement ; 06-03 feedback/onboarding — REQ-06/09 livrés, REQ-07 reste ; 06-04 SMS différé)
 **UI hint**: yes
 
 ### Phase 7: Réputation & Scale
@@ -255,16 +267,17 @@ Plans:
 **Plans**: TBD
 **UI hint**: yes
 
-### Phase 8: Architecture PWA Mobile-First & Packaging Stores (Capacitor 6)
-**Goal**: Transformer Bâti-Axe en une Web App autonome ultrarapide résiliente hors-ligne (Offline-Resilient) et préparer la publication sur iOS App Store et Android Play Store.
+### Phase 8: Architecture PWA Mobile-First
+**Goal**: Rendre Bâti-Axe installable et résilient au réseau (offline-resilient) — shell UI en cache, chargement perçu plus rapide, sans réécriture native.
 **Depends on**: Phase 4.7, Phase 6
 **Success Criteria** (what must be TRUE):
-  1. `@vite-pwa/nuxt` est intégré avec stratégie *StaleWhileRevalidate* et Web App Manifest standalone.
-  2. L'UI propose un Shell Mobile-First natif (Bottom Navigation Bar sur `< 768px`, Safe Area Insets iOS).
-  3. L'application gère la mise en cache locale des données et la ré-essai asynchrone des mutations en cas de perte de réseau.
-  4. Capacitor 6 est initialisé avec accès aux API natives (Appareil photo, Biométrie, Push, Haptics) pour les builds iOS (`.xcworkspace`) et Android (`.aab`).
+  1. `@vite-pwa/nuxt` est intégré avec stratégie *StaleWhileRevalidate* (shell UI + assets statiques uniquement) et Web App Manifest standalone.
+  2. L'UI propose un Shell Mobile-First (Bottom Navigation Bar sur `< 768px`, Safe Area Insets iOS, touch targets ≥ 44px).
+  3. Aucun cache de données métier (leads/messages) : hors-ligne → état "hors-ligne" explicite, jamais de coordonnées périmées servies (ADR-004 intact).
 **Plans**: TBD
 **UI hint**: yes
+
+> Capacitor 6 / packaging App Store & Play Store : **hors scope** (maintenance native non justifiée, cf. spec client 2026-08-06) — à reconsidérer seulement si un besoin terrain documenté émerge, via un ADR dédié.
 
 ## Progress
 
@@ -281,6 +294,16 @@ Plans:
 | 5.5. Portfolio Pro, Refonte Profil & Social | 8/8 | Complete   | 2026-07-19 |
 | 5.6. Calculateur de Prix & Refonte Simulateur | 3/3 | Complete   | 2026-07-19 |
 | 5.8. Tunnel B2B & Apporteurs d'Affaires | 3/3 | Complete   | 2026-07-20 |
-| 6. SMS + Acquisition + Messagerie | 0/TBD | Not started | - |
+| 6. Messagerie & Espace Client | 1/4 | In progress (06-01 livré ; acquisition retirée, SMS différé) | - |
+| 05.9 Extension Simulateur Mes Aides Réno | 0/4 | Planned | - |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
-| 8. Architecture PWA Mobile-First & Packaging Stores | 0/TBD | Not started | - |
+| 8. Architecture PWA Mobile-First | 0/TBD | Not started | - |
+
+## Deferred (post-lancement)
+
+Reportés en toute fin — exécuter seulement après que le produit soit construit et validé :
+
+- **Acquisition pros (cold outreach)** — retiré de la Phase 6 le 2026-08-18 (REQ-05, plan 06-02). Import prospects + invitation email + funnel admin. Source (CSV/seed/scrape) à trancher le moment venu.
+- **SMS différencié** (REQ-08, plan 06-04) — aucune dépense fournisseur sans feu vert explicite. Reco Brevo, alt OVH/Twilio.
+- **Packaging stores (Capacitor)** — hors scope Phase 8, à reconsidérer via ADR dédié si besoin terrain documenté.
+- **Design final email + passe design totale** (ux-pro-max → impeccable → taste-skill).

@@ -74,4 +74,4 @@ Faire cohabiter le B2C et le B2B sur la même plateforme maximise les revenus gr
 ---
 
 ## 5. Sujets à discuter
-1. **Nommage et Copywriting** : Faut-il bannir le mot "Particulier" au profit de "Client Final" sur les espaces VIP ?
+1. **Nommage et Copywriting** — ✅ TRANCHÉ (2026-08-18) : **ne pas** remplacer "Particulier" par "Client Final". Le modèle est pro-centrique : le client payeur de BÂTI-AXE est le **professionnel abonné** ; le particulier est la **demande** (porteur de projet, "celui qui veut des travaux"). "Client Final" est ambigu (il peut désigner le pro payeur ou le bénéficiaire final dans la chaîne prescripteur→artisan→particulier) → on conserve "Particulier" / "Porteur de projet".
