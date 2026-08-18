@@ -74,6 +74,8 @@ export default defineNuxtConfig({
     // partagé 'onboarding@resend.dev' (ne livre qu'à l'adresse du compte Resend).
     // Override prod via NUXT_EMAIL_FROM une fois bati-axe.fr vérifié.
     emailFrom: process.env.EMAIL_FROM || 'BÂTI-AXE <onboarding@resend.dev>',
+    // Email d'onboarding pro (REQ-07) — off par défaut. Préfixe NUXT_ côté Cloudflare.
+    onboardingEmails: process.env.ONBOARDING_EMAILS === 'true',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
     }
