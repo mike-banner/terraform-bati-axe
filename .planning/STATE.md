@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.9.0-experience-pro
 milestone_name: Experience & Growth Pro
-status: ready_to_plan_v0.9.1
-stopped_at: Phase 5.9 exécutée (4/4 plans) — prochaine étape Phase 8
-last_updated: "2026-08-18T00:00:00.000Z"
-last_activity: 2026-08-18
+status: ready_to_plan_06.1
+stopped_at: Phase 6 complétée (messagerie + onboarding REQ-07) — prochaine étape Phase 06.1 Console Admin
+last_updated: "2026-08-19T00:00:00.000Z"
+last_activity: 2026-08-19
 progress:
-  total_phases: 13
-  completed_phases: 11
-  total_plans: 49
-  completed_plans: 48
+  total_phases: 14
+  completed_phases: 12
+  total_plans: 51
+  completed_plans: 50
   percent: 98
 ---
 
@@ -27,20 +27,20 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Phase 8 — PWA Mobile-First (scope réduit). Phase 05.9 livrée (aides rénovation), Phase 06 différée (décision utilisateur 2026-08-18).
+**Current focus**: Phase 06.1 — Console Admin Opérationnelle (fonctionnel d'abord, UI/UX dédiée plus tard). Phase 6 complétée (messagerie + feedback + onboarding REQ-07), Phase 05.9 livrée (aides rénovation).
 
 ## Current Position
 
-Phase: 5.9 (extension-simulateur-mes-aides-reno) — exécutée (4/4 plans livrés : 01 proxy, 02 composant, 03 fork simulateur, 04 standalone/home/espace client)
-Ensuite: Phase 8 (pwa-mobile-first, scope réduit sans Capacitor)
-Status: Complete (4/4 plans livrés) — Phase 06 mise en pause (06-01 seul livré)
-Last activity: 2026-08-18
+Phase: 6 (messagerie-espace-client) — COMPLETE (06-01 messagerie ✅, 06-03 feedback loop REQ-06/09 + email onboarding REQ-07 ✅ livré le 2026-08-19 ; 06-02 acquisition et 06-04 SMS différés post-lancement)
+Ensuite: Phase 06.1 (console-admin-operationnelle) puis Phase 7/8
+Status: Complete — Phase 06.1 planifiée au ROADMAP (pas encore de plans)
+Last activity: 2026-08-19
 
 ### Plans Phase 06 (Messagerie & Espace Client) — acquisition retirée, SMS différé
 
 - [x] 06-01 — Magic Link & Messagerie In-App (codé et mergé dans `dev` le 2026-06-15, hors flux GSD ; vérifié via `06-UAT.md` status complete 4/5 PASS + 1 fixed ; `06-01-SUMMARY.md` rédigé rétroactivement le 2026-08-06). Bug majeur trouvé et corrigé : verrou de déblocage manquant côté messagerie pro (ADR-004), fix sur `fix/messaging-unlock-guard`.
 - [ ] 06-02 — Acquisition Pros (cold email) — ⏸ RETIRÉ de la Phase 6 (décision 2026-08-18) : pas prioritaire tant que le site se construit. Reporté post-lancement, source (CSV/seed/scrape) à trancher le moment venu.
-- [~] 06-03 — Feedback loop lead (REQ-06) + profil public espace particulier (REQ-09) livrés hors-plan (commit `b4970a9`) ; Email onboarding (REQ-07, flag off par défaut) reste à faire.
+- [x] 06-03 — Feedback loop lead (REQ-06) + profil public espace particulier (REQ-09) livrés hors-plan (commit `b4970a9`) ; **Email onboarding (REQ-07) livré le 2026-08-19** (flag `NUXT_ONBOARDING_EMAILS`, migration `onboarding_email_sent_at`, envoi au claim, idempotence, livraison Resend vérifiée sur le compte du propriétaire).
 - [ ] 06-04 — SMS différencié — ⏸ DIFFÉRÉ volontairement en tout dernier (décision utilisateur 2026-06-16 : aucune dépense fournisseur SMS sans feu vert explicite)
 
 Dette connue héritée du plan 06-01 : passe visuelle Playwright jamais faite (MCP bloqué sur Chrome système, fix identifié mais non appliqué), 10 erreurs typecheck préexistantes dans `server/api/v1/leads/index.get.ts`, angle mort d'observabilité sur la notification mock-email client→pro.
