@@ -2,6 +2,9 @@
   "name": "bati-axe",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -15,7 +18,7 @@
   "dependencies": {
     "@lucide/vue": "^1.17.0",
     "aws4fetch": "^1.0.20",
-    "nuxt": "^4.4.6",
+    "nuxt": "^4.5.2",
     "reka-ui": "^2.9.8",
     "resend": "^6.12.4",
     "shadcn-vue": "^2.7.3",
