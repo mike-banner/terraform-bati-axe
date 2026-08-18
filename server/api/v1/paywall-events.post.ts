@@ -17,6 +17,9 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event)
   if (!user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
 
+  const userId = resolveSupabaseUserId(user)
+  if (!userId) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
+
   const body = await readBody(event)
   const parsed = eventSchema.safeParse(body)
   if (!parsed.success) throw createError({ statusCode: 400, statusMessage: parsed.error.message })
@@ -25,15 +28,15 @@ export default defineEventHandler(async (event) => {
 
   // Rate limit: 2-second window per pro (silent — returns logged:false, no error to avoid retries)
   const now = Date.now()
-  const last = lastEventAt.get(user.id) ?? 0
+  const last = lastEventAt.get(userId) ?? 0
   if (now - last < 2000) {
     return { logged: false, reason: 'rate_limited' }
   }
-  lastEventAt.set(user.id, now)
+  lastEventAt.set(userId, now)
 
   const supabase = await serverSupabaseServiceRole(event) as any
   await supabase.from('paywall_events').insert({
-    pro_id: user.id,
+    pro_id: userId,
     event_type,
     lead_id: lead_id ?? null,
     qualify_score: qualify_score ?? null,

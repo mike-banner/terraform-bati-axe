@@ -5,6 +5,9 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event)
   if (!user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
 
+  const userId = resolveSupabaseUserId(user)
+  if (!userId) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
+
   const config = useRuntimeConfig(event)
   const stripe = new Stripe(config.stripeSecretKey as string, {
     httpClient: Stripe.createFetchHttpClient(),
@@ -14,7 +17,7 @@ export default defineEventHandler(async (event) => {
   const { data: pro } = await supabase
     .from('professionals')
     .select('id, stripe_customer_id')
-    .eq('id', user.id)
+    .eq('id', userId)
     .single()
 
   if (!pro) throw createError({ statusCode: 404, statusMessage: 'Profil professionnel introuvable.' })
@@ -24,7 +27,7 @@ export default defineEventHandler(async (event) => {
     line_items: [{ price: config.stripePriceId as string, quantity: 1 }],
     success_url: `${config.public.siteUrl}/espace/leads?upgrade=success`,
     cancel_url: `${config.public.siteUrl}/espace/premium`,
-    metadata: { pro_id: user.id },
+    metadata: { pro_id: userId },
   }
 
   if (pro.stripe_customer_id) {
