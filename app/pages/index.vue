@@ -34,7 +34,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
             </h1>
 
             <p class="mt-6 max-w-md text-lg text-slate-500" style="text-wrap: pretty">
-              Chaque professionnel partenaire est vérifié manuellement : décennale en cours de validité, Kbis à jour. Vos coordonnées restent masquées jusqu'au moment du contact.
+              Décrivez votre projet et recevez des contacts d'artisans certifiés de votre zone. Vos coordonnées restent masquées jusqu'au contact.
             </p>
           </div>
 
@@ -53,23 +53,15 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
               Je suis artisan
             </NuxtLink>
           </div>
-        </div>
-
-        <!-- Carte accent : Gratuit et sans engagement -->
-        <div class="reveal-item bento-card md:col-span-4 flex flex-col justify-between rounded-sm bg-industrial p-8 text-white">
-          <div class="flex items-center gap-2 text-sm font-medium text-orange-200">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            100% Gratuit
-          </div>
-          <div>
-            <div class="text-3xl font-bold leading-tight">Sans engagement</div>
-            <p class="mt-3 text-sm text-white/80">Notre service est entièrement gratuit pour les particuliers. Comparez les artisans et restez libre de votre choix.</p>
-          </div>
+          <p class="mt-4 text-sm text-slate-500">Gratuit pour les particuliers, sans engagement.</p>
         </div>
 
         <!-- Carte bénéfices : critères contrôlés -->
-        <div class="reveal-item bento-card md:col-span-4 rounded-sm border border-slate-800 bg-slate-900 p-8 text-white shadow-lg">
-          <div class="mb-4 text-sm text-slate-400">Contrôlés avant activation</div>
+        <div class="reveal-item bento-card md:col-span-4 flex flex-col justify-center gap-5 rounded-sm bg-slate-900 p-8 text-white shadow-lg">
+          <div>
+            <p class="text-sm font-semibold text-slate-300">Contrôlés avant activation</p>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400">Chaque artisan passe ces vérifications avant de pouvoir vous contacter.</p>
+          </div>
           <div class="flex flex-wrap gap-2">
             <span class="rounded-full bg-white/10 px-3 py-1 text-sm">Décennale valide</span>
             <span class="rounded-full bg-white/10 px-3 py-1 text-sm">Kbis &lt; 3 mois</span>
@@ -78,7 +70,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </div>
 
         <!-- Carte visuelle : photo chantier -->
-        <div class="reveal-item bento-card md:col-span-8 relative min-h-[280px] overflow-hidden rounded-sm border border-slate-200 shadow-lg">
+        <div class="reveal-item bento-card md:col-span-12 relative min-h-[280px] overflow-hidden rounded-sm border border-slate-200 shadow-lg">
           <img
             :src="heroPhoto"
             alt="Chantier de rénovation en cours, mur en briques apparentes"
@@ -96,19 +88,15 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
 
     <!-- ───────────────── Teaser aides (Phase 05.9 — visuel, aucun calcul) ───────────────── -->
     <section class="mx-auto w-full max-w-7xl px-6 pb-24">
-      <div class="reveal-item bento-card relative overflow-hidden rounded-sm bg-slate-900 p-8 md:p-12 shadow-lg">
+      <div class="reveal-item bento-card rounded-sm bg-safety p-8 md:p-12 shadow-lg">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div class="max-w-2xl">
-            <div class="inline-flex items-center gap-2 rounded-full bg-safety/15 px-3.5 py-1.5 text-sm font-semibold text-orange-300">
-              <span class="inline-block h-1.5 w-1.5 rounded-full bg-safety" aria-hidden="true" />
-              MaPrimeRénov' · CEE · Éco-PTZ
-            </div>
-            <h2 class="mt-5 text-3xl md:text-4xl font-black tracking-tight text-white" style="text-wrap: balance">Estimez vos aides en 30 secondes</h2>
-            <p class="mt-3 text-base leading-relaxed text-slate-300">Découvrez les aides d'État et votre reste à charge réel, avant de choisir votre artisan.</p>
+            <h2 class="text-3xl md:text-4xl font-black tracking-tight text-white" style="text-wrap: balance">Estimez vos aides en 30 secondes</h2>
+            <p class="mt-3 text-base font-semibold leading-relaxed text-white">MaPrimeRénov', CEE, Éco-PTZ : découvrez votre reste à charge réel avant de choisir votre artisan.</p>
           </div>
           <NuxtLink
             to="/calculateur-aides"
-            class="inline-flex h-14 shrink-0 items-center gap-2 rounded-full bg-safety px-8 text-lg font-bold text-white shadow-lg shadow-safety/30 transition-transform hover:scale-105"
+            class="inline-flex h-14 shrink-0 items-center gap-2 rounded-full bg-white px-8 text-lg font-bold text-safety shadow-lg transition-transform hover:scale-105"
           >
             Calculer mes aides
             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -121,10 +109,10 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
     <section class="w-full bg-slate-900 text-white">
       <div class="mx-auto w-full max-w-7xl px-6 py-[clamp(3rem,7vw,5.5rem)]">
         <p class="max-w-[24ch] text-4xl font-black tracking-tight leading-[1.1] sm:text-5xl" style="text-wrap: balance">
-          La confiance, dans le bâtiment, ça se prouve. Pas ça s'annonce.
+          Vos coordonnées restent masquées jusqu'au contact.
         </p>
         <p class="mt-5 max-w-[52ch] text-base leading-relaxed text-white/70">
-          Un artisan non conforme n'accède jamais à vos coordonnées. Décennale expirée, Kbis manquant, zone hors secteur : c'est non. Vous parlez uniquement à des professionnels en règle.
+          L'artisan vous écrit via la plateforme, sans voir votre numéro. Vous décidez qui peut vous joindre, et quand.
         </p>
       </div>
     </section>
@@ -179,9 +167,9 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
     <!-- ───────────────── Preuve : avant / après ───────────────── -->
     <section class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
       <div class="mb-10 max-w-[52ch]">
-        <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Le résultat, pas la promesse</h2>
+        <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Avant et après, sur de vrais chantiers</h2>
         <p class="mt-3 text-base leading-relaxed text-slate-500">
-          Des chantiers menés par des artisans vérifiés de la plateforme. Glissez pour comparer.
+          Glissez pour comparer des travaux menés par des artisans vérifiés.
         </p>
       </div>
       <BeforeAfterSlider
@@ -192,39 +180,6 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         before-alt="Chantier de rénovation en cours"
         after-alt="Rénovation terminée"
       />
-    </section>
-
-    <!-- ───────────────── Vérification (sceaux) ───────────────── -->
-    <section class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
-      <div class="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
-        <div>
-          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-black tracking-tight text-slate-900" style="text-wrap: balance">
-            Chaque professionnel est vérifié à la main.
-          </h2>
-          <p class="mt-4 max-w-[48ch] text-base leading-relaxed text-slate-500">
-            Aucun algorithme. Un membre de notre équipe contrôle la décennale, le Kbis et la zone d'intervention avant toute activation. Un artisan non conforme ne peut pas accéder aux leads.
-          </p>
-        </div>
-        <ul class="reveal space-y-3">
-          <li
-            v-for="item in [
-              { t: 'Assurance décennale valide', d: 'Attestation contrôlée avec date d\'expiration vérifiée.' },
-              { t: 'Kbis de moins de 3 mois', d: 'Extrait officiel attestant de l\'activité en cours.' },
-              { t: 'Zone d\'intervention confirmée', d: 'L\'artisan intervient bien dans votre secteur géographique.' },
-            ]"
-            :key="item.t"
-            class="reveal-item bento-card flex items-start gap-4 rounded-sm border border-slate-200 bg-white p-5 shadow-lg"
-          >
-            <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-safety text-white">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
-            </span>
-            <div>
-              <p class="text-sm font-semibold text-slate-900">{{ item.t }}</p>
-              <p class="mt-0.5 text-sm text-slate-500">{{ item.d }}</p>
-            </div>
-          </li>
-        </ul>
-      </div>
     </section>
 
     <!-- ───────────────── CTA final ───────────────── -->

@@ -22,7 +22,9 @@ const onSimulateur = computed(() => route.path === '/simulateur')
   <div class="min-h-screen bg-page text-foreground flex flex-col font-sans antialiased">
     <header class="sticky top-0 z-40 border-b border-border bg-page/95 backdrop-blur-sm">
       <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        <NuxtLink to="/" class="text-base font-bold tracking-tight text-foreground hover:opacity-70 transition-opacity">BÂTI-AXE</NuxtLink>
+        <NuxtLink to="/" class="flex items-center hover:opacity-80 transition-opacity" aria-label="BÂTI-AXE — Accueil">
+          <img src="/images/logo.png" alt="BÂTI-AXE" class="h-8 w-auto object-contain" />
+        </NuxtLink>
         <nav class="flex items-center gap-2">
           <template v-if="user">
             <NuxtLink :to="espaceLink" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Mon espace</NuxtLink>
