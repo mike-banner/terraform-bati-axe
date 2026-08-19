@@ -75,3 +75,23 @@ Faire cohabiter le B2C et le B2B sur la même plateforme maximise les revenus gr
 
 ## 5. Sujets à discuter
 1. **Nommage et Copywriting** — ✅ TRANCHÉ (2026-08-18) : **ne pas** remplacer "Particulier" par "Client Final". Le modèle est pro-centrique : le client payeur de BÂTI-AXE est le **professionnel abonné** ; le particulier est la **demande** (porteur de projet, "celui qui veut des travaux"). "Client Final" est ambigu (il peut désigner le pro payeur ou le bénéficiaire final dans la chaîne prescripteur→artisan→particulier) → on conserve "Particulier" / "Porteur de projet".
+
+## 6. Modèle de Paiement — TRANCHÉ (2026-08-19)
+
+**Nuance importante (corrige une interprétation erronée) : il n'y a AUCUN compte Stripe par client/partenaire.** BÂTI-AXE ne fait que la **mise en relation** — les pros et leurs clients se débrouillent entre eux **hors plateforme** (le marché est un lieu de mise en relation, pas un lieu de paiement).
+
+### Décisions verrouillées
+
+1. **Un seul compte Stripe (celui du porteur) encaisse tout** :
+   - **Abonnements pros** (Basic/Premium) — le pro paie pour la liaison (l'accès aux leads/coordonnées), pas pour un chantier.
+   - **Module commission** (PIVOT-B2B) : commission au succès des prescripteurs — encaissée sur le MÊME compte Stripe.
+   - **Facturation** : factures établies aux coordonnées de BÂTI-AXE (le porteur), pas au nom d'un client.
+2. **Aucun paiement inter-pros / inter-partenaires sur la plateforme** : pas de Stripe Connect, pas de multi-tenant Stripe, pas de split de paiement. Le code actuel (clés Stripe en env var, checkout + webhook) reste valable tel quel — **rien à refactoriser**.
+3. **Lemon Squeezy (MoR) écarté** : conçu pour un compte central unique au nom de Lemon Squeezy (factures à leur nom, 5% + 50¢). Incompatible avec le modèle "le porteur encaisse avec ses coordonnées". Stripe est le bon choix (1.5% + 25¢ EU, factures au nom de BÂTI-AXE).
+4. **Multi-déploiement white-label (Terraform) ≠ multi-paiement** : chaque instance client (Cloudflare du client + domaine perso) encaisse avec le **même** Stripe (celui du porteur). Le Terraform existant (`terraform/` : modules cloudflare_pages + supabase_project + platform, workspaces dev/staging/prod) est la fondation pour ajouter un workspace par client — voir ROADMAP § Priorités pilote v1.
+5. **État Stripe actuel** : vérifié le 2026-08-19 — `STRIPE_SECRET_KEY` en **mode TEST** (`sk_test_...`) : aucun vrai paiement possible, les cartes de test sont bloquées. Le passage en live (`sk_live_...`) sera un choix explicite au moment du lancement.
+
+### Points d'attention pour le multi-déploiement (Terraform)
+- Le module Supabase est `count = 0` en prod (`create_supabase = false`, base existante) — pour un client isolé, activer la création (`create_supabase = true`) ou pointer vers une base dédiée.
+- Backend d'état sécurisé par client (le `backend.tf` prod doit pointer vers un remote state isolé).
+- Les secrets (clés Stripe/Resend, Supabase) sont passés en variables Terraform — à gérer par workspace.

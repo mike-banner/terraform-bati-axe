@@ -1,0 +1,5 @@
+# BÂTI-AXE — site en construction (v1 pilote)
+# Désindexation totale tant que le produit n'est pas lancé (décision 2026-08-19).
+# À retirer au moment du lancement public réel.
+User-agent: *
+Disallow: /
