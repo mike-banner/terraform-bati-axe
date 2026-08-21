@@ -1,10 +1,12 @@
 # Roadmap: BÂTI-AXE
 
+> 🧭 **Plan de vol consolidé (fait / V1-V2-V3 / milestones)** : voir `.planning/PLAN_DE_VOL.md` (synthèse 2026-08-21).
+
 ## Milestones
 
 ### ✅ Milestone v0.9.0 « Experience & Growth Pro » — CLÔTURÉ le 2026-08-19
 
-**Verdict : v1 livrable pour le pilote mono-ville (Carrières-sous-Poissy / 78).** Toutes les phases du périmètre livrées : capture (2), onboarding/vérification (3), verrou & billing (4), conversion (4.5), marché (4.6), design system (4.7), SIRET/badges (5, 5.8), portfolio (5.5), calculateur (5.6), durcissement (5.7), tunnel B2B (5.8), messagerie/espace client + onboarding email (6), aides rénovation (05.9).
+**Verdict : v1 livrable pour le pilote mono-ville (Carrières-sous-Poissy / 78).** Toutes les phases du périmètre livrées : capture (2), onboarding/vérification (3), verrou & billing (4), conversion (4.5), marché (4.6), design system (4.7), SIRET/badges (5, 5.8), portfolio (5.5), calculateur (5.6), durcissement (5.7), messagerie/espace client + onboarding email (6), aides rénovation (05.9).
 
 **Conditions de livraison v1 (à valider avant mise en prod réelle avec vrais utilisateurs) :**
 - [ ] Déploiement Cloudflare Pages vérifié au vert (Node 22 via `.nvmrc` — sinon poser `NODE_VERSION=22` en var de build)
@@ -30,9 +32,11 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 5.5: Portfolio Pro, Refonte Profil & Social** - Upload R2 (galerie projets), BDD completed_projects/likes, carousel landing, profil immersif pleine page (zéro menu, mobile-first). (completed 2026-07-19)
 - [x] **Phase 5.6: Calculateur de Prix & Refonte Simulateur** - Estimateur interactif (tuiles, type de travaux, m²), algorithme de chiffrage, et capture de leads qualifiés (résultat contre coordonnées). (completed 2026-07-19)
 - [x] **Phase 5.7: Durcissement Validation des Inputs** - Bornes maxlength/pattern alignées serveur (Zod) ↔ client (HTML) sur tous les formulaires + CHECK constraints DB. (completed 2026-07-20)
-- [x] **Phase 5.8: Tunnel B2B & Apporteurs d'Affaires** - Landing page partenaire ("Bras armé technique"), dépôt de plans/rapports expert, SLA de 4h, attestation décennale 1-clic pour syndics, archis et assureurs. (completed 2026-07-20)
+- [ ] **Phase 05.10: Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B)** - Landing page partenaire ("Bras armé technique"), tunnel 4 étapes, dépôt de plans/rapports expert via R2, SLA de 4h, notif équipe. (ex « Phase 5.8 », renommée pour lever la collision avec « 05.8 Enrichissement SIRET » — jamais implémentée, cf. spec client 2026-08-21)
+- [ ] **Phase 05.11: Coffre-Fort Juridique & Capacité Sous-traitance** - Table documents_artisan (KBIS/URSSAF/décennale + statuts API), switch alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois. (INSERTED 2026-08-21, directive client « immédiate »)
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
 - [ ] **Phase 06.1: Console Admin Opérationnelle** - Consolider et compléter l'admin : revue documents, gestion pros, projets/leads, analytics paywall, audit log. UI/UX de l'admin → passe design dédiée plus tard (voir Deferred).
+- [ ] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** - Dashboard des 5 KPIs (CAC, LTV/CAC, churn, matching, rétention prescripteurs, activation fournisseurs) + seuils vert/orange/rouge + Matomo (P1). (INSERTED 2026-08-21, spec client 2026-08-21)
 - [x] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
 - [ ] **Phase 8: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
@@ -232,15 +236,63 @@ Plans:
 **Plans**: TBD
 **UI hint**: no (durcissement de formulaires existants, pas de nouvelle UI)
 
-### Phase 5.8: Tunnel B2B & Apporteurs d'Affaires
-**Goal**: Déployer un Fast-Track dédié aux VIPs (Architectes, Syndics, Assureurs, Experts) avec un positionnement "Tiers de confiance / Courtier".
-**Depends on**: Phase 4.7
+### Phase 05.10: Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B) (RENOMMÉE — ex « Phase 5.8 »)
+
+**Goal:** Construire la landing `/partenaires` et le tunnel de conversion apporteurs d'affaires BTP (Architectes, BET, Agences immo, Syndics) : rassurer (positionnement « bras armé technique / tiers de confiance »), collecter les dossiers lourds (plans, CCTP, notes de calcul) via R2, alimenter le CRM interne et notifier l'équipe commerciale (engagement de rappel < 4h).
+
+**Contexte:** l'ancienne « Phase 5.8 Tunnel B2B » était marquée « Complete » au ROADMAP mais n'a **jamais été implémentée** (docs-only, commits `4883ad5` / `4b46d0e`). La « 05.8 » réellement livrée est l'**Enrichissement SIRET** (autre sujet). Renommage en `05.10` pour lever la collision. Spec complète : `.planning/clients/20260821-ESPACE_PARTENAIRES_APPORTEURS_AFFAIRES-SPEC_CLIENT.md`.
+
+**Depends on:** Phase 4.7 (design system), P2 Turnstile (upload public), Phase 06.1 (vue admin `b2b_requests`)
+
+**Requirements:** B2B-01 (landing), B2B-02 (tunnel 4 étapes), B2B-03 (upload R2 public), B2B-04 (CRM interne + notifs), B2B-05 (consentement RGPD), B2B-06 (human-in-the-loop DirCo)
+
 **Success Criteria** (what must be TRUE):
-  1. Une Landing Page dédiée "Espace Partenaires" positionne BÂTI-AXE comme un Hub d'artisans certifiés sans risque opérationnel.
-  2. Un tunnel en 3 étapes : Qualification Pro → Niveau de Risque/Lot → Dépôt express (Plans, CCTP, Rapports d'expertise).
-  3. L'acceptation des CGU dans le tunnel force le consentement explicite : BÂTI-AXE est courtier, l'artisan porte la décennale.
-  4. L'attestation décennale BÂTI-AXE est téléchargeable en un clic depuis cette page pour rassurer immédiatement le prescripteur.
-**Plans**: TBD
+  1. `/partenaires` accessible : hero, 4 promesses (cartes), badge « Conformité Automatisée », CTA ancré + lien header/footer.
+  2. Tunnel 4 étapes (profil → besoin → dépôt → coordonnées) ; « partenariat régulier » saute l'étape 3.
+  3. Pièces (PDF/DWG/DXF/PNG/JPG/ZIP/DOCX, ≤ 50 Mo) uploadées en R2 via presign public protégé (Turnstile), liens stockés dans `b2b_requests`.
+  4. Soumission → ligne `b2b_requests` + consentement journalisé (`consents`, source `b2b-prescripteur`) + email confirmation pro (Resend) + notif équipe (Resend, Slack webhook optionnel) → déclenche le rappel < 4h.
+  5. Vue admin liste/détail des demandes B2B avec statut pipeline (fusionnée avec la Phase 06.1).
+  6. Validation Zod ↔ HTML alignées (règle Phase 5.7) ; aucun fichier hors allow-list MIME accepté.
+  7. Workflow DirCo (human-in-the-loop) : un chargé d'affaires analyse le CCTP/dossier, qualifie le besoin et présente 2-3 sous-traitants validés au donneur d'ordres (statut pipeline + `assigned_to` dans `b2b_requests`).
+
+**Plans**: 7 plans (découpage proposé — à générer via `gsd-plan-phase`)
+Plans:
+- [ ] 05.10-01-PLAN.md — Schéma BDD : table `b2b_requests` + migration + types + RLS
+- [ ] 05.10-02-PLAN.md — Endpoint public `POST /api/v1/b2b/requests` (Zod + consentement + Turnstile P2)
+- [ ] 05.10-03-PLAN.md — Presign public R2 pièces jointes (allow-list MIME, 50 Mo, anti-abuse) + upload client
+- [ ] 05.10-04-PLAN.md — Landing `/partenaires` (hero, réassurance, badge) + lien header/footer
+- [ ] 05.10-05-PLAN.md — Tunnel 4 étapes (cartes profil, radio besoin, drop zone, coordonnées + GDPR)
+- [ ] 05.10-06-PLAN.md — Back-office `b2b_requests` + notif équipe (Resend/Slack) + email confirmation pro
+- [ ] 05.10-07-PLAN.md — Thank-you page + assets PDF (Book/Kit/attestation — dépend livrables client)
+- [ ] 05.10-08-PLAN.md — Workflow DirCo (qualification CCTP, sélection 2-3 sous-traitants, restitution au donneur d'ordres)
+
+**Hors phase (V1.1+):** Google Places autocomplete, simulateur macro agences immo (widget), CRM HubSpot/Pipedrive, notif WhatsApp, Compte Prescripteur (P8).
+**UI hint**: yes
+
+### Phase 05.11: Coffre-Fort Juridique & Capacité Sous-traitance (documents_artisan) (INSERTED 2026-08-21)
+
+**Goal:** Centraliser et vérifier les documents légaux des artisans (KBIS < 3 mois, Attestation vigilance URSSAF, Décennale avec activités souscrites) dans une table `documents_artisan`, et exposer la capacité de sous-traitance (`is_available_subcontracting`, `workforce_size`) pour préparer la bascule B2B Majors (pré-qualification administrative avant Phase 7).
+
+**Contexte:** directive « immédiate » du client (spec 2026-08-18 §2.4/§9.2) — ne pas attendre la Phase 7. Objectif : au basculement B2B, la base d'artisans est déjà pré-qualifiée → envoi de dossiers conformes en un clic. **Point à trancher en planification** : relation avec la table `verifications` existante (Kbis/décennale) — `documents_artisan` l'étend (URSSAF + statuts API) ou la remplace.
+
+**Depends on:** Phase 5 (badges SIRET/décennale), Phase 06.1 (vue admin documents)
+
+**Requirements:** B2B-SC-01 (table documents_artisan + statuts API), B2B-SC-02 (switch alerte capacité + effectif), B2B-SC-03 (suspension auto à expiration), B2B-SC-04 (devoir de vigilance 6 mois)
+
+**Success Criteria** (what must be TRUE):
+  1. Table `documents_artisan` (KBIS/URSSAF/décennale + `status` validation API + `expires_at`) + colonnes `is_available_subcontracting` (bool) et `workforce_size` (int) sur `professionals` (migration + types + RLS).
+  2. Un pro bascule « Alerte Capacité » et saisit son effectif mobilisable depuis `/espace/dashboard`.
+  3. Suspension automatique du profil (ou badge) dès qu'un document légal expire (check à la lecture ou cron pg_cron).
+  4. Re-contrôle tous les 6 mois (devoir de vigilance donneur d'ordres) tracé dans `documents_artisan` / `audit_logs`.
+  5. V1 = statuts manuels + dates d'expiration (pattern décennale Phase 5) ; API Infolégale/Paperless = V2.
+
+**Plans**: 4 plans (découpage proposé — à générer via `gsd-plan-phase`)
+Plans:
+- [ ] 05.11-01-PLAN.md — Migration `documents_artisan` + colonnes sous-traitance + types + RLS
+- [ ] 05.11-02-PLAN.md — Switch « Alerte Capacité » + effectif dans `/espace/dashboard` + endpoint PATCH
+- [ ] 05.11-03-PLAN.md — Suspension auto à expiration + re-contrôle 6 mois (devoir de vigilance)
+- [ ] 05.11-04-PLAN.md — Vue admin documents (statuts, expirations) — fusionnée Phase 06.1
+
 **UI hint**: yes
 
 ### Phase 05.9: Extension Simulateur — API Mes Aides Réno
@@ -281,14 +333,45 @@ Plans:
 **Plans**: TBD
 **UI hint**: no (fonctionnel d'abord, design dédié plus tard)
 
+### Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité (INSERTED 2026-08-21)
+
+**Goal:** Construire le dashboard de pilotage des 5 KPIs de scalabilité (CAC, LTV, LTV/CAC, churn, taux de matching, rétention prescripteurs, activation fournisseurs) avec seuils vert/orange/rouge, pour valider le pilote 78 avant expansion nationale (spec client 2026-08-21).
+
+**Contexte:** seul le funnel `paywall_events` (CNV-07) existe. Pas de tracking CAC/LTV/churn/matching/fournisseur. Le client propose PostHog/Mixpanel mais **Matomo a déjà été tranché (P1)** → Matomo pour le funnel + calculs KPI côté serveur (Supabase/Stripe) + affichage dans la console admin (P14).
+
+**Depends on:** Phase 06.1 (Console Admin), P1 (Matomo), P2 (Turnstile — données propres)
+
+**Requirements:** KPI-01 (CAC), KPI-02 (LTV + LTV/CAC), KPI-03 (churn), KPI-04 (matching + rétention prescripteurs), KPI-05 (activation fournisseurs)
+
+**Success Criteria** (what must be TRUE):
+  1. Churn calculé depuis Stripe (`customer.subscription.deleted`) + snapshot mensuel des payants — dashboard admin.
+  2. CAC calculé via table `acquisition_costs` (commissions freelance + frais marketing, saisie admin).
+  3. LTV (part abonnement) + LTV/CAC calculés ; commission B2B ajoutée à la formule quand P10 existera.
+  4. Taux de matching calculé sur la définition retenue (réponses pros ≥ 3 en 48h ou leads débloqués) — définition à trancher.
+  5. Rétention prescripteurs V1 = particuliers actifs (≥ 1 projet/mois) ; bascule vers `b2b_requests` (05.10) quand construit.
+  6. Activation fournisseurs = stub (dépend US-ART-03 / P11) — non bloquant.
+  7. Dashboard admin : 5 lignes rouges (vert/orange/rouge + action si rouge) + funnel Matomo (P1).
+
+**Plans**: 4 plans (découpage proposé — à générer via `gsd-plan-phase`)
+Plans:
+- [ ] 06.2-01-PLAN.md — Schéma BDD : `acquisition_costs` + `kpi_snapshots` + migration + types + RLS
+- [ ] 06.2-02-PLAN.md — Ingestion : coûts (saisie admin), churn (Stripe webhook), matching (projets → réponses pros)
+- [ ] 06.2-03-PLAN.md — Calculs KPI serveur (CAC/LTV/churn/matching/rétention/activation) + endpoint admin
+- [ ] 06.2-04-PLAN.md — Dashboard admin (5 lignes rouges) + intégration Matomo (P1)
+
+**UI hint**: yes
+
 ### Phase 7: Réputation & Scale
 **Goal**: Pérenniser la croissance par la preuve sociale et l'expansion géographique conditionnée aux métriques pilote.
 **Depends on**: Phase 6
-**Requirements**: REP-01, REP-02, SCL-01
+**Requirements**: REP-01, REP-02, SCL-01, SCL-02 (ouverture TP), ECO-01 (modèle hybride)
 **Success Criteria** (what must be TRUE):
   1. Un particulier peut laisser un avis sur un pro après attribution d'un chantier ; l'avis est affiché sur le profil public.
   2. Un pro peut inviter un collègue via un lien de parrainage ; les deux reçoivent 1 mois offert à l'activation.
   3. L'ouverture d'une nouvelle ville est conditionnée à : ≥3 pros Premium actifs + ≥10 projets qualifiés/mois sur Carrières-sous-Poissy.
+
+> **Sous-traitance B2B** (documents_artisan, alerte capacité) : voir **Phase 05.11**. **Ouverture TP** (VRD/terrassement/géomètres) + **modèle hybride** (forfait B2C + commission au succès B2B) : cf. spec 2026-08-18 §2.3/§2.4 — à intégrer au périmètre de la phase.
+
 **Plans**: TBD
 **UI hint**: yes
 
@@ -319,10 +402,13 @@ Plans:
 | 5.5. Portfolio Pro, Refonte Profil & Social | 8/8 | Complete   | 2026-07-19 |
 | 5.6. Calculateur de Prix & Refonte Simulateur | 3/3 | Complete   | 2026-07-19 |
 | 5.7. Durcissement Validation des Inputs | 2/2 | Complete   | 2026-07-20 |
-| 5.8. Tunnel B2B & Apporteurs d'Affaires | 3/3 | Complete   | 2026-07-20 |
+| 05.8 Enrichissement SIRET (forme juridique/NAF) | 3/3 | Complete | 2026-07-20 |
+| 05.10 Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B) | 0/TBD | Not started | - |
+| 05.11 Coffre-Fort Juridique & Capacité Sous-traitance | 0/TBD | Not started | - |
 | 6. Messagerie & Espace Client | 2/2 livrés (2 différés) | Complete | 2026-08-19 |
 | 05.9 Extension Simulateur Mes Aides Réno | 4/4 | Complete | 2026-08-18 |
 | 06.1 Console Admin Opérationnelle | 0/TBD | Planned | - |
+| 06.2 KPIs de Pilotage & Dashboard de Scalabilité | 0/TBD | Not started | - |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
 | 8. Architecture PWA Mobile-First | 0/TBD | Not started | - |
 
@@ -332,21 +418,28 @@ Items hors roadmap détectés en relisant les specs client (18/08 Arti-Box, 06/0
 
 | # | Item | Source | Pourquoi | Statut |
 |---|---|---|---|---|
-| P1 | **Analytics de conversion** (simulateur → lead → contact → chantier signé). **Décidé le 2026-08-19 : Matomo** (open-source, GDPR, données souveraines — fit marché FR). Déploiement : cloud Matomo au départ ; si Matomo doit couvrir plusieurs projets, **self-host sur le VPS du porteur de projet** (partie prenante). Axiom écarté (gestion de logs, pas analytics) | Avis mentor + décision utilisateur | Sans mesure, impossible de savoir si le pilote fonctionne — plus critique que l'admin | ✅ décidé — à implémenter |
-| P2 | **Anti-spam capture** — Turnstile (Cloudflare) sur `POST /projects` public | Checklist sécurité (optionnel → obligatoire) | Un bot flood tue la qualité du marché + la délivrabilité email | ❌ à faire |
+| P1 | **Analytics de conversion** (simulateur → lead → contact → chantier signé). **Décidé le 2026-08-19 : Matomo** (open-source, GDPR, données souveraines — fit marché FR). Déploiement : cloud Matomo au départ ; si Matomo doit couvrir plusieurs projets, **self-host sur le VPS du porteur de projet** (partie prenante). Axiom écarté (gestion de logs, pas analytics) | Avis mentor + décision utilisateur | Sans mesure, impossible de savoir si le pilote fonctionne — plus critique que l'admin | ✅ décidé — à implémenter (funnel → Phase 06.2) |
+| P2 | **Anti-spam capture** — Turnstile (Cloudflare) sur `POST /projects` public | Checklist sécurité (optionnel → obligatoire) | Un bot flood tue la qualité du marché + la délivrabilité email | ✅ code livré — **standby** (clés client, à créer sur son Cloudflare au transfert) |
 | P3 | **Stripe (checkout + webhook) + cron pg_cron 72h re-testés en prod** | Condition de livraison v0.9 | Jamais re-testés depuis Phase 4/4.5 ; vérifier que le job pg_cron existe bien en prod | ❌ à faire en premier |
 | P4 | **Notif pro nouveaux leads** — 2 temps : (1) email dès maintenant (léger, zéro install), (2) **Web Push API natif via la PWA** (Phase 8, `@vite-pwa/nuxt` + `web-push`/VAPID depuis Nitro — pas de service tiers) quand le pro opt-in + installe la PWA. Email = filet universel, push = expérience | Avis mentor | Active les pros du pilote sans les obliger à surveiller la liste | ❌ à faire (email) + Phase 8 (push) |
 | P5 | **Feedback loop refus → remise au marché** : testé ? | Avis mentor | Messagerie testée, ce chemin-là non | ❌ à tester |
 | P6 | **US-PAR-02 : étude de financement courtier partenaire** (1 CTA + envoi) | Spec 18/08 | Levier de monétisation simple | ❌ absent |
-| P7 | **Packs zonés** (Zone Unique / Département + engagement 12 mois, §6.1) | Spec 18/08 | Pricing actuel plat (mensuel/annuel) | ❌ absent |
+| P7 | **Packs zonés & exclusivité métier** — zone principale incluse + add-on par sous-zone + dégressif > 3 zones ; exclusivité **Département + Métier** ; tarifs : **Basic 150-200 € (5-10 leads) / Premium 300 € (flux total)** ; **charte d'exclusivité B2C** (contrat) (cahier v1.1 §4.1 révisé 08/08 + spec courtier 21/08) | Spec 06/08 + 18/08 + 21/08 | Pricing actuel plat (mensuel/annuel) | ❌ absent |
 | P8 | **Compte Prescripteur** (rôle BDD, « Mes dossiers clients », pipeline translucide, landing splitée, jauge anti-piège « Illimité » 40 leads/mois) | PIVOT-B2B v2 | Le pivot B2B n'est pas implémenté | ❌ absent |
 | P15 | **Messagerie temps réel (Supabase Realtime) — noté, PAS prioritaire** — le chat 1:1 pro↔demandeur reste en **polling actuel** (fonctionne). Si le temps réel devient requis un jour : **Supabase Realtime** (WebSocket natif Postgres, zéro infra à ajouter — PAS de Durable Objects : Workers-only + état en double avec la base, cf. analyse 2026-08-19). **Décision produit 2026-08-19** : on ne voit pas pro et demandeur discuter en ligne — 1-2 échanges de messages suffisent à convenir d'un appel, **le vrai objectif est le téléphone direct, d'où le déblocage premium** (coordonnées révélées au déblocage du lead). La messagerie reste un facilitateur, pas le cœur du produit | Décision utilisateur 2026-08-19 | Ne pas sur-investir dans le chat : le funnel réel est message → appel téléphonique (lead débloqué) | 📝 noté — polling OK |
 | P14 | **Monitoring & alerting — Axiom** — observabilité (logs, erreurs, alertes) des Workers/webhooks/API externes : si Mes Aides Réno tombe, le webhook Stripe échoue ou un endpoint 500, on doit le savoir. **Axiom ≠ Matomo** : Matomo (P1) = analytics produit (funnels), Axiom = logs/observabilité — complémentaires, pas concurrents. Cloud en premier ; self-host possible sur le VPS du porteur si besoin. **Vue monitoring intégrée à la console admin** (onglet observabilité : erreurs 4xx/5xx, latence, défaillances webhooks/API externes, uptime) + **alertes par email** (via Resend existant) quand un seuil est dépassé (ex : rate 500 > 0, webhook Stripe échoué, API aides injoignable) — décision utilisateur 2026-08-19 | Avis mentor (2026-08-19) | Le paywall Stripe mort a été découvert par hasard (404 silencieux) — un monitoring l'aurait détecté | ❌ à faire |
 | P13 | **Multi-déploiement white-label (Terraform)** — une instance par client (Cloudflare du client + domaine perso + Supabase dédié), **tous encaissant sur le MÊME Stripe du porteur** (pas de multi-tenant de paiement — cf. PIVOT-B2B §6). Fondation Terraform existante (`terraform/` : modules cloudflare_pages + supabase_project + platform, workspaces dev/staging/prod) ; à étendre avec un workspace par client + backend d'état isolé. L'instance actuelle reste la **démo du porteur** | Décision utilisateur 2026-08-19 | Modèle économique validé : un compte Stripe central (abonnements + commission + factures aux coordonnées BÂTI-AXE) | 📝 fondation existe — à étendre |
 | P9 | **Mobile QA landing + simulateur + états vides** (dashboard sans leads, espace client sans messages, erreurs/offline) | Spec 06/08 + avis mentor | 80% de la première impression d'un nouveau user | ❌ à faire |
 | P12 | **Page pro public « digne de ce nom »** — vitrine commerciale du pro (héro, preuve sociale, avis une fois Phase 7, CTA contact). Base Phase 5.5 existe (immersif, galerie, likes) mais à élever | Décision utilisateur 2026-08-19 | C'est ce que voient les particuliers avant de contacter un pro | ❌ à faire |
-| P10 | **Commission dégressive 8→2,5% + Stripe Connect** (§6.3/6.4) | Spec 18/08 / PIVOT-B2B | Documenté mais pas implémenté | 📝 doc only |
+| P10 | **Commission B2B + Stripe Connect** — ⚠️ **% à réconciler** (grille 8→2,5 % vs 5-10 % vs ex. 3 %) ; **contrat d'apport anti-contournement (12-24 mois)** ; recadrage PM : **facturation manuelle pour les 10 premiers chantiers** avant d'automatiser | Spec 18/08 + 21/08 | Documenté mais pas implémenté — ne pas sur-automatiser en phase 1 | 📝 doc only |
 | P11 | **Signature eIDAS** (Yousign/DocuSign, verrou commission) + **codes privilèges fournisseurs** (US-ART-03/04) + **workspace architecte** (§7) | Spec 18/08 | Différenciateurs Phase 7+ | ❌ Phase 7+ |
+| P16 | **Ouverture TP (Phase 2)** — apporteurs : géomètres-experts, promoteurs/aménageurs, économistes VRD, CMistes ; tunnel TP séparé (Bâtiment vs Infrastructures) + catégories (terrassement/enrochement, VRD/assainissement, démolition/désamiantage, voirie) + blindage technique (plan de masse, étude G2, bornage) ; barrières : parc machine + assurances dommages réseaux | Spec 17-18/08 + 21/08 | Différenciateur vs Arti-Box, paniers 10-100 k€+ | ❌ Phase 2 (après 78) |
+| P17 | **Modèle 2 piliers** — B2C = abonnement MRR (Stripe) + B2B = commission au succès 5-10 % | Spec 17-18/08 §2.3 + 21/08 | Affine le pricing plat actuel — à trancher avec P7/P10 | ❌ à trancher |
+| P18 | **Devoir de vigilance 6 mois** (re-contrôle des documents légaux) | Spec 17-18/08 §6.7 (légal) | Obligation donneur d'ordres ; aligné sur la suspension auto (Phase 05.11) | ❌ à faire (ops/05.11) |
+| P19 | **Diagnostiqueurs = apporteurs d'affaires** (type de compte + bouton « déposer un rapport » + commission fixe 15-20 €/lead) — ⚠️ **réversal** du « rejeté niche » (outil dictaphone, lui, reste différé) | Spec 21/08 | Source de leads DPE ultra-qualifiés, sature les départements | ❌ à faire |
+| P20 | **Passerelle B2B payante** — Ticket à l'acte (79 €) + Pack Elite/Corporate (450 €/mois : flux B2C illimité + postulation B2B) | Spec 21/08 | Étanchéité des flux B2C/B2B + filtre des pros sérieux | ❌ à faire (avec P7/P8) |
+| P21 | **Tunnel Sinistres / Assurances (REN)** — bouton « Déclarer un sinistre », tunnel 4 étapes (urgence, infos assurance, photos, SLA 48h), devis aux normes assurance (Sedgwick/Sia), positionnement Contractant Général | Spec 21/08 | Marché captif financé (assureurs), forte marge | ❌ à faire |
+| P22 | **Majors / Grands Comptes (Phase 3)** — tunnel « Je suis une Entreprise Générale / Major » (lot à sous-traiter, date démarrage, budget, dépôt CCTP/bordereau) ; promesse dispo 48h + zéro risque admin ; commission paliers (5 % → 2-3 % au-delà 100 k€) ; chasse directions régionales 78 (Nearby Leads Extractor) | Spec 21/08 | Sous-traitance second rang Vinci/Eiffage/Spie/Legendre/Léon Grosse | ❌ Phase 3 (après TP) |
 
 ## Deferred (post-lancement)
 
