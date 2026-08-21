@@ -176,6 +176,9 @@ const normalizePostalCode = (e: Event) => {
   form.postal_code = (e.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 5)
 }
 
+// P2 — token Cloudflare Turnstile (anti-spam), rempli par <TurnstileWidget>
+const turnstileToken = ref('')
+
 const handleSubmit = async () => {
   touched.name = true; touched.email = true; touched.phone = true
   if (!isStepValid.value) return
@@ -201,6 +204,7 @@ const handleSubmit = async () => {
         customer_phone: form.customer_phone.replace(/\s/g, ''),
         cgu_accepted:   form.cgu_accepted,
         sms_opt_in:     form.sms_opt_in,
+        turnstile_token: turnstileToken.value,
       }
     })
 
@@ -572,6 +576,8 @@ const handleSubmit = async () => {
               </span>
             </label>
           </div>
+
+          <TurnstileWidget v-if="step === totalSteps" @success="turnstileToken = $event" class="mt-4" />
 
           <div v-if="submitError" role="alert" class="flex items-start gap-2.5 p-3 border border-red-200 bg-red-50 rounded-sm text-sm text-red-700">
             <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

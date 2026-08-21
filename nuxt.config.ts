@@ -76,8 +76,12 @@ export default defineNuxtConfig({
     emailFrom: process.env.EMAIL_FROM || 'BÂTI-AXE <onboarding@resend.dev>',
     // Email d'onboarding pro (REQ-07) — off par défaut. Préfixe NUXT_ côté Cloudflare.
     onboardingEmails: process.env.ONBOARDING_EMAILS === 'true',
+    // P2 — Cloudflare Turnstile (anti-spam). Clé secrète côté serveur uniquement.
+    turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY,
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+      // P2 — clé publique Turnstile (rendue côté client).
+      turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '',
     }
   },
 
