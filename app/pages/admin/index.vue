@@ -47,7 +47,7 @@ const isLoading     = ref(true)
 const actionLoading = ref<string | null>(null)
 const errorMessage  = ref<string | null>(null)
 const professionals = ref<Professional[]>([])
-const activeTab       = ref<'pending' | 'all' | 'projects' | 'realisations'>('pending')
+const activeTab       = ref<'overview' | 'pending' | 'all' | 'projects' | 'realisations'>('overview')
 const categoryFilter  = ref<string>('')
 const expiryDates     = ref<Record<string, string>>({})
 
@@ -78,6 +78,21 @@ interface Realisation {
 }
 
 const realisations = ref<Realisation[]>([])
+
+// ─── Vue d'ensemble (KPIs) state ──────────────────────────────────────────────
+interface Overview {
+  professionals: { total: number; verified: number; pending: number; active_subscriptions: number }
+  projects: { total: number; qualified: number; pending: number }
+  leads: { total: number; unlocked: number }
+  paywall_30d: { paywall_view: number; checkout_started: number; checkout_completed: number }
+}
+const overview = ref<Overview | null>(null)
+
+const paywallConversion = computed(() => {
+  const f = overview.value?.paywall_30d
+  if (!f || !f.paywall_view) return 0
+  return Math.round((f.checkout_completed / f.paywall_view) * 100)
+})
 
 const sortedProjects = computed(() => {
   return [...projects.value].sort((a, b) => {
@@ -139,7 +154,16 @@ const fetchRealisations = async () => {
 }
 
 
-onMounted(() => { if (isAdmin.value) { fetchQueue(); fetchProjects(); fetchRealisations() } })
+const fetchOverview = async () => {
+  try {
+    const url: string = '/api/v1/admin/overview'
+    overview.value = await $fetch<Overview>(url)
+  } catch (err: any) {
+    errorMessage.value = err.data?.statusMessage || err.message
+  }
+}
+
+onMounted(() => { if (isAdmin.value) { fetchOverview(); fetchQueue(); fetchProjects(); fetchRealisations() } })
 
 // ─── Actions ──────────────────────────────────────────────────────────────────
 const viewDocument = async (fileKey: string) => {
@@ -280,6 +304,13 @@ const statusLabel: Record<string, string> = {
         </div>
         <div v-if="isAdmin" class="flex items-center gap-2">
           <button
+            @click="activeTab = 'overview'; categoryFilter = ''"
+            class="h-9 px-4 text-sm font-medium rounded-full border transition-colors"
+            :class="activeTab === 'overview' ? 'bg-safety text-white border-safety' : 'bg-white border-slate-200 text-muted-foreground hover:text-foreground hover:bg-muted'"
+          >
+            Vue d'ensemble
+          </button>
+          <button
             @click="activeTab = 'pending'; categoryFilter = ''"
             class="h-9 px-4 text-sm font-medium rounded-full border transition-colors"
             :class="activeTab === 'pending' ? 'bg-safety text-white border-safety' : 'bg-white border-slate-200 text-muted-foreground hover:text-foreground hover:bg-muted'"
@@ -353,7 +384,7 @@ const statusLabel: Record<string, string> = {
         </div>
 
         <!-- Pro cards (hidden when Projets/Réalisations tab is active) -->
-        <template v-if="activeTab !== 'projects' && activeTab !== 'realisations'">
+        <template v-if="activeTab === 'pending' || activeTab === 'all'">
         <div v-if="filtered.length === 0 && !isLoading" class="py-16 text-center border border-dashed border-slate-200 rounded-sm">
           <p class="text-sm text-muted-foreground">Aucun dossier {{ activeTab === 'pending' ? 'en attente' : '' }}.</p>
         </div>
@@ -518,6 +549,48 @@ const statusLabel: Record<string, string> = {
             </div>
           </div>
         </div>
+        </template>
+
+        <!-- Vue d'ensemble (KPIs) -->
+        <template v-if="activeTab === 'overview'">
+          <div v-if="overview" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+
+            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-sm">
+              <p class="text-xs text-muted-foreground mb-2">Pros vérifiés</p>
+              <p class="text-3xl font-bold text-slate-900">{{ overview.professionals.verified }}<span class="text-base font-medium text-muted-foreground"> / {{ overview.professionals.total }}</span></p>
+              <p v-if="overview.professionals.pending" class="text-xs text-amber-700 mt-2">{{ overview.professionals.pending }} en attente</p>
+              <p v-else class="text-xs text-muted-foreground mt-2">Aucun en attente</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-sm">
+              <p class="text-xs text-muted-foreground mb-2">Projets qualifiés</p>
+              <p class="text-3xl font-bold text-slate-900">{{ overview.projects.qualified }}<span class="text-base font-medium text-muted-foreground"> / {{ overview.projects.total }}</span></p>
+              <p class="text-xs text-muted-foreground mt-2">{{ overview.projects.pending }} en attente</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-sm">
+              <p class="text-xs text-muted-foreground mb-2">Leads débloqués</p>
+              <p class="text-3xl font-bold text-slate-900">{{ overview.leads.unlocked }}<span class="text-base font-medium text-muted-foreground"> / {{ overview.leads.total }}</span></p>
+              <p class="text-xs text-muted-foreground mt-2">Coordonnées accessibles</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-sm">
+              <p class="text-xs text-muted-foreground mb-2">Abonnés actifs</p>
+              <p class="text-3xl font-bold text-slate-900">{{ overview.professionals.active_subscriptions }}</p>
+              <p class="text-xs text-muted-foreground mt-2">MRR en cours</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-sm">
+              <p class="text-xs text-muted-foreground mb-2">Conversion paywall (30j)</p>
+              <p class="text-3xl font-bold text-safety">{{ paywallConversion }}%</p>
+              <p class="text-xs text-muted-foreground mt-2">{{ overview.paywall_30d.checkout_completed }} checkout / {{ overview.paywall_30d.paywall_view }} vues</p>
+            </div>
+
+          </div>
+
+          <div v-if="!overview && !isLoading" class="py-16 text-center border border-dashed border-slate-200 rounded-sm">
+            <p class="text-sm text-muted-foreground">Aucune donnée agrégée pour l'instant.</p>
+          </div>
         </template>
 
         <!-- Projects tab -->

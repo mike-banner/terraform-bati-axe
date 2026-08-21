@@ -352,6 +352,23 @@ useHead(() => ({
               {{ legalFormLabel(pro!.siret_legal_form) }}
             </template>
           </p>
+
+          <!-- CTA contact (hero) -->
+          <div class="flex flex-wrap items-center gap-3 mt-6 sm:mt-8">
+            <NuxtLink
+              to="/simulateur"
+              class="inline-flex items-center gap-2 h-12 px-6 bg-safety text-white text-sm font-bold rounded-full shadow-xl shadow-safety/20 hover:bg-orange-600 transition-colors"
+            >
+              Demander un devis
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+            </NuxtLink>
+            <a
+              href="#portfolio"
+              class="inline-flex items-center gap-2 h-12 px-6 bg-white/10 backdrop-blur-md text-white text-sm font-semibold rounded-full border border-white/15 hover:bg-white/20 transition-colors"
+            >
+              Voir les réalisations
+            </a>
+          </div>
           </div>
         </div>
       </div>
@@ -403,7 +420,7 @@ useHead(() => ({
 
 
         <!-- PORTFOLIO GRID -->
-        <div class="pt-4">
+        <div id="portfolio" class="pt-4 scroll-mt-24">
           <div class="flex items-end justify-between mb-10">
             <div>
               <h2 class="text-3xl font-black tracking-tight text-slate-900">Portfolio</h2>
