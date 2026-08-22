@@ -10,6 +10,8 @@ interface Pro {
   siret_company_name?: string | null
   siret_legal_form?: string | null
   siret_naf_code?: string | null
+  is_available_subcontracting?: boolean
+  workforce_size?: number | null
 }
 interface Verif {
   document_type: string; status: string; expiry_date: string | null; created_at: string
@@ -45,7 +47,7 @@ async function loadProData() {
     }
     const [{ data: proData, error: proErr }, { data: verifData, error: verifErr }] = await Promise.all([
       supabase.from('professionals')
-        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, siret_legal_form, siret_naf_code, created_at, categories, subscription_status, bio, logo_url')
+        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, siret_legal_form, siret_naf_code, created_at, categories, subscription_status, bio, logo_url, is_available_subcontracting, workforce_size')
         .eq('id', uid).maybeSingle(),
       supabase.from('verifications')
         .select('document_type, status, expiry_date, created_at, file_key, reviewed_at')
@@ -111,6 +113,38 @@ const uploads = reactive({
   decennale: { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '',
     policyNumber: '', expirationDate: '' },
 })
+
+// ─── Capacité sous-traitance (05.11-02) ─────────────────────────────────────
+const capacity = reactive({ saving: false, available: false, workforce: '' })
+
+watch(() => pro.value, (p) => {
+  if (p) {
+    capacity.available = p.is_available_subcontracting === true
+    capacity.workforce = p.workforce_size != null ? String(p.workforce_size) : ''
+  }
+}, { immediate: true })
+
+async function saveCapacity() {
+  capacity.saving = true
+  try {
+    const workforce = capacity.workforce === '' ? null : Number(capacity.workforce)
+    if (workforce != null && (!Number.isInteger(workforce) || workforce < 1 || workforce > 999)) {
+      throw new Error('Effectif invalide (1 à 999).')
+    }
+    await $fetch('/api/v1/pro/profile/me', {
+      method: 'PATCH',
+      body: { is_available_subcontracting: capacity.available, workforce_size: workforce },
+    })
+    if (pro.value) {
+      pro.value.is_available_subcontracting = capacity.available
+      pro.value.workforce_size = workforce
+    }
+  } catch (err: any) {
+    alert(err.data?.statusMessage || err.message || 'Erreur de sauvegarde.')
+  } finally {
+    capacity.saving = false
+  }
+}
 
 function onFileSelect(e: Event, type: 'kbis' | 'decennale') {
   const f = (e.target as HTMLInputElement).files?.[0]
@@ -363,6 +397,48 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
           </p>
         </div>
       </div>
+
+        <!-- ─── Capacité sous-traitance (05.11-02) ───── -->
+        <div class="bento-card rounded-sm p-6 border border-slate-200 bg-white shadow-sm">
+          <div class="flex items-center justify-between gap-3 mb-1">
+            <div>
+              <p class="text-sm font-semibold text-foreground">Capacité sous-traitance</p>
+              <p class="text-xs text-muted-foreground mt-0.5">Pré-qualification pour les dossiers B2B (apporteurs d'affaires, majors).</p>
+            </div>
+            <button
+              type="button"
+              @click="capacity.available = !capacity.available"
+              class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-safety/50"
+              :class="capacity.available ? 'bg-safety' : 'bg-slate-300'"
+              role="switch"
+              :aria-checked="capacity.available"
+            >
+              <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform" :class="capacity.available ? 'translate-x-6' : 'translate-x-1'" />
+            </button>
+          </div>
+          <label class="block text-xs font-medium text-foreground mt-4 mb-1.5">Effectif mobilisable <span class="text-muted-foreground font-normal">(1 à 999)</span></label>
+          <div class="flex items-center gap-3">
+            <input
+              v-model="capacity.workforce"
+              type="number"
+              min="1"
+              max="999"
+              inputmode="numeric"
+              maxlength="3"
+              placeholder="Ex. 12"
+              class="w-28 h-10 px-3 text-sm rounded-sm border border-slate-300 bg-white text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-safety"
+            />
+            <button
+              @click="saveCapacity"
+              :disabled="capacity.saving"
+              class="inline-flex items-center h-10 px-4 text-sm font-semibold rounded-sm bg-safety text-white hover:opacity-90 transition-opacity disabled:opacity-40"
+            >
+              <svg v-if="capacity.saving" class="w-4 h-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+              Enregistrer
+            </button>
+          </div>
+          <p class="text-[11px] text-muted-foreground mt-2">La capacité est automatiquement désactivée si un document légal (KBIS, URSSAF, décennale) expire.</p>
+        </div>
         </div>
 
         <!-- COLONNE DROITE (Checklist - 40%) -->

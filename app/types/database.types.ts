@@ -7,6 +7,11 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
   graphql_public: {
     Tables: {
       [_ in never]: never
@@ -64,6 +69,125 @@ export type Database = {
         }
         Relationships: []
       }
+      b2b_requests: {
+        Row: {
+          apporteur_type: Database["public"]["Enums"]["b2b_apporteur_type"]
+          assigned_to: string | null
+          budget_range: Database["public"]["Enums"]["b2b_budget_range"] | null
+          consent_accepted: boolean
+          consent_at: string | null
+          consent_ip: string | null
+          consent_source: string | null
+          contact_company: string | null
+          contact_email: string
+          contact_name: string
+          contact_phone: string
+          created_at: string | null
+          files: Json | null
+          id: string
+          need_type: Database["public"]["Enums"]["b2b_need_type"]
+          notes: string | null
+          planning_end: string | null
+          planning_start: string | null
+          project_location: string | null
+          qualifications_requises: string[]
+          recommended_pros: string[]
+          status: Database["public"]["Enums"]["b2b_request_status"]
+          updated_at: string | null
+        }
+        Insert: {
+          apporteur_type: Database["public"]["Enums"]["b2b_apporteur_type"]
+          assigned_to?: string | null
+          budget_range?: Database["public"]["Enums"]["b2b_budget_range"] | null
+          consent_accepted?: boolean
+          consent_at?: string | null
+          consent_ip?: string | null
+          consent_source?: string | null
+          contact_company?: string | null
+          contact_email: string
+          contact_name: string
+          contact_phone: string
+          created_at?: string | null
+          files?: Json | null
+          id?: string
+          need_type?: Database["public"]["Enums"]["b2b_need_type"]
+          notes?: string | null
+          planning_end?: string | null
+          planning_start?: string | null
+          project_location?: string | null
+          qualifications_requises?: string[]
+          recommended_pros?: string[]
+          status?: Database["public"]["Enums"]["b2b_request_status"]
+          updated_at?: string | null
+        }
+        Update: {
+          apporteur_type?: Database["public"]["Enums"]["b2b_apporteur_type"]
+          assigned_to?: string | null
+          budget_range?: Database["public"]["Enums"]["b2b_budget_range"] | null
+          consent_accepted?: boolean
+          consent_at?: string | null
+          consent_ip?: string | null
+          consent_source?: string | null
+          contact_company?: string | null
+          contact_email?: string
+          contact_name?: string
+          contact_phone?: string
+          created_at?: string | null
+          files?: Json | null
+          id?: string
+          need_type?: Database["public"]["Enums"]["b2b_need_type"]
+          notes?: string | null
+          planning_end?: string | null
+          planning_start?: string | null
+          project_location?: string | null
+          qualifications_requises?: string[]
+          recommended_pros?: string[]
+          status?: Database["public"]["Enums"]["b2b_request_status"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      completed_projects: {
+        Row: {
+          city: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_urls: string[]
+          is_showcased: boolean
+          professional_id: string
+          title: string
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_urls?: string[]
+          is_showcased?: boolean
+          professional_id: string
+          title: string
+        }
+        Update: {
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_urls?: string[]
+          is_showcased?: boolean
+          professional_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "completed_projects_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       consents: {
         Row: {
           cgu_version: string | null
@@ -106,6 +230,56 @@ export type Database = {
         }
         Relationships: []
       }
+      documents_artisan: {
+        Row: {
+          activities_subscribed: string[]
+          created_at: string | null
+          doc_type: Database["public"]["Enums"]["artisan_doc_type"]
+          expires_at: string | null
+          file_key: string | null
+          id: string
+          last_reviewed_at: string | null
+          professional_id: string
+          status: Database["public"]["Enums"]["artisan_doc_status"]
+          updated_at: string | null
+          validated_by_api: boolean
+        }
+        Insert: {
+          activities_subscribed?: string[]
+          created_at?: string | null
+          doc_type: Database["public"]["Enums"]["artisan_doc_type"]
+          expires_at?: string | null
+          file_key?: string | null
+          id?: string
+          last_reviewed_at?: string | null
+          professional_id: string
+          status?: Database["public"]["Enums"]["artisan_doc_status"]
+          updated_at?: string | null
+          validated_by_api?: boolean
+        }
+        Update: {
+          activities_subscribed?: string[]
+          created_at?: string | null
+          doc_type?: Database["public"]["Enums"]["artisan_doc_type"]
+          expires_at?: string | null
+          file_key?: string | null
+          id?: string
+          last_reviewed_at?: string | null
+          professional_id?: string
+          status?: Database["public"]["Enums"]["artisan_doc_status"]
+          updated_at?: string | null
+          validated_by_api?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_artisan_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       free_lead_grants: {
         Row: {
           granted_at: string
@@ -142,9 +316,73 @@ export type Database = {
           },
         ]
       }
+      kpi_snapshots: {
+        Row: {
+          cac: number | null
+          canceled_artisans: number | null
+          churn_rate: number | null
+          created_at: string | null
+          department_code: string
+          id: string
+          ltv: number | null
+          ltv_cac_ratio: number | null
+          matched_projects: number | null
+          matching_rate: number | null
+          new_paid_artisans: number | null
+          period_end: string
+          period_start: string
+          retention_rate: number | null
+          supplier_activation_rate: number | null
+          total_marketing_spend: number | null
+          total_paid_artisans: number | null
+          total_projects: number | null
+        }
+        Insert: {
+          cac?: number | null
+          canceled_artisans?: number | null
+          churn_rate?: number | null
+          created_at?: string | null
+          department_code?: string
+          id?: string
+          ltv?: number | null
+          ltv_cac_ratio?: number | null
+          matched_projects?: number | null
+          matching_rate?: number | null
+          new_paid_artisans?: number | null
+          period_end: string
+          period_start: string
+          retention_rate?: number | null
+          supplier_activation_rate?: number | null
+          total_marketing_spend?: number | null
+          total_paid_artisans?: number | null
+          total_projects?: number | null
+        }
+        Update: {
+          cac?: number | null
+          canceled_artisans?: number | null
+          churn_rate?: number | null
+          created_at?: string | null
+          department_code?: string
+          id?: string
+          ltv?: number | null
+          ltv_cac_ratio?: number | null
+          matched_projects?: number | null
+          matching_rate?: number | null
+          new_paid_artisans?: number | null
+          period_end?: string
+          period_start?: string
+          retention_rate?: number | null
+          supplier_activation_rate?: number | null
+          total_marketing_spend?: number | null
+          total_paid_artisans?: number | null
+          total_projects?: number | null
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           created_at: string | null
+          customer_decision: string
           id: string
           pro_id: string
           project_id: string
@@ -153,6 +391,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          customer_decision?: string
           id?: string
           pro_id: string
           project_id: string
@@ -161,6 +400,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          customer_decision?: string
           id?: string
           pro_id?: string
           project_id?: string
@@ -183,6 +423,68 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      likes: {
+        Row: {
+          created_at: string
+          id: string
+          ip_hash: string
+          project_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_hash: string
+          project_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_hash?: string
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "likes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "completed_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketing_spend_logs: {
+        Row: {
+          amount: number
+          channel: string
+          created_at: string | null
+          created_by: string | null
+          department_code: string
+          description: string | null
+          id: string
+          logged_date: string
+        }
+        Insert: {
+          amount: number
+          channel: string
+          created_at?: string | null
+          created_by?: string | null
+          department_code: string
+          description?: string | null
+          id?: string
+          logged_date?: string
+        }
+        Update: {
+          amount?: number
+          channel?: string
+          created_at?: string | null
+          created_by?: string | null
+          department_code?: string
+          description?: string | null
+          id?: string
+          logged_date?: string
+        }
+        Relationships: []
       }
       messages: {
         Row: {
@@ -277,6 +579,7 @@ export type Database = {
           free_leads_used: number
           full_name: string
           id: string
+          is_available_subcontracting: boolean
           is_claimed: boolean | null
           is_verified: boolean | null
           labels: Json | null
@@ -286,14 +589,17 @@ export type Database = {
           postal_code: string | null
           short_id: string
           siret: string
+          siret_address: string | null
           siret_company_name: string | null
           siret_legal_form: string | null
           siret_naf_code: string | null
           siret_status: string | null
+          siret_verified_at: string | null
           stripe_customer_id: string | null
           subscription_status:
             | Database["public"]["Enums"]["subscription_status"]
             | null
+          workforce_size: number | null
           zone: string | null
           zone_id: string | null
         }
@@ -311,6 +617,7 @@ export type Database = {
           free_leads_used?: number
           full_name: string
           id: string
+          is_available_subcontracting?: boolean
           is_claimed?: boolean | null
           is_verified?: boolean | null
           labels?: Json | null
@@ -320,14 +627,17 @@ export type Database = {
           postal_code?: string | null
           short_id: string
           siret: string
+          siret_address?: string | null
           siret_company_name?: string | null
           siret_legal_form?: string | null
           siret_naf_code?: string | null
           siret_status?: string | null
+          siret_verified_at?: string | null
           stripe_customer_id?: string | null
           subscription_status?:
             | Database["public"]["Enums"]["subscription_status"]
             | null
+          workforce_size?: number | null
           zone?: string | null
           zone_id?: string | null
         }
@@ -345,6 +655,7 @@ export type Database = {
           free_leads_used?: number
           full_name?: string
           id?: string
+          is_available_subcontracting?: boolean
           is_claimed?: boolean | null
           is_verified?: boolean | null
           labels?: Json | null
@@ -354,14 +665,17 @@ export type Database = {
           postal_code?: string | null
           short_id?: string
           siret?: string
+          siret_address?: string | null
           siret_company_name?: string | null
           siret_legal_form?: string | null
           siret_naf_code?: string | null
           siret_status?: string | null
+          siret_verified_at?: string | null
           stripe_customer_id?: string | null
           subscription_status?:
             | Database["public"]["Enums"]["subscription_status"]
             | null
+          workforce_size?: number | null
           zone?: string | null
           zone_id?: string | null
         }
@@ -379,6 +693,7 @@ export type Database = {
         Row: {
           access_token: string | null
           budget_range: string
+          calculator_data: Json | null
           category: string
           created_at: string | null
           customer_email: string
@@ -386,6 +701,7 @@ export type Database = {
           customer_phone: string
           description: string
           id: string
+          last_relaunched_at: string | null
           location: unknown
           postal_code: string
           qualify_budget: boolean
@@ -393,6 +709,7 @@ export type Database = {
           qualify_phone: boolean
           qualify_returning: boolean
           qualify_score: number
+          relaunch_count: number
           retention_until: string
           status: string
           timeline_range: string | null
@@ -401,6 +718,7 @@ export type Database = {
         Insert: {
           access_token?: string | null
           budget_range: string
+          calculator_data?: Json | null
           category: string
           created_at?: string | null
           customer_email: string
@@ -408,6 +726,7 @@ export type Database = {
           customer_phone: string
           description: string
           id?: string
+          last_relaunched_at?: string | null
           location?: unknown
           postal_code: string
           qualify_budget?: boolean
@@ -415,6 +734,7 @@ export type Database = {
           qualify_phone?: boolean
           qualify_returning?: boolean
           qualify_score?: number
+          relaunch_count?: number
           retention_until?: string
           status?: string
           timeline_range?: string | null
@@ -423,6 +743,7 @@ export type Database = {
         Update: {
           access_token?: string | null
           budget_range?: string
+          calculator_data?: Json | null
           category?: string
           created_at?: string | null
           customer_email?: string
@@ -430,6 +751,7 @@ export type Database = {
           customer_phone?: string
           description?: string
           id?: string
+          last_relaunched_at?: string | null
           location?: unknown
           postal_code?: string
           qualify_budget?: boolean
@@ -437,6 +759,7 @@ export type Database = {
           qualify_phone?: boolean
           qualify_returning?: boolean
           qualify_score?: number
+          relaunch_count?: number
           retention_until?: string
           status?: string
           timeline_range?: string | null
@@ -591,6 +914,7 @@ export type Database = {
           expiry_date: string | null
           file_key: string
           id: string
+          policy_number: string | null
           pro_id: string
           reviewed_at: string | null
           reviewed_by: string | null
@@ -602,6 +926,7 @@ export type Database = {
           expiry_date?: string | null
           file_key: string
           id?: string
+          policy_number?: string | null
           pro_id: string
           reviewed_at?: string | null
           reviewed_by?: string | null
@@ -613,6 +938,7 @@ export type Database = {
           expiry_date?: string | null
           file_key?: string
           id?: string
+          policy_number?: string | null
           pro_id?: string
           reviewed_at?: string | null
           reviewed_by?: string | null
@@ -707,6 +1033,14 @@ export type Database = {
           f_table_schema?: unknown
           srid?: number | null
           type?: string | null
+        }
+        Relationships: []
+      }
+      view_kpi_matching_48h: {
+        Row: {
+          matched_projects: number | null
+          matching_rate_pct: number | null
+          total_projects: number | null
         }
         Relationships: []
       }
@@ -872,6 +1206,7 @@ export type Database = {
         | { Args: { table_name: string }; Returns: string }
       enablelongtransactions: { Args: never; Returns: string }
       equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
+      expire_artisan_documents: { Args: never; Returns: undefined }
       geometry: { Args: { "": string }; Returns: unknown }
       geometry_above: {
         Args: { geom1: unknown; geom2: unknown }
@@ -1595,6 +1930,7 @@ export type Database = {
         Args: { geom: unknown; move: number; wrap: number }
         Returns: unknown
       }
+      sync_professional_subcontracting: { Args: never; Returns: undefined }
       unlockrows: { Args: { "": string }; Returns: number }
       updategeometrysrid: {
         Args: {
@@ -1608,12 +1944,30 @@ export type Database = {
       }
     }
     Enums: {
+      artisan_doc_status: "pending" | "valid" | "expired" | "suspended"
+      artisan_doc_type: "kbis" | "urssaf" | "decennale"
       audit_action:
         | "lead_unlocked"
         | "doc_validated"
         | "prospect_converted"
         | "project_created"
         | "consent_updated"
+        | "showcase_toggled"
+      b2b_apporteur_type:
+        | "architecte"
+        | "bet"
+        | "agence_immo"
+        | "syndic"
+        | "autre"
+      b2b_budget_range: "<30k" | "30-100k" | "100-300k" | ">300k"
+      b2b_need_type: "projet_immediat" | "partenariat_regulier"
+      b2b_request_status:
+        | "nouveau"
+        | "en_cours"
+        | "rappele"
+        | "qualifie"
+        | "converti"
+        | "perdu"
       consent_channel: "email" | "sms" | "cgu" | "cookies"
       consent_status: "granted" | "revoked"
       decennal_status: "pending" | "valid" | "expired" | "none"
@@ -1761,12 +2115,32 @@ export const Constants = {
   },
   public: {
     Enums: {
+      artisan_doc_status: ["pending", "valid", "expired", "suspended"],
+      artisan_doc_type: ["kbis", "urssaf", "decennale"],
       audit_action: [
         "lead_unlocked",
         "doc_validated",
         "prospect_converted",
         "project_created",
         "consent_updated",
+        "showcase_toggled",
+      ],
+      b2b_apporteur_type: [
+        "architecte",
+        "bet",
+        "agence_immo",
+        "syndic",
+        "autre",
+      ],
+      b2b_budget_range: ["<30k", "30-100k", "100-300k", ">300k"],
+      b2b_need_type: ["projet_immediat", "partenariat_regulier"],
+      b2b_request_status: [
+        "nouveau",
+        "en_cours",
+        "rappele",
+        "qualifie",
+        "converti",
+        "perdu",
       ],
       consent_channel: ["email", "sms", "cgu", "cookies"],
       consent_status: ["granted", "revoked"],
@@ -1780,4 +2154,3 @@ export const Constants = {
     },
   },
 } as const
-

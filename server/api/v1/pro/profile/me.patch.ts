@@ -10,6 +10,9 @@ const patchSchema = z.object({
   phone: z.string().regex(/^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone français invalide.').max(20).nullable().optional(),
   categories: z.array(z.enum(VALID_CATEGORIES, { message: 'Catégorie invalide.' })).optional(),
   logo_url: z.string().url('URL de logo invalide.').nullable().optional(),
+  // 05.11-02 — Capacité sous-traitance (B2B-SC-02)
+  is_available_subcontracting: z.boolean().optional(),
+  workforce_size: z.number().int('Effectif invalide.').min(1, 'Effectif minimum 1.').max(999, 'Effectif maximum 999.').nullable().optional(),
 }).strict()
 
 export default defineEventHandler(async (event) => {
@@ -22,6 +25,7 @@ export default defineEventHandler(async (event) => {
   if (body.zone === '') body.zone = null
   if (body.logo_url === '') body.logo_url = null
   if (body.phone === '') body.phone = null
+  if (body.workforce_size === '') body.workforce_size = null
   
   // Backwards compatibility during transition
   if (body.category !== undefined && body.categories === undefined) {
@@ -45,7 +49,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: pro } = await supabase
     .from('professionals')
-    .select('id, canonical_slug, short_id, postal_code, categories, bio, zone, phone, logo_url, company_name, full_name, is_verified, subscription_status')
+    .select('id, canonical_slug, short_id, postal_code, categories, bio, zone, phone, logo_url, company_name, full_name, is_verified, subscription_status, is_available_subcontracting, workforce_size')
     .eq('id', user.id)
     .single()
 
