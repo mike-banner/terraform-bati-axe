@@ -15,6 +15,7 @@ const isAdmin = computed(() => (user.value as any)?.app_metadata?.role === 'admi
 const espaceLink = computed(() => isAdmin.value ? '/admin' : '/espace/dashboard')
 
 const route = useRoute()
+const isPartenairesPage = computed(() => route.path === '/b2b/partenaires')
 const onSimulateur = computed(() => route.path === '/simulateur')
 </script>
 
@@ -27,7 +28,7 @@ const onSimulateur = computed(() => route.path === '/simulateur')
         </NuxtLink>
         <nav class="flex items-center gap-2">
           <template v-if="user">
-            <NuxtLink v-if="!isAdmin" to="/b2b/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Partenaires</NuxtLink>
+            <NuxtLink v-if="!isAdmin && !isPartenairesPage" to="/b2b/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Partenaires</NuxtLink>
             <NuxtLink :to="espaceLink" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Mon espace</NuxtLink>
             <button class="flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-sm border border-border hover:bg-muted transition-colors" @click="signOut">
               <span class="flex items-center justify-center w-6 h-6 rounded-full bg-foreground text-background text-xs font-bold">{{ userInitial }}</span>
@@ -35,7 +36,7 @@ const onSimulateur = computed(() => route.path === '/simulateur')
             </button>
           </template>
           <template v-else>
-            <NuxtLink to="/b2b/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Partenaires</NuxtLink>
+            <NuxtLink v-if="!isPartenairesPage" to="/b2b/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Partenaires</NuxtLink>
             <NuxtLink to="/pro/claim" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Se connecter</NuxtLink>
             <NuxtLink
               v-if="!onSimulateur"
