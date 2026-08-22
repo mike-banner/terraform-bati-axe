@@ -22,9 +22,23 @@ interface B2bRequest {
   status: 'nouveau' | 'en_cours' | 'rappele' | 'qualifie' | 'converti' | 'perdu'
   assigned_to: string | null
   notes: string | null
+  // 05.10-08 — Qualification DirCo
+  qualifications_requises: string[]
+  planning_start: string | null
+  planning_end: string | null
+  recommended_pros: string[]
   created_at: string
   updated_at: string
   assigned?: { email: string } | null
+}
+
+interface B2bPro {
+  id: string
+  company_name: string
+  full_name: string
+  category: string | null
+  canonical_slug: string | null
+  postal_code: string | null
 }
 
 const APPORTEUR_LABELS: Record<string, string> = {
@@ -69,17 +83,23 @@ const STATUS_COLORS: Record<string, string> = {
 
 const requests = ref<B2bRequest[]>([])
 const admins = ref<{ id: string; email: string }[]>([])
+const professionals = ref<B2bPro[]>([])
 const isLoading = ref(true)
 const errorMessage = ref<string | null>(null)
 const statusFilter = ref<string>('all')
 const expandedId = ref<string | null>(null)
 const savingId = ref<string | null>(null)
+const restitutionId = ref<string | null>(null)
 
 // Formulaires par demande (sans muter les props reçues)
 interface B2bDraft {
   status: string
   assigned_to: string
   notes: string
+  qualifications: string
+  planning_start: string
+  planning_end: string
+  recommended: string[]
 }
 
 const draft = reactive<Record<string, B2bDraft>>({})
@@ -93,6 +113,10 @@ function ensureDraft(id: string): B2bDraft {
       status: r?.status || 'nouveau',
       assigned_to: r?.assigned_to || '',
       notes: r?.notes || '',
+      qualifications: (r?.qualifications_requises || []).join(', '),
+      planning_start: r?.planning_start || '',
+      planning_end: r?.planning_end || '',
+      recommended: [...(r?.recommended_pros || [])],
     }
     draft[id] = d
   }
@@ -109,14 +133,19 @@ async function fetchRequests() {
   isLoading.value = true
   errorMessage.value = null
   try {
-    const data = await $fetch<{ requests: B2bRequest[]; admins: { id: string; email: string }[] }>('/api/v1/admin/b2b-requests')
+    const data = await $fetch<{ requests: B2bRequest[]; admins: { id: string; email: string }[]; professionals: B2bPro[] }>('/api/v1/admin/b2b-requests')
     requests.value = data.requests
     admins.value = data.admins
+    professionals.value = data.professionals || []
     for (const r of data.requests) {
       draft[r.id] = {
         status: r.status,
         assigned_to: r.assigned_to || '',
         notes: r.notes || '',
+        qualifications: (r.qualifications_requises || []).join(', '),
+        planning_start: r.planning_start || '',
+        planning_end: r.planning_end || '',
+        recommended: [...(r.recommended_pros || [])],
       }
     }
     if (!expandedId.value && data.requests.length > 0) {
@@ -144,6 +173,13 @@ async function saveChanges(r: B2bRequest) {
   if ((d.assigned_to || null) !== (r.assigned_to || null)) payload.assigned_to = d.assigned_to || null
   if (d.notes !== (r.notes || '')) payload.notes = d.notes
 
+  // Qualification DirCo (05.10-08)
+  const quals = d.qualifications.split(',').map(s => s.trim()).filter(Boolean)
+  if (JSON.stringify(quals) !== JSON.stringify(r.qualifications_requises || [])) payload.qualifications_requises = quals
+  if (d.planning_start !== (r.planning_start || '')) payload.planning_start = d.planning_start || null
+  if (d.planning_end !== (r.planning_end || '')) payload.planning_end = d.planning_end || null
+  if (JSON.stringify(d.recommended) !== JSON.stringify(r.recommended_pros || [])) payload.recommended_pros = d.recommended
+
   if (Object.keys(payload).length === 0) {
     savingId.value = null
     return
@@ -159,6 +195,26 @@ async function saveChanges(r: B2bRequest) {
     errorMessage.value = err.data?.statusMessage || err.message || 'Erreur de sauvegarde.'
   } finally {
     savingId.value = null
+  }
+}
+
+function togglePro(r: B2bRequest, proId: string) {
+  const d = ensureDraft(r.id)
+  const idx = d.recommended.indexOf(proId)
+  if (idx >= 0) d.recommended.splice(idx, 1)
+  else if (d.recommended.length < 3) d.recommended.push(proId)
+}
+
+async function sendRestitution(r: B2bRequest) {
+  restitutionId.value = r.id
+  errorMessage.value = null
+  try {
+    await $fetch(`/api/v1/admin/b2b-requests/${r.id}/restitution`, { method: 'POST' })
+    await fetchRequests()
+  } catch (err: any) {
+    errorMessage.value = err.data?.statusMessage || err.message || 'Erreur d\'envoi des propositions.'
+  } finally {
+    restitutionId.value = null
   }
 }
 
@@ -342,6 +398,86 @@ function pipelineLabel(status: string): string {
               placeholder="Qualification du besoin, actions de rappel…"
               class="w-full px-2.5 py-2 text-sm rounded-sm border border-border bg-background text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-safety resize-y"
             />
+          </div>
+
+          <!-- Qualification DirCo (05.10-08) -->
+          <div class="border-t border-border pt-4">
+            <p class="text-[10px] uppercase tracking-wide text-muted-foreground mb-3">Qualification DirCo</p>
+
+            <div class="grid sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Qualifications requises (Qualibat, RGE…)</label>
+                <input
+                  v-model="ensureDraft(r.id).qualifications"
+                  maxlength="500"
+                  placeholder="Isolation RGE, électricité Qualifelec… (séparées par des virgules)"
+                  class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-safety"
+                />
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Début planning</label>
+                  <input
+                    v-model="ensureDraft(r.id).planning_start"
+                    type="date"
+                    class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:border-safety"
+                  />
+                </div>
+                <div>
+                  <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Fin planning</label>
+                  <input
+                    v-model="ensureDraft(r.id).planning_end"
+                    type="date"
+                    class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:border-safety"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Picker sous-traitants (max 3) -->
+            <div class="mt-3">
+              <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">
+                Sous-traitants recommandés ({{ ensureDraft(r.id).recommended.length }}/3)
+              </label>
+              <div v-if="professionals.length === 0" class="text-xs text-muted-foreground border border-dashed border-border rounded-sm px-3 py-2">
+                Aucun pro vérifié disponible pour la sélection.
+              </div>
+              <div v-else class="max-h-44 overflow-y-auto border border-border rounded-sm divide-y divide-border">
+                <label
+                  v-for="p in professionals"
+                  :key="p.id"
+                  class="flex items-center gap-2.5 px-3 py-2 hover:bg-muted/50 cursor-pointer transition-colors"
+                  :class="{
+                    'opacity-40 pointer-events-none': !ensureDraft(r.id).recommended.includes(p.id) && ensureDraft(r.id).recommended.length >= 3
+                  }"
+                >
+                  <input
+                    type="checkbox"
+                    :checked="ensureDraft(r.id).recommended.includes(p.id)"
+                    @change="togglePro(r, p.id)"
+                    class="accent-[#EA580C] shrink-0"
+                  />
+                  <span class="text-sm text-foreground truncate">{{ p.company_name || p.full_name }}</span>
+                  <span v-if="p.category" class="text-[10px] text-muted-foreground ml-auto shrink-0">{{ p.category }}</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Restitution au donneur d'ordres -->
+            <div class="flex items-center justify-between gap-3 mt-4 flex-wrap">
+              <p class="text-[11px] text-muted-foreground">
+                Statut : {{ STATUS_LABELS[r.status] }}
+                <span v-if="r.recommended_pros && r.recommended_pros.length"> — {{ r.recommended_pros.length }} pro(s) recommandé(s)</span>
+              </p>
+              <button
+                @click="sendRestitution(r)"
+                :disabled="restitutionId === r.id || ensureDraft(r.id).recommended.length === 0"
+                class="inline-flex items-center h-9 px-4 text-sm font-medium rounded-sm border border-safety text-safety hover:bg-safety/10 transition-colors disabled:opacity-40"
+              >
+                <svg v-if="restitutionId === r.id" class="w-4 h-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                Envoyer les propositions au donneur d'ordres
+              </button>
+            </div>
           </div>
 
           <!-- Actions -->

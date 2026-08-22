@@ -47,9 +47,24 @@ export default defineEventHandler(async (event) => {
     assigned: r.assigned_to ? { email: emailById.get(r.assigned_to) || null } : null,
   }))
 
+  // Pros vérifiés — pour la sélection des 2-3 sous-traitants recommandés (DirCo)
+  let professionals: { id: string; company_name: string; full_name: string; category: string | null; canonical_slug: string | null; postal_code: string | null }[] = []
+  try {
+    const { data: pros } = await supabase
+      .from('professionals')
+      .select('id, company_name, full_name, category, canonical_slug, postal_code')
+      .eq('is_verified', true)
+      .order('company_name')
+      .limit(500)
+    professionals = pros || []
+  } catch {
+    // non bloquant — le picker restera vide
+  }
+
   return {
     requests,
     admins,
+    professionals,
     total: count || 0,
   }
 })

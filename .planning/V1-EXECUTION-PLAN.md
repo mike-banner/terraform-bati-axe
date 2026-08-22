@@ -89,7 +89,7 @@
 - [x] 8.6 Migration `b2b_requests` + types + RLS.
 - [x] 8.7 Liens « Partenaires » dans header/footer.
 - [x] 8.8 Back-office admin (onglet `b2b_requests` dans console admin).
-- [ ] 8.9 Workflow DirCo (qualification CCTP, sélection 2-3 sous-traitants).
+- [x] 8.9 Workflow DirCo (qualification CCTP, sélection 2-3 sous-traitants).
 
 ---
 
