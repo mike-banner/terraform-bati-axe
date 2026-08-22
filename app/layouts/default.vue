@@ -16,6 +16,7 @@ const espaceLink = computed(() => isAdmin.value ? '/admin' : '/espace/dashboard'
 
 const route = useRoute()
 const isPartenairesPage = computed(() => ['/partenaires', '/b2b/partenaires'].includes(route.path))
+const onPartenairesLanding = computed(() => route.path === '/partenaires')
 const onSimulateur = computed(() => route.path === '/simulateur')
 </script>
 
@@ -23,8 +24,8 @@ const onSimulateur = computed(() => route.path === '/simulateur')
   <div class="min-h-screen bg-page text-foreground flex flex-col font-sans antialiased">
     <header class="sticky top-0 z-40 border-b border-border bg-page/95 backdrop-blur-sm">
       <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <NuxtLink to="/" class="flex items-end self-end hover:opacity-80 transition-opacity" aria-label="BÂTI-AXE — Accueil">
-          <img src="/images/logo-transparent.png" alt="BÂTI-AXE" class="h-16 w-auto object-contain" />
+        <NuxtLink to="/" class="flex items-center shrink-0 hover:opacity-80 transition-opacity" aria-label="BÂTI-AXE — Accueil">
+          <img src="/images/logo-transparent.png" alt="BÂTI-AXE" class="h-12 w-auto object-contain" />
         </NuxtLink>
         <nav class="flex items-center gap-2">
           <template v-if="user">
@@ -37,12 +38,17 @@ const onSimulateur = computed(() => route.path === '/simulateur')
           </template>
           <template v-else>
             <NuxtLink v-if="!isPartenairesPage" to="/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Partenaires</NuxtLink>
-            <NuxtLink to="/pro/claim" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Se connecter</NuxtLink>
+            <NuxtLink to="/pro/claim" class="inline-flex items-center h-9 px-4 text-sm font-medium rounded-sm border border-border text-foreground hover:bg-muted transition-colors">Se connecter</NuxtLink>
             <NuxtLink
-              v-if="!onSimulateur"
+              v-if="!onSimulateur && !isPartenairesPage"
               to="/simulateur"
-              class="text-sm font-semibold bg-foreground text-background hover:opacity-80 transition-opacity px-4 py-2 rounded-sm"
+              class="inline-flex items-center h-9 px-4 text-sm font-semibold bg-foreground text-background hover:opacity-80 transition-opacity rounded-sm"
             >Déposer un projet</NuxtLink>
+            <NuxtLink
+              v-if="onPartenairesLanding"
+              to="/b2b/partenaires"
+              class="inline-flex items-center h-9 px-4 text-sm font-semibold bg-safety text-white hover:brightness-110 transition-all rounded-sm"
+            >Déposer un dossier</NuxtLink>
           </template>
         </nav>
       </div>
