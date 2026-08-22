@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: projects, error } = await supabase
     .from('projects')
-    .select('id, category, status, description, budget_range, timeline_range, created_at, leads(count)')
+    .select('id, customer_name, customer_email, customer_phone, category, status, description, budget_range, timeline_range, postal_code, created_at, leads(count)')
     .order('created_at', { ascending: true })
 
   if (error) serverError('admin.projects.get', error)
