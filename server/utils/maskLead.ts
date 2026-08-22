@@ -18,7 +18,7 @@ export function maskLead(lead: any, isPremium: boolean, now: Date, isFreeGranted
   const isUnlocked = isPremium || isFreeGranted || (lead.unlocked_at !== null && new Date(lead.unlocked_at) <= now)
 
   if (!isUnlocked) {
-    // BASIC pro, 72h not elapsed: mask all customer-identifying fields (D-05)
+    // BASIC pro, 48h pas écoulées : coordonnées masquées (D-05)
     return {
       id: lead.id,
       status: 'locked',
@@ -34,7 +34,7 @@ export function maskLead(lead: any, isPremium: boolean, now: Date, isFreeGranted
     }
   }
 
-  // Premium or 72h elapsed: full data (D-06 / D-07)
+  // Premium ou 48h écoulées : données complètes (D-06 / D-07)
   return {
     id: lead.id,
     status: 'unlocked',

@@ -68,7 +68,7 @@ const startCheckout = async () => {
           Premier contact exclusif.
         </h1>
         <p class="text-base text-slate-600 mt-4 leading-relaxed">
-          Accédez aux coordonnées du prospect dès la qualification — 72h avant les autres pros de votre métier.
+          Accédez aux coordonnées du prospect dès la qualification — 48h avant les autres pros de votre métier.
         </p>
       </div>
 
@@ -115,7 +115,7 @@ const startCheckout = async () => {
             <svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
             </svg>
-            <span class="text-sm text-slate-900">Exclusivité 72h avant les pros BASIC</span>
+            <span class="text-sm text-slate-900">Exclusivité 48h avant les pros BASIC</span>
           </div>
         </div>
 
@@ -172,7 +172,7 @@ const startCheckout = async () => {
             </span>
           </div>
           <div class="grid grid-cols-3 items-center px-5 py-3">
-            <span class="text-sm text-slate-900">Accès après 72h</span>
+            <span class="text-sm text-slate-900">Accès après 48h</span>
             <span class="flex justify-center">
               <svg class="w-3.5 h-3.5 text-slate-900" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
             </span>

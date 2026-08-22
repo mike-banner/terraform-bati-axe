@@ -13,6 +13,8 @@ const patchSchema = z.object({
   // 05.11-02 — Capacité sous-traitance (B2B-SC-02)
   is_available_subcontracting: z.boolean().optional(),
   workforce_size: z.number().int('Effectif invalide.').min(1, 'Effectif minimum 1.').max(999, 'Effectif maximum 999.').nullable().optional(),
+  // P4 — Alertes email de nouveaux leads
+  lead_alerts_email: z.boolean().optional(),
 }).strict()
 
 export default defineEventHandler(async (event) => {
@@ -49,7 +51,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: pro } = await supabase
     .from('professionals')
-    .select('id, canonical_slug, short_id, postal_code, categories, bio, zone, phone, logo_url, company_name, full_name, is_verified, subscription_status, is_available_subcontracting, workforce_size')
+    .select('id, canonical_slug, short_id, postal_code, categories, bio, zone, phone, logo_url, company_name, full_name, is_verified, subscription_status, is_available_subcontracting, workforce_size, lead_alerts_email')
     .eq('id', user.id)
     .single()
 

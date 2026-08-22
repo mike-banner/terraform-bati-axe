@@ -52,11 +52,13 @@
 
 ---
 
-## 5. P4 — Notif leads aux pros (email)
-- [ ] 5.1 Email transactionnel au pro quand un lead matche ses catégories (Resend existant).
-- [ ] 5.2 Flag d'opt-in + idempotence (pas de double envoi).
+## 5. P4 — Notif leads aux pros (email) ✅
+- [x] 5.1 Email transactionnel au pro quand un lead matche ses catégories (Resend existant).
+- [x] 5.2 Flag d'opt-in (`professionals.lead_alerts_email`, défaut ON) + idempotence (table `lead_notifications` UNIQUE pro/projet).
 - [ ] 5.3 (plus tard, Phase 8) Web Push natif via PWA.
 **Sortie** : un pro reçoit un email quand un lead arrive dans sa zone/catégorie.
+
+**Implémentation (2026-08-23)** : `server/utils/notifyProLead.ts` branché sur `projects.post.ts` (remplace le TODO) — pros vérifiés + opt-in dont les catégories matchent, envoi séquentiel non bloquant + trace d'idempotence. **La notification ne débloque rien** : les coordonnées restent masquées (règle Premium / free-grant / attente). Page « Lead non accessible » refaite sur `/espace/leads/[id]` (panneau cadenas : Passer Premium ou attendre 48h + countdown). Déblocage auto passé de **72h → 48h** (cron `auto-unlock-leads-48h`, plus laxiste au lancement).
 
 ---
 
