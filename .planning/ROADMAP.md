@@ -46,6 +46,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 5.7: Durcissement Validation des Inputs** - Bornes maxlength/pattern alignées serveur (Zod) ↔ client (HTML) sur tous les formulaires + CHECK constraints DB. (completed 2026-07-20)
 - [x] **Phase 05.10: Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B)** — Landing `/b2b/partenaires` (hero + 4 promesses + badge conformité), tunnel 4 étapes (profil → besoin → dropzone R2 → coordonnées GDPR), endpoint POST + presign R2 (Turnstile), notif Resend équipe + confirmation pro, back-office admin (queue + pipeline + assignation + notes), workflow DirCo (qualification, sélection 2-3 sous-traitants, restitution email). **Phase complète 7/7** (livré 2026-08-22)
 - [x] **Phase 05.11: Coffre-Fort Juridique & Capacité Sous-traitance** - Table documents_artisan (KBIS/URSSAF/décennale + statuts API), switch alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois. **Phase complète 4/4** (livré 2026-08-23)
+- [x] **Phase 05.12: Front Polish & Branding (Landing Partenaires + Logo)** - Landing `/partenaires` dédiée (hero, confiance, problème/solution, services, 4 étapes, profils, conformité, FAQ, CTA) avec CTAs vers le tunnel ; tunnel `/b2b/partenaires` allégé (formulaire seul + lien retour) ; scroll fluide global + copy CTA ; déclinaisons web du logo (détourage flood-fill, transparent/monochrome, favicon.ico multi-tailles, favicon 16/32/48, apple-touch-icon 180, icônes PWA 192/512, og-image 1200×630) branchées header/footer/nuxt.config. **Phase complète 2/2** (livré 2026-08-23)
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
 - [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, Dossiers B2B, KPIs, Documents légaux, Journal), search + pagination, projets cliquables. Onglet B2B fusionné (05.10-06) + Documents légaux (05.11-04). (livré 2026-08-22)
 - [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). *(récupéré d'une branche jamais mergée → merge PR #45)*. Reste: brancher Matomo côté client (P1). (livré 2026-08-22)
@@ -307,6 +308,28 @@ Plans:
 
 **UI hint**: yes
 
+### Phase 05.12: Front Polish & Branding (Landing Partenaires + Logo) (INSERTED 2026-08-23)
+
+**Goal:** Documenter en phase GSD les retouches front livrées « à la volée » sur la branche dédiée `fix/tweaks-front` (PR #49) : transformer l'entrée « Partenaires » en une vraie landing page de conversion pour les apporteurs d'affaires, et produire les déclinaisons web standard du logo.
+
+**Contexte:** le bouton « Partenaires » du header menait à la page mixte `b2b/partenaires.vue` (landing + tunnel dans un même fichier). L'utilisateur voulait une page d'accueil dédiée expliquant l'offre en détail, avec CTAs lançant le tunnel. En parallèle, le logo (PNG 1536×1024 RGB, fond blanc) n'avait aucune déclinaison web (favicon.ico daté d'août, 32×32 seul).
+
+**Depends on:** Phase 4.7 (design system), Phase 05.10 (tunnel `/b2b/partenaires` existant). Aucune migration DB ni endpoint — 100% frontend/statique.
+
+**Success Criteria** (what must be TRUE):
+  1. Landing `/partenaires` dédiée (9 sections : hero, barre de confiance, problème/solution, services, 4 étapes, profils, conformité, FAQ, CTA) avec CTAs qui lancent le tunnel.
+  2. Tunnel `/b2b/partenaires` allégé (formulaire seul) + lien retour ; header/footer pointent sur `/partenaires`, lien masqué sur les 2 pages.
+  3. Scroll fluide vers l'ancre (`scroll-behavior: smooth`), désactivé si `prefers-reduced-motion`.
+  4. Logo détouré (flood-fill, blanc interne préservé, halos adoucis) + déclinaisons : transparent, monochrome blanc/slate, favicon.ico multi-tailles, favicon PNG 16/32/48, apple-touch-icon 180, icon-192/512, og-image 1200×630.
+  5. Script réutilisable `scripts/generate-logo-variants.mjs` ; branchements header (transparent), footer (blanc), nuxt.config (favicons).
+
+**Plans**: 2/2 complete
+Plans:
+- [x] 05.12-01 ✅ — Landing page `/partenaires` dédiée + tunnel allégé + navigation + scroll fluide + copy CTA (2026-08-23)
+- [x] 05.12-02 ✅ — Déclinaisons web du logo (détourage + favicons + OG) + branchements (2026-08-23)
+
+**UI hint**: yes
+
 ### Phase 05.9: Extension Simulateur — API Mes Aides Réno
 **Goal**: Brancher l'API officielle d'État `mesaides.france-renov.gouv.fr/api/v1/` (moteur Publicodes) pour afficher les aides (MaPrimeRénov'/CEE/Éco-PTZ) et un reste à charge réel, afin de qualifier financièrement le lead. Les 6 étapes du tunnel principal (Phase 5.6) restent inchangées — le calcul des aides est proposé via un embranchement optionnel avant le lead wall.
 **Depends on**: Phase 5.6
@@ -421,6 +444,7 @@ Plans:
 | 05.9 Extension Simulateur Mes Aides Réno | 4/4 | Complete | 2026-08-18 |
 | 06.1 Console Admin Opérationnelle | 1/1 | Complete | 2026-08-22 |
 | 06.2 KPIs de Pilotage & Dashboard de Scalabilité | 1/1 | Complete | 2026-08-22 |
+| 05.12 Front Polish & Branding (Landing Partenaires + Logo) | 2/2 | Complete | 2026-08-23 |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
 | 8. Architecture PWA Mobile-First | 0/TBD | Not started | - |
 

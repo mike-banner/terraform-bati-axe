@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0-lancement-pilote
 milestone_name: Lancement v1 — Pilote Carrières-sous-Poissy
 status: v1_in_progress
-stopped_at: "V1 en cours — phases 05.10/05.11/06.1/06.2 + P4 livrées, PRs #44-47 mergés, #48 ouvert"
-last_updated: "2026-08-23T22:00:00.000Z"
+stopped_at: "V1 en cours — phases 05.10/05.11/06.1/06.2/05.12 + P4 livrées, PRs #44-48 mergés, #49 ouvert"
+last_updated: "2026-08-23T23:00:00.000Z"
 last_activity: 2026-08-23
 progress:
-  total_phases: 19
-  completed_phases: 17
-  total_plans: 66
-  completed_plans: 64
+  total_phases: 20
+  completed_phases: 18
+  total_plans: 68
+  completed_plans: 66
   percent: 97
 ---
 
@@ -37,7 +37,8 @@ Phases complètes récentes :
 - **05.11 — Coffre-Fort Juridique & Capacité Sous-traitance** ✅ 4/4 (2026-08-23) : `documents_artisan`, alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois, vue admin documents.
 - **06.1 — Console Admin Opérationnelle** ✅ (2026-08-22) : 8 composants modulaires, sidebar, dark mode, search/pagination, audit log, onglets B2B + Documents légaux.
 - **06.2 — KPIs de Pilotage** ✅ (2026-08-22, merge PR #45 le 2026-08-22) : kpi-engine 6 KPIs + dashboard admin. *(récupéré d'une branche jamais mergée — docs le marquaient « livré » à tort)*.
-- **P4 — Notif pro nouveaux leads (email)** ✅ (2026-08-23, PR #48 ouvert) : `notifyProLead` sur `projects.post.ts`, opt-in `lead_alerts_email`, idempotence `lead_notifications`, page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h, focus offre 15 s à l'arrivée depuis l'email.
+- **05.12 — Front Polish & Branding** ✅ 2/2 (2026-08-23, PR #49) : landing `/partenaires` dédiée (9 sections) + tunnel allégé + scroll fluide ; déclinaisons web du logo (détourage flood-fill, transparent/monochrome, favicons, apple-touch, PWA, og-image) + script `scripts/generate-logo-variants.mjs` ; passe anti-slop, icônes Phosphor duotone, FAQ éditoriale, univers `copper`, radius pill unifié, retour « Particuliers » dans le header. Aucune migration DB.
+- **P4 — Notif pro nouveaux leads (email)** ✅ (2026-08-23, PR #48 mergé) : `notifyProLead` sur `projects.post.ts`, opt-in `lead_alerts_email`, idempotence `lead_notifications`, page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h, focus offre 15 s à l'arrivée depuis l'email.
 
 Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod), **P1** (Matomo funnel), **P9** (mobile QA), **P5** (feedback loop testé), **P7** (packs zonés — bloqué tarifs), **P6/P8/P10** (leviers B2B).
 
@@ -47,7 +48,9 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - [x] 05.10-08 — Workflow DirCo (qualification CCTP, sélection 2-3 sous-traitants, restitution email) — PR #46
 - [x] 05.11-01..04 — Coffre-fort juridique (migration documents_artisan, capacité sous-traitance, cron expiration, vue admin) — PR #47
 - [x] 06.2 récupération — moteur KPI (endpoint + dashboard + migration `20260822000001`) — PR #45
-- [x] P4 — Notif email nouveaux leads + page « Lead non accessible » + déblocage 48h — PR #48 (ouvert)
+- [x] P4 — Notif email nouveaux leads + page « Lead non accessible » + déblocage 48h — PR #48 (mergé)
+- [x] 05.12-01 — Landing `/partenaires` dédiée + tunnel allégé + header/footer (PR #49)
+- [x] 05.12-02 — Déclinaisons web du logo (détourage + 11 fichiers + branchements) (PR #49)
 
 ## Decisions (récentes)
 
@@ -79,7 +82,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 | **P1** Matomo funnel | ❌ à implémenter (décidé : Matomo) |
 | **P2** Turnstile anti-spam | ✅ code livré — standby (clés client à créer au transfert Cloudflare) |
 | **P3** Stripe + cron re-test prod | ❌ **à faire en premier** (critique, runbook prêt) |
-| **P4** Notif leads email | ✅ livré (PR #48 ouvert) — temps 2 Web Push = Phase 8 |
+| **P4** Notif leads email | ✅ livré (PR #48 mergé) — temps 2 Web Push = Phase 8 |
 | **P5** Feedback loop refus→marché testé | ❌ à tester |
 | **P6** Étude financement courtier | ❌ absent |
 | **P7** Packs zonés & exclusivité | ❌ absent — bloqué tarifs définitifs (Basic 150-200 / Premium 300) |
@@ -105,7 +108,8 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - ✅ **#45** récupération moteur KPI (06.2) — mergé 2026-08-22 (après rebase + résolution conflit sidebar)
 - ✅ **#46** workflow DirCo — mergé 2026-08-22
 - ✅ **#47** coffre-fort juridique 05.11 — mergé 2026-08-23
-- 🟡 **#48** P4 notif email leads (ouvert, mergeable) — branche `feat/p4-notif-leads-email`
+- ✅ **#48** P4 notif email leads — mergé 2026-08-23 (résolution conflits ROADMAP/STATE faite au merge de #49)
+- 🟡 **#49** front polish partenaire (landing, logo, Phosphor, FAQ, copper) — ouvert, mergeable — branche `fix/tweaks-front`
 
 ## Blockers/Concerns
 
@@ -117,5 +121,5 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 ## Session Continuity
 
 Last session: 2026-08-23 (matinée → fin de journée)
-Stopped at: **P4 livré** (PR #48 ouvert) + mise à jour planning GSD (milestone v1.0 déclaré, STATE.md resynchronisé)
+Stopped at: **P4 + polish front partenaire livrés** (PRs #48 et #49 mergés) + planning GSD resynchronisé (milestone v1.0, 20 phases / 68 plans)
 Resume: prochain chantier au choix — **P3** (Stripe re-test prod, critique), **P1** (Matomo), **P9** (mobile QA), **P5** (feedback loop), **P7** (packs zonés, après validation tarifs)

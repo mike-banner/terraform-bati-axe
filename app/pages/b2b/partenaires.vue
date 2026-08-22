@@ -175,77 +175,20 @@ async function submitRequest() {
 
 <template>
   <div class="min-h-screen bg-background">
-    <!-- ═══ LANDING ═══ -->
-    <template v-if="step === 1 && !apporteurType">
-      <!-- Hero -->
-      <section class="relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-        <div class="relative max-w-5xl mx-auto px-6 pt-16 pb-20 md:pt-24 md:pb-28">
-          <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-slate-300 mb-6">
-            <span class="w-2 h-2 rounded-full bg-safety animate-pulse" />
-            Espace Professionnels & Prescripteurs
-          </div>
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.1] max-w-3xl">
-            Le bras armé technique des professionnels du bâtiment et de l'immobilier.
-          </h1>
-          <p class="mt-6 text-lg text-slate-400 max-w-2xl leading-relaxed">
-            Confiez vos chantiers à un réseau d'artisans audités en continu. Chiffrages réactifs, respect strict des plans et garanties décennales vérifiées par API.
-          </p>
-          <div class="mt-8 flex flex-col sm:flex-row gap-3">
-            <button
-              @click="step = 1"
-              class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-safety px-8 text-base font-bold text-white shadow-lg shadow-safety/25 hover:brightness-110 transition-all"
-            >
-              Déposer un dossier
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 4 Promesses -->
-      <section class="max-w-5xl mx-auto px-6 py-16">
-        <h2 class="text-2xl font-bold text-foreground mb-8">Pourquoi nous confier vos chantiers</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div
-            v-for="(data, key) in APPORTEUR_LABELS"
-            :key="key"
-            class="bg-card border border-border rounded-sm p-6 hover:border-safety/30 transition-colors"
-          >
-            <div class="flex items-start gap-3">
-              <span class="text-2xl">{{ data.icon }}</span>
-              <div>
-                <h3 class="text-sm font-bold text-foreground">{{ data.label }}</h3>
-                <p class="text-xs text-muted-foreground mt-1 italic">{{ data.fear }}</p>
-                <p class="text-sm text-foreground mt-2 font-medium">{{ data.promise }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Badge conformité -->
-      <section class="max-w-5xl mx-auto px-6 pb-16">
-        <div class="bg-card border border-border rounded-sm p-6 flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-            <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-          </div>
-          <div>
-            <p class="text-sm font-bold text-foreground">Conformité Automatisée</p>
-            <p class="text-xs text-muted-foreground mt-0.5">Entreprises du réseau auditées par API : Activité INSEE, Juridique et Décennales à jour. Suspension automatique en cas d'expiration.</p>
-          </div>
-        </div>
-      </section>
-    </template>
-
     <!-- ═══ TUNNEL ═══ -->
+    <div class="max-w-2xl mx-auto px-6 pt-10">
+      <NuxtLink to="/partenaires" class="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Retour à la page Partenaires
+      </NuxtLink>
+    </div>
     <div v-if="!submitSuccess" class="max-w-2xl mx-auto px-6 py-12">
       <!-- Progress bar -->
       <div class="flex items-center gap-2 mb-8">
         <template v-for="s in totalSteps" :key="s">
           <div
             class="h-1.5 flex-1 rounded-full transition-colors"
-            :class="s <= step ? 'bg-safety' : 'bg-muted'"
+            :class="s <= step ? 'bg-copper' : 'bg-muted'"
           />
         </template>
         <span class="text-xs text-muted-foreground ml-2">Étape {{ step }}/{{ totalSteps }}</span>
@@ -267,7 +210,7 @@ async function submitRequest() {
             @click="apporteurType = key as B2bApporteurType"
             class="flex items-start gap-3 p-4 rounded-sm border text-left transition-all"
             :class="apporteurType === key
-              ? 'border-safety bg-safety/5 ring-1 ring-safety/20'
+              ? 'border-copper bg-copper/5 ring-1 ring-copper/20'
               : 'border-border bg-card hover:border-muted-foreground/30'"
           >
             <span class="text-xl mt-0.5">{{ data.icon }}</span>
@@ -289,11 +232,11 @@ async function submitRequest() {
             @click="needType = 'projet_immediat'"
             class="w-full flex items-center gap-4 p-5 rounded-sm border text-left transition-all"
             :class="needType === 'projet_immediat'
-              ? 'border-safety bg-safety/5 ring-1 ring-safety/20'
+              ? 'border-copper bg-copper/5 ring-1 ring-copper/20'
               : 'border-border bg-card hover:border-muted-foreground/30'"
           >
-            <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0" :class="needType === 'projet_immediat' ? 'border-safety' : 'border-border'">
-              <div v-if="needType === 'projet_immediat'" class="w-2.5 h-2.5 rounded-full bg-safety" />
+            <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0" :class="needType === 'projet_immediat' ? 'border-copper' : 'border-border'">
+              <div v-if="needType === 'projet_immediat'" class="w-2.5 h-2.5 rounded-full bg-copper" />
             </div>
             <div>
               <p class="text-sm font-semibold text-foreground">J'ai un projet / chantier immédiat à faire chiffrer</p>
@@ -305,11 +248,11 @@ async function submitRequest() {
             @click="needType = 'partenariat_regulier'"
             class="w-full flex items-center gap-4 p-5 rounded-sm border text-left transition-all"
             :class="needType === 'partenariat_regulier'
-              ? 'border-safety bg-safety/5 ring-1 ring-safety/20'
+              ? 'border-copper bg-copper/5 ring-1 ring-copper/20'
               : 'border-border bg-card hover:border-muted-foreground/30'"
           >
-            <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0" :class="needType === 'partenariat_regulier' ? 'border-safety' : 'border-border'">
-              <div v-if="needType === 'partenariat_regulier'" class="w-2.5 h-2.5 rounded-full bg-safety" />
+            <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0" :class="needType === 'partenariat_regulier' ? 'border-copper' : 'border-border'">
+              <div v-if="needType === 'partenariat_regulier'" class="w-2.5 h-2.5 rounded-full bg-copper" />
             </div>
             <div>
               <p class="text-sm font-semibold text-foreground">Je souhaite établir un partenariat régulier</p>
@@ -351,7 +294,7 @@ async function submitRequest() {
         <div
           @dragover.prevent
           @drop.prevent="handleFileDrop"
-          class="border-2 border-dashed border-border rounded-sm p-8 text-center hover:border-safety/40 transition-colors cursor-pointer"
+          class="border-2 border-dashed border-border rounded-sm p-8 text-center hover:border-copper/40 transition-colors cursor-pointer"
         >
           <svg class="w-10 h-10 text-muted-foreground mx-auto mb-3" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
           <p class="text-sm font-medium text-foreground">Glissez vos fichiers ici</p>
@@ -411,7 +354,7 @@ async function submitRequest() {
 
           <!-- GDPR consent -->
           <label class="flex items-start gap-3 cursor-pointer pt-2">
-            <input v-model="consentAccepted" type="checkbox" class="mt-0.5 h-4 w-4 rounded border-border text-safety focus:ring-safety" />
+            <input v-model="consentAccepted" type="checkbox" class="mt-0.5 h-4 w-4 rounded border-border text-copper focus:ring-copper" />
             <span class="text-xs text-muted-foreground leading-relaxed">
               J'accepte d'être recontacté dans le cadre de ma demande. Mes données sont traitées conformément à la <NuxtLink to="/legal/confidentialite" class="underline hover:text-foreground">politique de confidentialité</NuxtLink>.
             </span>
@@ -424,7 +367,7 @@ async function submitRequest() {
         <button
           v-if="step > 1"
           @click="prevStep"
-          class="h-10 px-4 text-sm font-medium text-muted-foreground hover:text-foreground border border-border rounded-sm hover:bg-muted transition-colors"
+          class="h-10 px-4 text-sm font-medium text-muted-foreground hover:text-foreground border border-border rounded-full hover:bg-muted transition-colors"
         >
           ← Retour
         </button>
@@ -434,7 +377,7 @@ async function submitRequest() {
           v-if="step < totalSteps"
           @click="nextStep"
           :disabled="!canNextStep"
-          class="h-10 px-6 text-sm font-semibold bg-safety text-white rounded-sm hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm shadow-safety/20"
+          class="h-10 px-6 text-sm font-semibold bg-copper text-white rounded-full hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm shadow-copper/20"
         >
           Continuer
         </button>
@@ -442,7 +385,7 @@ async function submitRequest() {
           v-else
           @click="submitRequest"
           :disabled="!canNextStep || isSubmitting"
-          class="h-10 px-6 text-sm font-semibold bg-safety text-white rounded-sm hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm shadow-safety/20 flex items-center gap-2"
+          class="h-10 px-6 text-sm font-semibold bg-copper text-white rounded-full hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm shadow-copper/20 flex items-center gap-2"
         >
           <svg v-if="isSubmitting" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
           Envoyer le dossier — Rappel garanti sous 4h
@@ -464,7 +407,7 @@ async function submitRequest() {
       </p>
       <NuxtLink
         to="/"
-        class="inline-flex items-center gap-2 mt-8 h-10 px-6 text-sm font-medium border border-border rounded-sm hover:bg-muted transition-colors text-foreground"
+        class="inline-flex items-center gap-2 mt-8 h-10 px-6 text-sm font-medium border border-border rounded-full hover:bg-muted transition-colors text-foreground"
       >
         Retour à l'accueil
       </NuxtLink>
