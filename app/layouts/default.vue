@@ -24,7 +24,7 @@ const onSimulateur = computed(() => route.path === '/simulateur')
     <header class="sticky top-0 z-40 border-b border-border bg-page/95 backdrop-blur-sm">
       <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <NuxtLink to="/" class="flex items-end self-end hover:opacity-80 transition-opacity" aria-label="BÂTI-AXE — Accueil">
-          <img src="/images/logo.png" alt="BÂTI-AXE" class="h-16 w-auto object-contain" />
+          <img src="/images/logo-transparent.png" alt="BÂTI-AXE" class="h-16 w-auto object-contain" />
         </NuxtLink>
         <nav class="flex items-center gap-2">
           <template v-if="user">
@@ -54,7 +54,10 @@ const onSimulateur = computed(() => route.path === '/simulateur')
 
     <footer class="border-t border-white/10 bg-slate-800 mt-auto">
       <div class="max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-        <p class="text-slate-400">&copy; 2026 BÂTI-AXE. Tous droits réservés. Conforme RGPD.</p>
+        <div class="flex items-center gap-3">
+          <img src="/images/logo-light.png" alt="BÂTI-AXE" class="h-7 w-auto object-contain" />
+          <p class="text-slate-400">&copy; 2026 BÂTI-AXE. Tous droits réservés. Conforme RGPD.</p>
+        </div>
         <nav class="flex items-center gap-5">
           <NuxtLink to="/partenaires" class="text-slate-400 hover:text-white transition-colors">Partenaires</NuxtLink>
           <NuxtLink to="/legal/mentions-legales" class="text-slate-400 hover:text-white transition-colors">Mentions légales</NuxtLink>
