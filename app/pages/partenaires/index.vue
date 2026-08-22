@@ -145,7 +145,7 @@ const stats = [
             href="#comment-ca-marche"
             class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-8 text-base font-semibold text-white hover:bg-white/10 transition-all"
           >
-            Voir comment ça marche
+            Découvrir le processus
           </a>
         </div>
       </div>
