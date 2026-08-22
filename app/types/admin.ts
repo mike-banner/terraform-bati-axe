@@ -26,11 +26,15 @@ export interface Professional {
 
 export interface Project {
   id: string
+  customer_name: string
+  customer_email: string
+  customer_phone: string
   category: string | null
   status: string
   description: string | null
   budget_range: string | null
   timeline_range: string | null
+  postal_code: string | null
   created_at: string
   lead_count: number
 }

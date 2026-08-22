@@ -70,8 +70,8 @@ const userInitial = computed(() => user.value?.email?.charAt(0).toUpperCase() ||
 </script>
 
 <template>
-  <div class="min-h-screen bg-background">
-    <div class="flex min-h-screen">
+  <div class="h-screen bg-background flex flex-col overflow-hidden">
+    <div class="flex-1 flex min-h-0">
 
       <!-- Mobile sidebar overlay -->
       <div
@@ -162,13 +162,7 @@ const userInitial = computed(() => user.value?.email?.charAt(0).toUpperCase() ||
             <h1 class="text-sm font-bold text-foreground truncate">{{ currentLabel }}</h1>
           </div>
 
-          <button
-            @click="signOut"
-            class="hidden sm:inline-flex items-center gap-1.5 h-8 px-3 text-xs font-medium text-red-400 hover:bg-red-500/10 border border-red-500/20 rounded-sm transition-colors"
-          >
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
-            Déconnexion
-          </button>
+
         </header>
 
         <!-- Page content -->
