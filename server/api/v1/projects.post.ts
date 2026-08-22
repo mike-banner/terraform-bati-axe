@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { serverSupabaseServiceRole } from '#supabase/server'
 import { computeQualifyScore } from '../../utils/qualifyScore'
 import { deriveTrades, derivePrimaryCategory } from '../../utils/calculatorMapping'
+import { verifyTurnstile } from '../../utils/verifyTurnstile'
 
 // French phone validation regex
 const phoneRegex = /^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/
@@ -36,6 +37,7 @@ const createProjectSchema = z.object({
   customer_phone: z.string().regex(phoneRegex, 'Numéro de téléphone invalide.'),
   cgu_accepted: z.literal(true, 'Vous devez accepter les CGU.'),
   sms_opt_in: z.boolean().default(false),
+  turnstile_token: z.string().optional(),
   timeline_range: z.enum(['1_semaine', '1_mois', '3_mois', '6_mois', 'flexible']).optional()
 })
 
@@ -55,6 +57,19 @@ export default defineEventHandler(async (event) => {
 
     const data = validation.data
     const supabase = await serverSupabaseServiceRole(event) as any
+
+    // Get IP and User-Agent for compliance auditing (moved up for Turnstile P2)
+    const ip = getHeader(event, 'cf-connecting-ip') || getHeader(event, 'x-forwarded-for') || event.node.req.socket.remoteAddress
+    const userAgent = getHeader(event, 'user-agent')
+
+    // P2 — Turnstile anti-spam : token requis si la clé secrète est configurée
+    const turnstileOk = await verifyTurnstile(data.turnstile_token, ip)
+    if (!turnstileOk) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Vérification anti-spam échouée. Veuillez réessayer.'
+      })
+    }
 
     // T-056-03 : category dérivée server-side (non lue du client par défaut), bornée aux 6 métiers valides
     const { renovation_type, pieces, surface_m2, gamme, estimate_min, estimate_max } = data.calculator_data
@@ -124,10 +139,6 @@ export default defineEventHandler(async (event) => {
         data: { message: `Désolé, la zone pour le code postal ${data.postal_code} n'est pas encore couverte par nos professionnels.` }
       })
     }
-
-    // Get IP and User-Agent for compliance auditing
-    const ip = getHeader(event, 'cf-connecting-ip') || getHeader(event, 'x-forwarded-for') || event.node.req.socket.remoteAddress
-    const userAgent = getHeader(event, 'user-agent')
 
     // 3. Create the project in DB
     const { data: project, error: projectError } = await supabase

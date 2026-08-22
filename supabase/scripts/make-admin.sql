@@ -1,10 +1,20 @@
--- Exécuter dans Supabase Studio (SQL Editor) ou via:
--- psql $DATABASE_URL -f supabase/scripts/make-admin.sql
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Admin — compte générique admin@batiaxe.com
 --
--- IMPORTANT : ne committer jamais ce fichier avec un vrai email dedans.
--- Remplacer par votre email avant exécution.
+-- 1. Créer l'utilisateur :
+--    - soit via Studio : Authentication > Users > "Add user"
+--      (email = admin@batiaxe.com + mot de passe + "Auto confirm") ;
+--    - soit en lançant le script Node clé-en-main :
+--        SUPABASE_URL="https://xxxx.supabase.co" \
+--        SUPABASE_SERVICE_ROLE_KEY="sb_secret_..." \
+--        ADMIN_PASSWORD="TonMotDePasse" \
+--        node supabase/scripts/reset-admin.mjs
+--
+-- 2. Puis exécuter ce script pour lui donner le rôle admin.
+-- ─────────────────────────────────────────────────────────────────────────────
 
-SELECT promote_to_admin('mick.ban@gmail.com');
+SELECT promote_to_admin('admin@batiaxe.com');
 
--- Pour vérifier :
--- SELECT email, raw_app_meta_data->>'role' AS role FROM auth.users WHERE email = 'mick.ban@gmail.com';
+-- Vérifier :
+-- SELECT email, raw_app_meta_data->>'role' AS role FROM auth.users
+--  WHERE email = 'admin@batiaxe.com';

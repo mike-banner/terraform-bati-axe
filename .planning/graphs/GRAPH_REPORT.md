@@ -1,16 +1,16 @@
 # Graph Report - bati-axe  (2026-08-18)
 
 ## Corpus Check
-- 363 files · ~721,254 words
+- 385 files · ~752,406 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3344 nodes · 4609 edges · 378 communities (302 shown, 76 thin omitted)
+- 3477 nodes · 5719 edges · 392 communities (315 shown, 77 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `40bc585f`
+- Built from commit: `64874367`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -62,6 +62,7 @@
 - [[_COMMUNITY_Community 55|Community 55]]
 - [[_COMMUNITY_Community 56|Community 56]]
 - [[_COMMUNITY_Community 57|Community 57]]
+- [[_COMMUNITY_Community 58|Community 58]]
 - [[_COMMUNITY_Community 59|Community 59]]
 - [[_COMMUNITY_Community 64|Community 64]]
 - [[_COMMUNITY_Community 65|Community 65]]
@@ -335,18 +336,26 @@
 - [[_COMMUNITY_Community 375|Community 375]]
 - [[_COMMUNITY_Community 376|Community 376]]
 - [[_COMMUNITY_Community 377|Community 377]]
+- [[_COMMUNITY_Community 378|Community 378]]
+- [[_COMMUNITY_Community 379|Community 379]]
+- [[_COMMUNITY_Community 380|Community 380]]
+- [[_COMMUNITY_Community 381|Community 381]]
+- [[_COMMUNITY_Community 382|Community 382]]
+- [[_COMMUNITY_Community 383|Community 383]]
+- [[_COMMUNITY_Community 389|Community 389]]
+- [[_COMMUNITY_Community 390|Community 390]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Communities (376 total, 74 thin omitted)` - 244 edges
-2. `Communities (377 total, 76 thin omitted)` - 244 edges
-3. `Communities (373 total, 76 thin omitted)` - 240 edges
-4. `Communities (371 total, 76 thin omitted)` - 238 edges
-5. `Communities (365 total, 76 thin omitted)` - 237 edges
-6. `Communities (347 total, 71 thin omitted)` - 224 edges
-7. `Phase 4: Le Verrou & Stripe Billing — Research` - 21 edges
-8. `Phase 5 : Intégration API État (SIRET) & Badges de Confiance — Research` - 21 edges
-9. `Phase Details` - 19 edges
-10. `UI-SPEC — Phase 4: Le Verrou & Stripe Billing` - 19 edges
+1. `Communities (392 total, 77 thin omitted)` - 253 edges
+2. `Communities (390 total, 76 thin omitted)` - 253 edges
+3. `Communities (389 total, 76 thin omitted)` - 252 edges
+4. `Communities (378 total, 76 thin omitted)` - 245 edges
+5. `Communities (376 total, 74 thin omitted)` - 244 edges
+6. `Communities (377 total, 76 thin omitted)` - 244 edges
+7. `Communities (373 total, 76 thin omitted)` - 240 edges
+8. `Communities (371 total, 76 thin omitted)` - 238 edges
+9. `Communities (365 total, 76 thin omitted)` - 237 edges
+10. `Communities (347 total, 71 thin omitted)` - 224 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -354,11 +363,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (378 total, 76 thin omitted)
+## Communities (392 total, 77 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.06
-Nodes (31): Overview, Phase 05.8: Enrichissement SIRET (forme juridique, NAF, suggestion catégories) au claim (INSERTED), Phase 1: Foundations & Compliance, Phase 2: Data Foundation & Capture mono-ville, Phase 3: Onboarding Pro & Vérification manuelle, Phase 4.5: Conversion & Qualification, Phase 4.6: Marché Dynamique & Multi-Catégories, Phase 4.7: Refonte UI Globale & Application du Design System (REPLAN v2) (+23 more)
+Nodes (34): Deferred (post-lancement), Overview, Phase 05.8: Enrichissement SIRET (forme juridique, NAF, suggestion catégories) au claim (INSERTED), Phase 05.9: Extension Simulateur — API Mes Aides Réno, Phase 1: Foundations & Compliance, Phase 2: Data Foundation & Capture mono-ville, Phase 3: Onboarding Pro & Vérification manuelle, Phase 4.5: Conversion & Qualification (+26 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.14
@@ -381,8 +390,8 @@ Cohesion: 0.40
 Nodes (3): Ce qui a été fait, Résultats et Décisions, Résumé d'Exécution : Plan 06
 
 ### Community 13 - "Community 13"
-Cohesion: 0.10
-Nodes (19): Accumulated Context, Blockers/Concerns, Current Position, Decisions, Deferred Ideas (hors scope, à reconsidérer plus tard), Known Patterns (à appliquer dans les prochaines phases), 🔒 Lock & Sync Status, Pending Todos (+11 more)
+Cohesion: 0.09
+Nodes (20): Accumulated Context, Blockers/Concerns, Current Position, Decisions, Deferred Ideas (hors scope, à reconsidérer plus tard), Known Patterns (à appliquer dans les prochaines phases), 🔒 Lock & Sync Status, Pending Todos (+12 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.25
@@ -410,7 +419,7 @@ Nodes (12): Agreed Concerns, Agreed Strengths, Concerns, Consensus Summary, Cros
 
 ### Community 20 - "Community 20"
 Cohesion: 0.05
-Nodes (43): dependencies, aws4fetch, @lucide/vue, nuxt, reka-ui, resend, shadcn-vue, stripe (+35 more)
+Nodes (47): dependencies, aws4fetch, @lucide/vue, nuxt, reka-ui, resend, shadcn-vue, stripe (+39 more)
 
 ### Community 21 - "Community 21"
 Cohesion: 0.12
@@ -479,6 +488,10 @@ Nodes (10): 1. Summary, 2. Strengths, 3. Concerns, 4. Suggestions, 5. Risk Asses
 ### Community 56 - "Community 56"
 Cohesion: 0.15
 Nodes (11): Accomplishments, Checkpoint, Decisions Made, Deviations from Plan, Files Created/Modified, Issues Encountered, Next Phase Readiness, Performance (+3 more)
+
+### Community 58 - "Community 58"
+Cohesion: 0.50
+Nodes (3): espaceLink, isAdmin, route
 
 ### Community 59 - "Community 59"
 Cohesion: 0.25
@@ -958,7 +971,7 @@ Nodes (3): Catégories ASVS applicables, Domaine sécurité, Menaces spécifique
 
 ### Community 234 - "Community 234"
 Cohesion: 0.12
-Nodes (15): Boundaries, Boundaries (reste), Falsifiable Requirements, Falsifiable Requirements (reste), REQ-01: Token d'accès au projet, REQ-02: Accès à l'Espace Client (Magic Link), REQ-03: Création de Message (Côté Pro), REQ-04: Création de Message (Côté Client) (+7 more)
+Nodes (16): Boundaries, Boundaries (reste), Falsifiable Requirements, Falsifiable Requirements (reste), REQ-01: Token d'accès au projet, REQ-02: Accès à l'Espace Client (Magic Link), REQ-03: Création de Message (Côté Pro), REQ-04: Création de Message (Côté Client) (+8 more)
 
 ### Community 235 - "Community 235"
 Cohesion: 0.13
@@ -1213,8 +1226,8 @@ Cohesion: 0.13
 Nodes (14): Additive-only migrations, `app/pages/simulateur.vue` (component, request-response) — full rewrite, `app/utils/calculateur.ts` (utility, transform) — new file, client-side pricing engine (D-01), Bento tile visual/interaction pattern, File Classification, French phone/email validation, Metadata, No Analog Found (+6 more)
 
 ### Community 311 - "Community 311"
-Cohesion: 0.05
-Nodes (84): Communities (347 total, 71 thin omitted), Communities (365 total, 76 thin omitted), Community 100 - "Community 100", Community 102 - "Community 102", Community 103 - "Community 103", Community 104 - "Community 104", Community 106 - "Community 106", Community 108 - "Community 108" (+76 more)
+Cohesion: 0.07
+Nodes (262): Communities (347 total, 71 thin omitted), Communities (365 total, 76 thin omitted), Communities (371 total, 76 thin omitted), Communities (373 total, 76 thin omitted), Communities (376 total, 74 thin omitted), Communities (377 total, 76 thin omitted), Communities (378 total, 76 thin omitted), Communities (389 total, 76 thin omitted) (+254 more)
 
 ### Community 312 - "Community 312"
 Cohesion: 0.13
@@ -1309,47 +1322,75 @@ Cohesion: 0.17
 Nodes (11): 🎯 1. Vision & Objectif Business, 👤 2. Acteurs & Personas Concernés, 🔹 3.1 Fonctionnalité Principale : {{TITRE_FEATURE_1}}, 🔹 3.2 Fonctionnalité Secondaire : {{TITRE_FEATURE_2}} (Si applicable), 💡 3. Spécifications Fonctionnelles (User Stories), 🖥️ 4. Exigences UI / UX & Parcours Visuel, ⚙️ 5. Données & Intégrations Techniques (Si identifiées), 🚨 6. Cas Limites & Ce qu'il NE FAUT PAS FAIRE (Out of Scope) (+3 more)
 
 ### Community 371 - "Community 371"
-Cohesion: 0.05
-Nodes (83): Communities (376 total, 74 thin omitted), Communities (377 total, 76 thin omitted), Community 105 - "Community 105", Community 121 - "Community 121", Community 13 - "Community 13", Community 165 - "Community 165", Community 171 - "Community 171", Community 172 - "Community 172" (+75 more)
+Cohesion: 0.10
+Nodes (19): Appel API Mes Aides Réno, Architecture du tunnel, Brief client & arbitrage, Canonical References, Claude's Discretion, Deferred Ideas, Emplacements d'entrée & restitution, Established Patterns (+11 more)
 
 ### Community 372 - "Community 372"
 Cohesion: 0.25
 Nodes (7): Accomplissements, Known Stubs / Gaps reportés, Phase 06 Plan 01: Magic Link & Messagerie In-App Summary, Self-Check: N/A — rédaction rétroactive à partir de 06-UAT.md (vérification déjà faite au moment de la livraison réelle), Task Commits, Threat Flags, Vérification
 
 ### Community 373 - "Community 373"
-Cohesion: 0.05
-Nodes (82): Communities (371 total, 76 thin omitted), Communities (373 total, 76 thin omitted), Community 0 - "Community 0", Community 101 - "Community 101", Community 109 - "Community 109", Community 10 - "Community 10", Community 110 - "Community 110", Community 112 - "Community 112" (+74 more)
+Cohesion: 0.24
+Nodes (8): AideRenoResult, AidesRenoResponse, AidesRenoSituation, buildSituationQuery(), computeAidesSummary(), cache, resolveInseeFromCodePostal(), schema
 
 ### Community 374 - "Community 374"
 Cohesion: 0.17
 Nodes (11): 🎯 1. Vision & Objectif Business, 👤 2. Acteurs & Personas Concernés, 🔹 3.1 Fonctionnalité Principale : PWA installable et résiliente au réseau, 🔹 3.2 Fonctionnalité Secondaire : Mobile-First UX Shell, 💡 3. Spécifications Fonctionnelles (User Stories), 🖥️ 4. Exigences UI / UX & Parcours Visuel, ⚙️ 5. Données & Intégrations Techniques, 🚨 6. Cas Limites & Ce qu'il NE FAUT PAS FAIRE (Out of Scope) (+3 more)
 
 ### Community 375 - "Community 375"
-Cohesion: 0.22
-Nodes (8): 🎯 1. Vision & Levier Product-Led Growth (PLG) : API "Mes Aides Réno", 🏗️ 2. Benchmark Arti-Box & Sous-traitance B2B (Phase 7+), 🤖 3. Arbitrage & Decision Matrix — APIs IA, 📋 4. Plan d'Action & Phasage Technique, 🔹 Briques Fonctionnelles B2B retenues, 📄 Cahier des Charges & Synthèse IA Client — Benchmark Arti-Box & APIs Intelligentes, 🔹 Concept & Objectif Business, 📌 Metadata du projet
+Cohesion: 0.08
+Nodes (23): 🎯 1. Vision & Levier Product-Led Growth (PLG) : API "Mes Aides Réno", 🏗️ 2. Benchmark Arti-Box & Sous-traitance B2B (Phase 7+), 🤖 3. Arbitrage & Decision Matrix — APIs IA, 👤 4. Personas Cibles, 📋 4. Plan d'Action & Phasage Technique, 📜 5. User Stories (Par Périmètre), 6.1. Découpage Territorial & Abonnements Artisans, 6.2. Monétisation des Outils SaaS (Freemium IA) (+15 more)
 
 ### Community 376 - "Community 376"
 Cohesion: 0.40
 Nodes (4): ADR-010: Stratégie de Versionnage SemVer, Git Tagging & Release Management, Conséquences, Contexte, Décisions
 
+### Community 378 - "Community 378"
+Cohesion: 0.22
+Nodes (8): Appel API Mes Aides Réno, Articulation entre le tunnel existant et le nouveau tunnel aides, Claude's Discretion, Deferred Ideas, Données revenu / composition du foyer, Fallback si l'API Mes Aides Réno est indisponible, Persistance du reste à charge, Phase 5.9: Extension Simulateur — Discussion Log
+
+### Community 379 - "Community 379"
+Cohesion: 0.40
+Nodes (4): 05.9-01 Summary — Proxy Nitro aides-reno + resolver CP→INSEE + persistance, Livré, Vérification, Écarts / notes
+
+### Community 380 - "Community 380"
+Cohesion: 0.40
+Nodes (4): 05.9-02 Summary — Composant réutilisable AidesMiniTunnel, Livré, Vérification, Écarts / notes
+
+### Community 381 - "Community 381"
+Cohesion: 0.40
+Nodes (4): 05.9-03 Summary — Fork aides dans simulateur.vue + révélation bilan complet, Livré, Vérification, Écarts / notes
+
+### Community 382 - "Community 382"
+Cohesion: 0.40
+Nodes (4): 05.9-04 Summary — Route standalone + teaser home + restitution espace client, Livré, Vérification, Écarts / notes
+
+### Community 383 - "Community 383"
+Cohesion: 0.50
+Nodes (3): ASVS Coverage, STRIDE Threat Register, Trust Boundaries
+
+### Community 389 - "Community 389"
+Cohesion: 0.13
+Nodes (14): 1. Mots de passe hashés, 2. Rate limiting login / API, 3. Droits vérifiés côté serveur, 4. Inputs validés (Zod), 5. Taille max upload, 6. Type de fichier vérifié, 7. console.log propres, 8. Erreurs détaillées coupées (pas de leak) (+6 more)
+
 ## Knowledge Gaps
-- **1630 isolated node(s):** `enabled`, `_auto_chain_active`, `research`, `plan_check`, `verifier` (+1625 more)
+- **1711 isolated node(s):** `enabled`, `_auto_chain_active`, `research`, `plan_check`, `verifier` (+1706 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **76 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **77 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Communities (376 total, 74 thin omitted)` connect `Community 371` to `Community 373`, `Community 142`, `Community 311`?**
+- **Why does `Communities (347 total, 71 thin omitted)` connect `Community 311` to `Community 142`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
-- **Why does `Communities (377 total, 76 thin omitted)` connect `Community 371` to `Community 373`, `Community 142`, `Community 311`?**
+- **Why does `Communities (392 total, 77 thin omitted)` connect `Community 311` to `Community 142`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
-- **Why does `Communities (373 total, 76 thin omitted)` connect `Community 373` to `Community 371`, `Community 142`, `Community 311`?**
+- **Why does `Communities (390 total, 76 thin omitted)` connect `Community 311` to `Community 142`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
 - **What connects `enabled`, `_auto_chain_active`, `research` to the rest of the system?**
-  _1630 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1711 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05555555555555555 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
 - **Should `Community 10` be split into smaller, more focused modules?**
