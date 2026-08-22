@@ -50,6 +50,12 @@ const navItems = computed(() => [
     badge: null,
   },
   {
+    key: 'b2b',
+    label: 'Dossiers B2B',
+    icon: 'briefcase',
+    badge: null,
+  },
+  {
     key: 'audit',
     label: 'Journal',
     icon: 'history',
@@ -114,6 +120,7 @@ const userInitial = computed(() => user.value?.email?.charAt(0).toUpperCase() ||
             <svg v-else-if="item.icon === 'folder'" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg>
             <svg v-else-if="item.icon === 'history'" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             <svg v-else-if="item.icon === 'image'" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+            <svg v-else-if="item.icon === 'briefcase'" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.1c0 1.1-.9 2-2 2H5.75c-1.1 0-2-.9-2-2v-4.1m16.5 0c0-1.35-.6-2.58-1.55-3.42L13.3 5.78a2.25 2.25 0 00-3.02 0L5.8 10.73A4.5 4.5 0 003.75 14.15m16.5 0H3.75m16.5 0h-4.5a2.25 2.25 0 01-2.25-2.25v-.75m-3 0v.75a2.25 2.25 0 01-2.25 2.25h-4.5"/></svg>
 
             <span class="flex-1 text-left">{{ item.label }}</span>
             <span
