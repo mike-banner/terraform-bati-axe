@@ -12,7 +12,7 @@ const user = useSupabaseUser()
 const isLoading = ref(true)
 const actionLoading = ref<string | null>(null)
 const errorMessage = ref<string | null>(null)
-const activeTab = ref<'overview' | 'pending' | 'all' | 'projects' | 'realisations' | 'audit'>('overview')
+const activeTab = ref<'overview' | 'pending' | 'all' | 'projects' | 'realisations' | 'kpi' | 'audit'>('overview')
 
 const professionals = ref<Professional[]>([])
 const projects = ref<Project[]>([])
@@ -226,6 +226,9 @@ async function toggleShowcase(projectId: string, isShowcased: boolean) {
       :action-loading="actionLoading"
       @toggle-showcase="toggleShowcase"
     />
+
+    <!-- Tab: KPIs -->
+    <AdminKpiDashboard v-else-if="activeTab === 'kpi'" />
 
     <!-- Tab: Audit log -->
     <AdminAuditLog v-else-if="activeTab === 'audit'" />
