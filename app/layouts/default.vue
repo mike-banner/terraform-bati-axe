@@ -30,6 +30,7 @@ const onSimulateur = computed(() => route.path === '/simulateur')
         <nav class="flex items-center gap-2">
           <template v-if="user">
             <NuxtLink v-if="!isAdmin && !isPartenairesPage" to="/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Partenaires</NuxtLink>
+            <NuxtLink v-if="!isAdmin && isPartenairesPage" to="/" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Particuliers</NuxtLink>
             <NuxtLink :to="espaceLink" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Mon espace</NuxtLink>
             <button class="flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-full border border-border hover:bg-muted transition-colors" @click="signOut">
               <span class="flex items-center justify-center w-6 h-6 rounded-full bg-foreground text-background text-xs font-bold">{{ userInitial }}</span>
@@ -38,6 +39,7 @@ const onSimulateur = computed(() => route.path === '/simulateur')
           </template>
           <template v-else>
             <NuxtLink v-if="!isPartenairesPage" to="/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Partenaires</NuxtLink>
+            <NuxtLink v-if="isPartenairesPage" to="/" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Particuliers</NuxtLink>
             <NuxtLink to="/pro/claim" class="inline-flex items-center h-9 px-4 text-sm font-medium rounded-full border border-border text-foreground hover:bg-muted transition-colors">Se connecter</NuxtLink>
             <NuxtLink
               v-if="!onSimulateur && !isPartenairesPage"

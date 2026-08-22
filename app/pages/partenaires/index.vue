@@ -2,7 +2,6 @@
 import { APPORTEUR_LABELS } from '~/types/b2b'
 import type { Component } from 'vue'
 import {
-  PhArrowLeft,
   PhArrowRight,
   PhBlueprint,
   PhBuildings,
@@ -146,15 +145,7 @@ const promises = [
   <div class="min-h-screen bg-page">
     <!-- ═══ 1. HERO ═══ -->
     <section class="bg-slate-900">
-      <div class="max-w-6xl mx-auto px-6 pt-8 pb-20 md:pt-10 md:pb-28">
-        <NuxtLink
-          to="/"
-          class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors mb-10"
-        >
-          <PhArrowLeft :size="14" />
-          Retour au site des particuliers
-        </NuxtLink>
-
+      <div class="max-w-6xl mx-auto px-6 pt-12 pb-20 md:pt-16 md:pb-28">
         <div class="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800 px-4 py-1.5 text-sm text-slate-300 mb-6">
           <span class="w-2 h-2 rounded-full bg-copper" />
           Espace Professionnels &amp; Prescripteurs
