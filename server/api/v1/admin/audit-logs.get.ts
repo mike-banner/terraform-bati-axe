@@ -15,14 +15,34 @@ export default defineEventHandler(async (event) => {
 
   const { data, error, count } = await supabase
     .from('audit_logs')
-    .select('*, actor:auth.users(email)', { count: 'exact' })
+    .select('*', { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1)
 
   if (error) throw createError({ statusCode: 500, statusMessage: error.message })
 
+  // Résolution des emails via l'API admin — l'embedding `actor:auth.users(email)`
+  // échoue (parse error PostgREST) sur cette instance, comme pour b2b_requests.
+  const emailById = new Map<string, string>()
+  try {
+    const actorIds = [...new Set((data || []).map((l: any) => l.actor_id).filter(Boolean))]
+    if (actorIds.length > 0) {
+      const { data: users } = await supabase.auth.admin.listUsers({ perPage: 1000 })
+      for (const u of (users?.users || [])) {
+        if (u.email) emailById.set(u.id, u.email)
+      }
+    }
+  } catch {
+    // non bloquant
+  }
+
+  const logs = (data || []).map((l: any) => ({
+    ...l,
+    actor: l.actor_id ? { email: emailById.get(l.actor_id) || null } : null,
+  }))
+
   return {
-    logs: data || [],
+    logs,
     total: count || 0,
     limit,
     offset,

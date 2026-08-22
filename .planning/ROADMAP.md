@@ -32,7 +32,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 5.5: Portfolio Pro, Refonte Profil & Social** - Upload R2 (galerie projets), BDD completed_projects/likes, carousel landing, profil immersif pleine page (zéro menu, mobile-first). (completed 2026-07-19)
 - [x] **Phase 5.6: Calculateur de Prix & Refonte Simulateur** - Estimateur interactif (tuiles, type de travaux, m²), algorithme de chiffrage, et capture de leads qualifiés (résultat contre coordonnées). (completed 2026-07-19)
 - [x] **Phase 5.7: Durcissement Validation des Inputs** - Bornes maxlength/pattern alignées serveur (Zod) ↔ client (HTML) sur tous les formulaires + CHECK constraints DB. (completed 2026-07-20)
-- [x] **Phase 05.10: Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B)** — Landing `/b2b/partenaires` (hero + 4 promesses + badge conformité), tunnel 4 étapes (profil → besoin → dropzone R2 → coordonnées GDPR), endpoint POST + presign R2 (Turnstile), notif Resend équipe + confirmation pro. Reste: back-office admin (05.10-06) + workflow DirCo (05.10-08). (livré 2026-08-22)
+- [x] **Phase 05.10: Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B)** — Landing `/b2b/partenaires` (hero + 4 promesses + badge conformité), tunnel 4 étapes (profil → besoin → dropzone R2 → coordonnées GDPR), endpoint POST + presign R2 (Turnstile), notif Resend équipe + confirmation pro, back-office admin (queue + pipeline + assignation + notes). Reste: workflow DirCo (05.10-08). (livré 2026-08-22)
 - [ ] **Phase 05.11: Coffre-Fort Juridique & Capacité Sous-traitance** - Table documents_artisan (KBIS/URSSAF/décennale + statuts API), switch alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois. (INSERTED 2026-08-21, directive client « immédiate »)
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
 - [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, 7 onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, KPIs, Journal), search + pagination, projets cliquables. Reste: fusion `b2b_requests` (05.10-06). (livré 2026-08-22)
@@ -262,7 +262,7 @@ Plans:
 - [x] 05.10-03 ✅ — Presign public R2 (Turnstile guard, allow-list MIME, 50 Mo) (2026-08-22)
 - [x] 05.10-04 ✅ — Landing `/b2b/partenaires` (hero + 4 promesses + badge) + liens header/footer (2026-08-22)
 - [x] 05.10-05 ✅ — Tunnel 4 étapes (profil → besoin → dropzone → coordonnées GDPR) (2026-08-22)
-- [ ] 05.10-06 ⬜ — Back-office `b2b_requests` (onglet admin queue) + notif équipe
+- [x] 05.10-06 ✅ — Back-office `b2b_requests` (onglet admin queue) + notif équipe (2026-08-22)
 - [x] 05.10-07 ✅ — Thank-you page + référence dossier (2026-08-22)
 - [ ] 05.10-08-PLAN.md — Workflow DirCo (qualification CCTP, sélection 2-3 sous-traitants, restitution au donneur d'ordres)
 
@@ -403,7 +403,7 @@ Plans:
 | 5.6. Calculateur de Prix & Refonte Simulateur | 3/3 | Complete   | 2026-07-19 |
 | 5.7. Durcissement Validation des Inputs | 2/2 | Complete   | 2026-07-20 |
 | 05.8 Enrichissement SIRET (forme juridique/NAF) | 3/3 | Complete | 2026-07-20 |
-| 05.10 Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B) | 0/TBD | Not started | - |
+| 05.10 Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B) | 6/7 | In progress (reste 05.10-08) | 2026-08-22 |
 | 05.11 Coffre-Fort Juridique & Capacité Sous-traitance | 0/TBD | Not started | - |
 | 6. Messagerie & Espace Client | 2/2 livrés (2 différés) | Complete | 2026-08-19 |
 | 05.9 Extension Simulateur Mes Aides Réno | 4/4 | Complete | 2026-08-18 |
