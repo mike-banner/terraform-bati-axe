@@ -27,7 +27,7 @@ const onSimulateur = computed(() => route.path === '/simulateur')
         </NuxtLink>
         <nav class="flex items-center gap-2">
           <template v-if="user">
-            <NuxtLink v-if="!isAdmin" to="/b2b/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Espace Pros</NuxtLink>
+            <NuxtLink v-if="!isAdmin" to="/b2b/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Partenaires</NuxtLink>
             <NuxtLink :to="espaceLink" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Mon espace</NuxtLink>
             <button class="flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-sm border border-border hover:bg-muted transition-colors" @click="signOut">
               <span class="flex items-center justify-center w-6 h-6 rounded-full bg-foreground text-background text-xs font-bold">{{ userInitial }}</span>
@@ -35,7 +35,7 @@ const onSimulateur = computed(() => route.path === '/simulateur')
             </button>
           </template>
           <template v-else>
-            <NuxtLink to="/b2b/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Espace Pros</NuxtLink>
+            <NuxtLink to="/b2b/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Partenaires</NuxtLink>
             <NuxtLink to="/pro/claim" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Se connecter</NuxtLink>
             <NuxtLink
               v-if="!onSimulateur"
@@ -55,7 +55,7 @@ const onSimulateur = computed(() => route.path === '/simulateur')
       <div class="max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
         <p class="text-slate-400">&copy; 2026 BÂTI-AXE. Tous droits réservés. Conforme RGPD.</p>
         <nav class="flex items-center gap-5">
-          <NuxtLink to="/b2b/partenaires" class="text-slate-400 hover:text-white transition-colors">Espace Pros</NuxtLink>
+          <NuxtLink to="/b2b/partenaires" class="text-slate-400 hover:text-white transition-colors">Partenaires</NuxtLink>
           <NuxtLink to="/legal/mentions-legales" class="text-slate-400 hover:text-white transition-colors">Mentions légales</NuxtLink>
           <NuxtLink to="/legal/confidentialite" class="text-slate-400 hover:text-white transition-colors">Confidentialité</NuxtLink>
           <NuxtLink to="/legal/cgu" class="text-slate-400 hover:text-white transition-colors">CGU</NuxtLink>
