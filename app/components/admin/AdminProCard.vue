@@ -34,7 +34,7 @@ function docStatusLabel(status?: string) {
 
 function docStatusClasses(status?: string) {
   if (!status) return 'border-border text-muted-foreground bg-muted/30'
-  if (status === 'pending') return 'border-amber-400/50 text-amber-200 bg-amber-500/20'
+  if (status === 'pending') return 'border-amber-400/60 text-amber-200 bg-amber-400/15'
   if (status === 'approved') return 'border-emerald-400/40 text-emerald-300 bg-emerald-500/15'
   if (status === 'rejected') return 'border-red-400/40 text-red-300 bg-red-500/15'
   return 'border-border text-muted-foreground'
@@ -46,7 +46,7 @@ function uploadKey(proId: string, docType: string) {
 </script>
 
 <template>
-  <div class="bg-card border border-border rounded-sm overflow-hidden shadow-sm">
+  <div class="bg-card border border-border/60 rounded-md overflow-hidden shadow-md shadow-black/10">
     <!-- Pro header row -->
     <div class="flex items-start justify-between gap-4 px-5 py-4">
       <div class="space-y-1.5 flex-1 min-w-0">
@@ -62,7 +62,7 @@ function uploadKey(proId: string, docType: string) {
           </span>
           <span
             v-else
-            class="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full border border-amber-400/50 text-amber-200 bg-amber-500/20"
+            class="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full border border-amber-400/60 text-amber-200 bg-amber-400/15"
           >
             <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             En attente

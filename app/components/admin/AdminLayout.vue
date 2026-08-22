@@ -70,7 +70,7 @@ const userInitial = computed(() => user.value?.email?.charAt(0).toUpperCase() ||
 </script>
 
 <template>
-  <div class="h-screen bg-background flex flex-col overflow-hidden">
+  <div class="dark h-screen bg-background text-foreground flex flex-col overflow-hidden">
     <div class="flex-1 flex min-h-0">
 
       <!-- Mobile sidebar overlay -->

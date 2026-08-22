@@ -22,32 +22,32 @@ const paywallConversion = computed(() => {
   <template v-else>
     <!-- KPI Cards -->
     <div v-if="overview" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-      <div class="bg-card border border-border rounded-sm p-5">
+      <div class="bg-card border border-border/60 rounded-md p-5 shadow-md shadow-black/10">
         <p class="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">Pros vérifiés</p>
         <p class="text-3xl font-bold text-foreground">{{ overview.professionals.verified }}<span class="text-base font-medium text-muted-foreground"> / {{ overview.professionals.total }}</span></p>
         <p v-if="overview.professionals.pending" class="text-xs text-amber-400 mt-2">{{ overview.professionals.pending }} en attente</p>
         <p v-else class="text-xs text-muted-foreground mt-2">Aucun en attente</p>
       </div>
 
-      <div class="bg-card border border-border rounded-sm p-5">
+      <div class="bg-card border border-border/60 rounded-md p-5 shadow-md shadow-black/10">
         <p class="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">Projets qualifiés</p>
         <p class="text-3xl font-bold text-foreground">{{ overview.projects.qualified }}<span class="text-base font-medium text-muted-foreground"> / {{ overview.projects.total }}</span></p>
         <p class="text-xs text-muted-foreground mt-2">{{ overview.projects.pending }} en attente</p>
       </div>
 
-      <div class="bg-card border border-border rounded-sm p-5">
+      <div class="bg-card border border-border/60 rounded-md p-5 shadow-md shadow-black/10">
         <p class="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">Leads débloqués</p>
         <p class="text-3xl font-bold text-foreground">{{ overview.leads.unlocked }}<span class="text-base font-medium text-muted-foreground"> / {{ overview.leads.total }}</span></p>
         <p class="text-xs text-muted-foreground mt-2">Coordonnées accessibles</p>
       </div>
 
-      <div class="bg-card border border-border rounded-sm p-5">
+      <div class="bg-card border border-border/60 rounded-md p-5 shadow-md shadow-black/10">
         <p class="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">Abonnés actifs</p>
         <p class="text-3xl font-bold text-foreground">{{ overview.professionals.active_subscriptions }}</p>
         <p class="text-xs text-muted-foreground mt-2">MRR en cours</p>
       </div>
 
-      <div class="bg-card border border-border rounded-sm p-5">
+      <div class="bg-card border border-border/60 rounded-md p-5 shadow-md shadow-black/10">
         <p class="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">Conversion paywall (30j)</p>
         <p class="text-3xl font-bold text-safety">{{ paywallConversion }}%</p>
         <p class="text-xs text-muted-foreground mt-2">{{ overview.paywall_30d.checkout_completed }} checkout / {{ overview.paywall_30d.paywall_view }} vues</p>
@@ -60,7 +60,7 @@ const paywallConversion = computed(() => {
 
     <!-- Quick stats -->
     <div v-if="overview" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="bg-card border border-border rounded-sm p-5">
+      <div class="bg-card border border-border/60 rounded-md p-5 shadow-md shadow-black/10">
         <h3 class="text-sm font-semibold text-foreground mb-3">Activité récente</h3>
         <div class="space-y-2">
           <div class="flex items-center justify-between text-xs">
@@ -80,7 +80,7 @@ const paywallConversion = computed(() => {
         </div>
       </div>
 
-      <div class="bg-card border border-border rounded-sm p-5">
+      <div class="bg-card border border-border/60 rounded-md p-5 shadow-md shadow-black/10">
         <h3 class="text-sm font-semibold text-foreground mb-3">Alertes</h3>
         <div class="space-y-2">
           <div v-if="overview.professionals.pending > 0" class="flex items-center gap-2 text-xs text-amber-400">
