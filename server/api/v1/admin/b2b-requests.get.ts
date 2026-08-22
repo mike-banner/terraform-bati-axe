@@ -2,6 +2,8 @@ import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 
 // 05.10-06 (B2B-04) : file d'attente des demandes partenaires B2B.
 // Retourne les demandes triées par created_at DESC + la liste des admins (assignation).
+// NB : les emails (assigné + admins) sont résolus via l'API admin — l'embedding
+// PostgREST `assigned:auth.users(email)` échoue (parse error) sur cette instance.
 
 export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event)
@@ -17,7 +19,7 @@ export default defineEventHandler(async (event) => {
 
   let builder = supabase
     .from('b2b_requests')
-    .select('*, assigned:auth.users(email)', { count: 'exact' })
+    .select('*', { count: 'exact' })
 
   if (status) builder = builder.eq('status', status)
 
@@ -27,19 +29,26 @@ export default defineEventHandler(async (event) => {
 
   if (error) throw createError({ statusCode: 500, statusMessage: error.message })
 
-  // Liste des admins pour le champ « chargé d'affaires » (assigned_to)
+  // Résolution des emails (assigné + admins) via l'API admin — un seul appel
+  const emailById = new Map<string, string>()
   let admins: { id: string; email: string }[] = []
   try {
-    const { data: users } = await supabase.auth.admin.listUsers({ perPage: 200 })
-    admins = (users?.users || [])
-      .filter((u: any) => u.app_metadata?.role === 'admin')
-      .map((u: any) => ({ id: u.id, email: u.email }))
+    const { data: users } = await supabase.auth.admin.listUsers({ perPage: 1000 })
+    for (const u of (users?.users || [])) {
+      if (u.email) emailById.set(u.id, u.email)
+      if (u.app_metadata?.role === 'admin') admins.push({ id: u.id, email: u.email })
+    }
   } catch {
     // non bloquant — le dropdown d'assignation restera vide
   }
 
+  const requests = (data || []).map((r: any) => ({
+    ...r,
+    assigned: r.assigned_to ? { email: emailById.get(r.assigned_to) || null } : null,
+  }))
+
   return {
-    requests: data || [],
+    requests,
     admins,
     total: count || 0,
   }
