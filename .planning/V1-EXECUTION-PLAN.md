@@ -2,6 +2,7 @@
 
 > Objectif V1 : machine B2C **en prod mesurée** + **Espace Partenaires MVP** + premières exclusivités vendues.
 > Ordre imposé par le risque et la valeur (voir `PLAN_DE_VOL.md`).
+> **Dernière mise à jour** : 2026-08-22 (session de développement)
 
 ---
 
@@ -18,35 +19,36 @@
 
 ---
 
-## 2. P2 — Turnstile anti-spam (Cloudflare)
-**Pourquoi** : un bot flood tue la qualité du marché + la délivrabilité email.
-**Dépend** : clé Turnstile (site + secret) fournie par le client.
-
-- [ ] 2.1 Ajouter `NUXT_TURNSTILE_SITE_KEY` / `NUXT_TURNSTILE_SECRET_KEY` (config + `.env.example`).
-- [ ] 2.2 Utilitaire serveur `verifyTurnstile(token, ip)` (appel `siteverify` Cloudflare).
-- [ ] 2.3 Widget client + envoi du token sur les formulaires publics (`/simulateur`, futur `/partenaires`).
-- [ ] 2.4 Rejet 400 si token invalide/absent en prod (bypass en dev si clé absente).
-**Sortie** : `POST /api/v1/projects` refuse les soumissions sans token Turnstile valide.
+## 2. P2 — Turnstile anti-spam (Cloudflare) ✅ CODE LIVRÉ
+**Statut** : code prêt, standby (clés Turnstile à poser côté client au transfert).
+- [x] 2.1 Ajouter `NUXT_TURNSTILE_SITE_KEY` / `NUXT_TURNSTILE_SECRET_KEY` (config + `.env.example`).
+- [x] 2.2 Utilitaire serveur `verifyTurnstile(token, ip)` (appel `siteverify` Cloudflare).
+- [x] 2.3 Widget client + envoi du token sur les formulaires publics (`/simulateur`, `/b2b/partenaires`).
+- [x] 2.4 Rejet 400 si token invalide/absent en prod (bypass en dev si clé absente).
+- [ ] **TODO** : créer les 2 clés Turnstile sur Cloudflare Dashboard → poser les vars en prod.
 
 ---
 
-## 3. 06.1 — Console admin opérationnelle
-- [ ] 3.1 Vue d'ensemble (KPIs : pros, projets, leads, paywall).
-- [ ] 3.2 Onglet revue documents (Kbis/décennale) consolidé.
-- [ ] 3.3 Gestion pros (vérifier/promouvoir/statut).
-- [ ] 3.4 Pilotage projets/leads + audit log consultable.
-- [ ] 3.5 Fusion de la future vue `b2b_requests` (05.10) dans le même écran.
-**Sortie** : l'admin couvre les 5 usages quotidiens sans code monolithique.
+## 3. 06.1 — Console admin opérationnelle ✅ FAIT
+**Statut** : console complète avec sidebar, 7 onglets, dark mode.
+- [x] 3.1 Vue d'ensemble (KPIs : pros, projets, leads, paywall).
+- [x] 3.2 Onglet revue documents (Kbis/décennale) consolidé avec AdminProCard.
+- [x] 3.3 Gestion pros (approuver/suspendre/statut) + search + pagination.
+- [x] 3.4 Pilotage projets (search étendue client, tri, pagination, cards cliquables).
+- [x] 3.5 Audit log consultable (onglet Journal).
+- [x] 3.6 Dark mode forcé + contraste cards/badges.
+- [x] 3.7 Sidebar fixe + déconnexion dans sidebar.
+- [ ] 3.8 Fusion de la future vue `b2b_requests` (05.10) dans le même écran.
 
 ---
 
-## 4. 06.2 — KPIs de pilotage (Matomo + dashboard)
-- [ ] 4.1 Schéma : `acquisition_costs` (commissions freelance + frais marketing) + `kpi_snapshots`.
-- [ ] 4.2 Ingestion : churn (Stripe), matching (projets → réponses pros), coûts (saisie admin).
-- [ ] 4.3 Calculs serveur : CAC, LTV, LTV/CAC, churn, matching, rétention, activation fournisseur (stub).
-- [ ] 4.4 Dashboard admin : 5 lignes rouges (vert/orange/rouge + action).
+## 4. 06.2 — KPIs de pilotage (Matomo + dashboard) ✅ CODE LIVRÉ
+**Statut** : moteur KPI + dashboard UI livrés. Matomo à brancher côté client.
+- [x] 4.1 Schéma : tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`.
+- [x] 4.2 Endpoint `GET /api/v1/admin/kpi-engine` (calcul CAC, LTV, churn, matching, rétention).
+- [x] 4.3 Dashboard admin : 6 cartes KPI + matrice lignes rouges (vert/orange/rouge).
+- [x] 4.4 Filtre période (7j, 30j, mois, année).
 - [ ] 4.5 Matomo (P1) branché sur le funnel (simulateur → lead → contact → chantier).
-**Sortie** : le pilote est mesurable dès J1.
 
 ---
 
@@ -66,22 +68,28 @@
 
 ---
 
-## 7. P12 — Page pro publique « digne »
-- [ ] 7.1 Héro + preuve sociale (avis une fois Phase 7) + CTA contact sur `/pro/[dept]/[slug]`.
-- [ ] 7.2 Mettre en avant badges (SIRET/décennale) + galerie + likes existants.
-**Sortie** : la vitrine du pro donne envie de contacter.
+## 7. P12 — Page pro publique « digne » ✅ PARTIEL
+**Statut** : CTA « Demander un devis » ajouté. Reste les avis (Phase 7).
+- [x] 7.1 CTA contact dans le hero de `/pro/[dept]/[slug]`.
+- [x] 7.2 Badge SIRET/décennale déjà affiché.
+- [ ] 7.3 Avis clients (Phase 7).
+- [ ] 7.4 Galerie améliorée.
 
 ---
 
-## 8. 05.10 MVP — Espace Partenaires + crash test commercial
+## 8. 05.10 MVP — Espace Partenaires ✅ LIVRÉ
+**Statut** : landing + tunnel complet + endpoint + presign R2. Reste back-office admin.
 **En parallèle** : appeler 5-6 artisans, vendre l'exclusivité (valider le modèle terrain avant de sur-builder).
 
-- [ ] 8.1 Landing `/partenaires` (hero « bras armé technique », 4 promesses, badge conformité) + lien header/footer.
-- [ ] 8.2 Formulaire épuré (profil → besoin → dépôt fichiers → coordonnées + GDPR) + bouton « Déposer vos plans/cahier des charges ».
-- [ ] 8.3 Upload R2 (presign public, derrière Turnstile P2).
-- [ ] 8.4 Rappel < 4h : notif équipe (Resend) + email confirmation pro.
-- [ ] 8.5 Table `b2b_requests` + vue admin minimale.
-**Sortie** : un archi/agent peut déposer un dossier, l'équipe est notifiée, rappel < 4h.
+- [x] 8.1 Landing `/b2b/partenaires` (hero « bras armé technique », 4 promesses par type, badge conformité).
+- [x] 8.2 Tunnel 4 étapes (profil apporteur → besoin → dropzone fichiers R2 → coordonnées + GDPR).
+- [x] 8.3 Endpoint `POST /api/v1/b2b/requests` (Zod + consent + notif Resend équipe + confirmation pro).
+- [x] 8.4 Presign R2 public (Turnstile guard, allow-list MIME, 50 Mo).
+- [x] 8.5 Thank-you page + référence dossier.
+- [x] 8.6 Migration `b2b_requests` + types + RLS.
+- [x] 8.7 Liens « Partenaires » dans header/footer.
+- [ ] 8.8 Back-office admin (onglet `b2b_requests` dans console admin).
+- [ ] 8.9 Workflow DirCo (qualification CCTP, sélection 2-3 sous-traitants).
 
 ---
 
@@ -104,8 +112,8 @@
 
 ## Dépendances & ordre
 ```
-P3 (Stripe) ─┬─ P2 (Turnstile) ─┬─ 05.10 MVP (upload public)
-             │                  │
-06.1 (admin) ┴─ 06.2 (KPIs) ───┴─ P7 (packs) ─ P4/P9/P12 ─ P5
+P3 (Stripe) ─┬─ P2 (Turnstile) ✅ ─┬─ 05.10 MVP ✅ (upload public)
+             │                     │
+06.1 (admin) ✴─ 06.2 (KPIs) ✅ ──┴─ P7 (packs) ─ P4/P9/P12 ─ P5
 ```
-**Blocages externes** : clé Turnstile (P2), PDF Book/Kit (05.10), tarifs définitifs (P7).
+**Blocages externes** : clé Turnstile (P2 — standby), PDF Book/Kit (05.10), tarifs définitifs (P7).

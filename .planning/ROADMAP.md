@@ -32,11 +32,11 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 5.5: Portfolio Pro, Refonte Profil & Social** - Upload R2 (galerie projets), BDD completed_projects/likes, carousel landing, profil immersif pleine page (zéro menu, mobile-first). (completed 2026-07-19)
 - [x] **Phase 5.6: Calculateur de Prix & Refonte Simulateur** - Estimateur interactif (tuiles, type de travaux, m²), algorithme de chiffrage, et capture de leads qualifiés (résultat contre coordonnées). (completed 2026-07-19)
 - [x] **Phase 5.7: Durcissement Validation des Inputs** - Bornes maxlength/pattern alignées serveur (Zod) ↔ client (HTML) sur tous les formulaires + CHECK constraints DB. (completed 2026-07-20)
-- [ ] **Phase 05.10: Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B)** - Landing page partenaire ("Bras armé technique"), tunnel 4 étapes, dépôt de plans/rapports expert via R2, SLA de 4h, notif équipe. (ex « Phase 5.8 », renommée pour lever la collision avec « 05.8 Enrichissement SIRET » — jamais implémentée, cf. spec client 2026-08-21)
+- [x] **Phase 05.10: Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B)** — Landing `/b2b/partenaires` (hero + 4 promesses + badge conformité), tunnel 4 étapes (profil → besoin → dropzone R2 → coordonnées GDPR), endpoint POST + presign R2 (Turnstile), notif Resend équipe + confirmation pro. Reste: back-office admin (05.10-06) + workflow DirCo (05.10-08). (livré 2026-08-22)
 - [ ] **Phase 05.11: Coffre-Fort Juridique & Capacité Sous-traitance** - Table documents_artisan (KBIS/URSSAF/décennale + statuts API), switch alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois. (INSERTED 2026-08-21, directive client « immédiate »)
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
-- [ ] **Phase 06.1: Console Admin Opérationnelle** - Consolider et compléter l'admin : revue documents, gestion pros, projets/leads, analytics paywall, audit log. UI/UX de l'admin → passe design dédiée plus tard (voir Deferred).
-- [ ] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** - Dashboard des 5 KPIs (CAC, LTV/CAC, churn, matching, rétention prescripteurs, activation fournisseurs) + seuils vert/orange/rouge + Matomo (P1). (INSERTED 2026-08-21, spec client 2026-08-21)
+- [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, 7 onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, KPIs, Journal), search + pagination, projets cliquables. Reste: fusion `b2b_requests` (05.10-06). (livré 2026-08-22)
+- [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). Reste: brancher Matomo côté client. (livré 2026-08-22)
 - [x] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
 - [ ] **Phase 8: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
@@ -257,13 +257,13 @@ Plans:
 
 **Plans**: 7 plans (découpage proposé — à générer via `gsd-plan-phase`)
 Plans:
-- [ ] 05.10-01-PLAN.md — Schéma BDD : table `b2b_requests` + migration + types + RLS
-- [ ] 05.10-02-PLAN.md — Endpoint public `POST /api/v1/b2b/requests` (Zod + consentement + Turnstile P2)
-- [ ] 05.10-03-PLAN.md — Presign public R2 pièces jointes (allow-list MIME, 50 Mo, anti-abuse) + upload client
-- [ ] 05.10-04-PLAN.md — Landing `/partenaires` (hero, réassurance, badge) + lien header/footer
-- [ ] 05.10-05-PLAN.md — Tunnel 4 étapes (cartes profil, radio besoin, drop zone, coordonnées + GDPR)
-- [ ] 05.10-06-PLAN.md — Back-office `b2b_requests` + notif équipe (Resend/Slack) + email confirmation pro
-- [ ] 05.10-07-PLAN.md — Thank-you page + assets PDF (Book/Kit/attestation — dépend livrables client)
+- [x] 05.10-01 ✅ — Schéma BDD : table `b2b_requests` + migration + types + RLS (2026-08-22)
+- [x] 05.10-02 ✅ — Endpoint public `POST /api/v1/b2b/requests` (Zod + consent + notif Resend) (2026-08-22)
+- [x] 05.10-03 ✅ — Presign public R2 (Turnstile guard, allow-list MIME, 50 Mo) (2026-08-22)
+- [x] 05.10-04 ✅ — Landing `/b2b/partenaires` (hero + 4 promesses + badge) + liens header/footer (2026-08-22)
+- [x] 05.10-05 ✅ — Tunnel 4 étapes (profil → besoin → dropzone → coordonnées GDPR) (2026-08-22)
+- [ ] 05.10-06 ⬜ — Back-office `b2b_requests` (onglet admin queue) + notif équipe
+- [x] 05.10-07 ✅ — Thank-you page + référence dossier (2026-08-22)
 - [ ] 05.10-08-PLAN.md — Workflow DirCo (qualification CCTP, sélection 2-3 sous-traitants, restitution au donneur d'ordres)
 
 **Hors phase (V1.1+):** Google Places autocomplete, simulateur macro agences immo (widget), CRM HubSpot/Pipedrive, notif WhatsApp, Compte Prescripteur (P8).

@@ -28,18 +28,18 @@
 ## 🚀 2. Ce qui reste — DANS L'ORDRE
 
 ### 🟢 V1 — Lancement pilote 78 (objectif : machine B2C qui tourne + premières archis/immo)
-| # | Item | Pourquoi | Réf |
+| # | Item | Statut | Réf |
 | :--- | :--- | :--- | :--- |
-| 1 | **Stripe + cron 72h re-testés en prod** | le paywall mort = découvert par hasard | P3 |
-| 2 | **Turnstile anti-spam** | un bot flood tue le marché + délivrabilité | P2 |
-| 3 | **Console admin opérationnelle** | piloter au quotidien | 06.1 |
-| 4 | **KPIs de pilotage (Matomo + dashboard)** | mesurer le pilote dès J1 | 06.2 + P1 |
-| 5 | **Notif leads aux pros (email)** | activer les pros sans surveillance | P4 |
-| 6 | **Mobile QA** (landing + simulateur + états vides) | 80 % de la 1ʳᵉ impression | P9 |
-| 7 | **Page pro publique « digne »** | ce que voit le particulier avant de contacter | P12 |
-| 8 | **Espace Partenaires MVP** (landing + formulaire + rappel 4h) — en parallèle du **crash test commercial** (appeler 5-6 artisans, vendre l'exclusivité) | capter les apporteurs + valider le modèle terrain | 05.10 |
-| 9 | **Packs zonés & exclusivité métier** (tarifs + charte d'exclusivité) | monétiser correctement le B2C | P7 |
-| 10 | **Feedback loop refus → remise marché testé** | chemin non testé | P5 |
+| 1 | **Stripe + cron 72h re-testés en prod** | ⏳ runbook prêt, à tester | P3 |
+| 2 | **Turnstile anti-spam** | ✅ code livré (standby clés) | P2 |
+| 3 | **Console admin opérationnelle** | ✅ livré (composants, dark, KPIs, audit) | 06.1 |
+| 4 | **KPIs de pilotage (Matomo + dashboard)** | ✅ livré (Matomo à brancher) | 06.2 |
+| 5 | **Notif leads aux pros (email)** | ⬜ à faire | P4 |
+| 6 | **Mobile QA** (landing + simulateur + états vides) | ⬜ à faire | P9 |
+| 7 | **Page pro publique « digne »** | ✅ CTA fait (avis = Phase 7) | P12 |
+| 8 | **Espace Partenaires MVP** (landing + tunnel) | ✅ livré (reste back-office 05.10-06) | 05.10 |
+| 9 | **Packs zonés & exclusivité métier** (tarifs + charte) | ⬜ à faire | P7 |
+| 10 | **Feedback loop refus → remise marché** | ⬜ à faire | P5 |
 
 ### 💰 V2 — Pivot B2B apporteurs d'affaires (objectif : la marge / commissions)
 | # | Item | Réf |
