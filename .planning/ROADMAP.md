@@ -33,7 +33,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 5.6: Calculateur de Prix & Refonte Simulateur** - Estimateur interactif (tuiles, type de travaux, m²), algorithme de chiffrage, et capture de leads qualifiés (résultat contre coordonnées). (completed 2026-07-19)
 - [x] **Phase 5.7: Durcissement Validation des Inputs** - Bornes maxlength/pattern alignées serveur (Zod) ↔ client (HTML) sur tous les formulaires + CHECK constraints DB. (completed 2026-07-20)
 - [x] **Phase 05.10: Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B)** — Landing `/b2b/partenaires` (hero + 4 promesses + badge conformité), tunnel 4 étapes (profil → besoin → dropzone R2 → coordonnées GDPR), endpoint POST + presign R2 (Turnstile), notif Resend équipe + confirmation pro, back-office admin (queue + pipeline + assignation + notes), workflow DirCo (qualification, sélection 2-3 sous-traitants, restitution email). **Phase complète 7/7** (livré 2026-08-22)
-- [ ] **Phase 05.11: Coffre-Fort Juridique & Capacité Sous-traitance** - Table documents_artisan (KBIS/URSSAF/décennale + statuts API), switch alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois. (INSERTED 2026-08-21, directive client « immédiate »)
+- [x] **Phase 05.11: Coffre-Fort Juridique & Capacité Sous-traitance** - Table documents_artisan (KBIS/URSSAF/décennale + statuts API), switch alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois. **Phase complète 4/4** (livré 2026-08-23)
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
 - [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, 7 onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, KPIs, Journal), search + pagination, projets cliquables. Reste: fusion `b2b_requests` (05.10-06). (livré 2026-08-22)
 - [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). Reste: brancher Matomo côté client. (livré 2026-08-22)
@@ -286,12 +286,12 @@ Plans:
   4. Re-contrôle tous les 6 mois (devoir de vigilance donneur d'ordres) tracé dans `documents_artisan` / `audit_logs`.
   5. V1 = statuts manuels + dates d'expiration (pattern décennale Phase 5) ; API Infolégale/Paperless = V2.
 
-**Plans**: 4 plans (découpage proposé — à générer via `gsd-plan-phase`)
+**Plans**: 4/4 complete
 Plans:
-- [ ] 05.11-01-PLAN.md — Migration `documents_artisan` + colonnes sous-traitance + types + RLS
-- [ ] 05.11-02-PLAN.md — Switch « Alerte Capacité » + effectif dans `/espace/dashboard` + endpoint PATCH
-- [ ] 05.11-03-PLAN.md — Suspension auto à expiration + re-contrôle 6 mois (devoir de vigilance)
-- [ ] 05.11-04-PLAN.md — Vue admin documents (statuts, expirations) — fusionnée Phase 06.1
+- [x] 05.11-01 ✅ — Migration `documents_artisan` + colonnes sous-traitance + types + RLS (2026-08-23)
+- [x] 05.11-02 ✅ — Switch « Alerte Capacité » + effectif dans `/espace/dashboard` + endpoint PATCH (2026-08-23)
+- [x] 05.11-03 ✅ — Suspension auto à expiration + re-contrôle 6 mois (devoir de vigilance) (2026-08-23)
+- [x] 05.11-04 ✅ — Vue admin documents (statuts, expirations) — fusionnée Phase 06.1 (2026-08-23)
 
 **UI hint**: yes
 
@@ -404,7 +404,7 @@ Plans:
 | 5.7. Durcissement Validation des Inputs | 2/2 | Complete   | 2026-07-20 |
 | 05.8 Enrichissement SIRET (forme juridique/NAF) | 3/3 | Complete | 2026-07-20 |
 | 05.10 Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B) | 7/7 | Complete | 2026-08-22 |
-| 05.11 Coffre-Fort Juridique & Capacité Sous-traitance | 0/TBD | Not started | - |
+| 05.11 Coffre-Fort Juridique & Capacité Sous-traitance | 4/4 | Complete | 2026-08-23 |
 | 6. Messagerie & Espace Client | 2/2 livrés (2 différés) | Complete | 2026-08-19 |
 | 05.9 Extension Simulateur Mes Aides Réno | 4/4 | Complete | 2026-08-18 |
 | 06.1 Console Admin Opérationnelle | 0/TBD | Planned | - |
