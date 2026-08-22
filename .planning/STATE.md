@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0-lancement-pilote
 milestone_name: Lancement v1 — Pilote Carrières-sous-Poissy
 status: v1_in_progress
-stopped_at: "V1 en cours — phases 05.10/05.11/06.1/06.2/05.12 + P4 livrées, PRs #44-48 mergés, #49 ouvert"
+stopped_at: "V1 en cours — phases 05.10/05.11/06.1/06.2/05.12 + P4 livrées, PRs #44-49 tous mergés"
 last_updated: "2026-08-23T23:00:00.000Z"
 last_activity: 2026-08-23
 progress:
@@ -108,8 +108,8 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - ✅ **#45** récupération moteur KPI (06.2) — mergé 2026-08-22 (après rebase + résolution conflit sidebar)
 - ✅ **#46** workflow DirCo — mergé 2026-08-22
 - ✅ **#47** coffre-fort juridique 05.11 — mergé 2026-08-23
-- ✅ **#48** P4 notif email leads — mergé 2026-08-23 (résolution conflits ROADMAP/STATE faite au merge de #49)
-- 🟡 **#49** front polish partenaire (landing, logo, Phosphor, FAQ, copper) — ouvert, mergeable — branche `fix/tweaks-front`
+- ✅ **#48** P4 notif email leads — mergé 2026-08-23 (conflits ROADMAP/STATE résolus au merge de #49)
+- ✅ **#49** front polish partenaire (landing, logo, Phosphor, FAQ, copper) — mergé 2026-08-23 (conflits planning résolus : base rewrite #48 + apports 05.12)
 
 ## Blockers/Concerns
 
