@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
 
 useRequireAuth()
 const route = useRoute()
@@ -94,8 +94,21 @@ useHead({
 
 const isLocked   = computed(() => lead.value?.status === 'locked')
 
-// Arrivée depuis l'email d'alerte (P4) : bandeau contextuel « vous avez été alerté »
+// Arrivée depuis l'email d'alerte (P4) : halo lumineux sur l'offre pendant ~15 s
 const fromEmailAlert = computed(() => route.query.src === 'email')
+const offerHighlight = ref(false)
+let highlightTimer: ReturnType<typeof setTimeout> | null = null
+
+onMounted(() => {
+  if (fromEmailAlert.value) {
+    offerHighlight.value = true
+    highlightTimer = setTimeout(() => { offerHighlight.value = false }, 15000)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (highlightTimer) clearTimeout(highlightTimer)
+})
 
 const formattedDate = computed(() =>
   lead.value?.created_at
@@ -148,17 +161,6 @@ async function copyToClipboard(text: string) {
       Retour à mes leads
     </NuxtLink>
 
-    <!-- Bandeau : arrivée depuis l'email d'alerte (P4) -->
-    <div v-if="fromEmailAlert" class="flex items-start gap-3 p-4 border border-safety/30 bg-safety/5 rounded-sm mb-6">
-      <svg class="w-4 h-4 shrink-0 mt-0.5 text-safety" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
-      </svg>
-      <div>
-        <p class="text-sm font-semibold text-slate-900">Vous avez été alerté de ce chantier</p>
-        <p class="text-xs text-slate-600 mt-0.5">Il correspond à vos catégories. Voici l'essentiel de l'offre — les coordonnées du client suivent la règle d'accès habituelle.</p>
-      </div>
-    </div>
-
     <!-- Loading -->
     <template v-if="pending">
       <div class="h-8 bg-muted rounded animate-pulse mb-4 w-64" />
@@ -203,8 +205,12 @@ async function copyToClipboard(text: string) {
         <p class="text-xs text-slate-500 mt-2">Reçu le {{ formattedDate }}</p>
       </div>
 
-      <!-- Focus sur l'offre : l'essentiel du chantier, verrouillé ou non (P4) -->
-      <div class="bg-slate-900 rounded-sm p-6 md:p-8 mb-8 shadow-lg">
+      <!-- Focus sur l'offre : l'essentiel du chantier, verrouillé ou non (P4)
+           Halo orange 15 s quand on arrive depuis l'email d'alerte (?src=email) -->
+      <div
+        class="bg-slate-900 rounded-sm p-6 md:p-8 mb-8 shadow-lg transition-all duration-700"
+        :class="offerHighlight ? 'ring-2 ring-safety/80 shadow-[0_0_45px_-5px_rgba(234,88,12,0.55)] scale-[1.01]' : ''"
+      >
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div>
             <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Budget</p>
