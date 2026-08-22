@@ -7,11 +7,11 @@ stopped_at: Milestone v0.9.0 clôturé (v1 livrable) — prochain chantier Phase
 last_updated: "2026-08-19T00:00:00.000Z"
 last_activity: 2026-08-19
 progress:
-  total_phases: 14
-  completed_phases: 12
-  total_plans: 51
-  completed_plans: 50
-  percent: 98
+  total_phases: 20
+  completed_phases: 18
+  total_plans: 68
+  completed_plans: 66
+  percent: 97
 ---
 
 # Project State
@@ -65,6 +65,7 @@ Dette connue héritée du plan 06-01 : passe visuelle Playwright jamais faite (M
 
 ### Roadmap Evolution
 
+- [2026-08-23] Phase 05.12 ajoutée : Front Polish & Branding (Landing Partenaires + Logo) — retouches front livrées sur la branche dédiée `fix/tweaks-front` (PR #49) et documentées en phase GSD : landing `/partenaires` dédiée (9 sections) + tunnel `/b2b/partenaires` allégé + scroll fluide + copy CTA (plan 01) ; déclinaisons web du logo (détourage flood-fill, transparent/monochrome, favicons multi-tailles, apple-touch 180, icônes PWA, og-image) + branchements header/footer/nuxt.config + script réutilisable `scripts/generate-logo-variants.mjs` (plan 02). **Phase complète 2/2** — aucune migration DB.
 - Phase 05.8 inserted after Phase 5: Enrichissement SIRET (forme juridique, NAF, suggestion catégories) au claim — étend server/utils/siretLookup.ts, ajoute siret_legal_form/siret_naf_code sur professionals, mapping statique NAF→catégories BTP, pré-cochage au claim (pro confirme). Scope claim uniquement pour l'instant.
 - Phase 05.8 edited: Ajout scope 05.8 : auto-approuver le Kbis à l'upload si professionals.siret_status === 'active' (déjà vérifié au claim), même pattern que l'auto-approbation décennale dans upload.post.ts. Évite la revue admin manuelle quand l'API gouv confirme déjà l'existence/activité de l'entreprise.
 - [2026-08-06] Phase 8 ajoutée à ROADMAP.md : Architecture PWA Mobile-First & Packaging Stores (Capacitor 6) — @vite-pwa/nuxt offline-resilient, Bottom Bar Shell mobile, wrapper Capacitor 6 pour App Store/Play Store. Dépend de Phase 4.7 et Phase 6.
