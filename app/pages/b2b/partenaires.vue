@@ -4,7 +4,7 @@ import type { B2bApporteurType, B2bNeedType, B2bBudgetRange, B2bRequestFile } fr
 
 useHead({ title: 'Espace Partenaires — BÂTI-AXE' })
 
-definePageMeta({ layout: 'dynamic' })
+definePageMeta({ layout: 'default' })
 
 // ─── State ────────────────────────────────────────────────────────────────────
 const step = ref(1)
