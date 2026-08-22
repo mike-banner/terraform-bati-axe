@@ -94,11 +94,23 @@ useHead({
 
 const isLocked   = computed(() => lead.value?.status === 'locked')
 
+// Arrivée depuis l'email d'alerte (P4) : bandeau contextuel « vous avez été alerté »
+const fromEmailAlert = computed(() => route.query.src === 'email')
+
 const formattedDate = computed(() =>
   lead.value?.created_at
     ? new Date(lead.value.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
     : ''
 )
+
+// Score de qualification (D-12) — l'essentiel de l'offre, visible même verrouillé
+const qualifyBadges = computed(() => [
+  { key: 'budget',       ok: lead.value?.qualify_budget ?? false,       label: 'Budget renseigné' },
+  { key: 'phone',        ok: lead.value?.qualify_phone ?? false,        label: 'Téléphone vérifié' },
+  { key: 'description',  ok: lead.value?.qualify_description ?? false,  label: 'Description détaillée' },
+  { key: 'returning',    ok: lead.value?.qualify_returning ?? false,    label: 'Client récurrent' },
+])
+
 
 async function updateLeadStatus(newStatus: string) {
   if (!lead.value) return
@@ -135,6 +147,17 @@ async function copyToClipboard(text: string) {
       </svg>
       Retour à mes leads
     </NuxtLink>
+
+    <!-- Bandeau : arrivée depuis l'email d'alerte (P4) -->
+    <div v-if="fromEmailAlert" class="flex items-start gap-3 p-4 border border-safety/30 bg-safety/5 rounded-sm mb-6">
+      <svg class="w-4 h-4 shrink-0 mt-0.5 text-safety" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+      </svg>
+      <div>
+        <p class="text-sm font-semibold text-slate-900">Vous avez été alerté de ce chantier</p>
+        <p class="text-xs text-slate-600 mt-0.5">Il correspond à vos catégories. Voici l'essentiel de l'offre — les coordonnées du client suivent la règle d'accès habituelle.</p>
+      </div>
+    </div>
 
     <!-- Loading -->
     <template v-if="pending">
@@ -178,6 +201,47 @@ async function copyToClipboard(text: string) {
           {{ CATEGORY_LABELS[lead.category] ?? lead.category }}
         </h1>
         <p class="text-xs text-slate-500 mt-2">Reçu le {{ formattedDate }}</p>
+      </div>
+
+      <!-- Focus sur l'offre : l'essentiel du chantier, verrouillé ou non (P4) -->
+      <div class="bg-slate-900 rounded-sm p-6 md:p-8 mb-8 shadow-lg">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div>
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Budget</p>
+            <p class="text-xl md:text-2xl font-black text-white">{{ lead.budget_range }}</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Délai</p>
+            <p class="text-xl md:text-2xl font-black text-white">{{ TIMELINE_LABELS[lead.timeline_range] ?? (lead.timeline_range || '—') }}</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Qualification</p>
+            <p class="text-xl md:text-2xl font-black text-white">{{ lead.qualify_score ?? 0 }}/4</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Client</p>
+            <p class="text-xl md:text-2xl font-black text-white">{{ lead.qualify_returning ? 'Récurrent' : 'Nouveau' }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 mt-5 pt-5 border-t border-slate-700">
+          <div class="flex items-center gap-1.5">
+            <span v-for="b in qualifyBadges" :key="b.key" :title="b.label"
+              class="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full border"
+              :class="b.ok ? 'border-safety/50 bg-safety/15 text-safety' : 'border-slate-600 text-slate-500'">
+              <svg v-if="b.ok" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              {{ b.label }}
+            </span>
+          </div>
+          <span class="ml-auto hidden md:inline-flex items-center gap-1.5 text-xs font-semibold"
+            :class="isLocked ? 'text-amber-400' : 'text-emerald-400'">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path v-if="isLocked" stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+              <path v-else stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+            </svg>
+            {{ isLocked ? 'Coordonnées bloquées' : 'Coordonnées débloquées' }}
+          </span>
+        </div>
       </div>
 
       <!-- Project details (always visible) -->

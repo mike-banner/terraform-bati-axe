@@ -74,7 +74,7 @@ export async function notifyMatchedPros(supabase: any, project: any, category: s
           Les coordonnées du client sont débloquées immédiatement si vous êtes Premium,
           ou automatiquement après <strong>48 h</strong>. Connectez-vous pour voir le lead.
         </p>
-        <a href="${siteUrl}/espace/leads/${project.id}"
+        <a href="${siteUrl}/espace/leads/${project.id}?src=email"
            style="display: inline-block; background: #0f172a; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">
           Voir le lead
         </a>
