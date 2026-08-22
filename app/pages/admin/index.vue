@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Professional, Project, Realisation, Overview } from '~/types/admin'
 
-definePageMeta({ layout: 'dynamic' })
+definePageMeta({ layout: 'admin' })
 
 useHead({ title: 'Console Admin — BÂTI-AXE' })
 
