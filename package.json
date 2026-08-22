@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@lucide/vue": "^1.17.0",
+    "@phosphor-icons/vue": "^2.2.1",
     "aws4fetch": "^1.0.20",
     "nuxt": "^4.5.2",
     "reka-ui": "^2.9.8",
