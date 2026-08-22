@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0-lancement-pilote
 milestone_name: Lancement v1 — Pilote Carrières-sous-Poissy
-status: ready_to_plan_06.1
-stopped_at: Milestone v0.9.0 clôturé (v1 livrable) — prochain chantier Phase 06.1 Console Admin
-last_updated: "2026-08-19T00:00:00.000Z"
-last_activity: 2026-08-19
+status: v1_in_progress
+stopped_at: "V1 en cours — phases 05.10/05.11/06.1/06.2/05.12 + P4 livrées, PRs #44-48 mergés, #49 ouvert"
+last_updated: "2026-08-23T23:00:00.000Z"
+last_activity: 2026-08-23
 progress:
   total_phases: 20
   completed_phases: 18
@@ -27,76 +27,43 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Milestone v0.9.0 clôturé (v1 livrable pilote). Prochain chantier : Phase 06.1 — Console Admin Opérationnelle (fonctionnel d'abord, UI/UX dédiée plus tard), puis Phase 7 (Réputation & Scale) et Phase 8 (PWA).
+**Current focus**: Milestone **v1.0 « Pilote 78 en orbite »** EN COURS — la machine B2C + couche Partenaires B2B + KPIs sont livrés ; il reste la priorité pilote (P3 Stripe re-test, P1 Matomo, P9 mobile QA, P5 feedback loop, P7 packs zonés) puis le go-live réel.
 
 ## Current Position
 
-Phase: 6 (messagerie-espace-client) — COMPLETE (06-01 messagerie ✅, 06-03 feedback loop REQ-06/09 + email onboarding REQ-07 ✅ livré le 2026-08-19 ; 06-02 acquisition et 06-04 SMS différés post-lancement)
-Ensuite: Phase 06.1 (console-admin-operationnelle) puis Phase 7/8 — **nouveau milestone v1.0**
-Status: Milestone v0.9.0 CLÔTURÉ le 2026-08-19 (v1 livrable, conditions de livraison documentées au ROADMAP)
-Last activity: 2026-08-19
+Milestone: **v1.0 « Pilote 78 en orbite »** (déclaré au ROADMAP le 2026-08-23)
+Phases complètes récentes :
+- **05.10 — Espace Partenaires & Apporteurs d'Affaires** ✅ 7/7 (2026-08-22) : landing `/b2b/partenaires`, tunnel 4 étapes, POST + presign R2, back-office admin `b2b_requests`, workflow DirCo (qualification + sélection 2-3 sous-traitants + restitution email).
+- **05.11 — Coffre-Fort Juridique & Capacité Sous-traitance** ✅ 4/4 (2026-08-23) : `documents_artisan`, alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois, vue admin documents.
+- **06.1 — Console Admin Opérationnelle** ✅ (2026-08-22) : 8 composants modulaires, sidebar, dark mode, search/pagination, audit log, onglets B2B + Documents légaux.
+- **06.2 — KPIs de Pilotage** ✅ (2026-08-22, merge PR #45 le 2026-08-22) : kpi-engine 6 KPIs + dashboard admin. *(récupéré d'une branche jamais mergée — docs le marquaient « livré » à tort)*.
+- **05.12 — Front Polish & Branding** ✅ 2/2 (2026-08-23, PR #49) : landing `/partenaires` dédiée (9 sections) + tunnel allégé + scroll fluide ; déclinaisons web du logo (détourage flood-fill, transparent/monochrome, favicons, apple-touch, PWA, og-image) + script `scripts/generate-logo-variants.mjs` ; passe anti-slop, icônes Phosphor duotone, FAQ éditoriale, univers `copper`, radius pill unifié, retour « Particuliers » dans le header. Aucune migration DB.
+- **P4 — Notif pro nouveaux leads (email)** ✅ (2026-08-23, PR #48 mergé) : `notifyProLead` sur `projects.post.ts`, opt-in `lead_alerts_email`, idempotence `lead_notifications`, page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h, focus offre 15 s à l'arrivée depuis l'email.
 
-### Plans Phase 06 (Messagerie & Espace Client) — acquisition retirée, SMS différé
+Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod), **P1** (Matomo funnel), **P9** (mobile QA), **P5** (feedback loop testé), **P7** (packs zonés — bloqué tarifs), **P6/P8/P10** (leviers B2B).
 
-- [x] 06-01 — Magic Link & Messagerie In-App (codé et mergé dans `dev` le 2026-06-15, hors flux GSD ; vérifié via `06-UAT.md` status complete 4/5 PASS + 1 fixed ; `06-01-SUMMARY.md` rédigé rétroactivement le 2026-08-06). Bug majeur trouvé et corrigé : verrou de déblocage manquant côté messagerie pro (ADR-004), fix sur `fix/messaging-unlock-guard`.
-- [ ] 06-02 — Acquisition Pros (cold email) — ⏸ RETIRÉ de la Phase 6 (décision 2026-08-18) : pas prioritaire tant que le site se construit. Reporté post-lancement, source (CSV/seed/scrape) à trancher le moment venu.
-- [x] 06-03 — Feedback loop lead (REQ-06) + profil public espace particulier (REQ-09) livrés hors-plan (commit `b4970a9`) ; **Email onboarding (REQ-07) livré le 2026-08-19** (flag `NUXT_ONBOARDING_EMAILS`, migration `onboarding_email_sent_at`, envoi au claim, idempotence, livraison Resend vérifiée sur le compte du propriétaire).
-- [ ] 06-04 — SMS différencié — ⏸ DIFFÉRÉ volontairement en tout dernier (décision utilisateur 2026-06-16 : aucune dépense fournisseur SMS sans feu vert explicite)
+## Plans récents livrés
 
-Dette connue héritée du plan 06-01 : passe visuelle Playwright jamais faite (MCP bloqué sur Chrome système, fix identifié mais non appliqué), 10 erreurs typecheck préexistantes dans `server/api/v1/leads/index.get.ts`, angle mort d'observabilité sur la notification mock-email client→pro.
+- [x] 05.10-06 — Back-office admin `b2b_requests` (queue, pipeline, assignation, notes, audit) — PR #44
+- [x] 05.10-08 — Workflow DirCo (qualification CCTP, sélection 2-3 sous-traitants, restitution email) — PR #46
+- [x] 05.11-01..04 — Coffre-fort juridique (migration documents_artisan, capacité sous-traitance, cron expiration, vue admin) — PR #47
+- [x] 06.2 récupération — moteur KPI (endpoint + dashboard + migration `20260822000001`) — PR #45
+- [x] P4 — Notif email nouveaux leads + page « Lead non accessible » + déblocage 48h — PR #48 (mergé)
+- [x] 05.12-01 — Landing `/partenaires` dédiée + tunnel allégé + header/footer (PR #49)
+- [x] 05.12-02 — Déclinaisons web du logo (détourage + 11 fichiers + branchements) (PR #49)
 
-### Plans Phase 5.5 (Portfolio, Refonte Profil & Social) — COMPLETE (8/8 plans)
+## Decisions (récentes)
 
-- Voir `.planning/phases/05.5-Portfolio-Refonte/` (01 à 08, toutes SUMMARY livrées).
+- [2026-08-22] **Fixes prod appliqués directement** : les migrations en attente (`20260822000000` showcase, `20260822000001` KPI, `20260822000002` b2b) ont été poussées sur la base de production via `supabase db push` (feu vert utilisateur). La table `b2b_requests` n'existait nulle part (ni local ni cloud) — c'était la cause racine de la page « Dossiers B2B » cassée.
+- [2026-08-22] **Embedding `auth.users` inutilisable sur cette instance PostgREST** (parse error) : les emails des pros assignés sont résolus via l'API admin (`listUsers`) au lieu de l'embedding — corrigé sur `b2b-requests.get.ts` et `audit-logs.get.ts` (bug latent : l'onglet Journal était cassé depuis longtemps).
+- [2026-08-22] **Ordre de merge des PRs** : #44 (back-office B2B) → #46 (DirCo, stacké) → #45 (KPI, rebasé après conflit sidebar — résolu en gardant les deux onglets B2B + KPIs). Les 3 mergés dans `main`.
+- [2026-08-23] **P4 — la notification ne débloque pas l'accès** : un pro non-premium reçoit l'email mais voit la page « Lead non accessible » (Premium ou attente 48h). Philosophie « plus laxiste au lancement » : déblocage auto **72h → 48h** (cron `auto-unlock-leads-48h`).
+- [2026-08-23] **Focus offre à l'arrivée email** : le panneau sombre de l'offre (budget/délai/qualification) est mis en surbrillance (ring + glow orange) 15 s quand le lien porte `?src=email` — au lieu d'un bandeau textuel.
+- [2026-08-23] **Migration P4 appliquée en prod** : `20260823000002_p4_lead_notifications` (colonne `lead_alerts_email`, table `lead_notifications`, cron 48h).
 
-### Plans Phase 5.6 (Calculateur de Prix) — COMPLETE (3/3 plans)
+## Known Patterns (à appliquer dans les prochaines phases)
 
-- Voir `.planning/phases/05.6-Calculateur-Simulateur/`.
-
-## Performance Metrics
-
-**Velocity:**
-
-- Total phases completed: 2
-- Average duration: N/A
-- Total execution time: N/A
-
-## Accumulated Context
-
-### Roadmap Evolution
-
-- [2026-08-23] Phase 05.12 ajoutée : Front Polish & Branding (Landing Partenaires + Logo) — retouches front livrées sur la branche dédiée `fix/tweaks-front` (PR #49) et documentées en phase GSD : landing `/partenaires` dédiée (9 sections) + tunnel `/b2b/partenaires` allégé + scroll fluide + copy CTA (plan 01) ; déclinaisons web du logo (détourage flood-fill, transparent/monochrome, favicons multi-tailles, apple-touch 180, icônes PWA, og-image) + branchements header/footer/nuxt.config + script réutilisable `scripts/generate-logo-variants.mjs` (plan 02). **Phase complète 2/2** — aucune migration DB.
-- Phase 05.8 inserted after Phase 5: Enrichissement SIRET (forme juridique, NAF, suggestion catégories) au claim — étend server/utils/siretLookup.ts, ajoute siret_legal_form/siret_naf_code sur professionals, mapping statique NAF→catégories BTP, pré-cochage au claim (pro confirme). Scope claim uniquement pour l'instant.
-- Phase 05.8 edited: Ajout scope 05.8 : auto-approuver le Kbis à l'upload si professionals.siret_status === 'active' (déjà vérifié au claim), même pattern que l'auto-approbation décennale dans upload.post.ts. Évite la revue admin manuelle quand l'API gouv confirme déjà l'existence/activité de l'entreprise.
-- [2026-08-06] Phase 8 ajoutée à ROADMAP.md : Architecture PWA Mobile-First & Packaging Stores (Capacitor 6) — @vite-pwa/nuxt offline-resilient, Bottom Bar Shell mobile, wrapper Capacitor 6 pour App Store/Play Store. Dépend de Phase 4.7 et Phase 6.
-- [2026-08-06] Resynchronisation STATE.md via /gsd:progress : le plan 06-01 (Magic Link & Messagerie) était déjà codé, vérifié et mergé dans `dev` depuis le 2026-06-15 mais hors flux GSD (pas de SUMMARY.md) — STATE.md affichait encore Phase 06 "Not started" avant cette mise à jour. SUMMARY rédigé rétroactivement à partir de `06-UAT.md`.
-- [2026-08-18] Décision utilisateur : l'acquisition pros (cold outreach, REQ-05 / plan 06-02) est retirée de la Phase 6 et reportée post-lancement — le site se construit d'abord, l'acquisition n'est pas une priorité. La Phase 6 ne conserve que messagerie/espace client (livré) + email onboarding (flag off) ; SMS déjà différé. ROADMAP.md resynchronisé en conséquence (ajout Phase 05.9 + réduction Phase 8 sans Capacitor).
-- [2026-08-18] Décision Phase 05.9 : le mini-tunnel aides devient un **embranchement optionnel avant le lead wall** (fork Oui/Non après l'étape localisation) — un seul `POST /projects`, révélation « bilan complet » unique (estimation + aides + reste à charge). Route standalone `/calculateur-aides` conservée. Le revenu n'est demandé qu'en opt-in.
-
-### Decisions
-
-- [Pre-Phase]: Pivot Nuxt 3 unique (ADR-008).
-- [Pre-Phase]: URL hybride slug + nanoid(8) pour les profils pro (ADR-009).
-- [Phase 2]: Intégration de Zod et client Service Role pour contourner le RLS client sur l'API publique `/api/v1/projects`.
-- [Phase 3]: Accès admin contrôlé par `ADMIN_EMAILS` env var (pas de table rôles en DB pour l'instant). Ajouter l'email dans `.env` local ET dans Cloudflare Pages > Settings > Environment variables en prod.
-- [Phase 4.6]: Architecture "Marché Dynamique" : abandon du modèle "Push" dans la table `leads`. Les chantiers sont lus en direct depuis `projects` selon le tableau `categories TEXT[]` du profil Pro. La ligne `leads` n'est créée qu'au moment du déblocage ou claim. Les UI utilisent des checkboxes multi-sélection.
-- [2026-06-13 AM]: Garde d'auth centralisée dans le composable `useRequireAuth()` (remplace le `watchEffect` fragile sur les 7 pages protégées) — corrige une race d'hydratation qui éjectait un pro connecté au rechargement de `/espace/*`. Voir Known Patterns ci-dessous.
-- [2026-06-13 AM]: Indicateur de fraîcheur des leads (`app/components/LeadAge.vue`) : badge d'âge dont le ton chauffe (vert <24h → ambre 3-7j → rouge ≥7j) pour pousser le pro à contacter vite. `created_at` était déjà exposé par l'API leads.
-- [2026-06-13 PM]: **Bug fix `useRequireAuth()`** : `getSession()` retournait `null` transitoirement à l'hydratation SSR. Refactorisé en `watch(immediate)` pour attendre la première valeur non-undefined de `user`. Cela permettait aux users non-connectés d'être redirigés vers login même après une création de compte réussie.
-- [2026-06-13 PM]: **Structure V1 professionnel** : séparation claire entre Dashboard (statut + upload docs) et Profil (édition infos publiques + nouveau champ Téléphone). Validation stricte : accès leads bloqué si `is_verified = false`.
-- [2026-06-13 PM]: **Timeout auto-logout** : inactivité 30 min → déconnexion automatique (composable `useIdleLogout.ts`). Appliqué au layout `dynamic.vue` pour les pages protégées.
-- [2026-06-13 PM]: **RLS Security Verified & Documented** : All 11 tables have RLS enabled. Security policies enforce: public SELECT on verified professionals only; authenticated users full access to own records; service-role-only for sensitive tables (projects, prospects, paywall_events, audit_logs). Migration `20260613000000_test_data_seeding.sql` creates 18 test leads (3 per category) with full verification documents. Architecture is reproducible for production deployment. See `.planning/RLS-SECURITY.md`.
-- [2026-06-23 PM]: **Phase 4.7 Design System Adoption** : Transition from self-hosted Clash Display + Geist Variable (Brique & Béton OKLCH palette) to Google Fonts (Figtree + Noto Sans) with MASTER.md hex color system (cyan #0891B2, green #22C55E, cream #ECFEFF, charcoal #164E63). CSS tokens for spacing, shadows, and radius defined in `app/assets/css/tailwind.css` as the foundation for all subsequent page refactors (04.7-02 through 04.7-07).
-- [Phase 04.7]: Composants PremiumBadge et IdentityBreadcrumbs bâtis sur la nouvelle charte Sketch 001 (gris industriel + orange sécurité), en attendant la refonte globale des tokens tailwind.css.
-- [Phase 05.5-07]: Profil public pro refondu en pleine page immersive (layout: false) avec bouton flottant retour, galerie de réalisations mobile-first (RealisationCard) et likes ; test de garde source anti-régression navbar/galerie.
-- [Phase 05.5-08]: Section landing preuve sociale 'Chantiers Réalisés' en carousel CSS scroll-snap pur (pas d'Embla), SSR via useFetch, réutilise RealisationCard sans dupliquer le markup ; section omise entièrement si aucun projet is_showcased.
-- [Phase 05.6]: Tasks 1-3 du plan 05.6-03 livrées en un seul commit atomique (réécriture cohésive d'un fichier unique)
-- [Phase 05.6]: Transition inter-étapes simulateur : fade CSS simple plutôt que reveal-item/reveal-up (conçu pour montage, pas cycle enter/leave répété)
-- [2026-08-18] Terminologie pro-centrique : « client » = professionnel abonné (payeur), « particulier » = porteur de projet (demande). « Client Final » écarté (ambigu). Rémunération prescripteurs = commission dégressive 8→2,5% + Stripe Connect (spec 18/08).
-
-### Known Patterns (à appliquer dans les prochaines phases)
-
-**Ajouter un admin** : mettre l'email dans `ADMIN_EMAILS` dans `.env` (local) et dans les env vars Cloudflare Pages (prod). Le check est dans `server/api/v1/admin/verify.post.ts` et `app/pages/admin/index.vue`.
+**Ajouter un admin** : le rôle admin passe par `app_metadata.role` (pattern actuel, cf. `server/api/v1/admin/*`). L'ancien `ADMIN_EMAILS` est obsolète. Compte admin générique : `admin@batiaxe.com` (+ scripts).
 
 **Nouvelle route protégée** : appeler `useRequireAuth()` en haut du `<script setup>` (composable `app/composables/useRequireAuth.ts`). NE PAS utiliser `watchEffect(() => { if (!user.value) navigateTo('/pro/claim') })` : ce pattern redirige sur le `null` transitoire de `useSupabaseUser()` pendant l'hydratation et éjecte un pro pourtant connecté au rechargement (bug corrigé le 2026-06-13). Le composable valide la session de façon autoritaire via `getSession()` puis ne réagit qu'à une déconnexion explicite. Toujours pas de middleware global car `supabase.redirect` est à `false` (ADR).
 
@@ -104,32 +71,55 @@ Dette connue héritée du plan 06-01 : passe visuelle Playwright jamais faite (M
 
 **Variable d'env manquante** : documenter dans `.env.example` immédiatement après ajout dans le code. C'est le seul endroit committé qui liste toutes les vars requises.
 
-### Backlog pilote v1 (ajouté le 2026-08-19, voir ROADMAP § Priorités pilote v1)
+**Migration + types** : après tout `supabase db push`, régénérer `app/types/database.types.ts` via `npx supabase gen types typescript --project-id xpwoczcbyamnjknloxgz --schema public > app/types/database.types.ts` (fichier committé — il était périmé depuis le 19/08, régénéré le 2026-08-23).
 
-Items manquants identifiés en relisant les specs client + PIVOT-B2B + avis mentor : **P1 analytics de conversion** (trou n°1 — mesurer sans ça, impossible de valider le pilote ; **décidé le 2026-08-19 : Matomo**, cloud au départ, self-host sur le VPS du porteur si multi-projets ; Axiom écarté = logs, pas analytics), **P2 anti-spam Turnstile sur POST /projects**, **P3 Stripe + cron 72h re-testés en prod**, **P4 notif pro nouveaux leads = email maintenant + Web Push natif PWA en Phase 8**, **P5 feedback loop refus→marché à tester**, **P6 étude de financement courtier (US-PAR-02)**, **P7 packs zonés**, **P8 compte Prescripteur PIVOT-B2B**, **P9 mobile QA + états vides**, **P10 commission dégressive + Stripe Connect (doc only)**, **P11 signature eIDAS / codes fournisseurs / workspace archi (Phase 7+)**, **P12 page pro public à élever (vitrine commerciale du pro)**. Décision utilisateur 2026-08-19 : tout le reste validé ; visuel traité en profondeur à la Phase 8 PWA avec les skills design. **P13 ajouté** : multi-déploiement white-label Terraform (une instance par client, tous encaissant sur le MÊME Stripe du porteur — pas de multi-tenant de paiement, cf. PIVOT-B2B §6). **P14 ajouté** : monitoring & alerting Axiom (observabilité Workers/webhooks/API externes — le paywall Stripe mort a été découvert par hasard ; Axiom complète Matomo, ne le remplace pas). **P15 ajouté (noté, PAS prioritaire — décision utilisateur 2026-08-19)** : messagerie temps réel → **Supabase Realtime** si un jour requis (zéro infra, pas de Durable Objects — Workers-only + état en double), mais le chat 1:1 reste en polling : on ne voit pas pro et demandeur discuter en ligne, 1-2 échanges suffisent à convenir d'un appel et **le vrai objectif est le téléphone direct via le déblocage premium** (coordonnées révélées au déblocage du lead). **Stripe vérifié en mode TEST** (sk_test) le 2026-08-19 — aucun vrai paiement possible tant que le passage en live n'est pas explicite. **Block compliance noté au ROADMAP (deferred + pré-lancement)** le 2026-08-19 : conservation/purge des données (trou n°1 CNIL — Kbis/décennale sensibles), export/suppression (portabilité), registre des traitements, sous-traitants (Supabase/Cloudflare/Resend/Stripe), médiation de la consommation (obligatoire dès le 1er particulier), CGV pro séparées, rétractation 14j, facturation électronique 2026-2027, protection sui generis des bases de données, backups vérifiés, modération des contenus, statut LCEN place de marché, responsabilité du badge « vérifié ».
+**Nouvelle migration** : ajouter le fichier dans `supabase/migrations/` puis `npx supabase db push --yes` (projet lié : `xpwoczcbyamnjknloxgz`, session CLI authentifiée). Ne jamais rééditer une migration déjà appliquée en remote.
 
-### Deferred Ideas (hors scope, à reconsidérer plus tard)
+## Backlog pilote v1 — Statut au 2026-08-23
 
-**Acquisition pros (cold outreach / source prospects)** — Retiré de la Phase 6 le 2026-08-18. Import prospects + invitation email + funnel admin (REQ-05, plan 06-02) reportés à la toute fin : le site se construit d'abord, l'acquisition sortante n'est pas une priorité. Source (CSV/seed/scrape) à trancher le moment venu.
+| Item | Statut |
+|---|---|
+| **P1** Matomo funnel | ❌ à implémenter (décidé : Matomo) |
+| **P2** Turnstile anti-spam | ✅ code livré — standby (clés client à créer au transfert Cloudflare) |
+| **P3** Stripe + cron re-test prod | ❌ **à faire en premier** (critique, runbook prêt) |
+| **P4** Notif leads email | ✅ livré (PR #48 mergé) — temps 2 Web Push = Phase 8 |
+| **P5** Feedback loop refus→marché testé | ❌ à tester |
+| **P6** Étude financement courtier | ❌ absent |
+| **P7** Packs zonés & exclusivité | ❌ absent — bloqué tarifs définitifs (Basic 150-200 / Premium 300) |
+| **P8** Compte Prescripteur | ❌ absent |
+| **P9** Mobile QA + états vides | ❌ à faire |
+| **P10** Commission B2B + Stripe Connect | 📝 doc only |
+| **P11** eIDAS / workspace archi | ❌ Phase 7+ |
+| **P12** Page pro public digne | ❌ à faire (CTA devis ajouté, avis = Phase 7) |
+| **P13** White-label Terraform | 📝 fondation existe |
+| **P14** Monitoring Axiom | ❌ à faire |
+| **P15** Messagerie temps réel | 📝 noté — polling OK |
+| **P16** Ouverture TP | ❌ Phase 2 (après 78) |
+| **P17** Modèle 2 piliers | ❌ à trancher (avec P7/P10) |
+| **P18** Devoir de vigilance 6 mois | ✅ couvert par 05.11-03 |
+| **P19** Diagnostiqueurs apporteurs | ❌ à faire |
+| **P20** Passerelle B2B payante | ❌ à faire (avec P7/P8) |
+| **P21** Tunnel Sinistres/Assurances | ❌ à faire |
+| **P22** Majors / Grands Comptes | ❌ Phase 3 |
 
-**Upload photos/plans sur les projets** — Idée écartée à Phase 4.
+## PRs récents
 
-- Problème bloquant : une photo de façade ou de chantier contient des informations géolocalisables qui court-circuitent ADR-004 (masquage serveur). Un pro BASIC verrait la maison du prospect avant déverrouillage.
-- Décision : pertinent **uniquement** si on construit un suivi de relation client/pro directement sur le site (messagerie, fil de chantier, avancement). Dans ce contexte, les images seraient derrière le même accès conditionné que les coordonnées.
-- À reconsidérer en Phase 6+ si on ajoute une fonctionnalité de suivi de chantier (messagerie pro↔client, jalons de projet, photos d'avancement).
+- ✅ **#44** back-office B2B + fix embedding `auth.users` — mergé 2026-08-22
+- ✅ **#45** récupération moteur KPI (06.2) — mergé 2026-08-22 (après rebase + résolution conflit sidebar)
+- ✅ **#46** workflow DirCo — mergé 2026-08-22
+- ✅ **#47** coffre-fort juridique 05.11 — mergé 2026-08-23
+- ✅ **#48** P4 notif email leads — mergé 2026-08-23 (résolution conflits ROADMAP/STATE faite au merge de #49)
+- 🟡 **#49** front polish partenaire (landing, logo, Phosphor, FAQ, copper) — ouvert, mergeable — branche `fix/tweaks-front`
 
-### Pending Todos
+## Blockers/Concerns
 
-- [x] PIVOT B2B (2026-08-18) : rémunération des prescripteurs = commission au succès dégressive (8% ≤25k → 6% → 4% → 2,5% >200k) + split Stripe Connect (spec client 18/08 §4.3-4.4).
-- [x] PIVOT B2B (2026-08-18) : **ne pas** remplacer "Particulier" par "Client Final" — modèle pro-centrique : le client payeur est le pro abonné, le particulier est la demande (porteur de projet).
-
-### Blockers/Concerns
-
-- **Browser tests block** : L'environnement de navigation Chromium local a des soucis d'initialisation dans le sandbox, mais les tests d'API et compilations sont OK.
-- **ADMIN_EMAILS en prod** : à ajouter manuellement dans Cloudflare Pages > Settings > Environment variables avant de tester la console admin en production.
+- **P3 — Stripe non re-testé en prod** : checkout + webhook + cron n'ont pas été re-vérifiés depuis Phase 4/4.5 (le paywall mort a été découvert par hasard en 08/2026). Runbook prêt, nécessite l'accès aux clés Stripe prod.
+- **Tarifs P7 non tranchés** : Basic 150-200 € / Premium 300 € à confirmer par le client avant d'implémenter les packs zonés.
+- **Browser tests block** : l'environnement de navigation Chromium local a des soucis d'initialisation dans le sandbox, mais les tests d'API et compilations sont OK. Dette connue : passe Playwright jamais câblée.
+- **Test badge préexistant cassé** : `tests/badges.test.ts` attend `bg-[#F8FAFC]` alors que le composant utilise `bg-green-100` (dérive de palette antérieure) — hors périmètre des chantiers récents, à corriger dans une passe dédiée.
 
 ## Session Continuity
 
-Last session: 2026-08-17T23:21:33.239Z
-Stopped at: Phase 5.9 context gathered
-Resume file: .planning/phases/05.9-extension-simulateur-mes-aides-reno/05.9-CONTEXT.md
+Last session: 2026-08-23 (matinée → fin de journée)
+Stopped at: **P4 + polish front partenaire livrés** (PRs #48 et #49 mergés) + planning GSD resynchronisé (milestone v1.0, 20 phases / 68 plans)
+Resume: prochain chantier au choix — **P3** (Stripe re-test prod, critique), **P1** (Matomo), **P9** (mobile QA), **P5** (feedback loop), **P7** (packs zonés, après validation tarifs)

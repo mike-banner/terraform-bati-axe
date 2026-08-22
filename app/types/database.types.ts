@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       audit_logs: {
@@ -379,6 +354,45 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_notifications: {
+        Row: {
+          channel: string
+          id: string
+          pro_id: string
+          project_id: string
+          sent_at: string
+        }
+        Insert: {
+          channel?: string
+          id?: string
+          pro_id: string
+          project_id: string
+          sent_at?: string
+        }
+        Update: {
+          channel?: string
+          id?: string
+          pro_id?: string
+          project_id?: string
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_notifications_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_notifications_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           created_at: string | null
@@ -583,6 +597,7 @@ export type Database = {
           is_claimed: boolean | null
           is_verified: boolean | null
           labels: Json | null
+          lead_alerts_email: boolean
           logo_url: string | null
           onboarding_email_sent_at: string | null
           phone: string
@@ -621,6 +636,7 @@ export type Database = {
           is_claimed?: boolean | null
           is_verified?: boolean | null
           labels?: Json | null
+          lead_alerts_email?: boolean
           logo_url?: string | null
           onboarding_email_sent_at?: string | null
           phone: string
@@ -659,6 +675,7 @@ export type Database = {
           is_claimed?: boolean | null
           is_verified?: boolean | null
           labels?: Json | null
+          lead_alerts_email?: boolean
           logo_url?: string | null
           onboarding_email_sent_at?: string | null
           phone?: string
@@ -2110,9 +2127,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       artisan_doc_status: ["pending", "valid", "expired", "suspended"],

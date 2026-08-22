@@ -2,20 +2,20 @@
 
 > Objectif V1 : machine B2C **en prod mesurée** + **Espace Partenaires MVP** + premières exclusivités vendues.
 > Ordre imposé par le risque et la valeur (voir `PLAN_DE_VOL.md`).
-> **Dernière mise à jour** : 2026-08-22 (session de développement)
+> **Dernière mise à jour** : 2026-08-23 (P4 livré, déblocage 72h → 48h, planning resynchronisé)
 
 ---
 
-## 1. P3 — Stripe + cron 72h re-testés en prod ⚠️ CRITIQUE
+## 1. P3 — Stripe + cron 48h re-testés en prod ⚠️ CRITIQUE
 **Pourquoi** : le paywall mort a été découvert par hasard (404 silencieux) — à re-tester avant tout.
 **Runbook** : voir `docs/P3-STRIPE-RETEST-RUNBOOK.md`.
 
 - [ ] 1.1 Vérifier que les vars Stripe sont bien posées en prod (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, prix/plan IDs).
 - [ ] 1.2 Test checkout de bout en bout (création session → paiement test → webhook reçu).
 - [ ] 1.3 Vérifier que `professionals.subscription_status` passe bien à `active`.
-- [ ] 1.4 Vérifier que le job `pg_cron` 72h existe bien en prod (`SELECT * FROM cron.job`).
-- [ ] 1.5 Vérifier le déblocage auto à T+72h sur un lead réel.
-**Sortie** : un abonnement test complet, facturé → activé → lead débloqué à 72h, sans intervention manuelle.
+- [ ] 1.4 Vérifier que le job `pg_cron` 48h existe bien en prod (`SELECT * FROM cron.job` — `auto-unlock-leads-48h`).
+- [ ] 1.5 Vérifier le déblocage auto à T+48h sur un lead réel.
+**Sortie** : un abonnement test complet, facturé → activé → lead débloqué à 48h, sans intervention manuelle.
 
 ---
 
@@ -52,11 +52,13 @@
 
 ---
 
-## 5. P4 — Notif leads aux pros (email)
-- [ ] 5.1 Email transactionnel au pro quand un lead matche ses catégories (Resend existant).
-- [ ] 5.2 Flag d'opt-in + idempotence (pas de double envoi).
+## 5. P4 — Notif leads aux pros (email) ✅
+- [x] 5.1 Email transactionnel au pro quand un lead matche ses catégories (Resend existant).
+- [x] 5.2 Flag d'opt-in (`professionals.lead_alerts_email`, défaut ON) + idempotence (table `lead_notifications` UNIQUE pro/projet).
 - [ ] 5.3 (plus tard, Phase 8) Web Push natif via PWA.
 **Sortie** : un pro reçoit un email quand un lead arrive dans sa zone/catégorie.
+
+**Implémentation (2026-08-23)** : `server/utils/notifyProLead.ts` branché sur `projects.post.ts` (remplace le TODO) — pros vérifiés + opt-in dont les catégories matchent, envoi séquentiel non bloquant + trace d'idempotence. **La notification ne débloque rien** : les coordonnées restent masquées (règle Premium / free-grant / attente). Page « Lead non accessible » refaite sur `/espace/leads/[id]` (panneau cadenas : Passer Premium ou attendre 48h + countdown). Déblocage auto passé de **72h → 48h** (cron `auto-unlock-leads-48h`, plus laxiste au lancement).
 
 ---
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
 
 useRequireAuth()
 const route = useRoute()
@@ -94,11 +94,36 @@ useHead({
 
 const isLocked   = computed(() => lead.value?.status === 'locked')
 
+// Arrivée depuis l'email d'alerte (P4) : halo lumineux sur l'offre pendant ~15 s
+const fromEmailAlert = computed(() => route.query.src === 'email')
+const offerHighlight = ref(false)
+let highlightTimer: ReturnType<typeof setTimeout> | null = null
+
+onMounted(() => {
+  if (fromEmailAlert.value) {
+    offerHighlight.value = true
+    highlightTimer = setTimeout(() => { offerHighlight.value = false }, 15000)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (highlightTimer) clearTimeout(highlightTimer)
+})
+
 const formattedDate = computed(() =>
   lead.value?.created_at
     ? new Date(lead.value.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
     : ''
 )
+
+// Score de qualification (D-12) — l'essentiel de l'offre, visible même verrouillé
+const qualifyBadges = computed(() => [
+  { key: 'budget',       ok: lead.value?.qualify_budget ?? false,       label: 'Budget renseigné' },
+  { key: 'phone',        ok: lead.value?.qualify_phone ?? false,        label: 'Téléphone vérifié' },
+  { key: 'description',  ok: lead.value?.qualify_description ?? false,  label: 'Description détaillée' },
+  { key: 'returning',    ok: lead.value?.qualify_returning ?? false,    label: 'Client récurrent' },
+])
+
 
 async function updateLeadStatus(newStatus: string) {
   if (!lead.value) return
@@ -178,6 +203,51 @@ async function copyToClipboard(text: string) {
           {{ CATEGORY_LABELS[lead.category] ?? lead.category }}
         </h1>
         <p class="text-xs text-slate-500 mt-2">Reçu le {{ formattedDate }}</p>
+      </div>
+
+      <!-- Focus sur l'offre : l'essentiel du chantier, verrouillé ou non (P4)
+           Halo orange 15 s quand on arrive depuis l'email d'alerte (?src=email) -->
+      <div
+        class="bg-slate-900 rounded-sm p-6 md:p-8 mb-8 shadow-lg transition-all duration-700"
+        :class="offerHighlight ? 'ring-2 ring-safety/80 shadow-[0_0_45px_-5px_rgba(234,88,12,0.55)] scale-[1.01]' : ''"
+      >
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div>
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Budget</p>
+            <p class="text-xl md:text-2xl font-black text-white">{{ lead.budget_range }}</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Délai</p>
+            <p class="text-xl md:text-2xl font-black text-white">{{ TIMELINE_LABELS[lead.timeline_range] ?? (lead.timeline_range || '—') }}</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Qualification</p>
+            <p class="text-xl md:text-2xl font-black text-white">{{ lead.qualify_score ?? 0 }}/4</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Client</p>
+            <p class="text-xl md:text-2xl font-black text-white">{{ lead.qualify_returning ? 'Récurrent' : 'Nouveau' }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 mt-5 pt-5 border-t border-slate-700">
+          <div class="flex items-center gap-1.5">
+            <span v-for="b in qualifyBadges" :key="b.key" :title="b.label"
+              class="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full border"
+              :class="b.ok ? 'border-safety/50 bg-safety/15 text-safety' : 'border-slate-600 text-slate-500'">
+              <svg v-if="b.ok" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              {{ b.label }}
+            </span>
+          </div>
+          <span class="ml-auto hidden md:inline-flex items-center gap-1.5 text-xs font-semibold"
+            :class="isLocked ? 'text-amber-400' : 'text-emerald-400'">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path v-if="isLocked" stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+              <path v-else stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+            </svg>
+            {{ isLocked ? 'Coordonnées bloquées' : 'Coordonnées débloquées' }}
+          </span>
+        </div>
       </div>
 
       <!-- Project details (always visible) -->
@@ -328,35 +398,58 @@ async function copyToClipboard(text: string) {
           </div>
         </template>
 
-        <!-- Locked: masked + countdown + Premium CTA -->
+        <!-- Locked: page « lead non accessible » — Premium ou attente 48h -->
         <template v-else-if="isLocked">
-          <div class="p-5 border border-amber-300 bg-amber-50 rounded-sm">
-            <p class="text-sm text-amber-700 font-semibold mb-1">Coordonnées non disponibles</p>
-            <template v-if="lead.requiresDocuments">
-              <p class="text-xs text-amber-700 mb-4">
-                Déposez vos documents (Kbis et décennale) pour débloquer vos 3 leads gratuits.
-              </p>
-              <NuxtLink
-                to="/espace/dashboard"
-                class="inline-flex items-center gap-2 h-9 px-4 rounded-full bg-safety text-white text-xs font-semibold hover:scale-105 shadow-safety/20 transition-transform"
-              >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                Déposer mes documents
-              </NuxtLink>
-            </template>
-            <template v-else>
-              <LeadCountdown v-if="lead.unlocked_at" :unlocked-at="lead.unlocked_at" />
-              <p v-else class="text-xs text-amber-700 mb-4">Disponible sous 72h — ou immédiatement avec Premium.</p>
-              <NuxtLink
-                to="/espace/premium"
-                class="inline-flex items-center gap-2 h-9 px-4 mt-4 rounded-full bg-safety text-white text-xs font-semibold hover:scale-105 shadow-safety/20 transition-transform"
-              >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
+          <div class="border border-amber-300 bg-amber-50/60 rounded-sm overflow-hidden">
+            <div class="flex flex-col items-center text-center px-8 py-10">
+              <div class="w-14 h-14 rounded-full bg-amber-100 border border-amber-200 flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-amber-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
                 </svg>
-                Passer Premium pour voir maintenant
-              </NuxtLink>
-            </template>
+              </div>
+              <h2 class="text-lg font-bold text-slate-900">Lead non accessible</h2>
+
+              <template v-if="lead.requiresDocuments">
+                <p class="text-sm text-slate-600 mt-2 max-w-sm">
+                  Déposez vos documents (Kbis et décennale) pour débloquer vos <strong>3 leads gratuits</strong>.
+                </p>
+                <NuxtLink
+                  to="/espace/dashboard"
+                  class="inline-flex items-center gap-2 h-10 px-6 mt-5 rounded-full bg-safety text-white text-xs font-semibold hover:scale-105 shadow-safety/20 transition-transform"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                  Déposer mes documents
+                </NuxtLink>
+              </template>
+
+              <template v-else>
+                <p class="text-sm text-slate-600 mt-2 max-w-sm">
+                  Passez <strong>Premium</strong> pour accéder aux coordonnées immédiatement,
+                  ou attendez <strong>48 h</strong> : le lead se débloquera automatiquement.
+                </p>
+                <div class="mt-4">
+                  <LeadCountdown v-if="lead.unlocked_at" :unlocked-at="lead.unlocked_at" />
+                  <p v-else class="text-xs text-amber-700">Déblocage automatique sous 48 h.</p>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center gap-3 mt-6">
+                  <NuxtLink
+                    to="/espace/premium"
+                    class="inline-flex items-center gap-2 h-10 px-6 rounded-full bg-safety text-white text-sm font-semibold hover:scale-105 shadow-safety/20 transition-transform"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
+                    </svg>
+                    Passer Premium maintenant
+                  </NuxtLink>
+                  <NuxtLink
+                    to="/espace/premium"
+                    class="inline-flex items-center h-10 px-4 text-xs font-semibold text-slate-700 underline underline-offset-2 hover:opacity-70 transition-opacity"
+                  >
+                    Voir l'offre Premium
+                  </NuxtLink>
+                </div>
+              </template>
+            </div>
           </div>
         </template>
 
