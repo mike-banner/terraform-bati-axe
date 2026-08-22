@@ -12,7 +12,7 @@
 | Tunnel de capture particulier (6 étapes) | Phase 2 |
 | Onboarding pro + vérif manuelle | Phase 3 |
 | **API SIRET/activité** + badges (SIRET/décennale) | Phase 5 + 05.8 |
-| Billing Stripe + floutage + déblocage 72h | Phase 4 |
+| Billing Stripe + floutage + déblocage 48h (72h → 48h via P4) | Phase 4 |
 | Conversion (3 leads gratuits, trial 14j, CRM minimaliste) | Phase 4.5 |
 | Marché dynamique multi-catégories (pull) | Phase 4.6 |
 | Design system (gris industriel + orange) | Phase 4.7 |
@@ -30,7 +30,7 @@
 ### 🟢 V1 — Lancement pilote 78 (objectif : machine B2C qui tourne + premières archis/immo)
 | # | Item | Statut | Réf |
 | :--- | :--- | :--- | :--- |
-| 1 | **Stripe + cron 72h re-testés en prod** | ⏳ runbook prêt, à tester | P3 |
+| 1 | **Stripe + cron 48h re-testés en prod** | ⏳ runbook prêt, à tester | P3 |
 | 2 | **Turnstile anti-spam** | ✅ code livré (standby clés) | P2 |
 | 3 | **Console admin opérationnelle** | ✅ livré (composants, dark, KPIs, audit) | 06.1 |
 | 4 | **KPIs de pilotage (Matomo + dashboard)** | ✅ livré (Matomo à brancher) | 06.2 |

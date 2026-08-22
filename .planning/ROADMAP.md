@@ -4,17 +4,29 @@
 
 ## Milestones
 
+### 🚧 **v1.0 « Pilote 78 en orbite » — EN COURS**
+
+**Verdict : la machine B2C est construite (v0.9.0 clôturé) + couche Partenaires B2B + KPIs livrés.** Reste : conditions de livraison ci-dessous + priorité pilote (backlog § « Priorités pilote v1 ») pour un go-live réel.
+
+**Livré dans ce milestone (2026-08-22 → 08-23) :**
+- ✅ **Phase 05.10 — Espace Partenaires & Apporteurs d'Affaires** (7/7) : landing `/b2b/partenaires`, tunnel 4 étapes, endpoint POST + presign R2, back-office admin `b2b_requests` (queue + pipeline + assignation + notes), workflow DirCo (qualification, sélection 2-3 sous-traitants, restitution email).
+- ✅ **Phase 05.11 — Coffre-Fort Juridique & Capacité Sous-traitance** (4/4) : table `documents_artisan`, switch alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois, vue admin documents.
+- ✅ **Phase 06.1 — Console Admin Opérationnelle** : 8 composants modulaires, sidebar 7+ onglets, dark mode, search/pagination, audit log, onglet « Dossiers B2B ».
+- ✅ **Phase 06.2 — KPIs de Pilotage & Dashboard de Scalabilité** : tables `marketing_spend_logs` + `kpi_snapshots`, endpoint kpi-engine (6 KPIs + seuils), dashboard admin. *(récupéré d'une branche jamais mergée — était « livré » par erreur dans les docs)*
+- ✅ **P4 — Notif pro nouveaux leads (email)** : `notifyProLead` sur `projects.post.ts` (opt-in `lead_alerts_email`, idempotence `lead_notifications`), page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h.
+- ✅ Migrations appliquées en prod : showcase (00), KPI (01), b2b (02), DirCo (03), coffre-fort 05.11 (×2), P4 (02).
+
+**Conditions de livraison v1 (reste à valider avant mise en prod réelle avec vrais utilisateurs) :**
+- [ ] Déploiement Cloudflare Pages vérifié au vert (Node 22 via `.nvmrc` — sinon poser `NODE_VERSION=22` en var de build)
+- [ ] Paiement Stripe re-testé de bout en bout (checkout + webhook, Phase 4) et cron pg_cron 48h vérifié (Phase 4 / P4) — **P3 en attente**
+- [ ] Admin minimal validé opérationnel pour le pilote — ✅ console admin 06.1/06.2 livrée (revue documents OK)
+- [ ] Dette test connue : passe Playwright jamais câblée (blocage navigateur sandbox) — à traiter dans ce milestone
+
+**Reporté au prochain milestone** : Phase 7 (Réputation & Scale), Phase 8 (PWA Mobile-First), Web Push P4-temps-2, P11 (eIDAS/workspace), P16 (TP), P22 (Majors) + tout le bloc Deferred ci-dessous.
+
 ### ✅ Milestone v0.9.0 « Experience & Growth Pro » — CLÔTURÉ le 2026-08-19
 
 **Verdict : v1 livrable pour le pilote mono-ville (Carrières-sous-Poissy / 78).** Toutes les phases du périmètre livrées : capture (2), onboarding/vérification (3), verrou & billing (4), conversion (4.5), marché (4.6), design system (4.7), SIRET/badges (5, 5.8), portfolio (5.5), calculateur (5.6), durcissement (5.7), messagerie/espace client + onboarding email (6), aides rénovation (05.9).
-
-**Conditions de livraison v1 (à valider avant mise en prod réelle avec vrais utilisateurs) :**
-- [ ] Déploiement Cloudflare Pages vérifié au vert (Node 22 via `.nvmrc` — sinon poser `NODE_VERSION=22` en var de build)
-- [ ] Paiement Stripe re-testé de bout en bout (checkout + webhook, Phase 4) et cron pg_cron 72h vérifié (Phase 4) — non re-testés le 2026-08-19
-- [ ] Admin minimal validé opérationnel pour le pilote (revue documents OK ; analytics/audit hors UI → Phase 06.1)
-- [ ] Dette test connue : passe Playwright jamais câblée (blocage navigateur sandbox) — à traiter dans le prochain milestone
-
-**Reporté au prochain milestone** : Phase 06.1 (Console Admin), Phase 7 (Réputation & Scale), Phase 8 (PWA Mobile-First) + tout le bloc Deferred ci-dessous.
 
 ## Overview
 Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-Poissy / 78). Chaque phase livre une capacité vérifiable et autonome. La Phase 5 est une validation business sans code nouveau — elle conditionne le scale géographique.
@@ -24,7 +36,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 1: Foundations & Compliance** - Nuxt 3, Supabase CLI local, Cloudflare Pages, pages légales, middleware sécurité.
 - [x] **Phase 2: Data Foundation & Capture mono-ville** - Schéma DB, seed zone pilote, vitrine landing SEO, simulateur de capture 6 étapes.
 - [x] **Phase 3: Onboarding Pro & Vérification manuelle** - Auth Supabase, flux Claim, upload R2, console admin validation docs, consents RGPD/LCEN.
-- [x] **Phase 4: Le Verrou & Stripe Billing** - API floutage serveur, abonnement Stripe, webhook, déblocage auto 72h.
+- [x] **Phase 4: Le Verrou & Stripe Billing** - API floutage serveur, abonnement Stripe, webhook, déblocage auto 72h (→ **48h** depuis P4, 2026-08-23).
 - [x] **Phase 4.5: Conversion & Qualification** - Verrou 3 leads gratuits, free trial 14j, plan annuel, auto-qualification, profil public éditable, ROI dashboard, copy Premium refondu, CRM Minimaliste.
 - [x] **Phase 4.6: Marché Dynamique & Multi-Catégories** - Refonte DB (categories TEXT[]), fin du push leads, pull temps réel via projects, UI sélection multiple (profil/claim).
 - [x] **Phase 4.7: Refonte UI Globale & Application du Design System** - Application du MASTER.md, harmonisation de la typographie (Figtree/Noto) et du thème B2B/Marketplace. (completed 2026-07-03)
@@ -35,8 +47,8 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 05.10: Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B)** — Landing `/b2b/partenaires` (hero + 4 promesses + badge conformité), tunnel 4 étapes (profil → besoin → dropzone R2 → coordonnées GDPR), endpoint POST + presign R2 (Turnstile), notif Resend équipe + confirmation pro, back-office admin (queue + pipeline + assignation + notes), workflow DirCo (qualification, sélection 2-3 sous-traitants, restitution email). **Phase complète 7/7** (livré 2026-08-22)
 - [x] **Phase 05.11: Coffre-Fort Juridique & Capacité Sous-traitance** - Table documents_artisan (KBIS/URSSAF/décennale + statuts API), switch alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois. **Phase complète 4/4** (livré 2026-08-23)
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
-- [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, 7 onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, KPIs, Journal), search + pagination, projets cliquables. Reste: fusion `b2b_requests` (05.10-06). (livré 2026-08-22)
-- [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). Reste: brancher Matomo côté client. (livré 2026-08-22)
+- [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, Dossiers B2B, KPIs, Documents légaux, Journal), search + pagination, projets cliquables. Onglet B2B fusionné (05.10-06) + Documents légaux (05.11-04). (livré 2026-08-22)
+- [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). *(récupéré d'une branche jamais mergée → merge PR #45)*. Reste: brancher Matomo côté client (P1). (livré 2026-08-22)
 - [x] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
 - [ ] **Phase 8: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
@@ -81,14 +93,14 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 **UI hint**: yes
 
 ### Phase 4: Le Verrou & Stripe Billing
-**Goal**: Monétisation opérationnelle — les coordonnées du prospect sont floutées par défaut et débloquées par abonnement ou après 72h.
+**Goal**: Monétisation opérationnelle — les coordonnées du prospect sont floutées par défaut et débloquées par abonnement ou après 48h (72h avant P4).
 **Depends on**: Phase 3
 **Requirements**: LCK-01, LCK-02, LCK-03
 **Success Criteria** (what must be TRUE):
-  1. L'API `/api/v1/leads` retourne les coordonnées client masquées (`***`) si le pro n'est pas Premium ET le lead a moins de 72h.
+  1. L'API `/api/v1/leads` retourne les coordonnées client masquées (`***`) si le pro n'est pas Premium ET le lead a moins de 48h.
   2. Un pro peut s'abonner via Stripe Checkout et accéder immédiatement aux coordonnées non floutées.
   3. Le webhook Stripe met à jour `professionals.subscription_status` de manière fiable.
-  4. Un cron `pg_cron` bascule `leads.unlocked_at` à T+72h pour le déblocage gratuit automatique.
+  4. Un cron `pg_cron` bascule `leads.unlocked_at` à T+48h pour le déblocage gratuit automatique (cron `auto-unlock-leads-48h`).
 **Plans**: 7 plans
 Plans:
 - [x] 04-01-PLAN.md — Migrations SQL (schema gaps + pg_cron) + nuxt.config runtimeConfig + .env.example
@@ -407,8 +419,8 @@ Plans:
 | 05.11 Coffre-Fort Juridique & Capacité Sous-traitance | 4/4 | Complete | 2026-08-23 |
 | 6. Messagerie & Espace Client | 2/2 livrés (2 différés) | Complete | 2026-08-19 |
 | 05.9 Extension Simulateur Mes Aides Réno | 4/4 | Complete | 2026-08-18 |
-| 06.1 Console Admin Opérationnelle | 0/TBD | Planned | - |
-| 06.2 KPIs de Pilotage & Dashboard de Scalabilité | 0/TBD | Not started | - |
+| 06.1 Console Admin Opérationnelle | 1/1 | Complete | 2026-08-22 |
+| 06.2 KPIs de Pilotage & Dashboard de Scalabilité | 1/1 | Complete | 2026-08-22 |
 | 7. Réputation & Scale | 0/TBD | Not started | - |
 | 8. Architecture PWA Mobile-First | 0/TBD | Not started | - |
 
@@ -420,7 +432,7 @@ Items hors roadmap détectés en relisant les specs client (18/08 Arti-Box, 06/0
 |---|---|---|---|---|
 | P1 | **Analytics de conversion** (simulateur → lead → contact → chantier signé). **Décidé le 2026-08-19 : Matomo** (open-source, GDPR, données souveraines — fit marché FR). Déploiement : cloud Matomo au départ ; si Matomo doit couvrir plusieurs projets, **self-host sur le VPS du porteur de projet** (partie prenante). Axiom écarté (gestion de logs, pas analytics) | Avis mentor + décision utilisateur | Sans mesure, impossible de savoir si le pilote fonctionne — plus critique que l'admin | ✅ décidé — à implémenter (funnel → Phase 06.2) |
 | P2 | **Anti-spam capture** — Turnstile (Cloudflare) sur `POST /projects` public | Checklist sécurité (optionnel → obligatoire) | Un bot flood tue la qualité du marché + la délivrabilité email | ✅ code livré — **standby** (clés client, à créer sur son Cloudflare au transfert) |
-| P3 | **Stripe (checkout + webhook) + cron pg_cron 72h re-testés en prod** | Condition de livraison v0.9 | Jamais re-testés depuis Phase 4/4.5 ; vérifier que le job pg_cron existe bien en prod | ❌ à faire en premier |
+| P3 | **Stripe (checkout + webhook) + cron pg_cron 48h re-testés en prod** | Condition de livraison v0.9 | Jamais re-testés depuis Phase 4/4.5 ; vérifier que le job pg_cron `auto-unlock-leads-48h` existe bien en prod | ❌ à faire en premier |
 | P4 | **Notif pro nouveaux leads** — 2 temps : (1) email ✅ (2026-08-23 : `notifyProLead` branché sur `projects.post.ts`, opt-in `lead_alerts_email` défaut ON, idempotence `lead_notifications`, la notif ne débloque pas les coordonnées — page « Lead non accessible » : Premium ou 48h, déblocage auto passé 72h → 48h), (2) **Web Push API natif via la PWA** (Phase 8, `@vite-pwa/nuxt` + `web-push`/VAPID depuis Nitro — pas de service tiers) quand le pro opt-in + installe la PWA. Email = filet universel, push = expérience | Avis mentor | Active les pros du pilote sans les obliger à surveiller la liste | ✅ email (Phase 8 : push) |
 | P5 | **Feedback loop refus → remise au marché** : testé ? | Avis mentor | Messagerie testée, ce chemin-là non | ❌ à tester |
 | P6 | **US-PAR-02 : étude de financement courtier partenaire** (1 CTA + envoi) | Spec 18/08 | Levier de monétisation simple | ❌ absent |
