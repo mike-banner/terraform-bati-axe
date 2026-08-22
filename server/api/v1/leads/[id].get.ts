@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
   // 1. Check if project exists
   const { data: project, error: projectError } = await supabase
     .from('projects')
-    .select('id, category, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code, created_at')
+    .select('id, category, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code, created_at, qualify_score, qualify_budget, qualify_phone, qualify_description, qualify_returning')
     .eq('id', id)
     .single()
 
@@ -131,7 +131,13 @@ export default defineEventHandler(async (event) => {
       id: project.id,
       claim_id: lead?.id || null,
       // Signale à l'UI pourquoi le free-grant n'a pas eu lieu (règle documents requis)
-      requiresDocuments: !isPremium && !alreadyTimeUnlocked && !hasDocuments && (pro.free_leads_used ?? 0) < 3
+      requiresDocuments: !isPremium && !alreadyTimeUnlocked && !hasDocuments && (pro.free_leads_used ?? 0) < 3,
+      // Score de qualification (D-12) — visible même verrouillé : c'est l'essentiel de l'offre
+      qualify_score: project.qualify_score ?? 0,
+      qualify_budget: project.qualify_budget ?? false,
+      qualify_phone: project.qualify_phone ?? false,
+      qualify_description: project.qualify_description ?? false,
+      qualify_returning: project.qualify_returning ?? false,
     }
   }
 })

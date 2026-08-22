@@ -3,6 +3,7 @@ import { serverSupabaseServiceRole } from '#supabase/server'
 import { computeQualifyScore } from '../../utils/qualifyScore'
 import { deriveTrades, derivePrimaryCategory } from '../../utils/calculatorMapping'
 import { verifyTurnstile } from '../../utils/verifyTurnstile'
+import { notifyMatchedPros } from '../../utils/notifyProLead'
 
 // French phone validation regex
 const phoneRegex = /^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/
@@ -173,20 +174,11 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // 4. Match verified pros for the category (e.g. for future SMS alerts)
-    // We NO LONGER pre-insert into the leads table (Dynamic Market Model)
-    const { data: pros, error: prosError } = await supabase
-      .from('professionals')
-      .select('id, phone')
-      .contains('categories', [category])
-      .eq('is_verified', true)
-
-    if (prosError) {
-      console.error('Failed to fetch pros for distribution:', prosError)
-    } else if (pros && pros.length > 0) {
-      console.log(`Matched ${pros.length} pros for project ${project.id}. Alerts will be triggered.`)
-      // TODO: Insert into sms_logs or trigger notification service here
-    }
+    // 4. P4 — Notifier par email les pros vérifiés dont les catégories matchent.
+    // La notification ne débloque rien : les coordonnées restent masquées tant
+    // que le pro n'est pas Premium / free-granté / 48h écoulées (cf. maskLead).
+    // Idempotence + non-bloquant gérés dans notifyMatchedPros.
+    await notifyMatchedPros(supabase, { ...project, budget_range: budgetRange, timeline_range: data.timeline_range ?? null, postal_code: data.postal_code }, category)
 
     // 5. Save CGU consent row
     const consentsToInsert: Array<{

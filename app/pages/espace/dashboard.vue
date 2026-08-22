@@ -12,6 +12,7 @@ interface Pro {
   siret_naf_code?: string | null
   is_available_subcontracting?: boolean
   workforce_size?: number | null
+  lead_alerts_email?: boolean
 }
 interface Verif {
   document_type: string; status: string; expiry_date: string | null; created_at: string
@@ -47,7 +48,7 @@ async function loadProData() {
     }
     const [{ data: proData, error: proErr }, { data: verifData, error: verifErr }] = await Promise.all([
       supabase.from('professionals')
-        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, siret_legal_form, siret_naf_code, created_at, categories, subscription_status, bio, logo_url, is_available_subcontracting, workforce_size')
+        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, siret_legal_form, siret_naf_code, created_at, categories, subscription_status, bio, logo_url, is_available_subcontracting, workforce_size, lead_alerts_email')
         .eq('id', uid).maybeSingle(),
       supabase.from('verifications')
         .select('document_type, status, expiry_date, created_at, file_key, reviewed_at')
@@ -117,12 +118,31 @@ const uploads = reactive({
 // ─── Capacité sous-traitance (05.11-02) ─────────────────────────────────────
 const capacity = reactive({ saving: false, available: false, workforce: '' })
 
+// ─── Alertes email nouveaux leads (P4) ───────────────────────────────────────
+const leadAlerts = reactive({ saving: false, enabled: true })
+
 watch(() => pro.value, (p) => {
   if (p) {
     capacity.available = p.is_available_subcontracting === true
     capacity.workforce = p.workforce_size != null ? String(p.workforce_size) : ''
+    leadAlerts.enabled = p.lead_alerts_email !== false
   }
 }, { immediate: true })
+
+async function saveLeadAlerts() {
+  leadAlerts.saving = true
+  try {
+    await $fetch('/api/v1/pro/profile/me', {
+      method: 'PATCH',
+      body: { lead_alerts_email: leadAlerts.enabled },
+    })
+    if (pro.value) pro.value.lead_alerts_email = leadAlerts.enabled
+  } catch (err: any) {
+    alert(err.data?.statusMessage || err.message || 'Erreur de sauvegarde.')
+  } finally {
+    leadAlerts.saving = false
+  }
+}
 
 async function saveCapacity() {
   capacity.saving = true
@@ -438,6 +458,35 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
             </button>
           </div>
           <p class="text-[11px] text-muted-foreground mt-2">La capacité est automatiquement désactivée si un document légal (KBIS, URSSAF, décennale) expire.</p>
+        </div>
+
+        <!-- ─── Alertes email nouveaux leads (P4) ───── -->
+        <div class="bento-card rounded-sm p-6 border border-slate-200 bg-white shadow-sm">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-sm font-semibold text-foreground">Alertes par email</p>
+              <p class="text-xs text-muted-foreground mt-0.5">Recevez un email dès qu'un nouveau lead correspond à vos catégories.</p>
+            </div>
+            <button
+              type="button"
+              @click="leadAlerts.enabled = !leadAlerts.enabled"
+              class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-safety/50"
+              :class="leadAlerts.enabled ? 'bg-safety' : 'bg-slate-300'"
+              role="switch"
+              :aria-checked="leadAlerts.enabled"
+            >
+              <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform" :class="leadAlerts.enabled ? 'translate-x-6' : 'translate-x-1'" />
+            </button>
+          </div>
+          <p class="text-[11px] text-muted-foreground mt-3">L'alerte vous prévient qu'un lead est disponible — elle ne débloque pas les coordonnées. L'accès suit la règle habituelle : Premium, 3 leads gratuits (documents déposés) ou 48 h.</p>
+          <button
+            @click="saveLeadAlerts"
+            :disabled="leadAlerts.saving"
+            class="mt-4 inline-flex items-center h-10 px-4 text-sm font-semibold rounded-sm bg-safety text-white hover:opacity-90 transition-opacity disabled:opacity-40"
+          >
+            <svg v-if="leadAlerts.saving" class="w-4 h-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+            Enregistrer
+          </button>
         </div>
         </div>
 
