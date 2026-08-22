@@ -1,7 +1,13 @@
 <script setup lang="ts">
 const user = useSupabaseUser()
+const supabase = useSupabaseClient()
 const route = useRoute()
 const sidebarOpen = ref(false)
+
+async function signOut() {
+  await navigateTo('/')
+  await supabase.auth.signOut()
+}
 
 const props = defineProps<{
   activeTab: string
@@ -120,7 +126,7 @@ const userInitial = computed(() => user.value?.email?.charAt(0).toUpperCase() ||
         </nav>
 
         <!-- Sidebar footer -->
-        <div class="px-3 py-3 border-t border-border">
+        <div class="px-3 py-3 border-t border-border space-y-2">
           <div class="flex items-center gap-2.5 px-3 py-2">
             <span class="flex items-center justify-center w-7 h-7 rounded-full bg-safety text-white text-xs font-bold shrink-0">
               {{ userInitial }}
@@ -130,6 +136,13 @@ const userInitial = computed(() => user.value?.email?.charAt(0).toUpperCase() ||
               <p class="text-[10px] text-muted-foreground">Administrateur</p>
             </div>
           </div>
+          <button
+            @click="signOut"
+            class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-sm text-xs font-medium text-red-400 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
+            Déconnexion
+          </button>
         </div>
       </aside>
 
@@ -149,13 +162,13 @@ const userInitial = computed(() => user.value?.email?.charAt(0).toUpperCase() ||
             <h1 class="text-sm font-bold text-foreground truncate">{{ currentLabel }}</h1>
           </div>
 
-          <NuxtLink
-            to="/"
-            class="hidden sm:inline-flex items-center gap-1.5 h-8 px-3 text-xs font-medium text-muted-foreground hover:text-foreground border border-border rounded-sm hover:bg-muted transition-colors"
+          <button
+            @click="signOut"
+            class="hidden sm:inline-flex items-center gap-1.5 h-8 px-3 text-xs font-medium text-red-400 hover:bg-red-500/10 border border-red-500/20 rounded-sm transition-colors"
           >
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
-            Site
-          </NuxtLink>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
+            Déconnexion
+          </button>
         </header>
 
         <!-- Page content -->
