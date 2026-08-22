@@ -22,7 +22,7 @@ const onSimulateur = computed(() => route.path === '/simulateur')
 
 <template>
   <div class="min-h-screen bg-page text-foreground flex flex-col font-sans antialiased">
-    <header class="sticky top-0 z-40 border-b border-border bg-page/95 backdrop-blur-sm">
+    <header class="sticky top-0 z-40 border-b border-border bg-page">
       <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <NuxtLink to="/" class="flex items-center shrink-0 hover:opacity-80 transition-opacity" aria-label="BÂTI-AXE — Accueil">
           <img src="/images/logo-transparent.png" alt="BÂTI-AXE" class="h-12 w-auto object-contain" />

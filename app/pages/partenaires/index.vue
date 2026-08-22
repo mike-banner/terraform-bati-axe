@@ -58,71 +58,67 @@ const steps = [
 
 // ─── Problèmes / Solutions ────────────────────────────────────────────────────
 const pains = [
-  { icon: '⏳', text: 'Des devis qui mettent 3 semaines et des ventes qui se refroidissent.' },
-  { icon: '🛠️', text: 'Des artisans qui ne respectent ni vos plans, ni vos délais, ni vos clients.' },
-  { icon: '📞', text: 'Des soirées passées à relancer des entreprises qui ne rappellent jamais.' },
+  'Des devis qui mettent 3 semaines et des ventes qui se refroidissent.',
+  'Des artisans qui ne respectent ni vos plans, ni vos délais, ni vos clients.',
+  'Des soirées passées à relancer des entreprises qui ne rappellent jamais.',
 ]
 
 const solutions = [
-  { icon: '🛡️', text: 'Un réseau audité en continu par API : INSEE, juridique, décennales — suspension automatique en cas d\'expiration.' },
-  { icon: '⚡', text: 'Des chiffrages réactifs : rappel garanti sous 4h, pré-chiffrage sous 48h pour aider vos acheteurs à se positionner.' },
-  { icon: '🤝', text: 'Un chargé d\'affaires dédié qui suit votre dossier jusqu\'à la livraison. Vous ne relancez plus personne.' },
+  'Un réseau audité en continu par API : INSEE, juridique, décennales — suspension automatique en cas d\'expiration.',
+  'Des chiffrages réactifs : rappel garanti sous 4h, pré-chiffrage sous 48h pour aider vos acheteurs à se positionner.',
+  'Un chargé d\'affaires dédié qui suit votre dossier jusqu\'à la livraison. Vous ne relancez plus personne.',
 ]
 
 // ─── Services ─────────────────────────────────────────────────────────────────
 const services = [
   {
-    icon: '📐',
+    icon: 'clock',
     title: 'Chiffrage réactif',
     desc: 'Déposez plans, CCTP ou compromis : pré-chiffrage sous 48h pour vos acheteurs, chiffrage détaillé et rappel sous 4h ouvrées.',
   },
   {
-    icon: '🛡️',
+    icon: 'shield',
     title: 'Artisans audités en continu',
     desc: 'Activité INSEE, situation juridique et assurances décennales vérifiées par API. Suspension automatique si un document expire.',
   },
   {
-    icon: '📋',
+    icon: 'file',
     title: 'Respect strict des plans',
     desc: 'Lecture au millimètre de vos plans et notes de calcul. Matériaux conformes à vos choix, finitions à la hauteur de votre signature.',
   },
   {
-    icon: '👤',
+    icon: 'user',
     title: 'Chargé d\'affaires dédié',
     desc: 'Un interlocuteur unique analyse vos pièces, sélectionne les entreprises et vous tient informé — du dépôt à la livraison.',
   },
   {
-    icon: '📦',
+    icon: 'clipboard',
     title: 'Suivi de chantier transparent',
     desc: 'Rapports d\'avancement clairs, respect du règlement de copropriété, comptes rendus exploitables pour vos clients.',
   },
   {
-    icon: '💼',
+    icon: 'link',
     title: 'Partenariat régulier',
     desc: 'Dossiers prioritaires, tarifs préférentiels et accès au réseau vérifié pour tous vos futurs chantiers.',
   },
 ]
 
-// ─── Stats ────────────────────────────────────────────────────────────────────
-const stats = [
-  { value: '4h', label: 'Rappel garanti après dépôt du dossier' },
-  { value: '48h', label: 'Pré-chiffrage pour vos acheteurs' },
-  { value: '100%', label: 'Décennales vérifiées par API' },
-  { value: '24/7', label: 'Dépôt de dossier en ligne sécurisé' },
+// ─── Promesses (barre de confiance) ───────────────────────────────────────────
+const promises = [
+  'Rappel garanti sous 4h après dépôt du dossier',
+  'Pré-chiffrage sous 48h pour vos acheteurs',
+  'Décennales vérifiées par API',
+  'Dépôt de dossier sécurisé 24/7',
 ]
 </script>
 
 <template>
   <div class="min-h-screen bg-page">
     <!-- ═══ 1. HERO ═══ -->
-    <section class="relative overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-      <div class="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-safety/20 blur-3xl" />
-      <div class="absolute -bottom-48 -left-32 w-[400px] h-[400px] rounded-full bg-safety/10 blur-3xl" />
-
-      <div class="relative max-w-6xl mx-auto px-6 pt-16 pb-20 md:pt-24 md:pb-28">
-        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-slate-300 mb-6">
-          <span class="w-2 h-2 rounded-full bg-safety animate-pulse" />
+    <section class="bg-slate-900">
+      <div class="max-w-6xl mx-auto px-6 pt-16 pb-20 md:pt-24 md:pb-28">
+        <div class="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800 px-4 py-1.5 text-sm text-slate-300 mb-6">
+          <span class="w-2 h-2 rounded-full bg-safety" />
           Espace Professionnels &amp; Prescripteurs
         </div>
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.1] max-w-3xl">
@@ -136,14 +132,14 @@ const stats = [
         <div class="mt-8 flex flex-col sm:flex-row gap-3">
           <NuxtLink
             :to="TUNNEL_URL"
-            class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-safety px-8 text-base font-bold text-white shadow-lg shadow-safety/25 hover:brightness-110 transition-all"
+            class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-safety px-8 text-base font-bold text-white shadow-lg hover:brightness-110 transition-all"
           >
             Déposer un dossier
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
           </NuxtLink>
           <a
             href="#comment-ca-marche"
-            class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-8 text-base font-semibold text-white hover:bg-white/10 transition-all"
+            class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-600 bg-slate-800 px-8 text-base font-semibold text-white hover:bg-slate-700 transition-colors"
           >
             Découvrir le processus
           </a>
@@ -151,12 +147,12 @@ const stats = [
       </div>
     </section>
 
-    <!-- ═══ 2. BARRE DE CONFIANCE ═══ -->
+    <!-- ═══ 2. PROMESSES ═══ -->
     <section class="border-b border-border bg-white">
-      <div class="max-w-6xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div v-for="s in stats" :key="s.label" class="text-center md:text-left">
-          <p class="text-3xl font-black text-foreground">{{ s.value }}</p>
-          <p class="text-xs text-muted-foreground mt-1 leading-snug">{{ s.label }}</p>
+      <div class="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
+        <div v-for="p in promises" :key="p" class="flex items-start gap-2.5">
+          <svg class="w-4 h-4 mt-0.5 text-safety shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <p class="text-sm text-foreground leading-snug">{{ p }}</p>
         </div>
       </div>
     </section>
@@ -168,29 +164,27 @@ const stats = [
       </h2>
 
       <div class="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Pains -->
         <div class="space-y-3">
-          <p class="text-xs font-bold uppercase tracking-wider text-destructive mb-4">Ce que vous vivez aujourd'hui</p>
+          <p class="text-sm font-bold text-destructive mb-4">Ce que vous vivez aujourd'hui</p>
           <div
             v-for="(p, i) in pains"
             :key="i"
             class="flex items-start gap-3 p-4 rounded-sm border border-destructive/20 bg-destructive/5"
           >
-            <span class="text-lg mt-0.5">{{ p.icon }}</span>
-            <p class="text-sm text-foreground leading-relaxed">{{ p.text }}</p>
+            <svg class="w-5 h-5 mt-0.5 text-destructive shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+            <p class="text-sm text-foreground leading-relaxed">{{ p }}</p>
           </div>
         </div>
 
-        <!-- Solutions -->
         <div class="space-y-3">
-          <p class="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-4">Ce que BÂTI-AXE change</p>
+          <p class="text-sm font-bold text-emerald-600 mb-4">Ce que BÂTI-AXE change</p>
           <div
             v-for="(s, i) in solutions"
             :key="i"
             class="flex items-start gap-3 p-4 rounded-sm border border-emerald-500/20 bg-emerald-500/5"
           >
-            <span class="text-lg mt-0.5">{{ s.icon }}</span>
-            <p class="text-sm text-foreground leading-relaxed">{{ s.text }}</p>
+            <svg class="w-5 h-5 mt-0.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p class="text-sm text-foreground leading-relaxed">{{ s }}</p>
           </div>
         </div>
       </div>
@@ -200,7 +194,6 @@ const stats = [
     <section class="bg-white border-y border-border">
       <div class="max-w-6xl mx-auto px-6 py-20">
         <div class="max-w-2xl">
-          <p class="text-xs font-bold uppercase tracking-wider text-safety mb-3">Nos services</p>
           <h2 class="text-2xl md:text-3xl font-bold text-foreground">
             Ce que nous vous proposons, concrètement.
           </h2>
@@ -214,10 +207,15 @@ const stats = [
           <div
             v-for="s in services"
             :key="s.title"
-            class="bg-card border border-border rounded-sm p-6 hover:border-safety/30 hover:shadow-lg transition-all"
+            class="bg-card border border-border rounded-sm p-6 hover:border-safety/30 transition-colors"
           >
-            <span class="text-2xl">{{ s.icon }}</span>
-            <h3 class="mt-3 text-sm font-bold text-foreground">{{ s.title }}</h3>
+            <svg v-if="s.icon === 'clock'" class="w-6 h-6 text-safety" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 2"/></svg>
+            <svg v-else-if="s.icon === 'shield'" class="w-6 h-6 text-safety" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 2.5V11c0 4.5-3 7.5-7 9.5C8 18.5 5 15.5 5 11V5.5L12 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 11.5l2 2 4-4"/></svg>
+            <svg v-else-if="s.icon === 'file'" class="w-6 h-6 text-safety" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V7l-5-5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M14 2v5h5M9 13h6M9 17h4"/></svg>
+            <svg v-else-if="s.icon === 'user'" class="w-6 h-6 text-safety" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 21c.5-3.5 3.5-5.5 7.5-5.5s7 2 7.5 5.5"/></svg>
+            <svg v-else-if="s.icon === 'clipboard'" class="w-6 h-6 text-safety" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 4H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-2"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 4a1.5 1.5 0 013 0v1H9V4z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6M9 17h4"/></svg>
+            <svg v-else-if="s.icon === 'link'" class="w-6 h-6 text-safety" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14a5 5 0 007.07 0l3-3a5 5 0 00-7.07-7.07L12 4.93"/><path stroke-linecap="round" stroke-linejoin="round" d="M14 10a5 5 0 00-7.07 0l-3 3a5 5 0 007.07 7.07L12 19.07"/></svg>
+            <h3 class="mt-4 text-sm font-bold text-foreground">{{ s.title }}</h3>
             <p class="mt-2 text-xs text-muted-foreground leading-relaxed">{{ s.desc }}</p>
           </div>
         </div>
@@ -227,7 +225,6 @@ const stats = [
     <!-- ═══ 5. COMMENT ÇA MARCHE ═══ -->
     <section id="comment-ca-marche" class="max-w-6xl mx-auto px-6 py-20">
       <div class="max-w-2xl mx-auto text-center">
-        <p class="text-xs font-bold uppercase tracking-wider text-safety mb-3">Comment ça marche</p>
         <h2 class="text-2xl md:text-3xl font-bold text-foreground">De votre dossier à la livraison, en 4 étapes.</h2>
       </div>
 
@@ -237,7 +234,7 @@ const stats = [
           :key="s.n"
           class="relative bg-card border border-border rounded-sm p-6 pt-8"
         >
-          <span class="absolute -top-4 left-6 h-8 w-8 rounded-full bg-safety text-white text-sm font-black flex items-center justify-center shadow-md shadow-safety/30">
+          <span class="absolute -top-4 left-6 h-8 w-8 rounded-full bg-safety text-white text-sm font-black flex items-center justify-center">
             {{ s.n }}
           </span>
           <h3 class="text-sm font-bold text-foreground">{{ s.title }}</h3>
@@ -248,7 +245,7 @@ const stats = [
       <div class="mt-10 text-center">
         <NuxtLink
           :to="TUNNEL_URL"
-          class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-safety px-8 text-base font-bold text-white shadow-lg shadow-safety/25 hover:brightness-110 transition-all"
+          class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-safety px-8 text-base font-bold text-white shadow-lg hover:brightness-110 transition-all"
         >
           Lancer mon dossier
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -260,7 +257,6 @@ const stats = [
     <section class="bg-white border-y border-border">
       <div class="max-w-6xl mx-auto px-6 py-20">
         <div class="max-w-2xl mx-auto text-center">
-          <p class="text-xs font-bold uppercase tracking-wider text-safety mb-3">Pour qui ?</p>
           <h2 class="text-2xl md:text-3xl font-bold text-foreground">Pensé pour chaque professionnel du bâtiment et de l'immobilier.</h2>
         </div>
 
@@ -287,7 +283,7 @@ const stats = [
     <section class="max-w-6xl mx-auto px-6 py-16">
       <div class="bg-card border border-border rounded-sm p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center gap-6">
         <div class="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-          <svg class="w-7 h-7 text-emerald-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+          <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 2.5V11c0 4.5-3 7.5-7 9.5C8 18.5 5 15.5 5 11V5.5L12 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 11.5l2 2 4-4"/></svg>
         </div>
         <div class="flex-1">
           <h3 class="text-lg font-bold text-foreground">Conformité automatisée, sans effort pour vous</h3>
@@ -298,7 +294,7 @@ const stats = [
         </div>
         <NuxtLink
           :to="TUNNEL_URL"
-          class="inline-flex h-11 shrink-0 items-center justify-center rounded-full border border-safety/40 bg-safety/5 px-6 text-sm font-semibold text-safety hover:bg-safety/10 transition-all"
+          class="inline-flex h-11 shrink-0 items-center justify-center rounded-full border border-safety/40 bg-safety/5 px-6 text-sm font-semibold text-safety hover:bg-safety/10 transition-colors"
         >
           Tester le réseau
         </NuxtLink>
@@ -308,7 +304,6 @@ const stats = [
     <!-- ═══ 8. FAQ ═══ -->
     <section class="max-w-3xl mx-auto px-6 py-20">
       <div class="text-center">
-        <p class="text-xs font-bold uppercase tracking-wider text-safety mb-3">FAQ</p>
         <h2 class="text-2xl md:text-3xl font-bold text-foreground">Vos questions, nos réponses.</h2>
       </div>
 
@@ -337,11 +332,8 @@ const stats = [
     </section>
 
     <!-- ═══ 9. CTA FINAL ═══ -->
-    <section class="relative overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-safety/20 blur-3xl" />
-
-      <div class="relative max-w-3xl mx-auto px-6 py-20 text-center">
+    <section class="bg-slate-900">
+      <div class="max-w-3xl mx-auto px-6 py-20 text-center">
         <h2 class="text-3xl md:text-4xl font-black text-white leading-tight">
           Un chantier à faire chiffrer, ou un partenariat à construire&nbsp;?
         </h2>
@@ -352,14 +344,14 @@ const stats = [
         <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
           <NuxtLink
             :to="TUNNEL_URL"
-            class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-safety px-8 text-base font-bold text-white shadow-lg shadow-safety/25 hover:brightness-110 transition-all"
+            class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-safety px-8 text-base font-bold text-white shadow-lg hover:brightness-110 transition-all"
           >
             Déposer un dossier
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
           </NuxtLink>
           <a
             href="mailto:partenaires@batiaxe.fr"
-            class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-8 text-base font-semibold text-white hover:bg-white/10 transition-all"
+            class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-600 bg-slate-800 px-8 text-base font-semibold text-white hover:bg-slate-700 transition-colors"
           >
             Nous écrire
           </a>
