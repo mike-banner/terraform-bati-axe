@@ -5,10 +5,17 @@ import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 
 const B2B_STATUS = ['nouveau', 'en_cours', 'rappele', 'qualifie', 'converti', 'perdu'] as const
 
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+
 const schema = z.object({
   status: z.enum(B2B_STATUS).optional(),
   assigned_to: z.string().uuid().nullable().optional(),
   notes: z.string().max(5000).nullable().optional(),
+  // 05.10-08 — Qualification DirCo
+  qualifications_requises: z.array(z.string().min(1).max(100)).max(20).optional(),
+  planning_start: z.string().regex(DATE_RE).nullable().optional(),
+  planning_end: z.string().regex(DATE_RE).nullable().optional(),
+  recommended_pros: z.array(z.string().uuid()).max(3).optional(),
 })
 
 export default defineEventHandler(async (event) => {
@@ -36,7 +43,7 @@ export default defineEventHandler(async (event) => {
     .from('b2b_requests')
     .update(changes)
     .eq('id', id)
-    .select('id, status, assigned_to, notes, updated_at')
+    .select('id, status, assigned_to, notes, qualifications_requises, planning_start, planning_end, recommended_pros, updated_at')
     .single()
 
   if (error) throw createError({ statusCode: 500, statusMessage: error.message })
@@ -46,6 +53,9 @@ export default defineEventHandler(async (event) => {
   if (changes.status) auditMeta.status = changes.status
   if ('assigned_to' in changes) auditMeta.assigned_to = changes.assigned_to
   if ('notes' in changes) auditMeta.has_notes = true
+  if (changes.qualifications_requises) auditMeta.qualifications = changes.qualifications_requises.length
+  if ('planning_start' in changes || 'planning_end' in changes) auditMeta.planning = true
+  if (changes.recommended_pros) auditMeta.recommended_pros = changes.recommended_pros.length
 
   await supabase.from('audit_logs').insert({
     actor_id: (user as any).id,
