@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0-lancement-pilote
 milestone_name: Lancement v1 — Pilote Carrières-sous-Poissy
 status: v1_in_progress
-stopped_at: "V1 en cours — phases 05.10/05.11/06.1/06.2/05.12 + P4 livrées, PRs #44-49 tous mergés"
+stopped_at: "V1 en cours — phases 05.10/05.11/06.1/06.2/05.12/05.13 + P4 livrées ; dette technique, P5, P9 soldées (branche fix/dette-p9-p5)"
 last_updated: "2026-08-23T23:00:00.000Z"
 last_activity: 2026-08-23
 progress:
-  total_phases: 20
-  completed_phases: 18
-  total_plans: 68
-  completed_plans: 66
+  total_phases: 21
+  completed_phases: 19
+  total_plans: 71
+  completed_plans: 69
   percent: 97
 ---
 
@@ -38,9 +38,10 @@ Phases complètes récentes :
 - **06.1 — Console Admin Opérationnelle** ✅ (2026-08-22) : 8 composants modulaires, sidebar, dark mode, search/pagination, audit log, onglets B2B + Documents légaux.
 - **06.2 — KPIs de Pilotage** ✅ (2026-08-22, merge PR #45 le 2026-08-22) : kpi-engine 6 KPIs + dashboard admin. *(récupéré d'une branche jamais mergée — docs le marquaient « livré » à tort)*.
 - **05.12 — Front Polish & Branding** ✅ 2/2 (2026-08-23, PR #49) : landing `/partenaires` dédiée (9 sections) + tunnel allégé + scroll fluide ; déclinaisons web du logo (détourage flood-fill, transparent/monochrome, favicons, apple-touch, PWA, og-image) + script `scripts/generate-logo-variants.mjs` ; passe anti-slop, icônes Phosphor duotone, FAQ éditoriale, univers `copper`, radius pill unifié, retour « Particuliers » dans le header. Aucune migration DB.
+- **05.13 — Dette technique + P9 Mobile QA + P5 Feedback Loop** ✅ 3/3 (2026-08-23, branche `fix/dette-p9-p5`) : suite e2e Playwright câblée sur le Chrome système (`channel: 'chrome'`, 24 specs → 24 pass, jamais lancée avant) + specs simulateur réécrites (flux 6 étapes) + test badge réparé (`bg-[#F8FAFC]`) ; QA mobile mesurée (scripts `mobile-audit`/`touch-audit`/`monprojet-mobile`), cibles tactiles ≥ 44px (header/simulateur/tunnel/footer), état vide catégorie leads atteignable, projet Playwright `mobile-chromium` (48/48 specs desktop + mobile) ; feedback loop extrait dans `server/utils/handleLeadDecision.ts` + 9 tests unitaires (remise au marché, garde-fou MAX_RELAUNCHES, 403/404). Aucune migration DB.
 - **P4 — Notif pro nouveaux leads (email)** ✅ (2026-08-23, PR #48 mergé) : `notifyProLead` sur `projects.post.ts`, opt-in `lead_alerts_email`, idempotence `lead_notifications`, page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h, focus offre 15 s à l'arrivée depuis l'email.
 
-Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod), **P1** (Matomo funnel), **P9** (mobile QA), **P5** (feedback loop testé), **P7** (packs zonés — bloqué tarifs), **P6/P8/P10** (leviers B2B).
+Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod), **P1** (Matomo funnel — décision hébergement VPS/Cloud à prendre, prérequis bandeau cookies RGPD), **P7** (packs zonés — bloqué tarifs), **P6/P8/P10** (leviers B2B).
 
 ## Plans récents livrés
 
@@ -51,6 +52,9 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - [x] P4 — Notif email nouveaux leads + page « Lead non accessible » + déblocage 48h — PR #48 (mergé)
 - [x] 05.12-01 — Landing `/partenaires` dédiée + tunnel allégé + header/footer (PR #49)
 - [x] 05.12-02 — Déclinaisons web du logo (détourage + 11 fichiers + branchements) (PR #49)
+- [x] 05.13-01 — Dette technique : suite e2e câblée (channel chrome) + specs alignées + badge réparé (PR à ouvrir)
+- [x] 05.13-02 — P9 Mobile QA : audit + cibles ≥ 44px + projet e2e mobile 48/48 (PR à ouvrir)
+- [x] 05.13-03 — P5 Feedback loop : `handleLeadDecision` + 9 tests (PR à ouvrir)
 
 ## Decisions (récentes)
 
@@ -60,6 +64,9 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - [2026-08-23] **P4 — la notification ne débloque pas l'accès** : un pro non-premium reçoit l'email mais voit la page « Lead non accessible » (Premium ou attente 48h). Philosophie « plus laxiste au lancement » : déblocage auto **72h → 48h** (cron `auto-unlock-leads-48h`).
 - [2026-08-23] **Focus offre à l'arrivée email** : le panneau sombre de l'offre (budget/délai/qualification) est mis en surbrillance (ring + glow orange) 15 s quand le lien porte `?src=email` — au lieu d'un bandeau textuel.
 - [2026-08-23] **Migration P4 appliquée en prod** : `20260823000002_p4_lead_notifications` (colonne `lead_alerts_email`, table `lead_notifications`, cron 48h).
+- [2026-08-23] **Dette technique** : suite e2e Playwright jamais lancée (bundle Chromium cassé en sandbox) → `channel: 'chrome'` (Chrome système) ; specs simulateur réécrites pour le flux 6 étapes (les helpers dataient de l'ancien flux) ; `BadgeEntrepriseVerifiee` aligné sur `bg-[#F8FAFC]` (palette Sketch 001) ; branche `test-fix` supprimée.
+- [2026-08-23] **P9 Mobile QA** : aucun débordement horizontal à 320/390px sur les pages publiques ; cibles tactiles header/simulateur/tunnel passées à ≥ 44px (h-11/min-h-11) ; état vide « Aucun lead pour cette catégorie » rendu atteignable (le filtre listait les catégories des leads présents → code mort) ; projet Playwright `mobile-chromium` (Pixel 7) verrouille le responsive (48/48 = 24 desktop + 24 mobile).
+- [2026-08-23] **P5 Feedback loop testé** : orchestration de `decision.post.ts` extraite dans `server/utils/handleLeadDecision.ts` (pattern `handleStripeEvent`) + 9 tests unitaires. E2e via `page.route` abandonnée : les appels Supabase du service role partent du serveur Nitro et ne sont pas interceptables par Playwright.
 
 ## Known Patterns (à appliquer dans les prochaines phases)
 
@@ -83,11 +90,11 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 | **P2** Turnstile anti-spam | ✅ code livré — standby (clés client à créer au transfert Cloudflare) |
 | **P3** Stripe + cron re-test prod | ❌ **à faire en premier** (critique, runbook prêt) |
 | **P4** Notif leads email | ✅ livré (PR #48 mergé) — temps 2 Web Push = Phase 8 |
-| **P5** Feedback loop refus→marché testé | ❌ à tester |
+| **P5** Feedback loop refus→marché testé | ✅ testé (2026-08-23, 05.13-03 — reste vérif sur données réelles au go-live) |
 | **P6** Étude financement courtier | ❌ absent |
 | **P7** Packs zonés & exclusivité | ❌ absent — bloqué tarifs définitifs (Basic 150-200 / Premium 300) |
 | **P8** Compte Prescripteur | ❌ absent |
-| **P9** Mobile QA + états vides | ❌ à faire |
+| **P9** Mobile QA + états vides | ✅ fait (2026-08-23, 05.13-02 — projet e2e mobile 48/48) |
 | **P10** Commission B2B + Stripe Connect | 📝 doc only |
 | **P11** eIDAS / workspace archi | ❌ Phase 7+ |
 | **P12** Page pro public digne | ❌ à faire (CTA devis ajouté, avis = Phase 7) |
@@ -122,4 +129,4 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 Last session: 2026-08-23 (matinée → fin de journée)
 Stopped at: **P4 + polish front partenaire livrés** (PRs #48 et #49 mergés) + planning GSD resynchronisé (milestone v1.0, 20 phases / 68 plans)
-Resume: prochain chantier au choix — **P3** (Stripe re-test prod, critique), **P1** (Matomo), **P9** (mobile QA), **P5** (feedback loop), **P7** (packs zonés, après validation tarifs)
+Resume: prochain chantier au choix — **P3** (Stripe re-test prod, critique — clés Stripe à récupérer), **P1** (Matomo — décision VPS/Cloud puis bandeau cookies RGPD prérequis), **P7** (packs zonés, après validation tarifs)
