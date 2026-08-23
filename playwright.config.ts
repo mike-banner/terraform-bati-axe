@@ -13,7 +13,15 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      // Le Chromium bundle de Playwright ne se lance pas dans le sandbox
+      // (dette connue) — on utilise le Chrome système installé.
+      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+    },
+    {
+      // P9 — QA mobile : mêmes specs passées en viewport mobile (390×844,
+      // iPhone 12-14) pour détecter les régressions responsives.
+      name: 'mobile-chromium',
+      use: { ...devices['Pixel 7'], channel: 'chrome' },
     },
   ],
   webServer: {

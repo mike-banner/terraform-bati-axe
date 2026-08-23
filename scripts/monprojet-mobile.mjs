@@ -1,0 +1,15 @@
+import { chromium } from '@playwright/test'
+const browser = await chromium.launch({ channel: 'chrome' })
+const ctx = await browser.newContext({ viewport: { width: 320, height: 640 }, isMobile: true })
+const page = await ctx.newPage()
+// 1) Token invalide → état erreur
+await page.route('**/api/v1/magic-link/bad-token', r => r.fulfill({ status: 404, contentType: 'application/json', body: JSON.stringify({ statusCode: 404, message: 'Not found' }) }))
+await page.goto('http://localhost:3000/mon-projet/bad-token', { waitUntil: 'networkidle', timeout: 30000 })
+const r1 = await page.evaluate(() => ({ scrollW: document.documentElement.scrollWidth, clientW: document.documentElement.clientWidth, text: document.body.innerText.slice(0, 120).replace(/\n/g, ' | ') }))
+console.log(`[mon-projet/bad-token 320px] overflow=${r1.scrollW > r1.clientW + 1 ? '❌' : '✅'} → ${r1.text}`)
+// 2) Token valide, état vide (aucun artisan)
+await page.route('**/api/v1/magic-link/good-token', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ project: { id: 'p1', category: 'Maçonnerie & Gros Œuvre', description: 'Rénovation façade.', budget_range: '15k-30k', timeline_range: '3_mois', postal_code: '78955', status: 'qualified', created_at: new Date().toISOString() }, messages: [] }) }))
+await page.goto('http://localhost:3000/mon-projet/good-token', { waitUntil: 'networkidle', timeout: 30000 })
+const r2 = await page.evaluate(() => ({ scrollW: document.documentElement.scrollWidth, clientW: document.documentElement.clientWidth, text: document.body.innerText.slice(0, 200).replace(/\n/g, ' | ') }))
+console.log(`[mon-projet/good-token 320px] overflow=${r2.scrollW > r2.clientW + 1 ? '❌' : '✅'} → ${r2.text}`)
+await browser.close()

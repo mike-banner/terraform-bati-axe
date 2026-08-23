@@ -380,15 +380,15 @@ test.describe('Leads — filtre par catégorie', () => {
 
     await gotoLeads(page)
 
-    // Sans filtre : 3 leads (compteur exact, pas la bannière "3 leads gratuits")
-    await expect(page.getByText('3 leads', { exact: true })).toBeVisible({ timeout: 10_000 })
+    // Sans filtre : 3 leads (compteur opportunités)
+    await expect(page.getByText('3 opportunités')).toBeVisible({ timeout: 10_000 })
 
     // Filtre sur "Maçonnerie"
     await page.selectOption('select[aria-label="Filtrer par catégorie"]', 'maconnerie')
 
-    // Après filtre : 2 leads maçonnerie ("2 leads · Maçonnerie" → regex, pas exact)
-    await expect(page.getByText(/2 leads/)).toBeVisible()
-    await expect(page.getByText(/Maçonnerie/).first()).toBeVisible()
+    // Après filtre : 2 leads maçonnerie
+    await expect(page.getByText('2 opportunités')).toBeVisible()
+    await expect(page.getByText(/Maçonnerie & Gros Œuvre/).first()).toBeVisible()
   })
 
   test('filtre sur catégorie sans résultat affiche l\'état vide de catégorie', async ({ page }) => {
@@ -419,12 +419,11 @@ test.describe('Leads — filtre par catégorie', () => {
 
     await gotoLeads(page)
 
-    // Les options du select sont dynamiques — on sélectionne par valeur brute
-    await page.selectOption('select[aria-label="Filtrer par catégorie"]', 'maconnerie')
-    // Puis on essaie de sélectionner une catégorie qui n'existe pas dans les leads
-    // En repassant à "Toutes catégories" pour simuler l'état 0 résultat filtré,
-    // ici on vérifie juste que le filtre fonctionne avec résultat non-vide
-    await expect(page.getByText(/1 lead/)).toBeVisible()
+    // On a un lead maçonnerie ; on filtre sur une catégorie sans résultat
+    // (Électricité fait partie des options fixes) → état vide de catégorie.
+    await page.selectOption('select[aria-label="Filtrer par catégorie"]', 'electricite')
+    await expect(page.getByText('Aucun lead pour cette catégorie.')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText('0 opportunités')).toBeVisible()
   })
 })
 
