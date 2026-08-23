@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0-lancement-pilote
 milestone_name: Lancement v1 — Pilote Carrières-sous-Poissy
 status: v1_in_progress
-stopped_at: "V1 en cours — phases 05.10/05.11/06.1/06.2/05.12/05.13 + P4 livrées ; dette technique, P5, P9 soldées (branche fix/dette-p9-p5)"
-last_updated: "2026-08-23T23:00:00.000Z"
+stopped_at: "V1 en cours — phases 05.10/05.11/06.1/06.2/05.12/05.13 + P4 livrées ; dette, P5, P9 soldées ; pass e2e admin prod (PR #52) — fix redirection login"
+last_updated: "2026-08-23T23:59:00.000Z"
 last_activity: 2026-08-23
 progress:
   total_phases: 21
@@ -67,6 +67,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - [2026-08-23] **Dette technique** : suite e2e Playwright jamais lancée (bundle Chromium cassé en sandbox) → `channel: 'chrome'` (Chrome système) ; specs simulateur réécrites pour le flux 6 étapes (les helpers dataient de l'ancien flux) ; `BadgeEntrepriseVerifiee` aligné sur `bg-[#F8FAFC]` (palette Sketch 001) ; branche `test-fix` supprimée.
 - [2026-08-23] **P9 Mobile QA** : aucun débordement horizontal à 320/390px sur les pages publiques ; cibles tactiles header/simulateur/tunnel passées à ≥ 44px (h-11/min-h-11) ; état vide « Aucun lead pour cette catégorie » rendu atteignable (le filtre listait les catégories des leads présents → code mort) ; projet Playwright `mobile-chromium` (Pixel 7) verrouille le responsive (48/48 = 24 desktop + 24 mobile).
 - [2026-08-23] **P5 Feedback loop testé** : orchestration de `decision.post.ts` extraite dans `server/utils/handleLeadDecision.ts` (pattern `handleStripeEvent`) + 9 tests unitaires. E2e via `page.route` abandonnée : les appels Supabase du service role partent du serveur Nitro et ne sont pas interceptables par Playwright.
+- [2026-08-23] **Pass e2e admin sur la prod (PR #52)** : login admin (cookie + rôle OK) mais pas de redirection auto → cause racine = `navigateTo('/admin')` immédiat après `signInWithPassword` alors que `useSupabaseUser()` n'est pas encore hydraté → le middleware `/admin` rebondissait vers `/pro/claim` (un reload corrigeait). Fix : le `watch(user)` route l'utilisateur dès que la session est hydratée (admin → `/admin` prioritaire, pro existant → dashboard, sinon onboarding étape 2). Spec e2e `tests/e2e/admin-login.spec.ts` (rouge sans fix, verte avec). Audit des 9 onglets admin en prod : tous OK + API admin protégées (401 sans session). Scripts réutilisables : `scripts/admin-audit.mjs`, `scripts/admin-tabs-deep.mjs`.
 
 ## Known Patterns (à appliquer dans les prochaines phases)
 
@@ -117,7 +118,8 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - ✅ **#47** coffre-fort juridique 05.11 — mergé 2026-08-23
 - ✅ **#48** P4 notif email leads — mergé 2026-08-23 (conflits ROADMAP/STATE résolus au merge de #49)
 - ✅ **#49** front polish partenaire (landing, logo, Phosphor, FAQ, copper) — mergé 2026-08-23 (conflits planning résolus : base rewrite #48 + apports 05.12)
-- 🔀 **#51** dette technique + P9 mobile QA + P5 feedback loop (phase 05.13) — ouvert 2026-08-23
+- ✅ **#51** dette technique + P9 mobile QA + P5 feedback loop (phase 05.13) — mergé 2026-08-23
+- ✅ **#52** fix redirection login admin (`watch(user)` + spec e2e admin-login) — mergé 2026-08-23
 
 ## Blockers/Concerns
 
@@ -129,5 +131,5 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 ## Session Continuity
 
 Last session: 2026-08-23 (matinée → fin de journée)
-Stopped at: **P4 + polish front partenaire livrés** (PRs #48 et #49 mergés) + planning GSD resynchronisé (milestone v1.0, 20 phases / 68 plans)
+Stopped at: **PRs #51 (dette/P9/P5) + #52 (fix login admin) mergés** — pass e2e admin prod terminé : 9 onglets OK, login → `/admin` auto OK
 Resume: prochain chantier au choix — **P3** (Stripe re-test prod, critique — clés Stripe à récupérer), **P1** (Matomo — décision VPS/Cloud puis bandeau cookies RGPD prérequis), **P7** (packs zonés, après validation tarifs)
