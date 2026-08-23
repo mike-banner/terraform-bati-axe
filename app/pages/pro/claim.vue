@@ -222,9 +222,18 @@ onMounted(async () => {
   }
 })
 
-// Déconnexion explicite après coup → retour à l'écran de connexion.
+// Aiguillage réactif dès que la session est hydratée (course avec
+// signInWithPassword : le navigateTo() immédiat de handleAuth échouait car
+// useSupabaseUser() n'était pas encore peuplé → le middleware rebondissait).
+// Admin → console (prioritaire), pro existant → dashboard, sinon étape 2.
 watch(user, (newUser) => {
-  if (newUser === null) activeStep.value = 1
+  if (newUser === null) {
+    activeStep.value = 1
+  } else if ((newUser as any)?.app_metadata?.role === 'admin') {
+    navigateTo('/admin')
+  } else {
+    routeAuthedUser(newUser)
+  }
 })
 
 if (prospectId.value) {
