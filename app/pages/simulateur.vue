@@ -282,7 +282,7 @@ const handleSubmit = async () => {
         <div class="mb-8">
           <div class="flex items-center justify-between mb-6">
             <span class="text-xs text-muted-foreground">Étape {{ step }} / {{ totalSteps }} — {{ stepLabels[step] }}</span>
-            <NuxtLink to="/" class="text-xs text-muted-foreground hover:text-foreground transition-colors">Annuler</NuxtLink>
+            <NuxtLink to="/" class="inline-flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-2">Annuler</NuxtLink>
           </div>
           <!-- Progress bar -->
           <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
@@ -595,7 +595,7 @@ const handleSubmit = async () => {
             type="button"
             @click="prevStep"
             :disabled="step === 1 || isSubmitting"
-            class="inline-flex items-center gap-1.5 h-10 px-4 border border-border text-sm font-medium text-foreground rounded-sm hover:bg-muted transition-colors disabled:opacity-30 disabled:pointer-events-none"
+            class="inline-flex items-center gap-1.5 h-11 px-4 border border-border text-sm font-medium text-foreground rounded-sm hover:bg-muted transition-colors disabled:opacity-30 disabled:pointer-events-none"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M12 5l-7 7 7 7"/></svg>
             Retour
@@ -607,7 +607,7 @@ const handleSubmit = async () => {
             type="button"
             @click="nextStep"
             :disabled="!isStepValid"
-            class="inline-flex items-center gap-1.5 h-10 px-5 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-30 disabled:pointer-events-none"
+            class="inline-flex items-center gap-1.5 h-11 px-5 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-30 disabled:pointer-events-none"
           >
             {{ step === 5 ? 'Continuer' : 'Suivant' }}
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -622,7 +622,7 @@ const handleSubmit = async () => {
             type="button"
             @click="handleSubmit"
             :disabled="!isStepValid || isSubmitting"
-            class="inline-flex items-center gap-2 h-10 px-5 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-30 disabled:pointer-events-none"
+            class="inline-flex items-center gap-2 h-11 px-5 bg-safety text-white text-sm font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-30 disabled:pointer-events-none"
           >
             <svg v-if="isSubmitting" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
             <span>{{ isSubmitting ? 'Envoi en cours…' : 'Recevoir mon estimation gratuite' }}</span>

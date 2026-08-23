@@ -17,6 +17,12 @@ export default defineConfig({
       // (dette connue) — on utilise le Chrome système installé.
       use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     },
+    {
+      // P9 — QA mobile : mêmes specs passées en viewport mobile (390×844,
+      // iPhone 12-14) pour détecter les régressions responsives.
+      name: 'mobile-chromium',
+      use: { ...devices['Pixel 7'], channel: 'chrome' },
+    },
   ],
   webServer: {
     command: 'npm run dev',

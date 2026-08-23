@@ -177,7 +177,7 @@ async function submitRequest() {
   <div class="min-h-screen bg-background">
     <!-- ═══ TUNNEL ═══ -->
     <div class="max-w-2xl mx-auto px-6 pt-10">
-      <NuxtLink to="/partenaires" class="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
+      <NuxtLink to="/partenaires" class="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors py-2 -my-2">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M12 19l-7-7 7-7"/></svg>
         Retour à la page Partenaires
       </NuxtLink>
@@ -367,7 +367,7 @@ async function submitRequest() {
         <button
           v-if="step > 1"
           @click="prevStep"
-          class="h-10 px-4 text-sm font-medium text-muted-foreground hover:text-foreground border border-border rounded-full hover:bg-muted transition-colors"
+          class="h-11 px-4 text-sm font-medium text-muted-foreground hover:text-foreground border border-border rounded-full hover:bg-muted transition-colors"
         >
           ← Retour
         </button>
@@ -377,7 +377,7 @@ async function submitRequest() {
           v-if="step < totalSteps"
           @click="nextStep"
           :disabled="!canNextStep"
-          class="h-10 px-6 text-sm font-semibold bg-copper text-white rounded-full hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm shadow-copper/20"
+          class="h-11 px-6 text-sm font-semibold bg-copper text-white rounded-full hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm shadow-copper/20"
         >
           Continuer
         </button>
@@ -385,7 +385,7 @@ async function submitRequest() {
           v-else
           @click="submitRequest"
           :disabled="!canNextStep || isSubmitting"
-          class="h-10 px-6 text-sm font-semibold bg-copper text-white rounded-full hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm shadow-copper/20 flex items-center gap-2"
+          class="h-11 px-6 text-sm font-semibold bg-copper text-white rounded-full hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm shadow-copper/20 flex items-center gap-2"
         >
           <svg v-if="isSubmitting" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
           Envoyer le dossier — Rappel garanti sous 4h

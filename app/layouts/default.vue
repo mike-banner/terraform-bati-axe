@@ -29,27 +29,27 @@ const onSimulateur = computed(() => route.path === '/simulateur')
         </NuxtLink>
         <nav class="flex items-center gap-2">
           <template v-if="user">
-            <NuxtLink v-if="!isAdmin && !isPartenairesPage" to="/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Partenaires</NuxtLink>
-            <NuxtLink v-if="!isAdmin && isPartenairesPage" to="/" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Particuliers</NuxtLink>
-            <NuxtLink :to="espaceLink" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Mon espace</NuxtLink>
-            <button class="flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-full border border-border hover:bg-muted transition-colors" @click="signOut">
+            <NuxtLink v-if="!isAdmin && !isPartenairesPage" to="/partenaires" class="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 min-h-11">Partenaires</NuxtLink>
+            <NuxtLink v-if="!isAdmin && isPartenairesPage" to="/" class="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 min-h-11">Particuliers</NuxtLink>
+            <NuxtLink :to="espaceLink" class="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 min-h-11">Mon espace</NuxtLink>
+            <button class="flex items-center gap-2 text-sm font-medium px-3 min-h-11 rounded-full border border-border hover:bg-muted transition-colors" @click="signOut">
               <span class="flex items-center justify-center w-6 h-6 rounded-full bg-foreground text-background text-xs font-bold">{{ userInitial }}</span>
               <span class="text-muted-foreground">Déconnexion</span>
             </button>
           </template>
           <template v-else>
-            <NuxtLink v-if="!isPartenairesPage" to="/partenaires" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Partenaires</NuxtLink>
-            <NuxtLink v-if="isPartenairesPage" to="/" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Particuliers</NuxtLink>
-            <NuxtLink to="/pro/claim" class="inline-flex items-center h-9 px-4 text-sm font-medium rounded-full border border-border text-foreground hover:bg-muted transition-colors">Se connecter</NuxtLink>
+            <NuxtLink v-if="!isPartenairesPage" to="/partenaires" class="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 min-h-11">Partenaires</NuxtLink>
+            <NuxtLink v-if="isPartenairesPage" to="/" class="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 min-h-11">Particuliers</NuxtLink>
+            <NuxtLink to="/pro/claim" class="inline-flex items-center h-11 px-4 text-sm font-medium rounded-full border border-border text-foreground hover:bg-muted transition-colors">Se connecter</NuxtLink>
             <NuxtLink
               v-if="!onSimulateur && !isPartenairesPage"
               to="/simulateur"
-              class="inline-flex items-center h-9 px-4 text-sm font-semibold bg-foreground text-background hover:opacity-80 transition-opacity rounded-full"
+              class="inline-flex items-center h-11 px-4 text-sm font-semibold bg-foreground text-background hover:opacity-80 transition-opacity rounded-full"
             >Déposer un projet</NuxtLink>
             <NuxtLink
               v-if="onPartenairesLanding"
               to="/b2b/partenaires"
-              class="inline-flex items-center h-9 px-4 text-sm font-semibold bg-copper text-white hover:brightness-110 transition-all rounded-full"
+              class="inline-flex items-center h-11 px-4 text-sm font-semibold bg-copper text-white hover:brightness-110 transition-all rounded-full"
             >Déposer un dossier</NuxtLink>
           </template>
         </nav>
@@ -66,12 +66,12 @@ const onSimulateur = computed(() => route.path === '/simulateur')
           <img src="/images/logo-light.png" alt="BÂTI-AXE" class="h-7 w-auto object-contain" />
           <p class="text-slate-400">&copy; 2026 BÂTI-AXE. Tous droits réservés. Conforme RGPD.</p>
         </div>
-        <nav class="flex items-center gap-5">
-          <NuxtLink to="/" class="text-slate-400 hover:text-white transition-colors">Particuliers</NuxtLink>
-          <NuxtLink to="/partenaires" class="text-slate-400 hover:text-white transition-colors">Partenaires</NuxtLink>
-          <NuxtLink to="/legal/mentions-legales" class="text-slate-400 hover:text-white transition-colors">Mentions légales</NuxtLink>
-          <NuxtLink to="/legal/confidentialite" class="text-slate-400 hover:text-white transition-colors">Confidentialité</NuxtLink>
-          <NuxtLink to="/legal/cgu" class="text-slate-400 hover:text-white transition-colors">CGU</NuxtLink>
+        <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+          <NuxtLink to="/" class="inline-flex items-center text-slate-400 hover:text-white transition-colors py-2 -my-2">Particuliers</NuxtLink>
+          <NuxtLink to="/partenaires" class="inline-flex items-center text-slate-400 hover:text-white transition-colors py-2 -my-2">Partenaires</NuxtLink>
+          <NuxtLink to="/legal/mentions-legales" class="inline-flex items-center text-slate-400 hover:text-white transition-colors py-2 -my-2">Mentions légales</NuxtLink>
+          <NuxtLink to="/legal/confidentialite" class="inline-flex items-center text-slate-400 hover:text-white transition-colors py-2 -my-2">Confidentialité</NuxtLink>
+          <NuxtLink to="/legal/cgu" class="inline-flex items-center text-slate-400 hover:text-white transition-colors py-2 -my-2">CGU</NuxtLink>
         </nav>
       </div>
     </footer>
