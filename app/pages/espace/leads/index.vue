@@ -47,10 +47,10 @@ const categoryFilter = ref('')
 const sortMode = ref<'urgent' | 'recent'>('urgent')
 const currentPage = ref(1)
 
-const availableCategories = computed(() => {
-  const cats = new Set(leads.value.map((l: any) => l.category).filter(Boolean))
-  return [...cats] as string[]
-})
+// Toutes les catégories connues, pas seulement celles déjà présentes dans les
+// leads : le pro peut filtrer sur une catégorie sans résultat et voir l'état
+// vide (« Aucun lead pour cette catégorie ») au lieu d'un filtre inutile.
+const availableCategories = computed(() => Object.keys(CATEGORY_LABELS))
 
 const filteredLeads = computed(() => {
   if (!categoryFilter.value) return leads.value

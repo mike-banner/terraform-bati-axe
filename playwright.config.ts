@@ -13,7 +13,9 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      // Le Chromium bundle de Playwright ne se lance pas dans le sandbox
+      // (dette connue) — on utilise le Chrome système installé.
+      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     },
   ],
   webServer: {

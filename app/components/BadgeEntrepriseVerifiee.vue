@@ -1,5 +1,5 @@
 <template>
-  <span class="premium-badge inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border border-[#64748B]/30 text-[#334155] bg-green-100">
+  <span class="premium-badge inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border border-[#64748B]/30 text-[#334155] bg-[#F8FAFC]">
     <!-- Icône bâtiment -->
     <svg class="w-3.5 h-3.5 text-[#F97316] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
       <path d="M3 21h18M3 7l9-4 9 4M4 7v14M20 7v14M9 21V12h6v9" />
