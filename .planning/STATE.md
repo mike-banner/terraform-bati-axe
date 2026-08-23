@@ -52,9 +52,9 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - [x] P4 — Notif email nouveaux leads + page « Lead non accessible » + déblocage 48h — PR #48 (mergé)
 - [x] 05.12-01 — Landing `/partenaires` dédiée + tunnel allégé + header/footer (PR #49)
 - [x] 05.12-02 — Déclinaisons web du logo (détourage + 11 fichiers + branchements) (PR #49)
-- [x] 05.13-01 — Dette technique : suite e2e câblée (channel chrome) + specs alignées + badge réparé (PR à ouvrir)
-- [x] 05.13-02 — P9 Mobile QA : audit + cibles ≥ 44px + projet e2e mobile 48/48 (PR à ouvrir)
-- [x] 05.13-03 — P5 Feedback loop : `handleLeadDecision` + 9 tests (PR à ouvrir)
+- [x] 05.13-01 — Dette technique : suite e2e câblée (channel chrome) + specs alignées + badge réparé (PR #51)
+- [x] 05.13-02 — P9 Mobile QA : audit + cibles ≥ 44px + projet e2e mobile 48/48 (PR #51)
+- [x] 05.13-03 — P5 Feedback loop : `handleLeadDecision` + 9 tests (PR #51)
 
 ## Decisions (récentes)
 
@@ -117,6 +117,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - ✅ **#47** coffre-fort juridique 05.11 — mergé 2026-08-23
 - ✅ **#48** P4 notif email leads — mergé 2026-08-23 (conflits ROADMAP/STATE résolus au merge de #49)
 - ✅ **#49** front polish partenaire (landing, logo, Phosphor, FAQ, copper) — mergé 2026-08-23 (conflits planning résolus : base rewrite #48 + apports 05.12)
+- 🔀 **#51** dette technique + P9 mobile QA + P5 feedback loop (phase 05.13) — ouvert 2026-08-23
 
 ## Blockers/Concerns
 
