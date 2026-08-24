@@ -100,3 +100,15 @@ variable "environment_domains" {
     production = "bati-axe.fr"
   }
 }
+
+# ─── Analytics Umami ────────────────────────────────────────────────────────
+
+variable "umami_url" {
+  description = "URL publique de l'instance Umami"
+  type        = string
+}
+
+variable "umami_website_id" {
+  description = "Identifiant public du site dans Umami"
+  type        = string
+}

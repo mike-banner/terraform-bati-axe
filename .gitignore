@@ -42,9 +42,12 @@ supabase/snippets/
 /A FAIREmd
 design-system/
 
-# Terraform — caches de providers (binaires lourds), état local et crash logs
-# Les .tf, .tfvars, .terraform.lock.hcl restent suivis ; seuls les caches/état sont ignorés.
+# Terraform — variables locales, caches de providers, état et crash logs
+# Les .tf et .terraform.lock.hcl restent suivis ; les valeurs locales/états sont ignorés.
 **/.terraform/
+*.tfvars
+*.tfvars.json
+*.tfvars.backup
 *.tfstate
 *.tfstate.*
 crash.log
