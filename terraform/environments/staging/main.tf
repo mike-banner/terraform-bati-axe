@@ -15,6 +15,8 @@ module "platform" {
   supabase_url               = var.supabase_url
   supabase_anon_key          = var.supabase_anon_key
   supabase_service_role_key  = var.supabase_service_role_key
+  umami_url                   = var.umami_url
+  umami_website_id            = var.umami_website_id
   supabase_region            = var.supabase_region
   environment_domains        = var.environment_domains
 }

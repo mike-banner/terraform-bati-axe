@@ -43,5 +43,7 @@ module "cloudflare_pages" {
     SUPABASE_KEY                  = var.supabase_anon_key
     NUXT_PUBLIC_SUPABASE_KEY      = var.supabase_anon_key
     SUPABASE_SERVICE_ROLE_KEY     = var.supabase_service_role_key
+    NUXT_PUBLIC_UMAMI_URL         = var.umami_url
+    NUXT_PUBLIC_UMAMI_WEBSITE_ID   = var.umami_website_id
   }
 }
