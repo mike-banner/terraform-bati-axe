@@ -4,27 +4,27 @@
 
 ---
 
-## ⚠️ RÉALITÉ ACTUELLE (à lire en premier)
+## ✅ RÉALITÉ ACTUELLE (à lire en premier)
 
-Aujourd'hui, **`development` EST la production** : Cloudflare Pages déploie la Production depuis `development`. `main` **n'existe pas**. Donc **merger dans `development` = déployer en prod**. Le schéma « cible » ci-dessous (main = prod, development = staging) **n'est PAS encore en place**.
+- **`dev`** est la branche de travail et de déploiement Cloudflare Dev.
+- Le workflow `.github/workflows/terraform-dev.yml` se déclenche sur un push vers `dev`.
+- Cloudflare Dev utilise le projet `bati-axe-dev` et le domaine `dev.bati-axe.fr`.
+- **`main`** est réservé à la future production client et reste protégé par Pull Request.
+- Le workflow `.github/workflows/terraform-prod.yml` est volontairement manuel tant que les identifiants client ne sont pas disponibles.
+- La base utilisée par Cloudflare Dev est temporairement la base existante via `TF_VAR_EXISTING_DATABASE_URL`; aucune base Supabase Dev séparée n'est créée.
 
-- **Modèle actuel (A)** : trunk sur `development`. Branches courtes `feat|fix|refactor|docs/*` depuis `development` → merge → déploiement. Versions marquées par des **tags** (`git tag -a v0.x.0`).
-- **Modèle cible (B), à mettre en place quand le projet sera validé / au lancement public** : créer `main` = prod, reconfigurer la branche Production de Cloudflare sur `main`, `development` redevient staging. ➜ **Point à traiter en backlog.**
-
----
-
-## 📋 Types de branches (modèle CIBLE B — pas encore actif)
+## 📋 Types de branches
 
 ```
-main                  ← Production (jamais toucher directement)   [À CRÉER au lancement]
-├─ development        ← Integration / staging                      [aujourd'hui = prod]
-│  ├─ feat/*          ← Features (nouvelles fonctionnalités)
-│  ├─ fix/*           ← Bugfixes (problèmes critiques)
-│  ├─ refactor/*      ← Refactorisation (pas de logique change)
-│  └─ docs/*          ← Documentation
+main                  ← Production client, protégée, déploiement manuel pour l'instant
+└─ dev                ← Travail + Cloudflare Dev (`dev.bati-axe.fr`)
+   ├─ feat/*           ← Fonctionnalités
+   ├─ fix/*            ← Corrections
+   ├─ refactor/*       ← Refactorisations
+   └─ docs/*           ← Documentation
 ```
 
-**Règle** : Toujours créer une branche à partir de `development`, jamais directement sur `main`.
+**Règle** : travailler sur `dev`; ne pas pousser directement sur `main`. Une future mise en production client passera par une Pull Request et une validation explicite.
 
 ---
 
@@ -35,8 +35,8 @@ main                  ← Production (jamais toucher directement)   [À CRÉER a
 ```bash
 # Sync local avec remote
 git fetch origin
-git checkout development
-git pull origin development
+git checkout dev
+git pull origin dev
 
 # Créer la branche pour la tâche
 git checkout -b fix/idle-logout-timeout
@@ -129,7 +129,7 @@ Ajoute une auto-déconnexion après 30 minutes d'inactivité pour améliorer la 
 
 ---
 
-### 5️⃣ **Merger dans development**
+### 5️⃣ **Merger dans dev**
 
 **Checklist avant merge** :
 - ✅ Tous les tests passent (CI/CD green)
@@ -140,13 +140,13 @@ Ajoute une auto-déconnexion après 30 minutes d'inactivité pour améliorer la 
 ```bash
 # Approuver sur GitHub → merger via UI
 # OU en CLI :
-git checkout development
-git pull origin development
+git checkout dev
+git pull origin dev
 git merge fix/idle-logout-timeout --no-ff
-git push origin development
+git push origin dev
 ```
 
-**Important** : `--no-ff` = gardé l'historique (ne pas squash)
+**Important** : `--no-ff` conserve l'historique de la tâche. Ne pas pousser directement sur `main`.
 
 ---
 
@@ -188,7 +188,7 @@ git status
 4. ✅ Tester (npm test, playwright test)
 5. ✅ Documenter dans STATE.md (nouvelles décisions)
 6. ✅ Push et créer la PR (simulation GitHub)
-7. ✅ Merger si validation ✅
+7. ✅ Merger dans `dev` si validation ✅
 
 **Output** :
 ```
@@ -216,13 +216,13 @@ git status
 ## 📝 Checklist PR avant merge
 
 ```markdown
-- [ ] Branch créée à partir de `development` (pas `main`)
+- [ ] Branch créée à partir de `dev` (pas `main`)
 - [ ] Commits atomiques avec messages explicites
 - [ ] Tests passent (npm test + playwright test)
 - [ ] Linting OK
 - [ ] Documentation mise à jour (STATE.md, ADR si besoin)
 - [ ] Pas de changements sur `main` en direct
-- [ ] Aucun conflit avec `development`
+- [ ] Aucun conflit avec `dev`
 ```
 
 ---
@@ -231,17 +231,17 @@ git status
 
 ```
 Pour chaque tâche :
-1. git checkout -b fix/nom-tache (depuis development)
+1. git checkout -b fix/nom-tache (depuis dev)
 2. Coder + commits atomiques
 3. Tests verts
 4. Documenter dans STATE.md
-5. git push + créer PR
-6. Merger dans development
-7. ✅ Done
+5. git push + créer PR si nécessaire
+6. Merger dans dev
+7. ✅ Terminé
 ```
 
 **Jamais** :
-- ❌ Committer directement sur `main`
+- ❌ Pousser directement sur `main`
 - ❌ Commits énormes ("Fixed stuff")
 - ❌ Pousser sans tests
 - ❌ Mergers sans documentation

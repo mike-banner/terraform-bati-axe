@@ -9,16 +9,15 @@ Garantir la sécurité et la confiance des chantiers de particuliers en les mett
 ## Requirements
 
 ### Validated
-(None yet — ship to validate)
+- **Infrastructure Dev** : Cloudflare Pages `bati-axe-dev` déployé via Terraform depuis `dev` et vérifié le 2026-08-25.
+- **Application** : build Node 22 réussi et 73 tests unitaires réussis le 2026-08-25.
 
-### Active
-- [ ] **INFRA-01 à 04**: Setup Nuxt 3, Supabase CLI, Cloudflare Pages, middleware sécurité
-- [ ] **LEGAL-01 à 02**: Mentions légales, CGU, registre RGPD
-- [ ] **CPTR-01 à 05**: Simulateur de capture 6 étapes (Zéro Friction)
-- [ ] **LCK-01 à 03**: Le Verrou (floutage serveur + déblocage Premium/24h)
-- [ ] **CLM-01 à 04**: Claim, Auth, Upload R2, Validation admin
-- [ ] **SMS-01 à 03**: Teasing SMS opt-in (instantané Premium, différé Basic)
-- [ ] **ADM-01 à 03**: Console admin (validation docs, modération, analytics)
+### Remaining
+- [ ] **P3** : re-test Stripe et cron 48h avec les identifiants de production client.
+- [ ] **P1** : brancher Matomo sur le funnel avec le bandeau cookies RGPD.
+- [ ] **P7** : confirmer les tarifs et implémenter les packs zonés/exclusivité métier.
+- [ ] **P6/P8/P10** : étude financement, compte prescripteur et commission Stripe Connect.
+- [ ] **Production client** : préparer Cloudflare, domaine, base et secrets après réception des identifiants.
 
 ### Out of Scope
 - **Real-time chat** — Le contact se fait par téléphone/SMS direct.
@@ -31,23 +30,23 @@ Garantir la sécurité et la confiance des chantiers de particuliers en les mett
 - ~7 000 prospects bruts en table interne, jamais publics sans opt-in (ADR-007).
 
 ## Constraints
-- **Tech Stack**: Nuxt 3 (Vue 3) unique hébergé 100% sur Cloudflare Pages (ADR-008).
+- **Tech Stack**: Nuxt 4 (Vue 3) unique hébergé sur Cloudflare Pages (ADR-008).
 - **Database**: PostgreSQL (Supabase) avec migrations CLI et RLS strict.
 - **Storage**: Cloudflare R2 pour documents et décennales (ADR-003).
 - **URL Routing**: Hybride slug + nanoid(8) pour les profils pro (ADR-009).
 - **Privacy & Security**: Floutage côté serveur Nitro obligatoire (ADR-004). Consentement explicite conforme LCEN (ADR-007).
-- **Environments**: Dev (local Docker) / Staging (CF Pages Preview) / Prod (CF Pages main) (ADR-006).
+- **Environments**: `local` (Docker/Supabase local) / `dev` (Cloudflare Dev) / `prod` (future production client) (ADR-006).
 - **API**: Préfixe `/api/v1/`, validation Zod, format de réponse standardisé (API_RULES.md).
 
 ## Key Decisions
 | Decision | Rationale | Outcome |
 |---|---|---|
-| Pivot vers Nuxt 3 (ADR-008) | Consolide la vitrine et l'application au sein d'une stack unique performante | — Pending |
-| Floutage Nitro (ADR-004) | Sécurise les coordonnées clients côté serveur avant déblocage | — Pending |
-| R2 Storage (ADR-003) | Bypass le backend Supabase pour réduire les coûts d'egress | — Pending |
-| Séparation Env (ADR-006) | Isole le développement local des environnements staging/prod | — Pending |
-| RGPD/LCEN double opt-in (ADR-007) | Conformité légale et protection de la délivrabilité SMS | — Pending |
-| URL hybride slug+ID (ADR-009) | SEO préservé, zéro collision, résistant aux changements de nom | — Pending |
+| Nuxt 4 unique (ADR-008) | Consolide la vitrine et l'application au sein d'une stack unique | Appliqué |
+| Floutage Nitro (ADR-004) | Sécurise les coordonnées clients côté serveur avant déblocage | Appliqué |
+| R2 Storage (ADR-003) | Bypass le backend Supabase pour réduire les coûts d'egress | Appliqué |
+| Séparation Env (ADR-006) | Sépare local, Cloudflare Dev et future production client | Appliqué |
+| RGPD/LCEN double opt-in (ADR-007) | Conformité légale et protection de la délivrabilité SMS | En vigueur |
+| URL hybride slug+ID (ADR-009) | SEO préservé, zéro collision, résistant aux changements de nom | Appliqué |
 
 ---
-*Last updated: 2026-06-02 after roadmap restructuration (5 phases) + ADR-009*
+*Last updated: 2026-08-25 after Cloudflare Dev validation and environment strategy update*

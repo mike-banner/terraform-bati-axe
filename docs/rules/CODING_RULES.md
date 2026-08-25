@@ -90,8 +90,8 @@ Prefixes obligatoires :
 ### Branches
 
 ```
-main        → Production (protégée, merge via PR uniquement)
-develop     → Intégration (CI obligatoire)
+main        → Future production client (protégée, merge via PR uniquement)
+dev         → Travail et déploiement Cloudflare Dev (CI obligatoire)
 feat/xxx    → Nouvelle feature
 fix/xxx     → Correction bug
 chore/xxx   → Maintenance
@@ -102,7 +102,7 @@ chore/xxx   → Maintenance
 - Description obligatoire (quoi, pourquoi, comment tester)
 - Minimum 1 review pour les changements `core/` ou `docs/`
 - CI verte obligatoire avant merge
-- Pas de `git push --force` sur `main` ou `develop`
+- Pas de `git push --force` sur `main` ou `dev`
 
 ---
 

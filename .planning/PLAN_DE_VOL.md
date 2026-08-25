@@ -1,4 +1,4 @@
-# 🧭 Plan de Vol BÂTI-AXE — Synthèse de Pilotage (2026-08-21)
+# 🧭 Plan de Vol BÂTI-AXE — Synthèse de Pilotage (mise à jour 2026-08-25)
 
 > Source : specs client consolidées (`.planning/clients/`) + ROADMAP + backlog P1→P22.
 > Objectif : répondre à « ce qui est fait, ce qui reste dans l'ordre, ce qui constitue V1/V2/V3, et les milestones ».
@@ -30,16 +30,16 @@
 ### 🟢 V1 — Lancement pilote 78 (objectif : machine B2C qui tourne + premières archis/immo)
 | # | Item | Statut | Réf |
 | :--- | :--- | :--- | :--- |
-| 1 | **Stripe + cron 48h re-testés en prod** | ⏳ runbook prêt, à tester | P3 |
+| 1 | **Stripe + cron 48h re-testés en prod** | ⏳ runbook prêt; accès aux identifiants client requis | P3 |
 | 2 | **Turnstile anti-spam** | ✅ code livré (standby clés) | P2 |
 | 3 | **Console admin opérationnelle** | ✅ livré (composants, dark, KPIs, audit) | 06.1 |
-| 4 | **KPIs de pilotage (Matomo + dashboard)** | ✅ livré (Matomo à brancher) | 06.2 |
-| 5 | **Notif leads aux pros (email)** | ⬜ à faire | P4 |
-| 6 | **Mobile QA** (landing + simulateur + états vides) | ⬜ à faire | P9 |
+| 4 | **KPIs de pilotage (dashboard)** | ✅ livré; Matomo reste à brancher | 06.2/P1 |
+| 5 | **Notif leads aux pros (email)** | ✅ livré le 2026-08-23; Web Push reporté Phase 8 | P4 |
+| 6 | **Mobile QA** (landing + simulateur + états vides) | ✅ livré le 2026-08-23 | P9 |
 | 7 | **Page pro publique « digne »** | ✅ CTA fait (avis = Phase 7) | P12 |
-| 8 | **Espace Partenaires MVP** (landing + tunnel) | ✅ livré (reste back-office 05.10-06) | 05.10 |
+| 8 | **Espace Partenaires MVP** (landing + tunnel + back-office + workflow DirCo) | ✅ livré le 2026-08-22 | 05.10 |
 | 9 | **Packs zonés & exclusivité métier** (tarifs + charte) | ⬜ à faire | P7 |
-| 10 | **Feedback loop refus → remise marché** | ⬜ à faire | P5 |
+| 10 | **Feedback loop refus → remise marché** | ✅ testé le 2026-08-23 | P5 |
 
 ### 💰 V2 — Pivot B2B apporteurs d'affaires (objectif : la marge / commissions)
 | # | Item | Réf |

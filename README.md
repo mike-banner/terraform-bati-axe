@@ -1,62 +1,74 @@
 # BÂTI-AXE
 
-Plateforme SaaS dédiée aux artisans du bâtiment.
+Plateforme SaaS de mise en relation entre particuliers et professionnels certifiés du bâtiment.
 
-Ce projet utilise une architecture moderne basée sur **Nuxt 3** (Frontend/Backend Serverless), **Supabase** (Base de données/Auth), et une infrastructure 100% gérée par **Terraform** (GitOps) sur **Cloudflare Pages**.
+Stack principale : **Nuxt**, **Supabase**, **Cloudflare Pages** et **Cloudflare R2**. L'infrastructure Cloudflare est gérée par Terraform.
 
----
+## Environnements
 
-## 🏗️ Architecture Cloud & Infrastructure as Code (IaC)
+| Environnement | Usage | Déploiement | Base de données |
+|---|---|---|---|
+| `local` | Développement sur le poste | `npm run dev` avec Docker/Supabase local | Supabase local |
+| `dev` | Environnement Cloudflare de développement | Push sur la branche `dev` via `terraform-dev.yml` | Base existante via `TF_VAR_EXISTING_DATABASE_URL` |
+| `prod` | Future production client | Workflow `terraform-prod.yml` manuel | À confirmer avec les identifiants client |
 
-Toute l'infrastructure de production est gérée comme du code via **Terraform**. Aucun clic manuel n'est requis sur le tableau de bord Cloudflare ou Supabase.
+L'environnement Cloudflare Dev est disponible sur `https://dev.bati-axe.fr` dans le projet Pages `bati-axe-dev`.
 
-### Structure Terraform (Modèle Multi-Environnements)
-Le dossier `terraform/` suit le standard de l'industrie (Séparation Modules / Environnements) :
-- `modules/platform` : Contient la logique d'orchestration entre Cloudflare Pages et Supabase (injection des variables `NUXT_PUBLIC_SUPABASE_URL`, etc.).
-- `environments/dev` : Environnement de développement (Base de données sandbox).
-- `environments/staging` : Environnement de pré-production.
-- `environments/prod` : Environnement de production réel.
+La production client n'est pas déclenchée automatiquement. Les identifiants et la configuration de production seront finalisés plus tard.
 
-### 🚀 Pipeline GitOps (CI/CD)
-Le déploiement est **100% automatisé** (Continuous Deployment) :
-1. Les modifications d'infrastructure dans le dossier `terraform/` sont détectées par **GitHub Actions**.
-2. Lors de la fusion d'une Pull Request sur la branche `main`, l'Action GitHub exécute `terraform apply` pour mettre à jour la configuration Cloudflare en direct.
-3. L'intégration native Cloudflare/GitHub compile ensuite le projet Nuxt (vers le dossier `dist`) et déploie le site de production.
+## Terraform
 
----
+```text
+terraform/
+├── modules/                 Modules réutilisables
+├── environments/dev/       Environnement Cloudflare Dev
+├── environments/staging/   Préproduction prévue, non utilisée actuellement
+└── environments/prod/      Configuration de la future production client
+```
 
-## 💻 Développement Local
+Le workflow Dev s'exécute uniquement sur un push vers `dev` et réalise :
+
+1. `terraform init`
+2. `terraform validate`
+3. `terraform plan`
+4. `terraform apply`
+
+Le workflow Production est déclenchable uniquement avec `workflow_dispatch`.
+
+## Développement local
 
 ### Prérequis
-- Node.js (v22+)
-- Un compte Supabase (avec le projet Bâti-Axe lié)
+
+- Node.js `22+` (version du projet : `22.22.1`)
+- Docker pour Supabase local
 
 ### Installation
 
 ```bash
-# Installer les dépendances
 npm install
 ```
 
 ### Variables d'environnement
-Créez un fichier `.env` à la racine (ne le commitez jamais) :
-```env
-NUXT_PUBLIC_SUPABASE_URL="votre_url_supabase"
-NUXT_PUBLIC_SUPABASE_KEY="votre_cle_anon_supabase"
-SUPABASE_SERVICE_KEY="votre_cle_service_supabase"
-```
 
-### Lancement du serveur
+Copier `.env.example` vers `.env` et renseigner les valeurs locales. Le fichier `.env` ne doit jamais être commité.
 
-Démarrez le serveur de développement sur `http://localhost:3000` :
+### Lancement
 
 ```bash
 npm run dev
 ```
 
-### Compilation (Build Test)
-Avant de pousser sur la branche `main`, vérifiez toujours que le build (Nitro preset Cloudflare) passe correctement :
+### Vérifications
 
 ```bash
+npm test -- --run
 npm run build
 ```
+
+## Branches
+
+- `dev` : branche de travail et déploiement Cloudflare Dev.
+- `main` : branche réservée à la future production client, protégée par Pull Request.
+- `feat/*`, `fix/*`, `docs/*` : branches temporaires créées depuis `dev`.
+
+Voir `.planning/GIT_WORKFLOW.md` pour le détail du flux Git.

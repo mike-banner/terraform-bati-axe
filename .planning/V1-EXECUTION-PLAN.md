@@ -2,7 +2,7 @@
 
 > Objectif V1 : machine B2C **en prod mesurée** + **Espace Partenaires MVP** + premières exclusivités vendues.
 > Ordre imposé par le risque et la valeur (voir `PLAN_DE_VOL.md`).
-> **Dernière mise à jour** : 2026-08-23 (P4 livré, déblocage 72h → 48h, planning resynchronisé)
+> **Dernière mise à jour** : 2026-08-25 (P4 livré, Cloudflare Dev vérifié, production client manuelle)
 
 ---
 
@@ -38,7 +38,7 @@
 - [x] 3.5 Audit log consultable (onglet Journal).
 - [x] 3.6 Dark mode forcé + contraste cards/badges.
 - [x] 3.7 Sidebar fixe + déconnexion dans sidebar.
-- [ ] 3.8 Fusion de la future vue `b2b_requests` (05.10) dans le même écran.
+- [x] 3.8 Fusion de la vue `b2b_requests` (05.10) dans le même écran.
 
 ---
 
@@ -63,9 +63,9 @@
 ---
 
 ## 6. P9 — Mobile QA
-- [ ] 6.1 Landing + simulateur sur 375px/768px sans scroll horizontal.
-- [ ] 6.2 États vides (dashboard sans leads, espace client sans messages).
-- [ ] 6.3 États erreur/hors-ligne propres.
+- [x] 6.1 Landing + simulateur sur 375px/768px sans scroll horizontal.
+- [x] 6.2 États vides (dashboard sans leads, espace client sans messages).
+- [x] 6.3 États erreur/hors-ligne propres.
 **Sortie** : parcours mobile complet sans friction.
 
 ---
@@ -80,7 +80,7 @@
 ---
 
 ## 8. 05.10 MVP — Espace Partenaires ✅ LIVRÉ
-**Statut** : landing + tunnel complet + endpoint + presign R2. Reste back-office admin.
+**Statut** : landing + tunnel complet + endpoint + presign R2 + back-office admin + workflow DirCo livrés.
 **En parallèle** : appeler 5-6 artisans, vendre l'exclusivité (valider le modèle terrain avant de sur-builder).
 
 - [x] 8.1 Landing `/b2b/partenaires` (hero « bras armé technique », 4 promesses par type, badge conformité).
@@ -106,8 +106,8 @@
 ---
 
 ## 10. P5 — Feedback loop refus → remise marché testé
-- [ ] 10.1 Tester le chemin « tous les pros engagés refusés → projet repart sur le marché ».
-- [ ] 10.2 Corriger les trous détectés (statuts, notifications).
+- [x] 10.1 Tester le chemin « tous les pros engagés refusés → projet repart sur le marché ».
+- [x] 10.2 Corriger les trous détectés (statuts, notifications).
 **Sortie** : le chemin est vérifié de bout en bout.
 
 ---
@@ -118,4 +118,4 @@ P3 (Stripe) ─┬─ P2 (Turnstile) ✅ ─┬─ 05.10 MVP ✅ (upload public)
              │                     │
 06.1 (admin) ✴─ 06.2 (KPIs) ✅ ──┴─ P7 (packs) ─ P4/P9/P12 ─ P5
 ```
-**Blocages externes** : clé Turnstile (P2 — standby), PDF Book/Kit (05.10), tarifs définitifs (P7).
+**Blocages externes** : clés Turnstile client (P2 — standby), PDF Book/Kit (05.10), tarifs définitifs (P7), identifiants de production client (P3).

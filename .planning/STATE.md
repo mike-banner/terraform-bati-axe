@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0-lancement-pilote
 milestone_name: Lancement v1 — Pilote Carrières-sous-Poissy
 status: v1_in_progress
-stopped_at: "V1 en cours — phases 05.10/05.11/06.1/06.2/05.12/05.13 + P4 livrées ; dette, P5, P9 soldées ; pass e2e admin prod (PR #52) — fix redirection login"
-last_updated: "2026-08-23T23:59:00.000Z"
-last_activity: 2026-08-23
+stopped_at: "Infrastructure Dev Cloudflare validée sur la branche dev ; production client volontairement laissée intacte et manuelle"
+last_updated: "2026-08-25T16:30:00.000Z"
+last_activity: 2026-08-25
 progress:
   total_phases: 21
   completed_phases: 19
@@ -24,10 +24,10 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-02)
+See: .planning/PROJECT.md (updated 2026-08-25)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Milestone **v1.0 « Pilote 78 en orbite »** EN COURS — la machine B2C + couche Partenaires B2B + KPIs sont livrés ; il reste la priorité pilote (P3 Stripe re-test, P1 Matomo, P9 mobile QA, P5 feedback loop, P7 packs zonés) puis le go-live réel.
+**Current focus**: Milestone **v1.0 « Pilote 78 en orbite »** EN COURS — le produit et l'environnement Cloudflare Dev sont opérationnels. La branche `dev` déploie `bati-axe-dev` sur `dev.bati-axe.fr`; elle utilise temporairement la base existante via `TF_VAR_EXISTING_DATABASE_URL`. La production client reste séparée, non modifiée et manuelle.
 
 ## Current Position
 
@@ -41,7 +41,16 @@ Phases complètes récentes :
 - **05.13 — Dette technique + P9 Mobile QA + P5 Feedback Loop** ✅ 3/3 (2026-08-23, branche `fix/dette-p9-p5`) : suite e2e Playwright câblée sur le Chrome système (`channel: 'chrome'`, 24 specs → 24 pass, jamais lancée avant) + specs simulateur réécrites (flux 6 étapes) + test badge réparé (`bg-[#F8FAFC]`) ; QA mobile mesurée (scripts `mobile-audit`/`touch-audit`/`monprojet-mobile`), cibles tactiles ≥ 44px (header/simulateur/tunnel/footer), état vide catégorie leads atteignable, projet Playwright `mobile-chromium` (48/48 specs desktop + mobile) ; feedback loop extrait dans `server/utils/handleLeadDecision.ts` + 9 tests unitaires (remise au marché, garde-fou MAX_RELAUNCHES, 403/404). Aucune migration DB.
 - **P4 — Notif pro nouveaux leads (email)** ✅ (2026-08-23, PR #48 mergé) : `notifyProLead` sur `projects.post.ts`, opt-in `lead_alerts_email`, idempotence `lead_notifications`, page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h. Le délai 48h est retenu pour v1 ; 72h ou une autre valeur pourra être décidé dans une version ultérieure avec le client.
 
-Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod), **P1** (Matomo funnel — décision hébergement VPS/Cloud à prendre, prérequis bandeau cookies RGPD), **P7** (packs zonés — bloqué tarifs), **P6/P8/P10** (leviers B2B).
+Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod), **P1** (Matomo funnel — bandeau cookies RGPD requis), **P7** (packs zonés — tarifs à confirmer), puis P6/P8/P10.
+
+## Infrastructure vérifiée le 2026-08-25
+
+- Branche active : `dev`, propre et synchronisée avec `origin/dev`.
+- Workflow : `.github/workflows/terraform-dev.yml` exécuté avec succès (Terraform Init, Validate, Plan, Apply).
+- Cloudflare Dev : projet `bati-axe-dev`, domaine `dev.bati-axe.fr`, mise à jour Terraform réussie (`0 ajout`, `1 modification`, `0 destruction`).
+- Application : build Nuxt réussi avec Node `22.22.1`; tests unitaires `73/73` réussis.
+- Base Dev Cloudflare : base existante fournie par `TF_VAR_EXISTING_DATABASE_URL`; aucune base Supabase Dev séparée n'est créée.
+- Production : workflow Terraform prod manuel dans la branche `dev`; aucune modification de l'environnement client n'a été appliquée.
 
 ## Plans récents livrés
 
@@ -89,8 +98,8 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 |---|---|
 | **P1** Matomo funnel | ❌ à implémenter (décidé : Matomo) |
 | **P2** Turnstile anti-spam | ✅ code livré — standby (clés client à créer au transfert Cloudflare) |
-| **P3** Stripe + cron re-test prod | ❌ **à faire en premier** (critique, runbook prêt) |
-| **P4** Notif leads email | ✅ livré (PR #48 mergé) — temps 2 Web Push = Phase 8 |
+| **P3** Stripe + cron re-test prod | ❌ à faire en premier (runbook prêt ; accès prod client nécessaire) |
+| **P4** Notif leads email | ✅ livré (PR #48 mergé) — Web Push reporté à la Phase 8 |
 | **P5** Feedback loop refus→marché testé | ✅ testé (2026-08-23, 05.13-03 — reste vérif sur données réelles au go-live) |
 | **P6** Étude financement courtier | ❌ absent |
 | **P7** Packs zonés & exclusivité | ❌ absent — bloqué tarifs définitifs (Basic 150-200 / Premium 300) |
@@ -125,11 +134,11 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 - **P3 — Stripe non re-testé en prod** : checkout + webhook + cron 48h n'ont pas été re-vérifiés depuis Phase 4/4.5 (le paywall mort a été découvert par hasard en 08/2026). Runbook prêt, nécessite l'accès aux clés Stripe prod. Le délai 48h est la référence v1 ; 72h ou une autre valeur reste une décision future.
 - **Tarifs P7 non tranchés** : Basic 150-200 € / Premium 300 € à confirmer par le client avant d'implémenter les packs zonés.
-- **Browser tests block** : l'environnement de navigation Chromium local a des soucis d'initialisation dans le sandbox, mais les tests d'API et compilations sont OK. Dette connue : passe Playwright jamais câblée.
+- **Playwright** : la suite est câblée sur Chrome système et les scénarios desktop/mobile ont été validés dans la phase 05.13. Les tests unitaires et le build passent localement avec Node 22.
 - **Test badge préexistant cassé** : `tests/badges.test.ts` attend `bg-[#F8FAFC]` alors que le composant utilise `bg-green-100` (dérive de palette antérieure) — hors périmètre des chantiers récents, à corriger dans une passe dédiée.
 
 ## Session Continuity
 
-Last session: 2026-08-23 (matinée → fin de journée)
-Stopped at: **PRs #51 (dette/P9/P5) + #52 (fix login admin) mergés** — pass e2e admin prod terminé : 9 onglets OK, login → `/admin` auto OK
-Resume: prochain chantier au choix — **P3** (Stripe re-test prod, critique — clés Stripe à récupérer), **P1** (Matomo — décision VPS/Cloud puis bandeau cookies RGPD prérequis), **P7** (packs zonés, après validation tarifs)
+Last session: 2026-08-25
+Stopped at: **branche `dev` poussée et workflow Terraform Dev validé sur Cloudflare** — production client non touchée.
+Resume: **P3** (re-test Stripe/cron quand les identifiants client seront disponibles), puis **P1** Matomo et **P7** packs zonés.

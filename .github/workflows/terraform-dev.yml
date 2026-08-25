@@ -56,7 +56,7 @@ jobs:
       TF_VAR_r2_bucket_name: batiaxe-documents
 
       # E-mails
-      TF_VAR_resend_api_key: ${{ secrets.TF_VAR_RESEND_API_KEY }}
+      TF_VAR_resend_api_key: ${{ secrets.RESEND_API_KEY }}
       TF_VAR_email_from: BÂTI-AXE <onboarding@resend.dev>
       TF_VAR_onboarding_emails: "false"
 
