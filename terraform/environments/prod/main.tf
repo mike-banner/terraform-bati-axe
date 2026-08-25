@@ -16,6 +16,20 @@ module "platform" {
   supabase_url               = var.supabase_url
   supabase_anon_key          = var.supabase_anon_key
   supabase_service_role_key  = var.supabase_service_role_key
+  umami_url                  = var.umami_url
+  umami_website_id           = var.umami_website_id
+  stripe_secret_key          = var.stripe_secret_key
+  stripe_price_id            = var.stripe_price_id
+  stripe_webhook_secret      = var.stripe_webhook_secret
+  r2_account_id              = var.r2_account_id
+  r2_access_key_id           = var.r2_access_key_id
+  r2_secret_access_key       = var.r2_secret_access_key
+  r2_bucket_name             = var.r2_bucket_name
+  resend_api_key             = var.resend_api_key
+  email_from                 = var.email_from
+  onboarding_emails          = var.onboarding_emails
+  turnstile_secret_key       = var.turnstile_secret_key
+  site_url                   = var.site_url
   supabase_region            = var.supabase_region
   environment_domains        = var.environment_domains
 }

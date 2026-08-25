@@ -28,10 +28,11 @@ module "supabase_project" {
 module "cloudflare_pages" {
   source = "../cloudflare_pages"
 
-  account_id       = var.cloudflare_account_id
-  project_name     = "${var.project_name}-${var.environment}"
-  github_owner     = var.github_owner
-  github_repo_name = var.github_repo_name
+  account_id        = var.cloudflare_account_id
+  project_name      = "${var.project_name}-${var.environment}"
+  production_branch = var.production_branch
+  github_owner      = var.github_owner
+  github_repo_name  = var.github_repo_name
 
   # Domaine personnalisé selon le workspace (lookup retourne "" si clé absente → pas de domaine)
   custom_domain = lookup(var.environment_domains, var.environment, "")
@@ -45,5 +46,17 @@ module "cloudflare_pages" {
     SUPABASE_SERVICE_ROLE_KEY     = var.supabase_service_role_key
     NUXT_PUBLIC_UMAMI_URL         = var.umami_url
     NUXT_PUBLIC_UMAMI_WEBSITE_ID   = var.umami_website_id
+    STRIPE_SECRET_KEY              = var.stripe_secret_key
+    STRIPE_PRICE_ID                = var.stripe_price_id
+    STRIPE_WEBHOOK_SECRET          = var.stripe_webhook_secret
+    R2_ACCOUNT_ID                  = var.r2_account_id
+    R2_ACCESS_KEY_ID               = var.r2_access_key_id
+    R2_SECRET_ACCESS_KEY           = var.r2_secret_access_key
+    R2_BUCKET_NAME                 = var.r2_bucket_name
+    NUXT_RESEND_API_KEY        = var.resend_api_key
+    NUXT_EMAIL_FROM             = var.email_from
+    NUXT_ONBOARDING_EMAILS      = var.onboarding_emails ? "true" : "false"
+    NUXT_TURNSTILE_SECRET_KEY   = var.turnstile_secret_key
+    NUXT_PUBLIC_SITE_URL        = var.site_url
   }
 }

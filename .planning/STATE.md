@@ -39,7 +39,7 @@ Phases complètes récentes :
 - **06.2 — KPIs de Pilotage** ✅ (2026-08-22, merge PR #45 le 2026-08-22) : kpi-engine 6 KPIs + dashboard admin. *(récupéré d'une branche jamais mergée — docs le marquaient « livré » à tort)*.
 - **05.12 — Front Polish & Branding** ✅ 2/2 (2026-08-23, PR #49) : landing `/partenaires` dédiée (9 sections) + tunnel allégé + scroll fluide ; déclinaisons web du logo (détourage flood-fill, transparent/monochrome, favicons, apple-touch, PWA, og-image) + script `scripts/generate-logo-variants.mjs` ; passe anti-slop, icônes Phosphor duotone, FAQ éditoriale, univers `copper`, radius pill unifié, retour « Particuliers » dans le header. Aucune migration DB.
 - **05.13 — Dette technique + P9 Mobile QA + P5 Feedback Loop** ✅ 3/3 (2026-08-23, branche `fix/dette-p9-p5`) : suite e2e Playwright câblée sur le Chrome système (`channel: 'chrome'`, 24 specs → 24 pass, jamais lancée avant) + specs simulateur réécrites (flux 6 étapes) + test badge réparé (`bg-[#F8FAFC]`) ; QA mobile mesurée (scripts `mobile-audit`/`touch-audit`/`monprojet-mobile`), cibles tactiles ≥ 44px (header/simulateur/tunnel/footer), état vide catégorie leads atteignable, projet Playwright `mobile-chromium` (48/48 specs desktop + mobile) ; feedback loop extrait dans `server/utils/handleLeadDecision.ts` + 9 tests unitaires (remise au marché, garde-fou MAX_RELAUNCHES, 403/404). Aucune migration DB.
-- **P4 — Notif pro nouveaux leads (email)** ✅ (2026-08-23, PR #48 mergé) : `notifyProLead` sur `projects.post.ts`, opt-in `lead_alerts_email`, idempotence `lead_notifications`, page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h, focus offre 15 s à l'arrivée depuis l'email.
+- **P4 — Notif pro nouveaux leads (email)** ✅ (2026-08-23, PR #48 mergé) : `notifyProLead` sur `projects.post.ts`, opt-in `lead_alerts_email`, idempotence `lead_notifications`, page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h. Le délai 48h est retenu pour v1 ; 72h ou une autre valeur pourra être décidé dans une version ultérieure avec le client.
 
 Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod), **P1** (Matomo funnel — décision hébergement VPS/Cloud à prendre, prérequis bandeau cookies RGPD), **P7** (packs zonés — bloqué tarifs), **P6/P8/P10** (leviers B2B).
 
@@ -123,7 +123,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 ## Blockers/Concerns
 
-- **P3 — Stripe non re-testé en prod** : checkout + webhook + cron n'ont pas été re-vérifiés depuis Phase 4/4.5 (le paywall mort a été découvert par hasard en 08/2026). Runbook prêt, nécessite l'accès aux clés Stripe prod.
+- **P3 — Stripe non re-testé en prod** : checkout + webhook + cron 48h n'ont pas été re-vérifiés depuis Phase 4/4.5 (le paywall mort a été découvert par hasard en 08/2026). Runbook prêt, nécessite l'accès aux clés Stripe prod. Le délai 48h est la référence v1 ; 72h ou une autre valeur reste une décision future.
 - **Tarifs P7 non tranchés** : Basic 150-200 € / Premium 300 € à confirmer par le client avant d'implémenter les packs zonés.
 - **Browser tests block** : l'environnement de navigation Chromium local a des soucis d'initialisation dans le sandbox, mais les tests d'API et compilations sont OK. Dette connue : passe Playwright jamais câblée.
 - **Test badge préexistant cassé** : `tests/badges.test.ts` attend `bg-[#F8FAFC]` alors que le composant utilise `bg-green-100` (dérive de palette antérieure) — hors périmètre des chantiers récents, à corriger dans une passe dédiée.
