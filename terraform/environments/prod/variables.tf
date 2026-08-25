@@ -112,3 +112,74 @@ variable "umami_website_id" {
   description = "Identifiant public du site dans Umami"
   type        = string
 }
+
+variable "stripe_secret_key" {
+  description = "Clé secrète Stripe"
+  type        = string
+  sensitive   = true
+}
+
+variable "stripe_price_id" {
+  description = "Identifiant du prix Stripe"
+  type        = string
+}
+
+variable "stripe_webhook_secret" {
+  description = "Secret du webhook Stripe"
+  type        = string
+  sensitive   = true
+}
+
+variable "r2_account_id" {
+  description = "Identifiant du compte Cloudflare R2"
+  type        = string
+}
+
+variable "r2_access_key_id" {
+  description = "Clé d'accès R2"
+  type        = string
+  sensitive   = true
+}
+
+variable "r2_secret_access_key" {
+  description = "Clé secrète R2"
+  type        = string
+  sensitive   = true
+}
+
+variable "r2_bucket_name" {
+  description = "Nom du bucket R2 applicatif"
+  type        = string
+  default     = "batiaxe-documents"
+}
+
+variable "resend_api_key" {
+  description = "Clé API Resend"
+  type        = string
+  sensitive   = true
+}
+
+variable "email_from" {
+  description = "Expéditeur des e-mails"
+  type        = string
+  default     = ""
+}
+
+variable "onboarding_emails" {
+  description = "Active les e-mails d'onboarding pro"
+  type        = bool
+  default     = false
+}
+
+variable "turnstile_secret_key" {
+  description = "Clé secrète Cloudflare Turnstile"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "site_url" {
+  description = "URL publique de l'application"
+  type        = string
+  default     = "https://bati-axe.fr"
+}

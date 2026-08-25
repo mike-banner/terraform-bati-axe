@@ -1,4 +1,4 @@
-# 🔍 Runbook P3 — Re-test Stripe + cron 72h en prod
+# 🔍 Runbook P3 — Re-test Stripe + cron 48h en prod
 
 > Objectif : prouver que le paywall fonctionne de bout en bout (checkout → webhook → activation → déblocage 72h), car il a déjà été découvert mort (404 silencieux). À faire **avant** tout lancement réel.
 
@@ -17,12 +17,12 @@
 ## 3. Vérification Webhook → DB
 - [ ] Dans Stripe Dashboard → Events : le `checkout.session.completed` est **livré avec succès** (pas d'erreur de signature/404).
 - [ ] En DB : `professionals.subscription_status` = `active` ; `subscription_id` rempli.
-- [ ] Le pro voit l'accès Premium immédiatement (coordonnées non floutées sur un lead < 72h).
+- [ ] Le pro voit l'accès Premium immédiatement (coordonnées non floutées sur un lead < 48h).
 
-## 4. Vérification cron 72h (déblocage gratuit)
-- [ ] Vérifier que le job `pg_cron` existe en prod : `SELECT jobname, schedule FROM cron.job;` (attendu : bascule `leads.unlocked_at` à T+72h).
+## 4. Vérification cron 48h (déblocage gratuit)
+- [ ] Vérifier que le job `pg_cron` existe en prod : `SELECT jobname, schedule FROM cron.job;` (attendu : bascule `leads.unlocked_at` à T+48h).
 - [ ] Si absent : exécuter la migration qui le crée (Phase 4).
-- [ ] Test : sur un lead **non débloqué**, forcer le test à T+72h (ou attendre) → `unlocked_at` se remplit → coordonnées visibles sans abonnement.
+- [ ] Test : sur un lead **non débloqué**, forcer le test à T+48h (ou attendre) → `unlocked_at` se remplit → coordonnées visibles sans abonnement.
 
 ## 5. Cas d'échec connus (à vérifier)
 - Webhook qui reçoit un 500/404 silencieux (le bug historique).
@@ -30,4 +30,4 @@
 - Migration cron jamais poussée en prod (`cron` extension absente).
 
 ## 6. Sortie = SUCCESS si
-Un abonnement test complet : facturé → `active` en DB → lead débloqué à T+72h, **sans intervention manuelle**.
+Un abonnement test complet : facturé → `active` en DB → lead débloqué à T+48h, **sans intervention manuelle**.

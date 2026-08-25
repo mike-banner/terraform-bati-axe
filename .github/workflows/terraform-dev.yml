@@ -1,49 +1,70 @@
-name: Terraform Production
+name: Terraform Dev
+
 on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/terraform-dev.yml'
   workflow_dispatch:
 
 jobs:
   deploy:
-    name: Terraform Apply (Prod)
+    name: Terraform Apply (Dev)
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: terraform/environments/prod
-    
+        working-directory: terraform/environments/dev
+
     env:
-      # S3 Backend (R2)
+      # Backend Terraform stocké dans Cloudflare R2
       AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_SECRET_ACCESS_KEY }}
-      
-      AWS_ENDPOINT_URL_S3: "https://${{ secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com"
-      
-      # Cloudflare & Supabase Secrets
+      AWS_ENDPOINT_URL_S3: https://${{ secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com
+
+      # Cloudflare et dépôt GitHub
       TF_VAR_cloudflare_api_token: ${{ secrets.TF_VAR_CLOUDFLARE_API_TOKEN }}
       TF_VAR_cloudflare_account_id: ${{ secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}
-      TF_VAR_existing_database_url: ${{ secrets.TF_VAR_EXISTING_DATABASE_URL }}
+      TF_VAR_project_name: bati-axe
       TF_VAR_github_owner: mike-banner
       TF_VAR_github_repo_name: terraform-bati-axe
+
+      # Base Supabase existante utilisée par Dev
+      TF_VAR_existing_database_url: ${{ secrets.TF_VAR_EXISTING_DATABASE_URL }}
+      TF_VAR_supabase_access_token: ${{ secrets.TF_VAR_SUPABASE_ACCESS_TOKEN }}
+      TF_VAR_supabase_organization_id: ${{ secrets.TF_VAR_SUPABASE_ORGANIZATION_ID }}
       TF_VAR_supabase_url: ${{ secrets.TF_VAR_SUPABASE_URL }}
       TF_VAR_supabase_anon_key: ${{ secrets.TF_VAR_SUPABASE_ANON_KEY }}
       TF_VAR_supabase_service_role_key: ${{ secrets.TF_VAR_SUPABASE_SERVICE_ROLE_KEY }}
+      TF_VAR_supabase_region: eu-west-3
+
+      # Analytics
       TF_VAR_umami_url: ${{ secrets.TF_VAR_UMAMI_URL }}
       TF_VAR_umami_website_id: ${{ secrets.TF_VAR_UMAMI_WEBSITE_ID }}
+
+      # Stripe de test
       TF_VAR_stripe_secret_key: ${{ secrets.TF_VAR_STRIPE_SECRET_KEY }}
       TF_VAR_stripe_price_id: ${{ secrets.TF_VAR_STRIPE_PRICE_ID }}
       TF_VAR_stripe_webhook_secret: ${{ secrets.TF_VAR_STRIPE_WEBHOOK_SECRET }}
+
+      # R2 applicatif
       TF_VAR_r2_account_id: ${{ secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}
       TF_VAR_r2_access_key_id: ${{ secrets.R2_APP_ACCESS_KEY_ID }}
       TF_VAR_r2_secret_access_key: ${{ secrets.R2_APP_SECRET_ACCESS_KEY }}
       TF_VAR_r2_bucket_name: batiaxe-documents
+
+      # E-mails
       TF_VAR_resend_api_key: ${{ secrets.TF_VAR_RESEND_API_KEY }}
-      TF_VAR_email_from: ${{ secrets.EMAIL_FROM }}
-      TF_VAR_onboarding_emails: ${{ secrets.ONBOARDING_EMAILS || 'false' }}
-      TF_VAR_turnstile_secret_key: ${{ secrets.TURNSTILE_SECRET_KEY }}
-      
-      # Dummy vars (non utilisées en prod car Supabase n'est pas créé, mais requises par TF)
-      TF_VAR_supabase_access_token: ${{ secrets.TF_VAR_SUPABASE_ACCESS_TOKEN }}
-      TF_VAR_supabase_organization_id: ${{ secrets.TF_VAR_SUPABASE_ORGANIZATION_ID }}
-      TF_VAR_supabase_database_password: "dummy"
+      TF_VAR_email_from: BÂTI-AXE <onboarding@resend.dev>
+      TF_VAR_onboarding_emails: "false"
+
+      # Turnstile désactivé en Dev
+      TF_VAR_turnstile_secret_key: ""
+      TF_VAR_site_url: https://dev.bati-axe.fr
+
+      # Domaine Dev uniquement
+      TF_VAR_environment_domains: '{"dev":"dev.bati-axe.fr"}'
 
     steps:
       - name: Checkout repo
@@ -57,18 +78,8 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Importer les ressources Cloudflare existantes
-        run: |
-          PROJECT_ADDRESS='module.platform.module.cloudflare_pages.cloudflare_pages_project.this'
-          DOMAIN_ADDRESS='module.platform.module.cloudflare_pages.cloudflare_pages_domain.custom[0]'
-
-          if ! terraform state list | grep -Fxq "$PROJECT_ADDRESS"; then
-            terraform import "$PROJECT_ADDRESS" "${TF_VAR_cloudflare_account_id}/bati-axe-production"
-          fi
-
-          if ! terraform state list | grep -Fxq "$DOMAIN_ADDRESS"; then
-            terraform import "$DOMAIN_ADDRESS" "${TF_VAR_cloudflare_account_id}/bati-axe-production/bati-axe.fr"
-          fi
+      - name: Terraform Validate
+        run: terraform validate
 
       - name: Terraform Plan
         run: terraform plan -no-color

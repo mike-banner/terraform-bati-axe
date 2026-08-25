@@ -18,7 +18,7 @@
 
 **Conditions de livraison v1 (reste à valider avant mise en prod réelle avec vrais utilisateurs) :**
 - [ ] Déploiement Cloudflare Pages vérifié au vert (Node 22 via `.nvmrc` — sinon poser `NODE_VERSION=22` en var de build)
-- [ ] Paiement Stripe re-testé de bout en bout (checkout + webhook, Phase 4) et cron pg_cron 48h vérifié (Phase 4 / P4) — **P3 en attente**
+- [ ] Paiement Stripe re-testé de bout en bout (checkout + webhook, Phase 4) et cron pg_cron 48h vérifié (Phase 4 / P4) — **P3 en attente**. Le délai 48h est retenu pour v1 ; 72h ou une autre valeur pourra être décidé dans une version ultérieure.
 - [ ] Admin minimal validé opérationnel pour le pilote — ✅ console admin 06.1/06.2 livrée (revue documents OK)
 - [ ] Dette test connue : passe Playwright jamais câblée (blocage navigateur sandbox) — à traiter dans ce milestone
 

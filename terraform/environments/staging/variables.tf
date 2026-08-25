@@ -59,8 +59,9 @@ variable "supabase_organization_id" {
 }
 
 variable "supabase_database_password" {
-  description = "Mot de passe de la base de données PostgreSQL (géré via CI)"
+  description = "Mot de passe utilisé uniquement si un projet Supabase est créé"
   type        = string
+  default     = ""
   sensitive   = true
 }
 
@@ -99,6 +100,90 @@ variable "umami_url" {
 variable "umami_website_id" {
   description = "Identifiant public du site dans Umami"
   type        = string
+}
+
+# --- Stripe ---
+
+variable "stripe_secret_key" {
+  description = "Clé secrète Stripe"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "stripe_price_id" {
+  description = "Identifiant du prix Stripe"
+  type        = string
+  default     = ""
+}
+
+variable "stripe_webhook_secret" {
+  description = "Secret du webhook Stripe"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+# --- Cloudflare R2 ---
+
+variable "r2_account_id" {
+  description = "Identifiant du compte Cloudflare R2"
+  type        = string
+  default     = ""
+}
+
+variable "r2_access_key_id" {
+  description = "Clé d'accès R2 de l'application"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "r2_secret_access_key" {
+  description = "Clé secrète R2 de l'application"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "r2_bucket_name" {
+  description = "Nom du bucket R2 de l'application"
+  type        = string
+  default     = "batiaxe-documents"
+}
+
+# --- Email ---
+
+variable "resend_api_key" {
+  description = "Clé API Resend"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "email_from" {
+  description = "Expéditeur des e-mails"
+  type        = string
+  default     = "BÂTI-AXE <onboarding@resend.dev>"
+}
+
+variable "onboarding_emails" {
+  description = "Active les e-mails d'onboarding"
+  type        = bool
+  default     = false
+}
+
+variable "turnstile_secret_key" {
+  description = "Clé Turnstile"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "site_url" {
+  description = "URL publique de l'application staging"
+  type        = string
+  default     = "https://staging.bati-axe.fr"
 }
 
 variable "environment_domains" {
