@@ -51,6 +51,19 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
+      - name: Importer les ressources Cloudflare existantes
+        run: |
+          PROJECT_ADDRESS='module.platform.module.cloudflare_pages.cloudflare_pages_project.this'
+          DOMAIN_ADDRESS='module.platform.module.cloudflare_pages.cloudflare_pages_domain.custom[0]'
+
+          if ! terraform state list | grep -Fxq "$PROJECT_ADDRESS"; then
+            terraform import "$PROJECT_ADDRESS" "${TF_VAR_cloudflare_account_id}/bati-axe-production"
+          fi
+
+          if ! terraform state list | grep -Fxq "$DOMAIN_ADDRESS"; then
+            terraform import "$DOMAIN_ADDRESS" "${TF_VAR_cloudflare_account_id}/bati-axe-production/bati-axe.fr"
+          fi
+
       - name: Terraform Plan
         run: terraform plan -no-color
 
