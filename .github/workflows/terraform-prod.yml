@@ -39,6 +39,7 @@ jobs:
       TF_VAR_email_from: ${{ secrets.EMAIL_FROM }}
       TF_VAR_onboarding_emails: ${{ secrets.ONBOARDING_EMAILS || 'false' }}
       TF_VAR_turnstile_secret_key: ${{ secrets.TURNSTILE_SECRET_KEY }}
+      TF_VAR_site_url: https://bati-axe.fr
       
       # Dummy vars (non utilisées en prod car Supabase n'est pas créé, mais requises par TF)
       TF_VAR_supabase_access_token: ${{ secrets.TF_VAR_SUPABASE_ACCESS_TOKEN }}

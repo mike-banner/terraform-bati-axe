@@ -57,7 +57,8 @@ export default defineNuxtConfig({
     redirect: false,
     url: process.env.SUPABASE_URL || process.env.NUXT_PUBLIC_SUPABASE_URL || '',
     key: process.env.SUPABASE_KEY || process.env.NUXT_PUBLIC_SUPABASE_KEY || '',
-    serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+    secretKey: process.env.NUXT_SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+    serviceKey: process.env.NUXT_SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_KEY || ''
   },
 
   shadcn: {
@@ -66,22 +67,22 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    stripeSecretKey: process.env.STRIPE_SECRET_KEY,
-    stripePriceId: process.env.STRIPE_PRICE_ID,
-    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
-    r2AccountId: process.env.R2_ACCOUNT_ID,
-    r2AccessKeyId: process.env.R2_ACCESS_KEY_ID,
-    r2SecretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
-    r2BucketName: process.env.R2_BUCKET_NAME || 'batiaxe-documents',
-    resendApiKey: process.env.RESEND_API_KEY,
+    stripeSecretKey: process.env.NUXT_STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY,
+    stripePriceId: process.env.NUXT_STRIPE_PRICE_ID || process.env.STRIPE_PRICE_ID,
+    stripeWebhookSecret: process.env.NUXT_STRIPE_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET,
+    r2AccountId: process.env.NUXT_R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID,
+    r2AccessKeyId: process.env.NUXT_R2_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY_ID,
+    r2SecretAccessKey: process.env.NUXT_R2_SECRET_ACCESS_KEY || process.env.R2_SECRET_ACCESS_KEY,
+    r2BucketName: process.env.NUXT_R2_BUCKET_NAME || process.env.R2_BUCKET_NAME || 'batiaxe-documents',
+    resendApiKey: process.env.NUXT_RESEND_API_KEY || process.env.RESEND_API_KEY,
     // Expéditeur Resend. Tant que le domaine n'est pas vérifié, garder le sender
     // partagé 'onboarding@resend.dev' (ne livre qu'à l'adresse du compte Resend).
     // Override prod via NUXT_EMAIL_FROM une fois bati-axe.fr vérifié.
-    emailFrom: process.env.EMAIL_FROM || 'BÂTI-AXE <onboarding@resend.dev>',
-    // Email d'onboarding pro (REQ-07) — off par défaut. Préfixe NUXT_ côté Cloudflare.
-    onboardingEmails: process.env.ONBOARDING_EMAILS === 'true',
+    emailFrom: process.env.NUXT_EMAIL_FROM || process.env.EMAIL_FROM || 'BÂTI-AXE <onboarding@resend.dev>',
+    // Email d'onboarding pro (REQ-07) — off par défaut.
+    onboardingEmails: (process.env.NUXT_ONBOARDING_EMAILS || process.env.ONBOARDING_EMAILS) === 'true',
     // P2 — Cloudflare Turnstile (anti-spam). Clé secrète côté serveur uniquement.
-    turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY,
+    turnstileSecretKey: process.env.NUXT_TURNSTILE_SECRET_KEY || process.env.TURNSTILE_SECRET_KEY,
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
       // P2 — clé publique Turnstile (rendue côté client).

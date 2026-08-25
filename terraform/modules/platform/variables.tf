@@ -1,7 +1,6 @@
 # variables.tf
 # Centralise toutes les variables d'entrée du module racine.
 # Les valeurs sensibles (tokens, IDs) ne doivent JAMAIS avoir de default ici :
-# Les valeurs sensibles (tokens, IDs) ne doivent JAMAIS avoir de default ici :
 # Terraform les demandera en interactif ou les lira depuis TF_VAR_* en CI.
 
 variable "environment" {
@@ -24,7 +23,6 @@ variable "create_supabase" {
 variable "existing_database_url" {
   description = "URL de la base de données existante (si create_supabase = false)"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
@@ -116,20 +114,17 @@ variable "umami_website_id" {
 variable "stripe_secret_key" {
   description = "Clé secrète Stripe"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
 variable "stripe_price_id" {
   description = "Identifiant du prix Stripe actif"
   type        = string
-  default     = ""
 }
 
 variable "stripe_webhook_secret" {
   description = "Secret de signature du webhook Stripe"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
@@ -138,27 +133,23 @@ variable "stripe_webhook_secret" {
 variable "r2_account_id" {
   description = "Identifiant du compte Cloudflare pour R2"
   type        = string
-  default     = ""
 }
 
 variable "r2_access_key_id" {
   description = "Clé d'accès R2"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
 variable "r2_secret_access_key" {
   description = "Clé secrète R2"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
 variable "r2_bucket_name" {
   description = "Nom du bucket R2 applicatif"
   type        = string
-  default     = "batiaxe-documents"
 }
 
 # ─── Email ──────────────────────────────────────────────────────────────────
@@ -166,7 +157,6 @@ variable "r2_bucket_name" {
 variable "resend_api_key" {
   description = "Clé API Resend"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
@@ -186,13 +176,11 @@ variable "turnstile_secret_key" {
   description = "Clé secrète Cloudflare Turnstile"
   type        = string
   sensitive   = true
-  default     = ""
 }
 
 variable "site_url" {
   description = "URL publique de l'application"
   type        = string
-  default     = "http://localhost:3000"
 }
 
 variable "environment_domains" {

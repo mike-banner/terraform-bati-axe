@@ -32,6 +32,7 @@ jobs:
 
       # Base Supabase existante utilisée par Dev
       TF_VAR_existing_database_url: ${{ secrets.TF_VAR_EXISTING_DATABASE_URL }}
+      TF_VAR_supabase_database_password: ""
       TF_VAR_supabase_access_token: ${{ secrets.TF_VAR_SUPABASE_ACCESS_TOKEN }}
       TF_VAR_supabase_organization_id: ${{ secrets.TF_VAR_SUPABASE_ORGANIZATION_ID }}
       TF_VAR_supabase_url: ${{ secrets.TF_VAR_SUPABASE_URL }}

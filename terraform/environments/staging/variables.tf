@@ -1,7 +1,6 @@
 # variables.tf
 # Centralise toutes les variables d'entrée du module racine.
 # Les valeurs sensibles (tokens, IDs) ne doivent JAMAIS avoir de default ici :
-# Les valeurs sensibles (tokens, IDs) ne doivent JAMAIS avoir de default ici :
 # Terraform les demandera en interactif ou les lira depuis TF_VAR_* en CI.
 
 variable "create_supabase" {
@@ -13,7 +12,6 @@ variable "create_supabase" {
 variable "existing_database_url" {
   description = "URL de la base de données existante (si create_supabase = false)"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
@@ -61,7 +59,6 @@ variable "supabase_organization_id" {
 variable "supabase_database_password" {
   description = "Mot de passe utilisé uniquement si un projet Supabase est créé"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
@@ -107,7 +104,6 @@ variable "umami_website_id" {
 variable "stripe_secret_key" {
   description = "Clé secrète Stripe"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
@@ -120,7 +116,6 @@ variable "stripe_price_id" {
 variable "stripe_webhook_secret" {
   description = "Secret du webhook Stripe"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
@@ -135,14 +130,12 @@ variable "r2_account_id" {
 variable "r2_access_key_id" {
   description = "Clé d'accès R2 de l'application"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
 variable "r2_secret_access_key" {
   description = "Clé secrète R2 de l'application"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
@@ -157,7 +150,6 @@ variable "r2_bucket_name" {
 variable "resend_api_key" {
   description = "Clé API Resend"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
@@ -176,7 +168,6 @@ variable "onboarding_emails" {
 variable "turnstile_secret_key" {
   description = "Clé Turnstile"
   type        = string
-  default     = ""
   sensitive   = true
 }
 

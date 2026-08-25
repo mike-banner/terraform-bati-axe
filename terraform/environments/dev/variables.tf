@@ -1,7 +1,6 @@
 # variables.tf
 # Centralise toutes les variables d'entrée du module racine.
 # Les valeurs sensibles (tokens, IDs) ne doivent JAMAIS avoir de default ici :
-# Les valeurs sensibles (tokens, IDs) ne doivent JAMAIS avoir de default ici :
 # Terraform les demandera en interactif ou les lira depuis TF_VAR_* en CI.
 
 variable "create_supabase" {
@@ -13,7 +12,6 @@ variable "create_supabase" {
 variable "existing_database_url" {
   description = "URL de la base de données existante (si create_supabase = false)"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
@@ -61,7 +59,6 @@ variable "supabase_organization_id" {
 variable "supabase_database_password" {
   description = "Mot de passe utilisé uniquement si un projet Supabase est créé"
   type        = string
-  default     = ""
   sensitive   = true
 }
 
@@ -169,7 +166,6 @@ variable "onboarding_emails" {
 variable "turnstile_secret_key" {
   description = "Clé Turnstile, vide en Dev"
   type        = string
-  default     = ""
   sensitive   = true
 }
 

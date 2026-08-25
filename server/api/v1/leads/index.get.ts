@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 
   // Client service-role via le module : il lit la clé depuis runtimeConfig,
   // seul canal fiable au runtime Cloudflare (event.context.cloudflare.env et
-  // process.env y sont vides). Nécessite NUXT_SUPABASE_SERVICE_KEY en env.
+  // process.env y sont vides). Nécessite NUXT_SUPABASE_SECRET_KEY en env.
   const supabase = serverSupabaseServiceRole(event) as any
 
   const { data: pro, error: proError } = await supabase
