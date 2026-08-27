@@ -25,6 +25,9 @@ module "platform" {
   r2_access_key_id           = var.r2_access_key_id
   r2_secret_access_key       = var.r2_secret_access_key
   r2_bucket_name             = var.r2_bucket_name
+  r2_bucket_public           = var.r2_bucket_public
+  r2_bucket_vault            = var.r2_bucket_vault
+  r2_bucket_b2b              = var.r2_bucket_b2b
   resend_api_key             = var.resend_api_key
   email_from                 = var.email_from
   onboarding_emails          = var.onboarding_emails

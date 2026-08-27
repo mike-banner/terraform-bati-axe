@@ -146,9 +146,29 @@ variable "r2_secret_access_key" {
 }
 
 variable "r2_bucket_name" {
-  description = "Nom du bucket R2 applicatif"
+  description = "Nom du bucket R2 applicatif (legacy)"
   type        = string
   default     = "batiaxe-documents"
+}
+
+# --- R2 Multi-Buckets (05.14) ---
+
+variable "r2_bucket_public" {
+  description = "Nom du bucket R2 public (logos & portfolio)"
+  type        = string
+  default     = "batiaxe-public-prod"
+}
+
+variable "r2_bucket_vault" {
+  description = "Nom du bucket R2 vault (KBIS, décennales, CNI)"
+  type        = string
+  default     = "batiaxe-vault-prod"
+}
+
+variable "r2_bucket_b2b" {
+  description = "Nom du bucket R2 B2B (CCTP, devis)"
+  type        = string
+  default     = "batiaxe-b2b-prod"
 }
 
 variable "resend_api_key" {

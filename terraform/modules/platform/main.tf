@@ -53,6 +53,9 @@ module "cloudflare_pages" {
     NUXT_R2_ACCESS_KEY_ID        = var.r2_access_key_id
     NUXT_R2_SECRET_ACCESS_KEY    = var.r2_secret_access_key
     NUXT_R2_BUCKET_NAME          = var.r2_bucket_name
+    NUXT_R2_BUCKET_PUBLIC        = var.r2_bucket_public
+    NUXT_R2_BUCKET_VAULT         = var.r2_bucket_vault
+    NUXT_R2_BUCKET_B2B           = var.r2_bucket_b2b
     NUXT_RESEND_API_KEY          = var.resend_api_key
     NUXT_EMAIL_FROM              = var.email_from
     NUXT_ONBOARDING_EMAILS       = var.onboarding_emails ? "true" : "false"

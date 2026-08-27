@@ -35,6 +35,9 @@ jobs:
       TF_VAR_r2_access_key_id: ${{ secrets.R2_APP_ACCESS_KEY_ID }}
       TF_VAR_r2_secret_access_key: ${{ secrets.R2_APP_SECRET_ACCESS_KEY }}
       TF_VAR_r2_bucket_name: batiaxe-documents
+      TF_VAR_r2_bucket_public: ${{ secrets.PROD_R2_BUCKET_PUBLIC }}
+      TF_VAR_r2_bucket_vault: ${{ secrets.PROD_R2_BUCKET_VAULT }}
+      TF_VAR_r2_bucket_b2b: ${{ secrets.PROD_R2_BUCKET_B2B }}
       TF_VAR_resend_api_key: ${{ secrets.TF_VAR_RESEND_API_KEY }}
       TF_VAR_email_from: ${{ secrets.EMAIL_FROM }}
       TF_VAR_onboarding_emails: ${{ secrets.ONBOARDING_EMAILS || 'false' }}

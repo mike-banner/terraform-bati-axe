@@ -26,7 +26,8 @@ export default defineEventHandler(async (event) => {
   const env = event.context.cloudflare?.env || {}
 
   const accountId = config.r2AccountId || env.R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID || ''
-  const bucket = config.r2BucketName || env.R2_BUCKET_NAME || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
+  // 05.14 — documents/view : vault bucket (KBIS, décennales)
+  const bucket = config.r2BucketVault || env.NUXT_R2_BUCKET_VAULT || config.r2BucketName || env.R2_BUCKET_VAULT || env.R2_BUCKET_NAME || process.env.R2_BUCKET_VAULT || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
 
   const aws = getAwsClient(config, env)
   const url = new URL(`https://${accountId}.r2.cloudflarestorage.com/${bucket}/${parsed.data.file_key}`)
