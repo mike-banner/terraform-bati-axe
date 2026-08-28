@@ -4,8 +4,8 @@ milestone: v1.0-lancement-pilote
 milestone_name: Lancement v1 — Pilote Carrières-sous-Poissy
 status: v1_in_progress
 stopped_at: "Infrastructure Dev Cloudflare validée sur la branche dev ; production client volontairement laissée intacte et manuelle"
-last_updated: "2026-08-25T16:30:00.000Z"
-last_activity: 2026-08-25
+last_updated: "2026-08-28T18:00:00.000Z"
+last_activity: 2026-08-28
 progress:
   total_phases: 21
   completed_phases: 19
@@ -39,9 +39,14 @@ Phases complètes récentes :
 - **06.2 — KPIs de Pilotage** ✅ (2026-08-22, merge PR #45 le 2026-08-22) : kpi-engine 6 KPIs + dashboard admin. *(récupéré d'une branche jamais mergée — docs le marquaient « livré » à tort)*.
 - **05.12 — Front Polish & Branding** ✅ 2/2 (2026-08-23, PR #49) : landing `/partenaires` dédiée (9 sections) + tunnel allégé + scroll fluide ; déclinaisons web du logo (détourage flood-fill, transparent/monochrome, favicons, apple-touch, PWA, og-image) + script `scripts/generate-logo-variants.mjs` ; passe anti-slop, icônes Phosphor duotone, FAQ éditoriale, univers `copper`, radius pill unifié, retour « Particuliers » dans le header. Aucune migration DB.
 - **05.13 — Dette technique + P9 Mobile QA + P5 Feedback Loop** ✅ 3/3 (2026-08-23, branche `fix/dette-p9-p5`) : suite e2e Playwright câblée sur le Chrome système (`channel: 'chrome'`, 24 specs → 24 pass, jamais lancée avant) + specs simulateur réécrites (flux 6 étapes) + test badge réparé (`bg-[#F8FAFC]`) ; QA mobile mesurée (scripts `mobile-audit`/`touch-audit`/`monprojet-mobile`), cibles tactiles ≥ 44px (header/simulateur/tunnel/footer), état vide catégorie leads atteignable, projet Playwright `mobile-chromium` (48/48 specs desktop + mobile) ; feedback loop extrait dans `server/utils/handleLeadDecision.ts` + 9 tests unitaires (remise au marché, garde-fou MAX_RELAUNCHES, 403/404). Aucune migration DB.
+- **05.14 — FIX: Refactoring Multi-Buckets Cloudflare R2** ✅ 1/1 (2026-08-28) : Isolation des buckets `batiaxe-public-[env]`, `batiaxe-vault-[env]`, `batiaxe-b2b-[env]` — code mergé dans `dev`, 3 buckets R2 prod créés, secrets GitHub à jour. **Terraform prod reporté après v1.**
+- **05.15 — FIX: Verrouillage Leads non-vérifiés sur `/espace/leads`** 🚧 0/1 (2026-08-27) : Blocage strict du déblocage de leads si `decennal_status !== 'verified'`.
+- **05.16 — P7: Découpage 78 en 4 Zones & Pricing Dégressif** 🚧 0/1 (2026-08-27) : Quadrillage des Yvelines (Mantes, Rambouillet, Versailles, St-Germain) avec abonnement dégressif (150€ -> 200€ -> 250€ -> 300€ max, **engagement 1 an minimum**).
+- **05.17 — P19: Partenaires Diagnostiqueurs Immobiliers** 🚧 0/1 (2026-08-27) : Profil diagnostiqueur sur `/b2b/partenaires` + dépôt de rapports DPE/diagnostics.
+- **05.18 — Annuaire, Vitrines Publiques & Dashboard Partenaires** 🚧 0/1 (2026-08-27) : Section Partenaires sur l'accueil `/`, annuaire filtrable par catégorie (`/partenaires/annuaire`), profil public (`/partenaire/[dept]/[slug]`) et dashboard d'édition (`/espace/partenaire`).
 - **P4 — Notif pro nouveaux leads (email)** ✅ (2026-08-23, PR #48 mergé) : `notifyProLead` sur `projects.post.ts`, opt-in `lead_alerts_email`, idempotence `lead_notifications`, page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h. Le délai 48h est retenu pour v1 ; 72h ou une autre valeur pourra être décidé dans une version ultérieure avec le client.
 
-Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod), **P1** (Matomo funnel — bandeau cookies RGPD requis), **P7** (packs zonés — tarifs à confirmer), puis P6/P8/P10.
+Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod), **P1** (Umami funnel — self-hosted VPS PostgreSQL), **P7** (packs zonés — tarifs à confirmer), puis P6/P8/P10.
 
 ## Infrastructure vérifiée le 2026-08-25
 
@@ -64,6 +69,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - [x] 05.13-01 — Dette technique : suite e2e câblée (channel chrome) + specs alignées + badge réparé (PR #51)
 - [x] 05.13-02 — P9 Mobile QA : audit + cibles ≥ 44px + projet e2e mobile 48/48 (PR #51)
 - [x] 05.13-03 — P5 Feedback loop : `handleLeadDecision` + 9 tests (PR #51)
+- [x] 05.14 — Multi-Buckets R2 : isolation 3 buckets (Public/Vault/B2B) + Terraform module + endpoints + workflows (mergé dev 2026-08-28). Terraform prod reporté après v1.
 
 ## Decisions (récentes)
 
@@ -96,7 +102,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 | Item | Statut |
 |---|---|
-| **P1** Matomo funnel | ❌ à implémenter (décidé : Matomo) |
+| **P1** Umami funnel | ❌ à implémenter (décidé : Umami VPS PostgreSQL, sans cookie) |
 | **P2** Turnstile anti-spam | ✅ code livré — standby (clés client à créer au transfert Cloudflare) |
 | **P3** Stripe + cron re-test prod | ❌ à faire en premier (runbook prêt ; accès prod client nécessaire) |
 | **P4** Notif leads email | ✅ livré (PR #48 mergé) — Web Push reporté à la Phase 8 |
@@ -141,4 +147,4 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 Last session: 2026-08-25
 Stopped at: **branche `dev` poussée et workflow Terraform Dev validé sur Cloudflare** — production client non touchée.
-Resume: **P3** (re-test Stripe/cron quand les identifiants client seront disponibles), puis **P1** Matomo et **P7** packs zonés.
+Resume: **P3** (re-test Stripe/cron quand les identifiants client seront disponibles), puis **P1** Umami (VPS + PostgreSQL) et **P7** packs zonés.
