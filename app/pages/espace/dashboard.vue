@@ -253,46 +253,8 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
         <div class="lg:col-span-3 space-y-4 order-2 lg:order-1 w-full">
           <!-- Header -->
           <div class="mb-1">
-            <div class="mb-3 space-y-1.5">
-              <div class="flex flex-wrap items-center gap-2">
-                <VerifiedBadge v-if="pro.is_verified" />
-                <span
-                  v-else-if="pro.siret_status !== 'active' && decennale?.status !== 'approved'"
-                  class="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 border border-amber-300 text-amber-700 bg-amber-50"
-                >
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                  Vérification en cours
-                </span>
-                <BadgeEntrepriseVerifiee
-                  v-if="pro.siret_status"
-                  :pending="pro.siret_status !== 'active'"
-                />
-                <BadgeDecennaleCertifiee
-                  v-if="decennale"
-                  :pending="decennale.status !== 'approved'"
-                />
-                <NuxtLink
-                  v-if="pro.subscription_status !== 'active'"
-                  to="/espace/premium"
-                  class="cta-premium inline-flex items-center gap-2 h-11 px-5 text-white text-sm font-bold rounded-md ml-auto"
-                >
-                  <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-1.012 1.09l1.242 5.385c.114.495-.417.882-.84.62l-4.757-2.937a.563.563 0 00-.594 0L5.973 21.085c-.423.262-.954-.125-.84-.62l1.242-5.385a.563.563 0 00-.182-.557L1.99 10.916c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
-                  <span class="relative">Devenir Premium</span>
-                </NuxtLink>
-              </div>
-              <div v-if="pro.categories && pro.categories.length > 0" class="flex flex-wrap gap-2 mt-1">
-                <span
-                  v-for="cat in pro.categories"
-                  :key="cat"
-                  class="inline-flex items-center gap-1 text-[13px] font-semibold px-3 py-1.5 rounded-md border border-slate-200 text-slate-700 bg-white"
-                >
-                  <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21m-3.75 3H21"/></svg>
-                  {{ CATEGORY_LABELS[cat] || cat }}
-                </span>
-              </div>
-            </div>
-            <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground mt-2" style="text-wrap: balance">{{ pro.company_name }}</h1>
-            <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 mt-1.5 text-sm text-foreground/60">
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground" style="text-wrap: balance">{{ pro.company_name }}</h1>
+            <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 mt-1 text-sm text-foreground/60">
               <span class="font-medium text-foreground/80">{{ pro.full_name }}</span>
               <span aria-hidden="true">·</span>
               <span class="font-mono">{{ pro.postal_code }}</span>
@@ -304,6 +266,41 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                 <span aria-hidden="true">·</span>
                 <span class="font-mono">NAF {{ pro.siret_naf_code }}</span>
               </template>
+            </div>
+            <div class="mt-3 flex flex-wrap items-center gap-2">
+              <VerifiedBadge v-if="pro.is_verified" />
+              <span
+                v-else-if="pro.siret_status !== 'active' && decennale?.status !== 'approved'"
+                class="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 border border-amber-300 text-amber-700 bg-amber-50"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Vérification en cours
+              </span>
+              <BadgeEntrepriseVerifiee
+                v-if="pro.siret_status"
+                :pending="pro.siret_status !== 'active'"
+              />
+              <BadgeDecennaleCertifiee
+                v-if="decennale"
+                :pending="decennale.status !== 'approved'"
+              />
+              <NuxtLink
+                v-if="pro.subscription_status !== 'active'"
+                to="/espace/premium"
+                class="cta-premium inline-flex items-center gap-2 h-11 px-5 text-white text-sm font-bold rounded-md ml-auto"
+              >
+                <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-1.012 1.09l1.242 5.385c.114.495-.417.882-.84.62l-4.757-2.937a.563.563 0 00-.594 0L5.973 21.085c-.423.262-.954-.125-.84-.62l1.242-5.385a.563.563 0 00-.182-.557L1.99 10.916c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+                <span class="relative">Devenir Premium</span>
+              </NuxtLink>
+            </div>
+            <div v-if="pro.categories && pro.categories.length > 0" class="flex flex-wrap gap-2 mt-3">
+              <span
+                v-for="cat in pro.categories"
+                :key="cat"
+                class="inline-flex items-center text-[13px] font-semibold px-3 py-1.5 rounded-md border border-slate-200 text-slate-700 bg-white"
+              >
+                {{ CATEGORY_LABELS[cat] || cat }}
+              </span>
             </div>
           </div>
           <!-- ─── Documents (toujours visible pour permettre le renouvellement) ───── -->
