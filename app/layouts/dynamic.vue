@@ -112,7 +112,7 @@ onMounted(() => {
             {{ route.meta.pageTitle || 'Espace Pro' }}
           </h2>
           <NuxtLink to="/espace/profil" class="flex items-center gap-2.5 group" title="Voir mon profil public">
-            <span class="text-sm font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
+            <span class="text-sm font-semibold uppercase text-muted-foreground group-hover:text-foreground transition-colors">
               {{ headerPro?.company_name || 'Mon entreprise' }}
             </span>
             <img v-if="headerPro?.logo_url" :src="headerPro.logo_url" :alt="headerPro.company_name"

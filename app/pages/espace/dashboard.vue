@@ -278,8 +278,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                 :pending="pro.siret_status !== 'active'"
               />
               <BadgeDecennaleCertifiee
-                v-if="decennale"
-                :pending="decennale.status !== 'approved'"
+                :pending="!decennale || decennale.status !== 'approved'"
               />
               <NuxtLink
                 v-if="pro.subscription_status !== 'active'"
