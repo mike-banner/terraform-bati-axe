@@ -27,10 +27,6 @@ const { data: profile } = await useAsyncData('pro-profile-leads', () =>
   requestFetch<{ profile: any }>('/api/v1/pro/profile/me').then(r => r.profile).catch(() => null)
 )
 
-const { data: marketData } = await useAsyncData('market-local', () =>
-  requestFetch<{ data: any }>('/api/v1/market-local').then(r => r.data).catch(() => null)
-)
-
 const leads = computed(() => leadsData.value?.leads || [])
 const isPremium = computed(() => leadsData.value?.isPremium ?? false)
 const freeLeadsUsed = computed(() => profile.value?.free_leads_used ?? 0)
@@ -187,44 +183,9 @@ async function copyToClipboard(text: string) {
       </NuxtLink>
     </div>
 
-    <!-- Marché local widget (shown only when data available) -->
-    <div v-if="marketData" class="bg-white rounded-sm border border-slate-200 shadow-sm divide-y divide-slate-200 mb-4">
-      <div class="flex items-center justify-between px-6 py-3">
-        <p class="text-xs font-semibold text-muted-foreground tracking-widest uppercase">Marché local</p>
-        <span class="text-xs text-muted-foreground">Ce mois</span>
-      </div>
-      <div class="flex items-center justify-between px-6 py-3">
-        <span class="text-sm text-muted-foreground">Projets dans votre zone</span>
-        <span class="text-sm font-semibold text-foreground">{{ marketData.projectCount }}</span>
-      </div>
-      <div class="px-6 py-3">
-        <span class="text-sm text-muted-foreground block mb-2">Catégories dominantes</span>
-        <div v-if="marketData.topCategories?.length" class="flex flex-wrap gap-2">
-          <span v-for="cat in marketData.topCategories" :key="cat"
-            class="inline-flex items-center text-xs font-semibold px-3 py-1 border border-border rounded-full text-foreground">
-            {{ cat }}
-          </span>
-        </div>
-        <p v-else class="text-xs text-muted-foreground">Aucun projet dans votre zone ce mois.</p>
-      </div>
-    </div>
 
-    <!-- Free leads counter banner (BASIC, used < 3) -->
-    <div v-if="showFreeLeadsBanner" class="flex items-center gap-3 p-3.5 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-sm mb-3 shadow-sm">
-      <div class="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
-        <svg class="w-4.5 h-4.5 text-orange-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
-        </svg>
-      </div>
-      <p class="text-sm flex-1">
-        <span class="text-orange-900"><span class="font-black text-base text-orange-600">{{ freeRemaining }}</span> lead{{ freeRemaining !== 1 ? 's' : '' }} gratuit{{ freeRemaining !== 1 ? 's' : '' }} restant{{ freeRemaining !== 1 ? 's' : '' }}.</span>
-        <span class="text-orange-700/70"> Passez Premium pour un accès illimité.</span>
-      </p>
-      <NuxtLink to="/espace/premium"
-        class="shrink-0 text-xs font-bold text-orange-700 underline underline-offset-2 hover:text-orange-900 transition-colors">
-        Voir l'offre
-      </NuxtLink>
-    </div>
+
+
 
     <!-- Paywall banner (BASIC, used >= 3 + has locked lead) -->
     <div v-if="showPaywallBanner" class="flex items-center gap-3 p-4 border border-amber-300 bg-amber-50 rounded-sm mb-4">
@@ -261,11 +222,12 @@ async function copyToClipboard(text: string) {
       <p class="text-xs text-muted-foreground">Les leads qualifiés apparaîtront ici dès que vous avez sélectionné vos catégories dans votre profil.</p>
     </div>
 
-    <!-- Filtre catégorie + compteur -->
+    <!-- Filtre catégorie + compteur + leads gratuits -->
     <div v-else class="space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-          <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm">
+      <div class="flex flex-col md:flex-row md:items-center gap-3">
+        <!-- Colonne gauche : compteur + catégorie -->
+        <div class="flex items-center gap-3 flex-1 min-w-0">
+          <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm shrink-0">
             <span class="relative flex h-2 w-2">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
@@ -274,16 +236,40 @@ async function copyToClipboard(text: string) {
               <strong class="text-foreground font-black text-sm">{{ filteredLeads.length }}</strong> opportunité{{ filteredLeads.length !== 1 ? 's' : '' }}
             </span>
           </div>
-          <div v-if="categoryFilter" class="h-4 w-px bg-slate-200"></div>
-          <span v-if="categoryFilter" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            {{ CATEGORY_LABELS[categoryFilter] ?? categoryFilter }}
-          </span>
+          <!-- Catégorie : texte si 1, dropdown si >1 -->
+          <template v-if="profile?.categories?.length === 1">
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest truncate">
+              {{ CATEGORY_LABELS[profile.categories[0]] ?? profile.categories[0] }}
+            </span>
+          </template>
+          <template v-else-if="profile?.categories?.length > 1">
+            <select
+              v-model="categoryFilter"
+              aria-label="Filtrer par catégorie"
+              class="h-8 px-2 pr-7 border border-border rounded-sm text-xs bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer appearance-none"
+            >
+              <option value="">Toutes catégories</option>
+              <option v-for="cat in profile.categories" :key="cat" :value="cat">
+                {{ CATEGORY_LABELS[cat] ?? cat }}
+              </option>
+            </select>
+          </template>
         </div>
-        <div class="flex items-center gap-2">
+
+        <!-- Colonne droite : leads gratuits + premium + tri -->
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- Compteur leads gratuits (BASIC, used < 3) -->
+          <div v-if="showFreeLeadsBanner" class="hidden md:flex items-center gap-2.5 px-3 py-1.5 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-sm">
+            <svg class="w-4 h-4 text-orange-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+            </svg>
+            <span class="text-xs"><span class="font-black text-orange-600">{{ freeRemaining }}</span> <span class="text-orange-800">gratuit{{ freeRemaining !== 1 ? 's' : '' }}</span></span>
+            <NuxtLink to="/espace/premium" class="text-[10px] font-bold text-orange-700 underline underline-offset-2 hover:text-orange-900">Offre</NuxtLink>
+          </div>
           <NuxtLink
             v-if="!isPremium && canUnlockLeads"
             to="/espace/premium"
-            class="hidden md:inline-flex items-center gap-1.5 h-9 px-4 bg-foreground text-background font-bold text-xs rounded-sm shadow-sm hover:opacity-80 transition-opacity mr-2"
+            class="hidden md:inline-flex items-center gap-1.5 h-9 px-4 bg-foreground text-background font-bold text-xs rounded-sm shadow-sm hover:opacity-80 transition-opacity"
           >
             <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-1.012 1.09l1.242 5.385c.114.495-.417.882-.84.62l-4.757-2.937a.563.563 0 00-.594 0L5.973 21.085c-.423.262-.954-.125-.84-.62l1.242-5.385a.563.563 0 00-.182-.557L1.99 10.916c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
             Passer Premium
@@ -296,17 +282,15 @@ async function copyToClipboard(text: string) {
             <option value="urgent">Plus urgents</option>
             <option value="recent">Plus récents</option>
           </select>
-          <select
-            v-model="categoryFilter"
-            aria-label="Filtrer par catégorie"
-            class="h-9 px-3 pr-8 border border-border rounded-sm text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
-          >
-            <option value="">Toutes catégories</option>
-            <option v-for="cat in availableCategories" :key="cat" :value="cat">
-              {{ CATEGORY_LABELS[cat] ?? cat }}
-            </option>
-          </select>
         </div>
+      </div>
+      <!-- Compteur leads gratuits MOBILE (en dessous) -->
+      <div v-if="showFreeLeadsBanner" class="md:hidden flex items-center gap-2.5 p-3 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-sm">
+        <svg class="w-4 h-4 text-orange-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+        </svg>
+        <span class="text-xs flex-1"><span class="font-black text-orange-600">{{ freeRemaining }}</span> <span class="text-orange-800">lead{{ freeRemaining !== 1 ? 's' : '' }} gratuit{{ freeRemaining !== 1 ? 's' : '' }} restant{{ freeRemaining !== 1 ? 's' : '' }}.</span></span>
+        <NuxtLink to="/espace/premium" class="text-xs font-bold text-orange-700 underline underline-offset-2">Offre</NuxtLink>
       </div>
 
       <!-- Empty filtered state -->
