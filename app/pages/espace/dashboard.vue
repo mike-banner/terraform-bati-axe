@@ -214,7 +214,7 @@ async function uploadDoc(type: 'kbis' | 'decennale') {
 
 const steps = computed(() => [
   { label: 'Compte créé',       done: true,                    desc: user.value?.email || '' },
-  { label: 'Profil entreprise', done: !!pro.value?.company_name, desc: pro.value?.company_name || 'Non renseigné',
+  { label: 'Profil entreprise', done: !!pro.value?.company_name, desc: pro.value?.company_name ? 'Identité enregistrée' : 'Non renseigné',
     action: !pro.value?.company_name ? { label: 'Compléter mon profil', to: '/pro/claim' } : null },
   { label: 'Kbis envoyé',       done: !!kbis.value,            desc: kbis.value ? `Statut : ${docStatus(kbis.value).label}` : 'Document manquant' },
   { label: 'Décennale envoyée', done: !!decennale.value,        desc: decennale.value ? `Statut : ${docStatus(decennale.value).label}` : 'Document manquant' },
