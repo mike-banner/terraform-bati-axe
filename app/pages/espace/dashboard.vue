@@ -253,27 +253,16 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
         <div class="lg:col-span-3 space-y-4 order-2 lg:order-1 w-full">
           <!-- Header -->
           <div class="mb-1">
-            <div class="flex items-start gap-4">
-              <div class="flex-1 min-w-0">
-                <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground" style="text-wrap: balance">{{ pro.company_name }}</h1>
-                <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 mt-1 text-sm text-foreground/60">
-                  <span class="font-mono">{{ pro.postal_code }}</span>
-                  <template v-if="legalFormLabel(pro.siret_legal_form)">
-                    <span aria-hidden="true">·</span>
-                    <span>{{ legalFormLabel(pro.siret_legal_form) }}</span>
-                  </template>
-                  <template v-if="pro.siret_naf_code">
-                    <span aria-hidden="true">·</span>
-                    <span class="font-mono">NAF {{ pro.siret_naf_code }}</span>
-                  </template>
-                </div>
-              </div>
-              <img
-                v-if="pro.logo_url"
-                :src="pro.logo_url"
-                :alt="pro.company_name"
-                class="w-16 h-16 md:w-20 md:h-20 rounded-lg object-cover border border-slate-200 shrink-0"
-              />
+            <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm text-foreground/60">
+              <span class="font-mono">{{ pro.postal_code }}</span>
+              <template v-if="legalFormLabel(pro.siret_legal_form)">
+                <span aria-hidden="true">·</span>
+                <span>{{ legalFormLabel(pro.siret_legal_form) }}</span>
+              </template>
+              <template v-if="pro.siret_naf_code">
+                <span aria-hidden="true">·</span>
+                <span class="font-mono">NAF {{ pro.siret_naf_code }}</span>
+              </template>
             </div>
             <div class="mt-3 flex flex-wrap items-center gap-2">
               <VerifiedBadge v-if="pro.is_verified" />
