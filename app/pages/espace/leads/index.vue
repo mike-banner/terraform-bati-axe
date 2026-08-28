@@ -126,25 +126,36 @@ async function copyToClipboard(text: string) {
   <div class="flex flex-col w-full max-w-[1440px] px-6 py-3 md:px-10 md:py-8">
 
     <!-- Blocker: documents non vérifiés (decennal_status !== 'valid') -->
-    <div v-if="profile && !canUnlockLeads" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border border-red-300 bg-red-50 rounded-lg mb-3">
-      <div class="flex items-start gap-3 flex-1">
-        <svg class="w-5 h-5 text-red-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
-        </svg>
-        <div>
-          <p class="text-sm font-semibold text-red-900">Accès aux leads bloqué</p>
-          <p class="text-xs text-red-700 mt-1">Envoyez vos documents (KBIS + Décennale) : accès débloqué sous 24h ouvrées après vérification.</p>
+    <div v-if="profile && !canUnlockLeads" class="relative overflow-hidden rounded-lg border-2 border-red-400 bg-gradient-to-r from-red-50 via-red-50 to-red-100 p-5 sm:p-6 mb-4 shadow-md">
+      <div class="absolute inset-0 bg-[repeating-linear-gradient(135deg,transparent,transparent_10px,rgba(239,68,68,0.04)_10px,rgba(239,68,68,0.04)_20px)]" />
+      <div class="relative flex flex-col sm:flex-row sm:items-center gap-4">
+        <div class="flex items-start gap-3 flex-1">
+          <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-base font-bold text-red-900">Accès aux leads bloqué</p>
+            <p class="text-sm text-red-700 mt-1 leading-relaxed">
+              Vous devez fournir vos documents légaux <strong>(KBIS + Décennale)</strong> pour débloquer l'accès aux leads gratuits.
+            </p>
+            <p class="text-xs text-red-600 mt-1.5">Accès débloqué sous 24h ouvrées après vérification par notre équipe.</p>
+          </div>
         </div>
+        <NuxtLink
+          to="/espace/dashboard"
+          class="inline-flex items-center justify-center gap-2 h-11 px-7 bg-red-600 text-white text-sm font-bold rounded-full hover:bg-red-700 hover:scale-105 shadow-lg shadow-red-600/25 transition-all shrink-0"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/>
+          </svg>
+          Envoyer mes documents
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </NuxtLink>
       </div>
-      <NuxtLink
-        to="/espace/dashboard"
-        class="inline-flex items-center justify-center gap-2 h-10 px-6 bg-red-700 text-white text-sm font-semibold rounded-sm hover:bg-red-800 transition-colors shrink-0"
-      >
-        Envoyer mes documents
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
-      </NuxtLink>
     </div>
 
     <!-- Success banner (?upgrade=success) -->
