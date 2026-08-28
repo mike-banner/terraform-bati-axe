@@ -18,13 +18,26 @@ function getAnnualSavings(zone: typeof zones[number]) {
   return (zone.monthly - zone.annual) * 12
 }
 
-const emit = defineEmits<{ subscribe: [zoneId: string, billing: string, price: number] }>()
+const loading = ref(false)
+const error = ref('')
 
-function handleSubscribe() {
-  if (!selectedZone.value) return
-  const zone = zones.find(z => z.id === selectedZone.value)
-  if (!zone) return
-  emit('subscribe', zone.id, billing.value, getPrice(zone))
+async function handleSubscribe() {
+  if (!selectedZone.value || loading.value) return
+  loading.value = true
+  error.value = ''
+  try {
+    const res = await $fetch<{ status: string; checkout_url: string }>('/api/v1/pro/zones/subscribe', {
+      method: 'POST',
+      body: { zone_id: selectedZone.value, billing: billing.value },
+    })
+    if (res.status === 'SUCCESS' && res.checkout_url) {
+      window.location.href = res.checkout_url
+    }
+  } catch (err: any) {
+    error.value = err.data?.statusMessage || err.message || 'Erreur lors de la souscription.'
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
@@ -97,15 +110,17 @@ function handleSubscribe() {
 
     <!-- CTA -->
     <div class="text-center">
+      <p v-if="error" class="mb-3 text-sm text-red-600">{{ error }}</p>
       <button
         @click="handleSubscribe"
-        :disabled="!selectedZone"
-        class="h-12 px-8 rounded-lg text-sm font-bold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+        :disabled="!selectedZone || loading"
+        class="h-12 px-8 rounded-lg text-sm font-bold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-2"
         :class="selectedZone
           ? 'bg-safety text-white hover:opacity-90 shadow-lg shadow-safety/20'
           : 'bg-slate-200 text-slate-400'"
       >
-        Choisir cette zone
+        <svg v-if="loading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+        {{ loading ? 'Redirection…' : 'Choisir cette zone' }}
       </button>
       <p class="mt-2 text-[11px] text-muted-foreground">
         {{ billing === 'annual' ? 'Engagement 12 mois · Résiliation possible après' : 'Pas d\'engagement · Résiliez quand vous voulez' }}
