@@ -10,7 +10,8 @@ export default defineEventHandler(async (event) => {
 
   const config = useRuntimeConfig(event)
   const accountId = config.r2AccountId || process.env.R2_ACCOUNT_ID
-  const bucket = config.r2BucketName || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
+  // 05.14 — logo proxy : bucket Public
+  const bucket = config.r2BucketPublic || process.env.R2_BUCKET_PUBLIC || config.r2BucketName || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
   const accessKeyId = config.r2AccessKeyId || process.env.R2_ACCESS_KEY_ID
   const secretAccessKey = config.r2SecretAccessKey || process.env.R2_SECRET_ACCESS_KEY
   if (!accountId || !accessKeyId || !secretAccessKey) {

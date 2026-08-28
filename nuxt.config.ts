@@ -74,11 +74,15 @@ export default defineNuxtConfig({
     r2AccessKeyId: process.env.NUXT_R2_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY_ID,
     r2SecretAccessKey: process.env.NUXT_R2_SECRET_ACCESS_KEY || process.env.R2_SECRET_ACCESS_KEY,
     r2BucketName: process.env.NUXT_R2_BUCKET_NAME || process.env.R2_BUCKET_NAME || 'batiaxe-documents',
+    // 05.14 — Multi-Buckets R2 (isolation Public / Vault / B2B)
+    r2BucketPublic: process.env.NUXT_R2_BUCKET_PUBLIC || process.env.R2_BUCKET_PUBLIC || '',
+    r2BucketVault: process.env.NUXT_R2_BUCKET_VAULT || process.env.R2_BUCKET_VAULT || '',
+    r2BucketB2b: process.env.NUXT_R2_BUCKET_B2B || process.env.R2_BUCKET_B2B || '',
     resendApiKey: process.env.NUXT_RESEND_API_KEY || process.env.RESEND_API_KEY,
     // Expéditeur Resend. Tant que le domaine n'est pas vérifié, garder le sender
     // partagé 'onboarding@resend.dev' (ne livre qu'à l'adresse du compte Resend).
     // Override prod via NUXT_EMAIL_FROM une fois bati-axe.fr vérifié.
-    emailFrom: process.env.NUXT_EMAIL_FROM || process.env.EMAIL_FROM || 'BÂTI-AXE <onboarding@resend.dev>',
+    emailFrom: process.env.NUXT_EMAIL_FROM || process.env.EMAIL_FROM || 'BÂTI-AXE <contact@bati-axe.com>',
     // Email d'onboarding pro (REQ-07) — off par défaut.
     onboardingEmails: (process.env.NUXT_ONBOARDING_EMAILS || process.env.ONBOARDING_EMAILS) === 'true',
     // P2 — Cloudflare Turnstile (anti-spam). Clé secrète côté serveur uniquement.

@@ -16,10 +16,9 @@ const presignSchema = z.object({
 })
 
 function getAwsClient(config: any, env: any) {
-  // Use config directly for r2AccessKeyId if it exists, otherwise check env
-  // Sometimes Cloudflare Pages bindings lowercase keys or remove parts
-  const accessKeyId = config.r2AccessKeyId || env.R2_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY_ID || 'mock'
-  const secretAccessKey = config.r2SecretAccessKey || env.R2_SECRET_ACCESS_KEY || process.env.R2_SECRET_ACCESS_KEY || 'mock'
+  // Use config directly for r2AccessKeyId if it exists, otherwise check env (NUXT_ prefixed or direct)
+  const accessKeyId = config.r2AccessKeyId || env.NUXT_R2_ACCESS_KEY_ID || env.R2_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY_ID || 'mock'
+  const secretAccessKey = config.r2SecretAccessKey || env.NUXT_R2_SECRET_ACCESS_KEY || env.R2_SECRET_ACCESS_KEY || process.env.R2_SECRET_ACCESS_KEY || 'mock'
   
   if (accessKeyId === 'mock' || secretAccessKey === 'mock') {
      console.warn('WARNING: Missing R2 credentials, using mock')
@@ -64,9 +63,10 @@ export default defineEventHandler(async (event) => {
       targetUserId = pro_id
     }
 
-    // Fallbacks sécurisés
-    const accountId = config.r2AccountId || env.R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID || 'mock'
-    const bucket = config.r2BucketName || env.R2_BUCKET_NAME || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
+    // Fallbacks sécurisés (compatible NUXT_ R2 Cloudflare Pages bindings)
+    const accountId = config.r2AccountId || env.NUXT_R2_ACCOUNT_ID || env.R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID || 'mock'
+    // 05.14 — documents/vault : KBIS, décennales, CNI → bucket Vault
+    const bucket = config.r2BucketVault || env.NUXT_R2_BUCKET_VAULT || env.NUXT_R2_BUCKET_NAME || env.R2_BUCKET_VAULT || env.R2_BUCKET_NAME || process.env.R2_BUCKET_VAULT || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
 
     // Clé lisible et historisée : {short_id}__{slug}/{type}/{type}_{date}_{rand8}.{ext}
     const sb = serverSupabaseServiceRole(event) as any

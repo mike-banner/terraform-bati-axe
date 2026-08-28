@@ -30,7 +30,8 @@ export default defineEventHandler(async (event) => {
   const env = event.context.cloudflare?.env || {}
 
   const accountId = config.r2AccountId || env.R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID || ''
-  const bucket = config.r2Bucket || env.R2_BUCKET || process.env.R2_BUCKET || 'bati-axe-uploads'
+  // 05.14 — B2B view : bucket B2B
+  const bucket = config.r2BucketB2b || env.NUXT_R2_BUCKET_B2B || config.r2Bucket || env.R2_BUCKET_B2B || env.R2_BUCKET || process.env.R2_BUCKET_B2B || process.env.R2_BUCKET || 'bati-axe-uploads'
 
   const aws = getAwsClient(config, env)
   const url = new URL(`https://${accountId}.r2.cloudflarestorage.com/${bucket}/${parsed.data.file_key}`)

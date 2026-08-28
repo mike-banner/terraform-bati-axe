@@ -35,7 +35,8 @@ export default defineEventHandler(async (event) => {
     const { filename } = parsed.data
 
     const accountId = config.r2AccountId || env.R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID || 'mock'
-    const bucket = config.r2BucketName || env.R2_BUCKET_NAME || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
+    // 05.14 — realisations : photos portfolio → bucket Public
+    const bucket = config.r2BucketPublic || env.NUXT_R2_BUCKET_PUBLIC || config.r2BucketName || env.R2_BUCKET_PUBLIC || env.R2_BUCKET_NAME || process.env.R2_BUCKET_PUBLIC || process.env.R2_BUCKET_NAME || 'batiaxe-documents'
     const r2PublicBaseUrl = config.r2PublicBaseUrl || env.R2_PUBLIC_BASE_URL || process.env.R2_PUBLIC_BASE_URL || ''
 
     // Résolution défensive de l'id (comme documents/presign) : selon le runtime,
