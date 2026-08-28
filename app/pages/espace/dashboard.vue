@@ -80,11 +80,11 @@ const decennale = computed(() => verifs.value?.find(v => v.document_type === 'de
 const docFileName = (key?: string) => key ? key.split('/').pop() : ''
 const docFmtDate = (d?: string | null) => d ? new Date(d).toLocaleDateString('fr-FR') : ''
 const docPeriod = (doc?: Verif) => {
-  if (!doc) return ''
+  if (!doc) return null
   if (doc.status === 'approved' && doc.expiry_date) {
-    return `En vigueur du ${docFmtDate(doc.reviewed_at || doc.created_at)} au ${docFmtDate(doc.expiry_date)}`
+    return { prefix: 'En vigueur du ', date1: docFmtDate(doc.reviewed_at || doc.created_at), middle: ' au ', date2: docFmtDate(doc.expiry_date) }
   }
-  return `Envoyé le ${docFmtDate(doc.created_at)}`
+  return { prefix: 'Envoyé le ', date1: docFmtDate(doc.created_at), middle: '', date2: '' }
 }
 
 const docStatus = (doc: any) => {
@@ -356,7 +356,9 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
               </span>
             </label>
           </div>
-          <p v-if="docPeriod(kbis)" class="mt-1 ml-6 text-base font-bold text-foreground leading-snug">{{ docPeriod(kbis) }}</p>
+          <p v-if="docPeriod(kbis)" class="mt-1 ml-6 text-sm text-foreground leading-snug">
+            {{ docPeriod(kbis)!.prefix }}<span class="text-base font-bold">{{ docPeriod(kbis)!.date1 }}</span>{{ docPeriod(kbis)!.middle }}<span v-if="docPeriod(kbis)!.date2" class="text-base font-bold">{{ docPeriod(kbis)!.date2 }}</span>
+          </p>
         </div>
 
         <!-- Décennale -->
@@ -422,7 +424,9 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
               </span>
             </label>
           </div>
-          <p v-if="docPeriod(decennale)" class="mt-1 ml-6 text-base font-bold text-foreground leading-snug">{{ docPeriod(decennale) }}</p>
+          <p v-if="docPeriod(decennale)" class="mt-1 ml-6 text-sm text-foreground leading-snug">
+            {{ docPeriod(decennale)!.prefix }}<span class="text-base font-bold">{{ docPeriod(decennale)!.date1 }}</span>{{ docPeriod(decennale)!.middle }}<span v-if="docPeriod(decennale)!.date2" class="text-base font-bold">{{ docPeriod(decennale)!.date2 }}</span>
+          </p>
         </div>
 
         <!-- Responsabilité -->
