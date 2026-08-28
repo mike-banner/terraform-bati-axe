@@ -94,44 +94,8 @@ export default defineEventHandler(async (event) => {
       returning_count: returningCount ?? 0,
     })
 
-    // 2. Verify if the postal code belongs to an active pilot zone
-    let { data: matchedZone, error: zoneError } = await supabase
-      .from('zones')
-      .select('id, name')
-      .eq('is_active', true)
-      .contains('postal_codes', [data.postal_code])
-      .maybeSingle()
-
-    if (zoneError) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: 'Database error checking zones'
-      })
-    }
-
-    // Fallback: si la DB n'a pas la zone ou si .contains échoue, on force pour 78955 avec la première zone active existante
-    if (!matchedZone && data.postal_code === '78955') {
-      const { data: fallbackZone } = await supabase.from('zones').select('id, name').limit(1).maybeSingle()
-      if (fallbackZone) {
-        matchedZone = fallbackZone
-      } else {
-        // La table est complètement vide (ex: base de production non seedée)
-        const { data: newZone, error: insertError } = await supabase.from('zones').insert({
-          name: 'Pilote Carrières-sous-Poissy',
-          type: 'city',
-          postal_codes: ['78955'],
-          is_active: true
-        }).select('id, name').single()
-        
-        if (insertError) {
-          console.error('Failed to create fallback zone:', insertError)
-        }
-        
-        if (newZone) {
-          matchedZone = newZone
-        }
-      }
-    }
+    // 2. Match postal code → zone (areas 78 ou city legacy)
+    const matchedZone = await matchZone(data.postal_code)
 
     if (!matchedZone) {
       throw createError({
