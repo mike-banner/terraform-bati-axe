@@ -265,7 +265,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
               </template>
             </div>
             <div class="mt-3 flex flex-wrap items-center gap-2">
-              <VerifiedBadge v-if="pro.is_verified" />
+              <VerifiedBadge v-if="pro.is_verified && docsComplete" />
               <span
                 v-else-if="pro.siret_status !== 'active' && decennale?.status !== 'approved'"
                 class="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 border border-amber-300 text-amber-700 bg-amber-50"
