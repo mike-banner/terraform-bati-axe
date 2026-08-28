@@ -284,7 +284,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                 <span
                   v-for="cat in pro.categories"
                   :key="cat"
-                  class="inline-flex items-center gap-1 text-[13px] font-semibold px-3 py-1.5 rounded-md border border-indigo-200 text-indigo-700 bg-indigo-50"
+                  class="inline-flex items-center gap-1 text-[13px] font-semibold px-3 py-1.5 rounded-md border border-slate-200 text-slate-700 bg-white"
                 >
                   <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21m-3.75 3H21"/></svg>
                   {{ CATEGORY_LABELS[cat] || cat }}
