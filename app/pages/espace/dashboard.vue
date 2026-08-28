@@ -42,9 +42,7 @@ async function loadProData() {
     // getSession() force la restauration de la session et donc l'attache du token.
     const { data: { session } } = await supabase.auth.getSession()
     const uid = session?.user?.id
-    console.log('[dashboard] uid:', uid, 'session:', !!session)
     if (!uid) {
-      console.warn('[dashboard] No session, showing fallback')
       loading.value = false
       return
     }
@@ -58,10 +56,8 @@ async function loadProData() {
     ])
     if (proErr && proErr.code !== 'PGRST116') console.error('[dashboard] pro fetch:', proErr.message)
     if (verifErr) console.error('[dashboard] verif fetch:', verifErr.message)
-    console.log('[dashboard] proData:', proData, 'proErr:', proErr?.message)
     
     if (!proData) {
-      console.warn('[dashboard] Profile missing, proData is null. Showing fallback UI.')
       return
     }
 
