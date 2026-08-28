@@ -210,16 +210,18 @@ async function copyToClipboard(text: string) {
     </div>
 
     <!-- Free leads counter banner (BASIC, used < 3) -->
-    <div v-if="showFreeLeadsBanner" class="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-sm mb-3">
-      <svg class="w-4 h-4 shrink-0 text-muted-foreground" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1010.058 8.4M12 4.875A2.625 2.625 0 1113.942 8.4M12 4.875V21m-9.375-9.75h18.75M6.375 8.4H3.75a1.5 1.5 0 000 3h15a1.5 1.5 0 000-3h-2.625M12 4.875a2.625 2.625 0 00-2.625 2.625h5.25A2.625 2.625 0 0012 4.875z"/>
-      </svg>
-      <p class="text-sm text-foreground flex-1">
-        <span class="font-semibold">{{ freeRemaining }} lead{{ freeRemaining !== 1 ? 's' : '' }} gratuit{{ freeRemaining !== 1 ? 's' : '' }} restant{{ freeRemaining !== 1 ? 's' : '' }}.</span>
-        <span class="text-muted-foreground"> Passez Premium pour un accès illimité.</span>
+    <div v-if="showFreeLeadsBanner" class="flex items-center gap-3 p-3.5 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-sm mb-3 shadow-sm">
+      <div class="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
+        <svg class="w-4.5 h-4.5 text-orange-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+        </svg>
+      </div>
+      <p class="text-sm flex-1">
+        <span class="text-orange-900"><span class="font-black text-base text-orange-600">{{ freeRemaining }}</span> lead{{ freeRemaining !== 1 ? 's' : '' }} gratuit{{ freeRemaining !== 1 ? 's' : '' }} restant{{ freeRemaining !== 1 ? 's' : '' }}.</span>
+        <span class="text-orange-700/70"> Passez Premium pour un accès illimité.</span>
       </p>
       <NuxtLink to="/espace/premium"
-        class="shrink-0 text-xs font-semibold text-foreground underline underline-offset-2 hover:opacity-70 transition-opacity">
+        class="shrink-0 text-xs font-bold text-orange-700 underline underline-offset-2 hover:text-orange-900 transition-colors">
         Voir l'offre
       </NuxtLink>
     </div>
