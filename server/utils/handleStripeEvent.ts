@@ -20,8 +20,32 @@ export async function handleStripeEvent(event: any, supabase: any): Promise<void
       }
       break
     }
+    case 'customer.subscription.updated': {
+      const sub = event.data.object as any
+      const stripeSubId = sub.id as string
+      // Mapper le statut Stripe → statut pro_zones
+      const statusMap: Record<string, string> = {
+        active: 'active',
+        past_due: 'past_due',
+        canceled: 'cancelled',
+        unpaid: 'cancelled',
+        trialing: 'active',
+      }
+      const newStatus = statusMap[sub.status] || 'active'
+      await supabase
+        .from('pro_zones')
+        .update({ status: newStatus, updated_at: new Date().toISOString() })
+        .eq('stripe_subscription_id', stripeSubId)
+      break
+    }
     case 'customer.subscription.deleted': {
       const sub = event.data.object
+      // Mettre à jour pro_zones si c'est une subscription zone
+      await supabase
+        .from('pro_zones')
+        .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+        .eq('stripe_subscription_id', sub.id)
+      // Mettre à jour professionals.subscription_status
       await supabase
         .from('professionals')
         .update({ subscription_status: 'canceled' })
