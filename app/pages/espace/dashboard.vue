@@ -263,8 +263,14 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                   Vérification en cours
                 </span>
-                <BadgeEntrepriseVerifiee v-if="pro.siret_status === 'active'" />
-                <BadgeDecennaleCertifiee v-if="decennale?.status === 'approved'" />
+                <BadgeEntrepriseVerifiee
+                  v-if="pro.siret_status"
+                  :pending="pro.siret_status !== 'active'"
+                />
+                <BadgeDecennaleCertifiee
+                  v-if="decennale"
+                  :pending="decennale.status !== 'approved'"
+                />
                 <NuxtLink
                   v-if="pro.subscription_status !== 'active'"
                   to="/espace/premium"
