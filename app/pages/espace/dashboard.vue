@@ -356,7 +356,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
               </span>
             </label>
           </div>
-          <p v-if="docPeriod(kbis)" class="mt-1 ml-6 text-sm font-bold text-foreground leading-snug">{{ docPeriod(kbis) }}</p>
+          <p v-if="docPeriod(kbis)" class="mt-1 ml-6 text-base font-bold text-foreground leading-snug">{{ docPeriod(kbis) }}</p>
         </div>
 
         <!-- Décennale -->
@@ -422,7 +422,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
               </span>
             </label>
           </div>
-          <p v-if="docPeriod(decennale)" class="mt-1 ml-6 text-sm font-bold text-foreground leading-snug">{{ docPeriod(decennale) }}</p>
+          <p v-if="docPeriod(decennale)" class="mt-1 ml-6 text-base font-bold text-foreground leading-snug">{{ docPeriod(decennale) }}</p>
         </div>
 
         <!-- Responsabilité -->
