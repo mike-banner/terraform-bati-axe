@@ -274,28 +274,37 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                 <NuxtLink
                   v-if="pro.subscription_status !== 'active'"
                   to="/espace/premium"
-                  class="cta-premium inline-flex items-center gap-1.5 h-[30px] px-3.5 text-background text-xs font-bold rounded-sm"
+                  class="cta-premium inline-flex items-center gap-2 h-11 px-5 text-white text-sm font-bold rounded-md ml-auto"
                 >
-                  <svg class="w-3.5 h-3.5 relative text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-1.012 1.09l1.242 5.385c.114.495-.417.882-.84.62l-4.757-2.937a.563.563 0 00-.594 0L5.973 21.085c-.423.262-.954-.125-.84-.62l1.242-5.385a.563.563 0 00-.182-.557L1.99 10.916c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+                  <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-1.012 1.09l1.242 5.385c.114.495-.417.882-.84.62l-4.757-2.937a.563.563 0 00-.594 0L5.973 21.085c-.423.262-.954-.125-.84-.62l1.242-5.385a.563.563 0 00-.182-.557L1.99 10.916c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
                   <span class="relative">Devenir Premium</span>
                 </NuxtLink>
               </div>
-              <div v-if="pro.categories && pro.categories.length > 0" class="flex flex-wrap gap-1.5">
+              <div v-if="pro.categories && pro.categories.length > 0" class="flex flex-wrap gap-2 mt-1">
                 <span
                   v-for="cat in pro.categories"
                   :key="cat"
-                  class="inline-flex items-center text-xs font-medium px-2.5 py-1 border border-border rounded-full text-muted-foreground bg-background"
+                  class="inline-flex items-center gap-1 text-[13px] font-semibold px-3 py-1.5 rounded-md border border-slate-200 text-slate-700 bg-slate-50"
                 >
+                  <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21m-3.75 3H21"/></svg>
                   {{ CATEGORY_LABELS[cat] || cat }}
                 </span>
               </div>
             </div>
             <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground md:hidden" style="text-wrap: balance">{{ pro.company_name }}</h1>
-            <p class="text-sm text-muted-foreground mt-1">
-              {{ pro.full_name }} · {{ pro.postal_code }}
-              <template v-if="legalFormLabel(pro.siret_legal_form)"> · {{ legalFormLabel(pro.siret_legal_form) }}</template>
-              <template v-if="pro.siret_naf_code"> · NAF {{ pro.siret_naf_code }}</template>
-            </p>
+            <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-2 text-[13px] text-foreground/70">
+              <span class="font-medium">{{ pro.full_name }}</span>
+              <span class="text-muted-foreground">·</span>
+              <span class="font-mono text-foreground/60">{{ pro.postal_code }}</span>
+              <template v-if="legalFormLabel(pro.siret_legal_form)">
+                <span class="text-muted-foreground">·</span>
+                <span>{{ legalFormLabel(pro.siret_legal_form) }}</span>
+              </template>
+              <template v-if="pro.siret_naf_code">
+                <span class="text-muted-foreground">·</span>
+                <span class="font-mono text-foreground/60">NAF {{ pro.siret_naf_code }}</span>
+              </template>
+            </div>
           </div>
           <!-- ─── Documents (toujours visible pour permettre le renouvellement) ───── -->
           <div class="bento-card rounded-sm p-6 border" :class="docsComplete ? 'border-slate-200 bg-white shadow-sm' : 'border-red-300 bg-red-50'">
@@ -555,10 +564,11 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: linear-gradient(155deg, #334155 0%, #1E293B 50%, #0F172A 100%);
+  background: linear-gradient(135deg, #1E293B 0%, #0F172A 60%, #1a1a2e 100%);
   box-shadow:
-    0 4px 14px -3px rgba(15, 23, 42, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 6px 20px -4px rgba(15, 23, 42, 0.55),
+    0 2px 6px -1px rgba(15, 23, 42, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
 
@@ -574,9 +584,10 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
 }
 
 .cta-premium:hover {
-  transform: translateY(-1px) scale(1.04);
+  transform: translateY(-2px) scale(1.05);
   box-shadow:
-    0 6px 20px -3px rgba(15, 23, 42, 0.6),
+    0 8px 28px -4px rgba(15, 23, 42, 0.65),
+    0 3px 8px -1px rgba(15, 23, 42, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
