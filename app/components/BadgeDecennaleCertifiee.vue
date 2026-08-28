@@ -27,17 +27,5 @@ withDefaults(defineProps<{ pending?: boolean }>(), { pending: false })
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  transition: box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.premium-badge:hover {
-  box-shadow: 0 8px 20px -6px rgba(100, 116, 139, 0.35);
-  transform: translateY(-1px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .premium-badge:hover {
-    transform: none;
-  }
 }
 </style>
