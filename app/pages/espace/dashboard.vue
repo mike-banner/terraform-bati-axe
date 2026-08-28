@@ -500,6 +500,15 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
             Enregistrer
           </button>
         </div>
+
+        <!-- ─── Zones 78 (05.16) ───── -->
+        <div class="bento-card rounded-sm p-6 border border-slate-200 bg-white shadow-sm">
+          <div class="mb-4">
+            <p class="text-sm font-semibold text-foreground">Zones d'intervention</p>
+            <p class="text-xs text-muted-foreground mt-0.5">Sélectionnez vos zones dans les Yvelines (78) pour recevoir les leads correspondants.</p>
+          </div>
+          <ZoneSelector />
+        </div>
         </div>
 
         <!-- COLONNE DROITE (Checklist - 40%) -->
