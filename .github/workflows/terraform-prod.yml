@@ -11,15 +11,14 @@ jobs:
         working-directory: terraform/environments/prod
     
     env:
-      # S3 Backend (R2)
-      AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_SECRET_ACCESS_KEY }}
+      # S3 Backend (R2) Client
+      AWS_ACCESS_KEY_ID: ${{ secrets.PROD_CF_R2_ACCESS_KEY_ID || secrets.CF_R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.PROD_CF_R2_SECRET_ACCESS_KEY || secrets.CF_R2_SECRET_ACCESS_KEY }}
+      AWS_ENDPOINT_URL_S3: "https://${{ secrets.PROD_CLOUDFLARE_ACCOUNT_ID || secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com"
       
-      AWS_ENDPOINT_URL_S3: "https://${{ secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com"
-      
-      # Cloudflare & Supabase Secrets
-      TF_VAR_cloudflare_api_token: ${{ secrets.TF_VAR_CLOUDFLARE_API_TOKEN }}
-      TF_VAR_cloudflare_account_id: ${{ secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}
+      # Cloudflare Client & Supabase Secrets
+      TF_VAR_cloudflare_api_token: ${{ secrets.PROD_CLOUDFLARE_API_TOKEN || secrets.TF_VAR_CLOUDFLARE_API_TOKEN }}
+      TF_VAR_cloudflare_account_id: ${{ secrets.PROD_CLOUDFLARE_ACCOUNT_ID || secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}
       TF_VAR_existing_database_url: ${{ secrets.TF_VAR_EXISTING_DATABASE_URL }}
       TF_VAR_github_owner: mike-banner
       TF_VAR_github_repo_name: terraform-bati-axe

@@ -18,15 +18,15 @@ jobs:
         working-directory: terraform/environments/dev
 
     env:
-      # Backend Terraform stocké dans Cloudflare R2
-      AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_SECRET_ACCESS_KEY }}
-      AWS_ENDPOINT_URL_S3: https://${{ secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com
+      # Backend Terraform stocké dans Cloudflare R2 Perso
+      AWS_ACCESS_KEY_ID: ${{ secrets.DEV_CF_R2_ACCESS_KEY_ID || secrets.CF_R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_CF_R2_SECRET_ACCESS_KEY || secrets.CF_R2_SECRET_ACCESS_KEY }}
+      AWS_ENDPOINT_URL_S3: https://${{ secrets.DEV_CLOUDFLARE_ACCOUNT_ID || secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com
 
-      # Cloudflare et dépôt GitHub
-      TF_VAR_cloudflare_api_token: ${{ secrets.TF_VAR_CLOUDFLARE_API_TOKEN }}
-      TF_VAR_cloudflare_account_id: ${{ secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}
-      TF_VAR_project_name: bati-axe
+      # Cloudflare et dépôt GitHub Perso
+      TF_VAR_cloudflare_api_token: ${{ secrets.DEV_CLOUDFLARE_API_TOKEN || secrets.TF_VAR_CLOUDFLARE_API_TOKEN }}
+      TF_VAR_cloudflare_account_id: ${{ secrets.DEV_CLOUDFLARE_ACCOUNT_ID || secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}
+      TF_VAR_project_name: bati-axe-dev
       TF_VAR_github_owner: mike-banner
       TF_VAR_github_repo_name: terraform-bati-axe
 
