@@ -253,16 +253,24 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
         <div class="lg:col-span-3 space-y-4 order-2 lg:order-1 w-full">
           <!-- Header -->
           <div class="mb-1">
-            <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm text-foreground/60">
-              <span class="font-mono">{{ pro.postal_code }}</span>
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-sm text-foreground/60">
+              <span><span class="text-foreground/40">Dép.</span> <span class="font-mono font-medium text-foreground/80">{{ pro.postal_code }}</span></span>
               <template v-if="legalFormLabel(pro.siret_legal_form)">
-                <span aria-hidden="true">·</span>
-                <span>{{ legalFormLabel(pro.siret_legal_form) }}</span>
+                <span class="text-foreground/30">·</span>
+                <span><span class="text-foreground/40">Forme</span> <span class="font-medium text-foreground/80">{{ legalFormLabel(pro.siret_legal_form) }}</span></span>
               </template>
               <template v-if="pro.siret_naf_code">
-                <span aria-hidden="true">·</span>
-                <span class="font-mono">NAF {{ pro.siret_naf_code }}</span>
+                <span class="text-foreground/30">·</span>
+                <span><span class="text-foreground/40">NAF</span> <span class="font-mono font-medium text-foreground/80">{{ pro.siret_naf_code }}</span></span>
               </template>
+              <NuxtLink
+                v-if="pro.subscription_status !== 'active'"
+                to="/espace/premium"
+                class="cta-premium inline-flex items-center gap-2 h-9 px-4 text-white text-xs font-bold rounded-md ml-auto"
+              >
+                <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-1.012 1.09l1.242 5.385c.114.495-.417.882-.84.62l-4.757-2.937a.563.563 0 00-.594 0L5.973 21.085c-.423.262-.954-.125-.84-.62l1.242-5.385a.563.563 0 00-.182-.557L1.99 10.916c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+                <span class="relative">Devenir Premium</span>
+              </NuxtLink>
             </div>
             <div class="mt-3 flex flex-wrap items-center gap-2">
               <VerifiedBadge v-if="pro.is_verified && docsComplete" />
@@ -280,14 +288,6 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
               <BadgeDecennaleCertifiee
                 :pending="!decennale || decennale.status !== 'approved'"
               />
-              <NuxtLink
-                v-if="pro.subscription_status !== 'active'"
-                to="/espace/premium"
-                class="cta-premium inline-flex items-center gap-2 h-11 px-5 text-white text-sm font-bold rounded-md ml-auto"
-              >
-                <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-1.012 1.09l1.242 5.385c.114.495-.417.882-.84.62l-4.757-2.937a.563.563 0 00-.594 0L5.973 21.085c-.423.262-.954-.125-.84-.62l1.242-5.385a.563.563 0 00-.182-.557L1.99 10.916c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
-                <span class="relative">Devenir Premium</span>
-              </NuxtLink>
             </div>
             <div v-if="pro.categories && pro.categories.length > 0" class="flex flex-wrap gap-2 mt-3">
               <span
