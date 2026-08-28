@@ -291,18 +291,18 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                 </span>
               </div>
             </div>
-            <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground md:hidden" style="text-wrap: balance">{{ pro.company_name }}</h1>
-            <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-2 text-[13px] text-foreground/70">
-              <span class="font-medium">{{ pro.full_name }}</span>
-              <span class="text-muted-foreground">·</span>
-              <span class="font-mono text-foreground/60">{{ pro.postal_code }}</span>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground mt-2" style="text-wrap: balance">{{ pro.company_name }}</h1>
+            <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 mt-1.5 text-sm text-foreground/60">
+              <span class="font-medium text-foreground/80">{{ pro.full_name }}</span>
+              <span aria-hidden="true">·</span>
+              <span class="font-mono">{{ pro.postal_code }}</span>
               <template v-if="legalFormLabel(pro.siret_legal_form)">
-                <span class="text-muted-foreground">·</span>
+                <span aria-hidden="true">·</span>
                 <span>{{ legalFormLabel(pro.siret_legal_form) }}</span>
               </template>
               <template v-if="pro.siret_naf_code">
-                <span class="text-muted-foreground">·</span>
-                <span class="font-mono text-foreground/60">NAF {{ pro.siret_naf_code }}</span>
+                <span aria-hidden="true">·</span>
+                <span class="font-mono">NAF {{ pro.siret_naf_code }}</span>
               </template>
             </div>
           </div>
