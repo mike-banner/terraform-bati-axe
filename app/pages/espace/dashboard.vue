@@ -525,18 +525,31 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
 
     </template>
 
-    <!-- Fallback if pro is null and redirect fails -->
+    <!-- Fallback if pro is null — profil non claimé ou erreur chargement -->
     <div v-else class="py-16 text-center space-y-4">
       <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
       </div>
       <h2 class="text-xl font-semibold text-foreground">Profil professionnel introuvable</h2>
       <p class="text-sm text-muted-foreground max-w-md mx-auto">
-        Votre compte existe, mais les données de votre entreprise n'ont pas pu être chargées.
+        Votre compte existe, mais votre profil entreprise n'a pas encore été créé ou n'a pas pu être chargé.
       </p>
-      <NuxtLink to="/pro/claim" class="mt-6 inline-flex items-center justify-center h-11 px-6 rounded-full bg-safety text-white font-semibold text-sm hover:scale-105 shadow-safety/20 transition-transform">
-        Créer ou vérifier mon profil
-      </NuxtLink>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
+        <NuxtLink to="/pro/claim" class="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full bg-safety text-white font-semibold text-sm hover:scale-105 shadow-safety/20 transition-transform">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+          Créer mon profil entreprise
+        </NuxtLink>
+        <button
+          @click="() => loadProData()"
+          class="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full border border-border text-foreground font-semibold text-sm hover:bg-muted transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.992 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182"/></svg>
+          Réessayer
+        </button>
+      </div>
+      <p class="text-xs text-muted-foreground max-w-sm mx-auto">
+        Si le problème persiste, déconnectez-vous et reconnectez-vous. Si vous n'avez pas encore complété votre inscription, créez d'abord votre profil entreprise.
+      </p>
     </div>
 
   </div>
