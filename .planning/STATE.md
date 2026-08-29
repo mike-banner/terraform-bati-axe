@@ -43,7 +43,7 @@ Phases complètes récentes :
 - **05.15 — FIX: Verrouillage Leads non-vérifiés sur `/espace/leads`** ✅ 1/1 (2026-08-29) : le gate n'existait qu'côté UI (bouton désactivé) — un pro non vérifié pouvait débloquer un lead en appelant `leads/[id]/claim.patch.ts` directement. Ajout du contrôle `decennal_status === 'valid'` côté serveur + email admin (`NUXT_ADMIN_EMAIL`) quand le SIRET n'est pas confirmé actif au claim (Kbis restera bloqué en attente de revue manuelle sinon). OCR/IA décennale reste dans le backlog Deferred (post-lancement), non traité cette session.
 - **05.16 — P7: Découpage 78 en 4 Zones & Pricing Dégressif** ✅ 2/2 (2026-08-29) : Quadrillage des Yvelines (Mantes, Rambouillet, Versailles, St-Germain), abonnement dégressif sans engagement mensuel (190€ → 350€) + annuel économique (150€ → 300€, -21%). 05.16-01 : sélection de zones, toggle mensuel/annuel, Stripe Checkout. 05.16-02 : retrait individuel de zone (Subscription Schedule, effet fin de période payée), garde-fou `assertSubscriptionModifiable` (un seul changement en vol à la fois, blocage si résiliation en cours) — cf. `05.16-STRIPE-SCHEDULES.md`.
 - **05.17 — P19: Partenaires Diagnostiqueurs Immobiliers** ✅ 1/1 (2026-08-29) : profil « Diagnostiqueur » ajouté au tunnel `/b2b/partenaires` existant (réutilisé, pas de page dédiée) — n° certification + travaux suggérés (isolation/chauffage/électricité/toiture) → `b2b_requests` qualifié. **Bug préexistant trouvé et corrigé au passage** : `requests.post.ts` plantait en 500 pour tous les apporteurs (`consents.insert().catch()` non chaînable sur cette version du client Supabase) — à vérifier si le même bug affecte la prod (formulaire B2B potentiellement cassé depuis sa mise en ligne 05.10).
-- **05.18 — Annuaire, Vitrines Publiques & Dashboard Partenaires** 🚧 0/1 (2026-08-27) : Section Partenaires sur l'accueil `/`, annuaire filtrable par catégorie (`/partenaires/annuaire`), profil public (`/partenaire/[dept]/[slug]`) et dashboard d'édition (`/espace/partenaire`).
+- **05.18 — Annuaire, Vitrines Publiques & Dashboard Partenaires** ⏸️ **Reportée au prochain milestone (2026-08-30)** — v1 recentrée sur le B2C (particuliers + artisans) pour rester simple à l'attaque du marché. Le bloc B2B déjà construit (05.10/05.11/05.17) reste committé et accessible tel quel, mais n'est plus une priorité d'investissement v1.
 - **P4 — Notif pro nouveaux leads (email)** ✅ (2026-08-23, PR #48 mergé) : `notifyProLead` sur `projects.post.ts`, opt-in `lead_alerts_email`, idempotence `lead_notifications`, page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h. Le délai 48h est retenu pour v1 ; 72h ou une autre valeur pourra être décidé dans une version ultérieure avec le client.
 
 Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod — inclut désormais un test webhook réel de transition de Subscription Schedule sur retrait de zone, non vérifié en conditions réelles), **P1** (Umami funnel — self-hosted VPS PostgreSQL), puis P6/P8/P10.
@@ -73,6 +73,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 ## Decisions (récentes)
 
+- [2026-08-30] **Recentrage v1 sur le B2C** : le pilote doit rester simple pour attirer particuliers + artisans sans complexifier le lancement (aucune prod client aujourd'hui, tout tourne sur `dev`). Le bloc B2B (05.10 Espace Partenaires, 05.11 Coffre-fort sous-traitance, 05.17 Diagnostiqueurs) reste committé et accessible tel quel — pas de revert, code fonctionnel conservé pour v2 — mais 05.18 (Annuaire/vitrines/dashboard partenaires), P10 (Stripe Connect B2B) et P20 (passerelle B2B payante) sont reportés au prochain milestone. Ce module B2B n'avait jamais été validé en usage réel (4 endpoints critiques trouvés cassés en 500 le 2026-08-29/30, corrigés avant que cette décision soit prise).
 - [2026-08-22] **Fixes prod appliqués directement** : les migrations en attente (`20260822000000` showcase, `20260822000001` KPI, `20260822000002` b2b) ont été poussées sur la base de production via `supabase db push` (feu vert utilisateur). La table `b2b_requests` n'existait nulle part (ni local ni cloud) — c'était la cause racine de la page « Dossiers B2B » cassée.
 - [2026-08-22] **Embedding `auth.users` inutilisable sur cette instance PostgREST** (parse error) : les emails des pros assignés sont résolus via l'API admin (`listUsers`) au lieu de l'embedding — corrigé sur `b2b-requests.get.ts` et `audit-logs.get.ts` (bug latent : l'onglet Journal était cassé depuis longtemps).
 - [2026-08-22] **Ordre de merge des PRs** : #44 (back-office B2B) → #46 (DirCo, stacké) → #45 (KPI, rebasé après conflit sidebar — résolu en gardant les deux onglets B2B + KPIs). Les 3 mergés dans `main`.
@@ -111,7 +112,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 | **P7** Packs zonés & exclusivité | ❌ absent — bloqué tarifs définitifs (Basic 150-200 / Premium 300) |
 | **P8** Compte Prescripteur | ❌ absent |
 | **P9** Mobile QA + états vides | ✅ fait (2026-08-23, 05.13-02 — projet e2e mobile 48/48) |
-| **P10** Commission B2B + Stripe Connect | 📝 doc only |
+| **P10** Commission B2B + Stripe Connect | 📝 doc only — reporté au prochain milestone (2026-08-30, recentrage B2C) |
 | **P11** eIDAS / workspace archi | ❌ Phase 7+ |
 | **P12** Page pro public digne | ❌ à faire (CTA devis ajouté, avis = Phase 7) |
 | **P13** White-label Terraform | 📝 fondation existe |
@@ -121,7 +122,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 | **P17** Modèle 2 piliers | ❌ à trancher (avec P7/P10) |
 | **P18** Devoir de vigilance 6 mois | ✅ couvert par 05.11-03 |
 | **P19** Diagnostiqueurs apporteurs | ❌ à faire |
-| **P20** Passerelle B2B payante | ❌ à faire (avec P7/P8) |
+| **P20** Passerelle B2B payante | ❌ reporté au prochain milestone (2026-08-30, recentrage B2C) |
 | **P21** Tunnel Sinistres/Assurances | ❌ à faire |
 | **P22** Majors / Grands Comptes | ❌ Phase 3 |
 
