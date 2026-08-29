@@ -57,10 +57,10 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 05.16: P7 Packs Zonés & Pricing Dégressif (Pilote 78)** - Quadrillage des Yvelines en 4 zones (Mantes, Rambouillet, Versailles, St-Germain) + tables `zones`/`pro_zones` + matching par code postal. Sans engagement mensuel (190€ → 350€) + annuel économique -21% (150€ → 300€). Ajout de zone, toggle mensuel/annuel et retrait individuel de zone (Subscription Schedule Stripe), garde-fou anti-conflit multi-changements. **Phase complète 2/2** (livré 2026-08-29)
 - [ ] **Phase 05.17: P19 Partenaires Diagnostiqueurs Immobiliers** - Intégration du profil Diagnostiqueur sur `/b2b/partenaires` + dépôt rapide de rapports DPE/diagnostics + génération d'opportunités de travaux B2B qualifiées.
 - [ ] **Phase 05.18: Annuaire, Vitrines Publiques & Dashboard Partenaires** - Section Partenaires sur l'accueil `/`, annuaire public par catégorie (`/partenaires/annuaire`), vitrine publique (`/partenaire/[dept]/[slug]`) et dashboard privé de gestion du profil (`/espace/partenaire`).
-- [ ] **Phase 05.19: Notifications Email Transactionnelles (bati-axe.com)** - Moteur multi-expéditeurs (`no-reply@`/`notifications@`/`contact@bati-axe.com`), notifs décennale/Stripe/zones côté Pros, accusés réception/déblocage côté Particuliers, accusé dépôt B2B, alertes admin centralisées, DNS Cloudflare (DKIM/SPF/DMARC) + Email Routing.
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
 - [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, Dossiers B2B, KPIs, Documents légaux, Journal), search + pagination, projets cliquables. Onglet B2B fusionné (05.10-06) + Documents légaux (05.11-04). (livré 2026-08-22)
 - [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). *(récupéré d'une branche jamais mergée → merge PR #45)*. Reste : brancher Matomo côté client (P1). (livré 2026-08-22)
+- [ ] **Phase 06.3: Notifications Email Transactionnelles (bati-axe.com)** - Moteur multi-expéditeurs (`no-reply@`/`notifications@`/`contact@bati-axe.com`), notifs décennale/Stripe/zones côté Pros, accusés réception/déblocage côté Particuliers, accusé dépôt B2B, alertes admin centralisées, DNS Cloudflare (DKIM/SPF/DMARC) + Email Routing. Étend EML-01 (Phase 6) — regroupé avec le SMS 06-04 différé sous la même phase parente.
 - [x] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
 - [ ] **Phase 8: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
@@ -430,6 +430,20 @@ Plans:
 
 **UI hint**: yes
 
+### Phase 06.3: Notifications Email Transactionnelles (bati-axe.com) (INSERTED 2026-08-29)
+
+**Goal:** Standardiser l'envoi d'e-mails transactionnels sur le domaine de prod `bati-axe.com` avec expéditeur dynamique selon la nature du message (`no-reply@`, `notifications@`, `contact@`), et couvrir les parcours Pros/Particuliers/B2B/Admin encore sans notification.
+**Contexte:** repris d'un plan externe (Antigravity IDE, `implementation_plan.md` du 2026-08-29) — étend `server/utils/email.ts` (existant, EML-01/Phase 6, P4) plutôt qu'il ne le remplace. Rattaché à la Phase 6 (déjà « la phase notifications », email + SMS 06-04 différé) plutôt que laissé en phase indépendante. Points couverts : moteur multi-expéditeurs + layout HTML branding, email validation/rejet décennale (`verify.post.ts`), alertes cron J-30/J-7 expiration décennale, confirmation Stripe souscription/modification/**retrait de zone** (`webhook.post.ts` — le retrait de zone via Subscription Schedule vient d'être vérifié fonctionnellement le 2026-08-29, cf. Phase 05.16-02, il ne manque que la notif email de confirmation), accusé réception projet particulier (`projects.post.ts`), email au particulier au déblocage du lead (`handleLeadDecision.ts`), accusé dépôt B2B (`requests.post.ts`), utilitaire `notifyAdmin.ts` centralisé (Gmail admin) branché sur claim/projet/B2B.
+**Requirements**: à formaliser au planning (étend EML-01 de la Phase 6, P4)
+**Depends on:** Phase 6 (moteur email existant), Phase 05.16 (webhook Stripe zones), Phase 05.10/05.11 (B2B, documents)
+**Bloquant avant activation prod:** DNS Cloudflare (DKIM/SPF/DMARC sur `bati-axe.com`), Cloudflare Email Routing sur `contact@bati-axe.com` → Gmail admin, variables d'env `RESEND_API_KEY`/`NUXT_PUBLIC_SITE_URL`.
+**Plans:** TBD (run `/gsd-plan-phase 06.3` pour découper)
+
+Plans:
+- [ ] TBD
+
+**UI hint**: no
+
 ### Phase 7: Réputation & Scale
 **Goal**: Pérenniser la croissance par la preuve sociale et l'expansion géographique conditionnée aux métriques pilote.
 **Depends on**: Phase 6
@@ -541,15 +555,3 @@ Reportés en toute fin — exécuter seulement après que le produit soit constr
 - **Notifications navigateur (Web Push)** — voir P4 : email maintenant, Web Push natif via PWA en Phase 8.
 - **Pages légales à finaliser (CGU, confidentialité, mentions légales)** — les 3 pages existent (`app/pages/legal/`) mais avec du contenu placeholder (SAS fictive, RCS fictif, adresse fictive). À compléter avec les vraies coordonnées + faire relire par un juriste. Skills communautaires identifiés (le 2026-08-19) : `kostja94/marketing-skills@legal-page-generator`, `anthropics/claude-for-legal@legal-writing`, `anthropics/knowledge-work-plugins@legal-risk-assessment` — à confirmer avant installation (skills non vérifiés).
 - **Variante design « accueil sombre » (2026-08-18, appliquée puis revertée — en attente validation client)** — full-dark de la landing, à réappliquer si le client valide. Référence : base page `bg-slate-800` (#1E293B) + texte blanc ; cartes `bg-slate-700/40` + `border-white/10` ; corps `slate-300`, atténué `slate-400`, chiffres `slate-400` ; header sombre route-aware sur `/` (`border-white/10 bg-slate-800/95`, CTA « Déposer un projet » inversé `bg-white text-slate-900`). ⚠️ Logo PNG en RGB (fond non transparent) : prévoir une variante blanche/transparente pour header sombre. `RealisationCard` (composant partagé avec le profil pro clair) restée blanche dans la variante — ajouter une prop `dark` si retenue. Fichiers concernés : `app/pages/index.vue`, `app/layouts/default.vue`, `app/components/BeforeAfterSlider.vue` (bordure `white/15`).
-
-### Phase 05.19: Notifications Email Transactionnelles (bati-axe.com) (INSERTED 2026-08-29)
-
-**Goal:** Standardiser l'envoi d'e-mails transactionnels sur le domaine de prod `bati-axe.com` avec expéditeur dynamique selon la nature du message (`no-reply@`, `notifications@`, `contact@`), et couvrir les parcours Pros/Particuliers/B2B/Admin encore sans notification.
-**Contexte:** repris d'un plan externe (Antigravity IDE, `implementation_plan.md` du 2026-08-29) — étend `server/utils/email.ts` (déjà utilisé par EML-01/Phase 6 et P4) plutôt qu'il ne le remplace. Points couverts : moteur multi-expéditeurs + layout HTML branding, email validation/rejet décennale (`verify.post.ts`), alertes cron J-30/J-7 expiration décennale, confirmation Stripe souscription/modification/**retrait de zone** (`webhook.post.ts` — le retrait de zone via Subscription Schedule vient d'être vérifié fonctionnellement le 2026-08-29, cf. Phase 05.16-02, il ne manque que la notif email de confirmation), accusé réception projet particulier (`projects.post.ts`), email au particulier au déblocage du lead (`handleLeadDecision.ts`), accusé dépôt B2B (`requests.post.ts`), utilitaire `notifyAdmin.ts` centralisé (Gmail admin) branché sur claim/projet/B2B.
-**Requirements**: à formaliser au planning (étend EML-01 de la Phase 6, P4)
-**Depends on:** Phase 6 (moteur email existant), Phase 05.16 (webhook Stripe zones), Phase 05.10/05.11 (B2B, documents)
-**Bloquant avant activation prod:** DNS Cloudflare (DKIM/SPF/DMARC sur `bati-axe.com`), Cloudflare Email Routing sur `contact@bati-axe.com` → Gmail admin, variables d'env `RESEND_API_KEY`/`NUXT_PUBLIC_SITE_URL`.
-**Plans:** TBD (run `/gsd-plan-phase 05.19` pour découper)
-
-Plans:
-- [ ] TBD

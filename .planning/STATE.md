@@ -148,10 +148,10 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 ### Roadmap Evolution
 
-- [2026-08-29] Phase 05.19 ajoutée : Notifications Email Transactionnelles (bati-axe.com) — repris d'un plan externe Antigravity IDE, converti en phase GSD, placé après 05.18 dans le milestone v1.0. Contexte détaillé : `.planning/phases/05.19-notifications-email-transactionnelles/05.19-CONTEXT.md`.
+- [2026-08-29] Phase ajoutée puis renumérotée : Notifications Email Transactionnelles (bati-axe.com), repris d'un plan externe Antigravity IDE. D'abord créée en 05.19 (indépendante), puis déplacée en **06.3** — rattachée à la Phase 6 qui est déjà « la phase notifications » (EML-01 email + SMS 06-04 différé). Contexte détaillé : `.planning/phases/06.3-notifications-email-transactionnelles/06.3-CONTEXT.md`.
 
 ## Session Continuity
 
 Last session: 2026-08-29
-Stopped at: **Phase 05.16-02 committée + push `dev` ; test P3 (retrait de zone / Subscription Schedule) validé en local via Stripe Test Clock ; Phase 05.19 (notifs email) créée à partir du plan Antigravity, pas encore planifiée en détail.**
-Resume: `/gsd-plan-phase 05.19` pour découper la phase email en plans exécutables, puis **P3** (re-test Stripe/cron en conditions prod réelles quand les identifiants client seront disponibles), **P1** Umami (VPS + PostgreSQL).
+Stopped at: **Phase 05.16-02 committée + push `dev` ; test P3 (retrait de zone / Subscription Schedule) validé en local via Stripe Test Clock ; Phase 06.3 (notifs email, ex-05.19) créée à partir du plan Antigravity et rattachée à la Phase 6, pas encore planifiée en détail.**
+Resume: `/gsd-plan-phase 06.3` pour découper la phase email en plans exécutables, puis **P3** (re-test Stripe/cron en conditions prod réelles quand les identifiants client seront disponibles), **P1** Umami (VPS + PostgreSQL).
