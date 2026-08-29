@@ -80,5 +80,22 @@ export default defineEventHandler(async (event) => {
     if (updateErr) throw createError({ statusCode: 500, statusMessage: updateErr.message })
   }
 
+  // Le profil passe "vérifié" dès que Kbis + décennale sont tous deux approuvés
+  // (auto-approbation ci-dessus, ou validation manuelle admin passée) — sans attendre une revue humaine.
+  if (status === 'approved') {
+    const { data: approvedDocs } = await supabase
+      .from('verifications')
+      .select('document_type')
+      .eq('pro_id', uid)
+      .eq('status', 'approved')
+
+    const hasKbis = approvedDocs?.some((v: any) => v.document_type === 'kbis')
+    const hasDecennale = approvedDocs?.some((v: any) => v.document_type === 'decennale')
+
+    if (hasKbis && hasDecennale) {
+      await supabase.from('professionals').update({ is_verified: true }).eq('id', uid)
+    }
+  }
+
   return { error: null, status: 'SUCCESS', document_type, approved: isDecennale || isKbisAutoApproved }
 })

@@ -23,7 +23,7 @@ export async function sendEmail(options: { to: string; subject: string; html: st
   const apiKey = config.resendApiKey || process.env.RESEND_API_KEY
   // Expéditeur configurable. Défaut = sender partagé Resend (ne livre qu'à
   // l'adresse du compte tant que le domaine n'est pas vérifié).
-  const from = (config as any).emailFrom || 'BÂTI-AXE <onboarding@resend.dev>'
+  const from = (config as any).emailFrom || 'BÂTI-AXE <contact@bati-axe.com>'
 
   if (!apiKey) {
     console.warn('⚠️ Missing RESEND_API_KEY. Falling back to console.log')

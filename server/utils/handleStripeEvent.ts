@@ -1,4 +1,4 @@
-export async function handleStripeEvent(event: any, supabase: any): Promise<void> {
+export async function handleStripeEvent(event: any, supabase: any, stripe: any): Promise<void> {
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object
@@ -8,6 +8,22 @@ export async function handleStripeEvent(event: any, supabase: any): Promise<void
         .from('professionals')
         .update({ subscription_status: 'active', stripe_customer_id: session.customer as string })
         .eq('id', proId)
+
+      // Souscription zones (05.16) : la ligne pro_zones n'a pas pu être créée à la volée
+      // (l'abonnement n'existait pas encore avant confirmation du paiement) — on la crée ici.
+      const zoneId = session.metadata?.zone_id
+      const billing = session.metadata?.billing as 'monthly' | 'annual' | undefined
+      const subscriptionId = typeof session.subscription === 'string' ? session.subscription : session.subscription?.id
+      if (zoneId && billing && subscriptionId) {
+        const priceCents = calculateZonePrice(1, billing) * 100
+        await supabase
+          .from('pro_zones')
+          .upsert(
+            { pro_id: proId, zone_id: zoneId, billing, price_cents: priceCents, stripe_subscription_id: subscriptionId, status: 'active' },
+            { onConflict: 'pro_id,zone_id' },
+          )
+      }
+
       // CNV-07: track checkout_completed in paywall_events for funnel analytics
       try {
         await supabase.from('paywall_events').insert({
@@ -32,10 +48,37 @@ export async function handleStripeEvent(event: any, supabase: any): Promise<void
         trialing: 'active',
       }
       const newStatus = statusMap[sub.status] || 'active'
-      await supabase
+      // Le Subscription Schedule (changement mensuel ↔ annuel) fait évoluer le prix
+      // de l'abonnement à la fin de la période payée — on aligne pro_zones.billing dessus.
+      const newInterval = sub.items?.data?.[0]?.price?.recurring?.interval as string | undefined
+      const newBilling = newInterval === 'year' ? 'annual' : newInterval === 'month' ? 'monthly' : undefined
+
+      // Retrait de zone programmé (unsubscribe.post.ts) : la 2e phase du schedule vient de
+      // prendre effet quand le prix courant correspond au prix cible qu'on avait enregistré.
+      const removedZoneId = sub.metadata?.pending_zone_removal_id as string | undefined
+      const currentPriceId = sub.items?.data?.[0]?.price?.id as string | undefined
+      const removalApplied = removedZoneId && currentPriceId === sub.metadata?.pending_zone_removal_price
+
+      if (removalApplied) {
+        await supabase
+          .from('pro_zones')
+          .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+          .eq('stripe_subscription_id', stripeSubId)
+          .eq('zone_id', removedZoneId)
+        // Nettoie les clés de metadata pour ne pas rejouer ce traitement sur les updates suivants.
+        await stripe.subscriptions.update(stripeSubId, { metadata: { pending_zone_removal_id: '', pending_zone_removal_price: '' } })
+      }
+
+      let bulkUpdate = supabase
         .from('pro_zones')
-        .update({ status: newStatus, updated_at: new Date().toISOString() })
+        .update({
+          status: newStatus,
+          updated_at: new Date().toISOString(),
+          ...(newBilling ? { billing: newBilling } : {}),
+        })
         .eq('stripe_subscription_id', stripeSubId)
+      if (removalApplied) bulkUpdate = bulkUpdate.neq('zone_id', removedZoneId)
+      await bulkUpdate
       break
     }
     case 'customer.subscription.deleted': {

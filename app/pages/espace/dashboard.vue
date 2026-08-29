@@ -5,7 +5,7 @@ interface Pro {
   id: string; company_name: string; full_name: string; phone: string
   postal_code: string; canonical_slug: string; short_id: string
   is_verified: boolean; is_claimed: boolean; decennal_status: string; created_at: string
-  categories: string[]; subscription_status: string; bio?: string; logo_url?: string
+  categories: string[]; bio?: string; logo_url?: string
   siret_status?: string | null
   siret_company_name?: string | null
   siret_legal_form?: string | null
@@ -32,6 +32,7 @@ const pro    = ref<Pro | null>(null)
 const verifs = ref<Verif[]>([])
 const loading = ref(true)
 const router = useRouter()
+const activeZoneCount = ref(0)
 
 async function loadProData() {
   loading.value = true
@@ -46,16 +47,20 @@ async function loadProData() {
       loading.value = false
       return
     }
-    const [{ data: proData, error: proErr }, { data: verifData, error: verifErr }] = await Promise.all([
+    const [{ data: proData, error: proErr }, { data: verifData, error: verifErr }, { count: zoneCount }] = await Promise.all([
       supabase.from('professionals')
-        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, siret_legal_form, siret_naf_code, created_at, categories, subscription_status, bio, logo_url, is_available_subcontracting, workforce_size, lead_alerts_email')
+        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, siret_legal_form, siret_naf_code, created_at, categories, bio, logo_url, is_available_subcontracting, workforce_size, lead_alerts_email')
         .eq('id', uid).maybeSingle(),
       supabase.from('verifications')
         .select('document_type, status, expiry_date, created_at, file_key, reviewed_at')
-        .eq('pro_id', uid).order('created_at', { ascending: false })
+        .eq('pro_id', uid).order('created_at', { ascending: false }),
+      supabase.from('pro_zones')
+        .select('id', { count: 'exact', head: true })
+        .eq('pro_id', uid).eq('status', 'active')
     ])
     if (proErr && proErr.code !== 'PGRST116') console.error('[dashboard] pro fetch:', proErr.message)
     if (verifErr) console.error('[dashboard] verif fetch:', verifErr.message)
+    activeZoneCount.value = zoneCount || 0
     
     if (!proData) {
       console.warn('[dashboard] Profile missing, proData is null. Showing fallback UI.')
@@ -218,11 +223,9 @@ const steps = computed(() => [
     action: !pro.value?.company_name ? { label: 'Compléter mon profil', to: '/pro/claim' } : null },
   { label: 'Kbis envoyé',       done: !!kbis.value,            desc: kbis.value ? `Statut : ${docStatus(kbis.value).label}` : 'Document manquant' },
   { label: 'Décennale envoyée', done: !!decennale.value,        desc: decennale.value ? `Statut : ${docStatus(decennale.value).label}` : 'Document manquant' },
-  { label: 'Profil vérifié',    done: pro.value?.is_verified === true,
-    desc: pro.value?.is_verified ? 'Votre profil est actif et visible.' : 'En attente de validation par notre équipe (sous 24h ouvrées).' },
-  { label: 'Abonnement Premium', done: pro.value?.subscription_status === 'active',
-    desc: pro.value?.subscription_status === 'active' ? 'Accès illimité aux chantiers exclusifs.' : 'Débloquez tous les leads en illimité.',
-    action: pro.value?.subscription_status !== 'active' ? { label: 'Devenir Premium', to: '/espace/premium' } : { label: 'Gérer mon abonnement', to: '/espace/premium' } },
+  { label: 'Abonnement Premium', done: activeZoneCount.value > 0,
+    desc: activeZoneCount.value > 0 ? `${activeZoneCount.value} zone${activeZoneCount.value > 1 ? 's' : ''} active${activeZoneCount.value > 1 ? 's' : ''}.` : 'Débloquez tous les leads en illimité.',
+    action: activeZoneCount.value === 0 ? { label: 'Devenir Premium', to: '/espace/premium' } : { label: 'Gérer mon abonnement', to: '/espace/premium' } },
   { label: 'Mon profil public', done: !!(pro.value?.bio || pro.value?.logo_url),
     desc: "Bio, logo, zone d'intervention",
     action: { label: 'Éditer mon profil', to: '/espace/profil' } },
@@ -264,12 +267,19 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                 <span><span class="text-foreground/40">NAF</span> <span class="font-mono font-medium text-foreground/80">{{ pro.siret_naf_code }}</span></span>
               </template>
               <NuxtLink
-                v-if="pro.subscription_status !== 'active'"
+                v-if="activeZoneCount === 0"
                 to="/espace/premium"
                 class="cta-premium inline-flex items-center gap-2 h-9 px-4 text-white text-xs font-bold rounded-md ml-auto"
               >
                 <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-1.012 1.09l1.242 5.385c.114.495-.417.882-.84.62l-4.757-2.937a.563.563 0 00-.594 0L5.973 21.085c-.423.262-.954-.125-.84-.62l1.242-5.385a.563.563 0 00-.182-.557L1.99 10.916c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
                 <span class="relative">Devenir Premium</span>
+              </NuxtLink>
+              <NuxtLink
+                v-else
+                to="/espace/premium"
+                class="inline-flex items-center gap-2 h-9 px-4 text-xs font-bold rounded-md ml-auto border border-slate-200 text-foreground/80 hover:bg-slate-50"
+              >
+                Gérer mon abonnement
               </NuxtLink>
             </div>
             <div class="mt-3 flex flex-wrap items-center gap-2">

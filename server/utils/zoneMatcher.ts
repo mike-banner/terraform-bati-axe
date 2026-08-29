@@ -38,6 +38,36 @@ export function calculateZonePrice(zoneCount: number, billing: 'monthly' | 'annu
 }
 
 /**
+ * Clé stable identifiant un palier de prix — sert de lookup_key Stripe
+ * pour réutiliser le même Price au lieu d'en recréer un à chaque souscription.
+ */
+export function zonePriceLookupKey(zoneCount: number, billing: 'monthly' | 'annual'): string {
+  const tier = Math.min(Math.max(zoneCount, 1), 4)
+  return `zone_${tier}z_${billing}`
+}
+
+/**
+ * Vérifie qu'un abonnement Stripe est modifiable (ajout/retrait de zone, changement de
+ * facturation) : un seul Subscription Schedule à la fois côté Stripe, et pas de
+ * modification sur un abonnement en cours de résiliation (sinon le pro paierait un
+ * nouveau palier sur un service qui s'arrête quand même à la date prévue).
+ */
+export function assertSubscriptionModifiable(sub: { schedule: unknown; cancel_at_period_end: boolean }) {
+  if (sub.cancel_at_period_end) {
+    throw createError({
+      statusCode: 409,
+      statusMessage: 'Votre abonnement est en cours de résiliation. Réactivez-le via "Gérer la facturation" avant de modifier vos zones.',
+    })
+  }
+  if (sub.schedule) {
+    throw createError({
+      statusCode: 409,
+      statusMessage: 'Un changement est déjà programmé sur votre abonnement — annulez-le avant d\'en démarrer un autre.',
+    })
+  }
+}
+
+/**
  * Retourne le détail du pricing pour l'affichage UI.
  */
 export function getPricingTiers() {

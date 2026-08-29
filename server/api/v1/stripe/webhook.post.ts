@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const supabase = await serverSupabaseServiceRole(event) as any
-  await handleStripeEvent(stripeEvent, supabase)
+  await handleStripeEvent(stripeEvent, supabase, stripe)
 
   return { received: true }
 })

@@ -341,11 +341,11 @@ const promises = [
             Un doute qui n'est pas couvert ici ? Écrivez-nous, un chargé d'affaires vous répond sous 4 heures ouvrées.
           </p>
           <a
-            href="mailto:partenaires@batiaxe.fr"
+            href="mailto:partenaires@bati-axe.com"
             class="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-semibold text-foreground hover:bg-muted transition-colors"
           >
             <PhArrowRight :size="14" class="rotate-180" />
-            Écrire à partenaires@batiaxe.fr
+            Écrire à partenaires@bati-axe.com
           </a>
         </div>
 
@@ -400,7 +400,7 @@ const promises = [
             <PhArrowRight :size="16" weight="bold" />
           </NuxtLink>
           <a
-            href="mailto:partenaires@batiaxe.fr"
+            href="mailto:partenaires@bati-axe.com"
             class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-600 bg-slate-800 px-8 text-base font-semibold text-white hover:bg-slate-700 transition-colors"
           >
             Nous écrire
