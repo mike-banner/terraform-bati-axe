@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: pro, error: proError } = await supabase
     .from('professionals')
-    .select('id, subscription_status')
+    .select('id, subscription_status, decennal_status')
     .eq('id', user.id)
     .single()
 
@@ -27,6 +27,13 @@ export default defineEventHandler(async (event) => {
   // Premium-only: BASIC pros cannot claim leads (D-08 — T-04-09)
   if (pro.subscription_status !== 'active') {
     throw createError({ statusCode: 403, statusMessage: 'Réservé aux pros Premium.' })
+  }
+
+  // 05.15 — Documents requis : le déblocage était bloqué côté UI uniquement
+  // (bouton désactivé), pas côté serveur. Un pro pouvait appeler cet endpoint
+  // directement sans jamais avoir de décennale validée.
+  if (pro.decennal_status !== 'valid') {
+    throw createError({ statusCode: 403, statusMessage: 'Envoyez votre attestation décennale pour débloquer les leads.' })
   }
 
   // Verify project exists

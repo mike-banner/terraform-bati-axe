@@ -85,6 +85,8 @@ export default defineNuxtConfig({
     emailFrom: process.env.NUXT_EMAIL_FROM || process.env.EMAIL_FROM || 'BÂTI-AXE <contact@bati-axe.com>',
     // Email d'onboarding pro (REQ-07) — off par défaut.
     onboardingEmails: (process.env.NUXT_ONBOARDING_EMAILS || process.env.ONBOARDING_EMAILS) === 'true',
+    // 05.15 — Adresse recevant les alertes admin (ex. SIRET non trouvé/en erreur au claim).
+    adminEmail: process.env.NUXT_ADMIN_EMAIL || process.env.ADMIN_EMAIL || '',
     // P2 — Cloudflare Turnstile (anti-spam). Clé secrète côté serveur uniquement.
     turnstileSecretKey: process.env.NUXT_TURNSTILE_SECRET_KEY || process.env.TURNSTILE_SECRET_KEY,
     public: {
