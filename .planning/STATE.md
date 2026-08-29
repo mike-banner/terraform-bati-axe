@@ -144,8 +144,14 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - **Playwright** : la suite est câblée sur Chrome système et les scénarios desktop/mobile ont été validés dans la phase 05.13. Les tests unitaires et le build passent localement avec Node 22.
 - **Test badge préexistant cassé** : `tests/badges.test.ts` attend `bg-[#F8FAFC]` alors que le composant utilise `bg-green-100` (dérive de palette antérieure) — hors périmètre des chantiers récents, à corriger dans une passe dédiée.
 
+## Accumulated Context
+
+### Roadmap Evolution
+
+- [2026-08-29] Phase 05.19 ajoutée : Notifications Email Transactionnelles (bati-axe.com) — repris d'un plan externe Antigravity IDE, converti en phase GSD, placé après 05.18 dans le milestone v1.0. Contexte détaillé : `.planning/phases/05.19-notifications-email-transactionnelles/05.19-CONTEXT.md`.
+
 ## Session Continuity
 
-Last session: 2026-08-25
-Stopped at: **branche `dev` poussée et workflow Terraform Dev validé sur Cloudflare** — production client non touchée.
-Resume: **P3** (re-test Stripe/cron quand les identifiants client seront disponibles), puis **P1** Umami (VPS + PostgreSQL) et **P7** packs zonés.
+Last session: 2026-08-29
+Stopped at: **Phase 05.16-02 committée + push `dev` ; test P3 (retrait de zone / Subscription Schedule) validé en local via Stripe Test Clock ; Phase 05.19 (notifs email) créée à partir du plan Antigravity, pas encore planifiée en détail.**
+Resume: `/gsd-plan-phase 05.19` pour découper la phase email en plans exécutables, puis **P3** (re-test Stripe/cron en conditions prod réelles quand les identifiants client seront disponibles), **P1** Umami (VPS + PostgreSQL).
