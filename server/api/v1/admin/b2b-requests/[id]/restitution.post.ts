@@ -119,13 +119,15 @@ export default defineEventHandler(async (event) => {
 
   if (eUpd) throw createError({ statusCode: 500, statusMessage: eUpd.message })
 
-  await supabase.from('audit_logs').insert({
-    actor_id: (user as any).id,
-    action: 'b2b_restitution_sent',
-    target_table: 'b2b_requests',
-    target_id: id,
-    metadata: { pro_count: pros.length, pro_ids: proIds },
-  }).catch(() => {})
+  try {
+    await supabase.from('audit_logs').insert({
+      actor_id: (user as any).id,
+      action: 'b2b_restitution_sent',
+      target_table: 'b2b_requests',
+      target_id: id,
+      metadata: { pro_count: pros.length, pro_ids: proIds },
+    })
+  } catch { /* non-blocking */ }
 
   return {
     status: 'SUCCESS',

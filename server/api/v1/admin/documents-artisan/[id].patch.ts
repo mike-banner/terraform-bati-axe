@@ -49,13 +49,15 @@ export default defineEventHandler(async (event) => {
   if (changes.activities_subscribed) auditMeta.activities = changes.activities_subscribed.length
   if ('last_reviewed_at' in changes && changes.last_reviewed_at) auditMeta.reviewed = true
 
-  await supabase.from('audit_logs').insert({
-    actor_id: (user as any).id,
-    action: 'document_artisan_updated',
-    target_table: 'documents_artisan',
-    target_id: id,
-    metadata: auditMeta,
-  }).catch(() => {})
+  try {
+    await supabase.from('audit_logs').insert({
+      actor_id: (user as any).id,
+      action: 'document_artisan_updated',
+      target_table: 'documents_artisan',
+      target_id: id,
+      metadata: auditMeta,
+    })
+  } catch { /* non-blocking */ }
 
   return { status: 'SUCCESS', document: data }
 })

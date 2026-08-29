@@ -57,13 +57,15 @@ export default defineEventHandler(async (event) => {
   if ('planning_start' in changes || 'planning_end' in changes) auditMeta.planning = true
   if (changes.recommended_pros) auditMeta.recommended_pros = changes.recommended_pros.length
 
-  await supabase.from('audit_logs').insert({
-    actor_id: (user as any).id,
-    action: 'b2b_request_updated',
-    target_table: 'b2b_requests',
-    target_id: id,
-    metadata: auditMeta,
-  }).catch(() => {})
+  try {
+    await supabase.from('audit_logs').insert({
+      actor_id: (user as any).id,
+      action: 'b2b_request_updated',
+      target_table: 'b2b_requests',
+      target_id: id,
+      metadata: auditMeta,
+    })
+  } catch { /* non-blocking */ }
 
   return { status: 'SUCCESS', request: data }
 })
