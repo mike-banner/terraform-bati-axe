@@ -33,7 +33,7 @@
 | 1 | **Stripe + cron 48h re-testés en prod** | ⏳ runbook prêt; accès aux identifiants client requis | P3 |
 | 2 | **Turnstile anti-spam** | ✅ code livré (standby clés) | P2 |
 | 3 | **Console admin opérationnelle** | ✅ livré (composants, dark, KPIs, audit) | 06.1 |
-| 4 | **KPIs de pilotage (dashboard)** | ✅ livré; Matomo reste à brancher | 06.2/P1 |
+| 4 | **KPIs de pilotage (dashboard)** | ✅ livré; Umami (VPS + PostgreSQL) reste à brancher | 06.2/P1 |
 | 5 | **Notif leads aux pros (email)** | ✅ livré le 2026-08-23; Web Push reporté Phase 8 | P4 |
 | 6 | **Mobile QA** (landing + simulateur + états vides) | ✅ livré le 2026-08-23 | P9 |
 | 7 | **Page pro publique « digne »** | ✅ CTA fait (avis = Phase 7) | P12 |
@@ -77,7 +77,7 @@
 
 1. ✅ **Commission %** : artisan B2B = **grille dégressive par volume** (cahier §4.3 : 8 % ≤25 k€ → 2,5 % >200 k€) ; rétrocession apporteur = **3-5 %** (sous Art. 27).
 2. ✅ **Livrables client** : PDF (Book/Kit/Attestation), clé Turnstile, webhook Slack, **2 contrats types** (charte d'exclusivité B2C + contrat d'apport B2B).
-3. ✅ **Analytics** : Matomo (pas PostHog).
+3. ✅ **Analytics** : Umami self-hosted sur le VPS avec PostgreSQL (pas Matomo, pas PostHog).
 4. ✅ **Séquençage B2B** : Stripe Connect/signature **après** 10 chantiers manuels validés.
 
 ---

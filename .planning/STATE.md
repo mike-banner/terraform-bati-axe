@@ -8,10 +8,10 @@ last_updated: "2026-08-28T18:00:00.000Z"
 last_activity: 2026-08-28
 progress:
   total_phases: 21
-  completed_phases: 19
-  total_plans: 71
-  completed_plans: 69
-  percent: 97
+  completed_phases: 20
+  total_plans: 72
+  completed_plans: 71
+  percent: 99
 ---
 
 # Project State
@@ -41,12 +41,12 @@ Phases complètes récentes :
 - **05.13 — Dette technique + P9 Mobile QA + P5 Feedback Loop** ✅ 3/3 (2026-08-23, branche `fix/dette-p9-p5`) : suite e2e Playwright câblée sur le Chrome système (`channel: 'chrome'`, 24 specs → 24 pass, jamais lancée avant) + specs simulateur réécrites (flux 6 étapes) + test badge réparé (`bg-[#F8FAFC]`) ; QA mobile mesurée (scripts `mobile-audit`/`touch-audit`/`monprojet-mobile`), cibles tactiles ≥ 44px (header/simulateur/tunnel/footer), état vide catégorie leads atteignable, projet Playwright `mobile-chromium` (48/48 specs desktop + mobile) ; feedback loop extrait dans `server/utils/handleLeadDecision.ts` + 9 tests unitaires (remise au marché, garde-fou MAX_RELAUNCHES, 403/404). Aucune migration DB.
 - **05.14 — FIX: Refactoring Multi-Buckets Cloudflare R2** ✅ 1/1 (2026-08-28) : Isolation des buckets `batiaxe-public-[env]`, `batiaxe-vault-[env]`, `batiaxe-b2b-[env]` — code mergé dans `dev`, 3 buckets R2 prod créés, secrets GitHub à jour. **Terraform prod reporté après v1.**
 - **05.15 — FIX: Verrouillage Leads non-vérifiés sur `/espace/leads`** 🚧 0/1 (2026-08-27) : Blocage strict du déblocage de leads si `decennal_status !== 'verified'`.
-- **05.16 — P7: Découpage 78 en 4 Zones & Pricing Dégressif** 🚧 0/1 (2026-08-27) : Quadrillage des Yvelines (Mantes, Rambouillet, Versailles, St-Germain) avec abonnement dégressif (150€ -> 200€ -> 250€ -> 300€ max, **engagement 1 an minimum**).
+- **05.16 — P7: Découpage 78 en 4 Zones & Pricing Dégressif** ✅ 2/2 (2026-08-29) : Quadrillage des Yvelines (Mantes, Rambouillet, Versailles, St-Germain), abonnement dégressif sans engagement mensuel (190€ → 350€) + annuel économique (150€ → 300€, -21%). 05.16-01 : sélection de zones, toggle mensuel/annuel, Stripe Checkout. 05.16-02 : retrait individuel de zone (Subscription Schedule, effet fin de période payée), garde-fou `assertSubscriptionModifiable` (un seul changement en vol à la fois, blocage si résiliation en cours) — cf. `05.16-STRIPE-SCHEDULES.md`.
 - **05.17 — P19: Partenaires Diagnostiqueurs Immobiliers** 🚧 0/1 (2026-08-27) : Profil diagnostiqueur sur `/b2b/partenaires` + dépôt de rapports DPE/diagnostics.
 - **05.18 — Annuaire, Vitrines Publiques & Dashboard Partenaires** 🚧 0/1 (2026-08-27) : Section Partenaires sur l'accueil `/`, annuaire filtrable par catégorie (`/partenaires/annuaire`), profil public (`/partenaire/[dept]/[slug]`) et dashboard d'édition (`/espace/partenaire`).
 - **P4 — Notif pro nouveaux leads (email)** ✅ (2026-08-23, PR #48 mergé) : `notifyProLead` sur `projects.post.ts`, opt-in `lead_alerts_email`, idempotence `lead_notifications`, page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h. Le délai 48h est retenu pour v1 ; 72h ou une autre valeur pourra être décidé dans une version ultérieure avec le client.
 
-Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod), **P1** (Umami funnel — self-hosted VPS PostgreSQL), **P7** (packs zonés — tarifs à confirmer), puis P6/P8/P10.
+Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod — inclut désormais un test webhook réel de transition de Subscription Schedule sur retrait de zone, non vérifié en conditions réelles), **P1** (Umami funnel — self-hosted VPS PostgreSQL), puis P6/P8/P10.
 
 ## Infrastructure vérifiée le 2026-08-25
 

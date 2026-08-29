@@ -161,3 +161,38 @@ Le client donne un ordre d'exécution **business-first** :
 - Définition opérationnelle du « matching » (devis vs réponses vs leads débloqués) — spec KPIs 21/08.
 - PDF Book Garanties / Kit Convention / Attestation (spec 21/08).
 - Toute nouvelle spec à venir.
+
+---
+
+## 8. `20260827` — Kit de Transfert de Propriété & Handover des Accès
+**Statut global :** documenté et prêt pour la passation client.
+- **Fichier** : `.planning/clients/20260827-KIT_TRANSFERT_ET_HANDOVER_ACCES-SPEC_CLIENT.md`
+- **Contenu** : Matrice complète des accès (Cloudflare Pages/R2/Email Routing, Supabase BDD `xpwoczcbyamnjknloxgz`, Resend `contact@bati-axe.com`, Stripe Prod, Umami VPS) + Runbook de transfert.
+
+---
+
+## 9. `20260828` — Stripe Connect, Séquestre & Split Payment (P10)
+**Statut global :** cadré et documenté pour la v2 (Item P10).
+- **Fichier** : `.planning/clients/20260828-STRIPE_CONNECT_SPLIT_PAYMENT-SPEC_CLIENT.md`
+- **Contenu** : Architecture PSP séquestre ACPR, table Supabase `payment_accounts`, endpoint `POST /api/v1/payments/create-deposit`, ventilation 3 flux (Artisan 92% / BÂTI-AXE 5% / Prescripteur 3%).
+
+---
+
+## 10. `20260828` — Convention Tripartite d'Apport d'Affaires & 5 Clauses Juridiques (P11)
+**Statut global :** cadré et documenté pour la v2 (Item P11).
+- **Fichier** : `.planning/clients/20260828-CONVENTION_TRIPARTITE_BLINDAGE_JURIDIQUE-SPEC_CLIENT.md`
+- **Contenu** : Les 5 clauses légales intraitables (Succès, Non-contournement 12-24 mois avec pénalité 5000€, Transparence déontologique Ordre Archis/Loi Hoguet, Mandat encaissement Stripe Connect) + workflow Avenant 1-Click.
+
+---
+
+## 11. `20260828` — Outils Agents Immobiliers (Home Staging 3D IA & Dossier VIP) (P19)
+**Statut global :** cadré et documenté pour la v2 (Item P19).
+- **Fichier** : `.planning/clients/20260828-AGENT_IMMOBILIER_HOME_STAGING_IA-SPEC_CLIENT.md`
+- **Contenu** : Rendu 3D IA en 5s à partir d'une photo vétuste, Chiffreur Flash IA post-visite, Export PDF Dossier VIP (3D + Chiffrage + Aides Réno) et injection lead vers BÂTI-AXE.
+
+---
+
+## 12. `20260828` — Synthèse des User Stories de l'Écosystème BÂTI-AXE
+**Statut global :** cartographié et synchronisé avec le phasage GSD v1.0 / v2.0 / v3.0.
+- **Fichier** : `.planning/clients/20260828-SYNTHESE_USER_STORIES_ECOSYSTEME-SPEC_CLIENT.md`
+- **Contenu** : Matrice complète des User Stories par persona (B2C Particuliers, Artisans BTP, Prescripteurs & Partenaires, Courtiers & Fournisseurs BTP).

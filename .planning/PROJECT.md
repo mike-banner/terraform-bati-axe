@@ -14,7 +14,7 @@ Garantir la sécurité et la confiance des chantiers de particuliers en les mett
 
 ### Remaining
 - [ ] **P3** : re-test Stripe et cron 48h avec les identifiants de production client.
-- [ ] **P1** : brancher Matomo sur le funnel avec le bandeau cookies RGPD.
+- [ ] **P1** : brancher Umami (self-hosted VPS + PostgreSQL, sans cookies) sur le funnel.
 - [ ] **P7** : confirmer les tarifs et implémenter les packs zonés/exclusivité métier.
 - [ ] **P6/P8/P10** : étude financement, compte prescripteur et commission Stripe Connect.
 - [ ] **Production client** : préparer Cloudflare, domaine, base et secrets après réception des identifiants.
