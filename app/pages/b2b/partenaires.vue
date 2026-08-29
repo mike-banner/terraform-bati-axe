@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { APPORTEUR_LABELS, BUDGET_OPTIONS } from '~/types/b2b'
-import type { B2bApporteurType, B2bNeedType, B2bBudgetRange, B2bRequestFile } from '~/types/b2b'
+import { APPORTEUR_LABELS, BUDGET_OPTIONS, TRAVAUX_OPTIONS } from '~/types/b2b'
+import type { B2bApporteurType, B2bNeedType, B2bBudgetRange, B2bRequestFile, B2bTravauxSuggere } from '~/types/b2b'
 
 useHead({ title: 'Espace Partenaires — BÂTI-AXE' })
 
@@ -18,6 +18,14 @@ const apporteurType = ref<B2bApporteurType | ''>('')
 const needType = ref<B2bNeedType | ''>('')
 const projectLocation = ref('78 — Yvelines')
 const budgetRange = ref<B2bBudgetRange | ''>('')
+const certificationNumber = ref('')
+const travauxSuggeres = ref<B2bTravauxSuggere[]>([])
+const isDiagnostiqueur = computed(() => apporteurType.value === 'diagnostiqueur')
+function toggleTravail(t: B2bTravauxSuggere) {
+  const idx = travauxSuggeres.value.indexOf(t)
+  if (idx === -1) travauxSuggeres.value.push(t)
+  else travauxSuggeres.value.splice(idx, 1)
+}
 const uploadedFiles = ref<B2bRequestFile[]>([])
 const uploading = ref(false)
 const uploadError = ref<string | null>(null)
@@ -153,6 +161,8 @@ async function submitRequest() {
         need_type: needType.value,
         project_location: projectLocation.value || null,
         budget_range: budgetRange.value || null,
+        certification_number: isDiagnostiqueur.value ? (certificationNumber.value || null) : null,
+        travaux_suggeres: isDiagnostiqueur.value && travauxSuggeres.value.length > 0 ? travauxSuggeres.value : null,
         files: uploadedFiles.value,
         contact_name: contactName.value,
         contact_company: contactCompany.value || null,
@@ -277,6 +287,37 @@ async function submitRequest() {
             class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
+
+        <!-- Diagnostiqueur : n° certification + types de travaux suggérés -->
+        <template v-if="isDiagnostiqueur">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-foreground mb-1.5">Numéro de certification</label>
+            <input
+              v-model="certificationNumber"
+              type="text"
+              maxlength="50"
+              placeholder="Ex : CERT-2024-XXXX"
+              class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </div>
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-foreground mb-1.5">Travaux suggérés par votre rapport DPE</label>
+            <div class="flex flex-wrap gap-2">
+              <button
+                v-for="opt in TRAVAUX_OPTIONS"
+                :key="opt.value"
+                type="button"
+                @click="toggleTravail(opt.value)"
+                class="px-3 py-1.5 rounded-full border text-xs font-medium transition-colors"
+                :class="travauxSuggeres.includes(opt.value)
+                  ? 'border-copper bg-copper/10 text-copper'
+                  : 'border-border text-muted-foreground hover:border-muted-foreground/50'"
+              >
+                {{ opt.label }}
+              </button>
+            </div>
+          </div>
+        </template>
 
         <!-- Budget -->
         <div class="mb-6">

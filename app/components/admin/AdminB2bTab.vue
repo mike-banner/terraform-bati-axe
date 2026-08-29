@@ -8,7 +8,7 @@ interface B2bFile {
 
 interface B2bRequest {
   id: string
-  apporteur_type: 'architecte' | 'bet' | 'agence_immo' | 'syndic' | 'autre'
+  apporteur_type: 'architecte' | 'bet' | 'agence_immo' | 'syndic' | 'diagnostiqueur' | 'autre'
   need_type: 'projet_immediat' | 'partenariat_regulier'
   project_location: string | null
   budget_range: '<30k' | '30-100k' | '100-300k' | '>300k' | null
@@ -46,6 +46,7 @@ const APPORTEUR_LABELS: Record<string, string> = {
   bet: "Bureau d'études",
   agence_immo: 'Agence immo',
   syndic: 'Syndic',
+  diagnostiqueur: 'Diagnostiqueur',
   autre: 'Autre',
 }
 

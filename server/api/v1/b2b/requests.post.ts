@@ -3,10 +3,12 @@ import { serverSupabaseServiceRole } from '#supabase/server'
 import { sendEmail } from '../../../utils/email'
 
 const schema = z.object({
-  apporteur_type: z.enum(['architecte', 'bet', 'agence_immo', 'syndic', 'autre']),
+  apporteur_type: z.enum(['architecte', 'bet', 'agence_immo', 'syndic', 'diagnostiqueur', 'autre']),
   need_type: z.enum(['projet_immediat', 'partenariat_regulier']),
   project_location: z.string().max(200).optional(),
   budget_range: z.enum(['<30k', '30-100k', '100-300k', '>300k']).optional(),
+  certification_number: z.string().max(50).optional().nullable(),
+  travaux_suggeres: z.array(z.enum(['isolation', 'chauffage', 'electricite', 'toiture'])).max(4).optional().nullable(),
   files: z.array(z.object({
     file_key: z.string(),
     filename: z.string().max(255),
@@ -44,6 +46,8 @@ export default defineEventHandler(async (event) => {
       need_type: data.need_type,
       project_location: data.project_location || null,
       budget_range: data.budget_range || null,
+      certification_number: data.certification_number || null,
+      travaux_suggeres: data.travaux_suggeres || null,
       files: data.files,
       contact_name: data.contact_name,
       contact_company: data.contact_company || null,
@@ -62,15 +66,17 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 500, statusMessage: 'Erreur lors de l\'enregistrement.' })
   }
 
-  // Log consent in consents table
-  await supabase.from('consents').insert({
-    subject_type: 'professional',
-    subject_id: request.id,
-    channel: 'cgu',
-    status: 'granted',
-    source: 'b2b-prescripteur',
-    ip,
-  }).catch(() => {}) // non-blocking
+  // Log consent in consents table (non-blocking)
+  try {
+    await supabase.from('consents').insert({
+      subject_type: 'professional',
+      subject_id: request.id,
+      channel: 'cgu',
+      status: 'granted',
+      source: 'b2b-prescripteur',
+      ip,
+    })
+  } catch { /* non-blocking */ }
 
   // ─── Notify team (email) ───────────────────────────────────────────────────
   const config = useRuntimeConfig()
@@ -82,6 +88,7 @@ export default defineEventHandler(async (event) => {
       bet: 'Bureau d\'Études / Ingénieur',
       agence_immo: 'Agence Immobilière',
       syndic: 'Syndic / Gestionnaire',
+      diagnostiqueur: 'Diagnostiqueur Immobilier',
       autre: 'Autre Professionnel',
     }[data.apporteur_type]
 
@@ -100,6 +107,8 @@ export default defineEventHandler(async (event) => {
           <tr><td style="padding: 8px 0; color: #64748B;">Besoin</td><td style="padding: 8px 0; color: #0F172A;">${data.need_type === 'projet_immediat' ? 'Projet immédiat' : 'Partenariat régulier'}</td></tr>
           ${data.project_location ? `<tr><td style="padding: 8px 0; color: #64748B;">Localisation</td><td style="padding: 8px 0; color: #0F172A;">${data.project_location}</td></tr>` : ''}
           ${data.budget_range ? `<tr><td style="padding: 8px 0; color: #64748B;">Budget</td><td style="padding: 8px 0; color: #0F172A;">${budgetLabel}</td></tr>` : ''}
+          ${data.certification_number ? `<tr><td style="padding: 8px 0; color: #64748B;">N° certification</td><td style="padding: 8px 0; color: #0F172A;">${data.certification_number}</td></tr>` : ''}
+          ${data.travaux_suggeres?.length ? `<tr><td style="padding: 8px 0; color: #64748B;">Travaux suggérés</td><td style="padding: 8px 0; color: #0F172A;">${data.travaux_suggeres.join(', ')}</td></tr>` : ''}
           <tr><td style="padding: 8px 0; color: #64748B;">Contact</td><td style="padding: 8px 0; color: #0F172A;">${data.contact_name}${data.contact_company ? ` (${data.contact_company})` : ''}</td></tr>
           <tr><td style="padding: 8px 0; color: #64748B;">Téléphone</td><td style="padding: 8px 0; color: #0F172A;">${data.contact_phone}</td></tr>
           <tr><td style="padding: 8px 0; color: #64748B;">Email</td><td style="padding: 8px 0; color: #0F172A;">${data.contact_email}</td></tr>

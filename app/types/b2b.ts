@@ -1,6 +1,7 @@
 // ─── B2B Request types ────────────────────────────────────────────────────────
 
-export type B2bApporteurType = 'architecte' | 'bet' | 'agence_immo' | 'syndic' | 'autre'
+export type B2bApporteurType = 'architecte' | 'bet' | 'agence_immo' | 'syndic' | 'diagnostiqueur' | 'autre'
+export type B2bTravauxSuggere = 'isolation' | 'chauffage' | 'electricite' | 'toiture'
 export type B2bNeedType = 'projet_immediat' | 'partenariat_regulier'
 export type B2bBudgetRange = '<30k' | '30-100k' | '100-300k' | '>300k'
 export type B2bRequestStatus = 'nouveau' | 'en_cours' | 'rappele' | 'qualifie' | 'converti' | 'perdu'
@@ -19,6 +20,8 @@ export interface B2bRequest {
   project_location: string | null
   budget_range: B2bBudgetRange | null
   files: B2bRequestFile[]
+  certification_number: string | null
+  travaux_suggeres: B2bTravauxSuggere[] | null
   contact_name: string
   contact_company: string | null
   contact_phone: string
@@ -57,6 +60,12 @@ export const APPORTEUR_LABELS: Record<B2bApporteurType, { label: string; icon: s
     fear: 'Manque de réactivité, travail bâlé, copropriétaires qui hurlent',
     promise: 'Habitués aux AG, respect du règlement de copro et rapports de chantier clairs.',
   },
+  diagnostiqueur: {
+    label: 'Diagnostiqueur Immobilier',
+    icon: '📋',
+    fear: 'Détecter des travaux nécessaires (isolation, électricité...) sans savoir à qui les recommander',
+    promise: 'Transformez vos rapports DPE en opportunités de travaux qualifiées, sans effort.',
+  },
   autre: {
     label: 'Autre Professionnel',
     icon: '🔧',
@@ -64,6 +73,13 @@ export const APPORTEUR_LABELS: Record<B2bApporteurType, { label: string; icon: s
     promise: 'Un réseau d\'artisans audités, disponibles et qualifiés sur votre zone.',
   },
 }
+
+export const TRAVAUX_OPTIONS: { value: B2bTravauxSuggere; label: string }[] = [
+  { value: 'isolation', label: 'Isolation' },
+  { value: 'chauffage', label: 'Chauffage' },
+  { value: 'electricite', label: 'Électricité' },
+  { value: 'toiture', label: 'Toiture' },
+]
 
 export const BUDGET_OPTIONS: { value: B2bBudgetRange; label: string }[] = [
   { value: '<30k', label: '< 30 000 €' },
