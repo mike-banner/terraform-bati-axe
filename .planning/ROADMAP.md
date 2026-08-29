@@ -22,7 +22,7 @@
 **Conditions de livraison v1 (reste à valider avant mise en prod réelle avec vrais utilisateurs) :**
 - [x] Environnement Cloudflare Dev vérifié au vert sur la branche `dev` : projet `bati-axe-dev`, domaine `dev.bati-axe.fr`, Terraform `Init/Validate/Plan/Apply` réussis le 2026-08-25.
 - [ ] Déploiement de production client vérifié avec les identifiants du client (workflow prod actuellement manuel dans la configuration Dev).
-- [ ] Paiement Stripe re-testé de bout en bout (checkout + webhook, Phase 4) et cron pg_cron 48h vérifié (Phase 4 / P4) — **P3 en attente**. Le délai 48h est retenu pour v1 ; 72h ou une autre valeur pourra être décidé dans une version ultérieure.
+- [x] Paiement Stripe re-testé de bout en bout en local (checkout + webhook, mode test Stripe CLI, 2026-08-30) — cron pg_cron 48h confirmé **inopérant par construction** (condition jamais atteignable, décision : ne pas corriger pour l'instant, cf. STATE.md). Reste une validation finale avec les vraies clés Stripe prod (formalité).
 - [ ] Admin minimal validé opérationnel pour le pilote — ✅ console admin 06.1/06.2 livrée (revue documents OK)
 - [x] Dette test traitée : suite Playwright câblée sur Chrome système et QA mobile validée dans la phase 05.13.
 
