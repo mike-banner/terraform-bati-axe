@@ -436,13 +436,18 @@ Plans:
 
 **Goal:** Standardiser l'envoi d'e-mails transactionnels sur le domaine de prod `bati-axe.com` avec expéditeur dynamique selon la nature du message (`no-reply@`, `notifications@`, `contact@`), et couvrir les parcours Pros/Particuliers/B2B/Admin encore sans notification.
 **Contexte:** repris d'un plan externe (Antigravity IDE, `implementation_plan.md` du 2026-08-29) — étend `server/utils/email.ts` (existant, EML-01/Phase 6, P4) plutôt qu'il ne le remplace. Rattaché à la Phase 6 (déjà « la phase notifications », email + SMS 06-04 différé) plutôt que laissé en phase indépendante. Points couverts : moteur multi-expéditeurs + layout HTML branding, email validation/rejet décennale (`verify.post.ts`), alertes cron J-30/J-7 expiration décennale, confirmation Stripe souscription/modification/**retrait de zone** (`webhook.post.ts` — le retrait de zone via Subscription Schedule vient d'être vérifié fonctionnellement le 2026-08-29, cf. Phase 05.16-02, il ne manque que la notif email de confirmation), accusé réception projet particulier (`projects.post.ts`), email au particulier au déblocage du lead (`handleLeadDecision.ts`), accusé dépôt B2B (`requests.post.ts`), utilitaire `notifyAdmin.ts` centralisé (Gmail admin) branché sur claim/projet/B2B.
-**Requirements**: à formaliser au planning (étend EML-01 de la Phase 6, P4)
+**Requirements**: EML-02 (moteur multi-expéditeurs + layout LCEN), EML-03 (validation/rejet document pro), EML-04 (alerte lead sur notifications@), EML-05 (cron J-30/J-7 décennale), EML-06 (confirmations Stripe zones), EML-07 (accusé réception projet particulier), EML-08 (positionnement artisan → particulier), EML-09 (accusé dépôt B2B), EML-10 (notifyAdmin centralisé) — formalisés au planning du 2026-08-30, étendent EML-01 (Phase 6, P4)
 **Depends on:** Phase 6 (moteur email existant), Phase 05.16 (webhook Stripe zones), Phase 05.10/05.11 (B2B, documents)
 **Bloquant avant activation prod:** DNS Cloudflare (DKIM/SPF/DMARC sur `bati-axe.com`), Cloudflare Email Routing sur `contact@bati-axe.com` → Gmail admin, variables d'env `RESEND_API_KEY`/`NUXT_PUBLIC_SITE_URL`.
-**Plans:** TBD (run `/gsd-plan-phase 06.3` pour découper)
+**Plans:** 4 plans (2 vagues)
 
 Plans:
-- [ ] TBD
+- [ ] 06.3-01-PLAN.md — Moteur : sendEmail multi-expéditeurs + layout HTML/LCEN + notifyAdmin (vague 1)
+- [ ] 06.3-02-PLAN.md — Pros : validation/rejet document, alerte lead sur notifications@, cron J-30/J-7 décennale (vague 2)
+- [ ] 06.3-03-PLAN.md — Particuliers & B2B : accusé réception projet (lien magique enfin envoyé), positionnement artisan, accusé B2B (vague 2)
+- [ ] 06.3-04-PLAN.md — Stripe & Admin : confirmations souscription/retrait de zone/changement de facturation, migration alerte SIRET (vague 2)
+
+**Note de planning (2026-08-30):** l'e-mail « artisan a pris le lead en charge » est câblé dans `leads/[id]/claim.patch.ts` et NON dans `handleLeadDecision.ts` comme l'indiquait le CONTEXT — `handleLeadDecision` traite la décision du particulier, pas la prise en charge par un artisan. Découverte au passage : `projects.post.ts` n'envoyait AUCUN e-mail au particulier en production (le lien magique n'était qu'un `console.log` sous `import.meta.dev`).
 
 **UI hint**: no
 

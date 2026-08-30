@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0-lancement-pilote
-milestone_name: Lancement v1 — Pilote Carrières-sous-Poissy
-status: v1_in_progress
-stopped_at: "Infrastructure Dev Cloudflare validée sur la branche dev ; production client volontairement laissée intacte et manuelle"
-last_updated: "2026-08-28T18:00:00.000Z"
-last_activity: 2026-08-28
+milestone: v1.0
+milestone_name: « Pilote 78 en orbite » — EN COURS
+status: Ready to execute
+stopped_at: **Phase 05.16-02 committée + push `dev` ; test P3 (retrait de zone / Subscription Schedule) validé en local via Stripe Test Clock ; Phase 06.3 (notifs email, ex-05.19) créée à partir du plan Antigravity et rattachée à la Phase 6, pas encore planifiée en détail.**
+last_updated: "2026-08-30T00:31:18.562Z"
 progress:
-  total_phases: 21
-  completed_phases: 20
-  total_plans: 72
-  completed_plans: 71
-  percent: 99
+  total_phases: 23
+  completed_phases: 15
+  total_plans: 75
+  completed_plans: 69
+  percent: 92
 ---
 
 # Project State
@@ -33,6 +32,7 @@ See: .planning/PROJECT.md (updated 2026-08-25)
 
 Milestone: **v1.0 « Pilote 78 en orbite »** (déclaré au ROADMAP le 2026-08-23)
 Phases complètes récentes :
+
 - **05.10 — Espace Partenaires & Apporteurs d'Affaires** ✅ 7/7 (2026-08-22) : landing `/b2b/partenaires`, tunnel 4 étapes, POST + presign R2, back-office admin `b2b_requests`, workflow DirCo (qualification + sélection 2-3 sous-traitants + restitution email).
 - **05.11 — Coffre-Fort Juridique & Capacité Sous-traitance** ✅ 4/4 (2026-08-23) : `documents_artisan`, alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois, vue admin documents.
 - **06.1 — Console Admin Opérationnelle** ✅ (2026-08-22) : 8 composants modulaires, sidebar, dark mode, search/pagination, audit log, onglets B2B + Documents légaux.
