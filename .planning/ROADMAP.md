@@ -63,6 +63,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, Dossiers B2B, KPIs, Documents légaux, Journal), search + pagination, projets cliquables. Onglet B2B fusionné (05.10-06) + Documents légaux (05.11-04). (livré 2026-08-22)
 - [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). *(récupéré d'une branche jamais mergée → merge PR #45)*. Reste : brancher Matomo côté client (P1). (livré 2026-08-22)
 - [ ] **Phase 06.3: Notifications Email Transactionnelles (bati-axe.com)** - Moteur multi-expéditeurs (`no-reply@`/`notifications@`/`contact@bati-axe.com`), notifs décennale/Stripe/zones côté Pros, accusés réception/déblocage côté Particuliers, accusé dépôt B2B, alertes admin centralisées, DNS Cloudflare (DKIM/SPF/DMARC) + Email Routing. Étend EML-01 (Phase 6) — regroupé avec le SMS 06-04 différé sous la même phase parente.
+- [ ] **Phase 06.4: Mot de passe oublié (pro) & Templates Auth Supabase** - Lien "Mot de passe oublié ?" sur `/pro/claim` (`resetPasswordForEmail` + page de réinitialisation), templates d'e-mails Auth Supabase brandés (recovery/invite/confirmation) réutilisant le branding copper/navy + footer LCEN de 06.3. Découvert lors de l'audit email 06.3 (2026-08-30) : aucun recours self-service n'existe aujourd'hui pour un pro qui oublie son mot de passe.
 - [x] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
 - [ ] **Phase 8: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
@@ -450,6 +451,19 @@ Plans:
 **Note de planning (2026-08-30):** l'e-mail « artisan a pris le lead en charge » est câblé dans `leads/[id]/claim.patch.ts` et NON dans `handleLeadDecision.ts` comme l'indiquait le CONTEXT — `handleLeadDecision` traite la décision du particulier, pas la prise en charge par un artisan. Découverte au passage : `projects.post.ts` n'envoyait AUCUN e-mail au particulier en production (le lien magique n'était qu'un `console.log` sous `import.meta.dev`).
 
 **UI hint**: no
+
+### Phase 06.4: Mot de passe oublié (pro) & Templates Auth Supabase (INSERTED 2026-08-30)
+
+**Goal:** Donner aux pros un recours self-service quand ils oublient leur mot de passe, et brander les e-mails Auth natifs Supabase (recovery/invite/confirmation) avec le même habillage copper/navy + footer LCEN que les e-mails métier de 06.3.
+**Contexte:** découvert lors de l'audit email de la Phase 06.3 (2026-08-30) — `app/pages/pro/claim.vue` a un login mais aucun lien de récupération ; le seul mécanisme existant est `supabase/scripts/reset-admin.mjs`, un script CLI manuel réservé au compte admin générique. Devient exploitable maintenant que le SMTP Auth Resend est branché (06.3, plus de plafond à 2 e-mails/heure).
+**Requirements**: à formaliser au planning
+**Depends on:** Phase 06.3 (SMTP Auth Resend + branding copper/navy définis)
+**Plans:** TBD (run `/gsd-plan-phase 06.4` pour découper)
+
+Plans:
+- [ ] TBD
+
+**UI hint**: yes
 
 ### Phase 7: Réputation & Scale
 **Goal**: Pérenniser la croissance par la preuve sociale et l'expansion géographique conditionnée aux métriques pilote.
