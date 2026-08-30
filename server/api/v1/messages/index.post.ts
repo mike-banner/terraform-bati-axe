@@ -114,11 +114,17 @@ export default defineEventHandler(async (event) => {
       `
     })
   } else {
-    // For the pro, we fetch the pro's email from professionals table or auth.
-    const { data: proAuth } = await supabase.auth.admin.getUserById(lead.pro_id)
-    if (proAuth && proAuth.user) {
+    // 06.3 — auth.admin.getUserById() rejette la clé service_role legacy sur
+    // certaines instances GoTrue (cf. STATE.md § Blockers, 2026-08-29). L'email
+    // du pro est déjà en base (posé au claim) : pas besoin de l'API admin.
+    const { data: proRow } = await supabase
+      .from('professionals')
+      .select('email')
+      .eq('id', lead.pro_id)
+      .maybeSingle()
+    if (proRow?.email) {
       await sendEmail({
-        to: proAuth.user.email,
+        to: proRow.email,
         subject: `Nouveau message d'un client sur BÂTI-AXE`,
         html: `
           <p>Bonjour,</p>
