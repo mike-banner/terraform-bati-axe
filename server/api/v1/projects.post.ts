@@ -4,6 +4,9 @@ import { computeQualifyScore } from '../../utils/qualifyScore'
 import { deriveTrades, derivePrimaryCategory } from '../../utils/calculatorMapping'
 import { verifyTurnstile } from '../../utils/verifyTurnstile'
 import { notifyMatchedPros } from '../../utils/notifyProLead'
+import { sendEmail } from '../../utils/email'
+import { renderEmail } from '../../utils/emailLayout'
+import { notifyAdmin, adminDetailsTable } from '../../utils/notifyAdmin'
 
 // French phone validation regex
 const phoneRegex = /^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/
@@ -220,17 +223,6 @@ export default defineEventHandler(async (event) => {
       console.error('Failed to log consent status:', consentError)
     }
 
-    // Mock Email for Magic Link (Phase 5) — dev only : le lien contient
-    // l'access_token du projet, un secret d'accès qui ne doit jamais
-    // apparaître dans les logs de production.
-    if (import.meta.dev) {
-      console.log('\n=============================================')
-      console.log('MOCK EMAIL: Nouveau projet BÂTI-AXE créé !')
-      console.log(`À: ${data.customer_email}`)
-      console.log(`Lien magique (Espace Client): http://localhost:3000/mon-projet/${project.access_token}`)
-      console.log('=============================================\n')
-    }
-
     // 7. Log audit entry for tracking
     await supabase
       .from('audit_logs')
@@ -245,6 +237,50 @@ export default defineEventHandler(async (event) => {
           qualify_score: qualifyScore
         }
       })
+
+    // 06.3 — Accusé de réception au particulier (no-reply@ : aucune réponse attendue).
+    // Contient le lien magique vers l'espace client : c'est le SEUL moyen pour lui
+    // de retrouver son projet et de suivre les artisans qui se positionnent.
+    const siteUrl = useRuntimeConfig().public.siteUrl || 'https://bati-axe.com'
+    try {
+      await sendEmail({
+        to: data.customer_email,
+        sender: 'no-reply',
+        replyTo: 'contact@bati-axe.com',
+        subject: 'Votre projet est enregistré — BÂTI-AXE',
+        html: renderEmail({
+          title: 'Votre projet est bien enregistré',
+          preheader: 'Conservez ce message : il contient le lien vers votre espace projet.',
+          intro: `Bonjour ${data.customer_name}, votre demande a bien été enregistrée. Des artisans certifiés de votre secteur vont pouvoir se positionner sur votre chantier.`,
+          bodyHtml: `
+            <table style="width:100%;border-collapse:collapse;margin:8px 0 0;">
+              <tr><td style="padding:8px 0;font-size:13px;color:#64748B;">Type de travaux</td><td style="padding:8px 0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${category}</td></tr>
+              <tr><td style="padding:8px 0;border-top:1px solid #E2E8F0;font-size:13px;color:#64748B;">Budget estimé</td><td style="padding:8px 0;border-top:1px solid #E2E8F0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${budgetRange}</td></tr>
+              <tr><td style="padding:8px 0;border-top:1px solid #E2E8F0;font-size:13px;color:#64748B;">Secteur</td><td style="padding:8px 0;border-top:1px solid #E2E8F0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${data.postal_code}</td></tr>
+            </table>`,
+          cta: { label: 'Suivre mon projet', href: `${siteUrl}/mon-projet/${project.access_token}` },
+          footerNote: "Ce lien est personnel : il donne accès à votre projet sans mot de passe. Ne le transférez pas. Aucun artisan n'obtient vos coordonnées avant que vous ne validiez un contact.",
+        }),
+      })
+    } catch (err) {
+      console.error('[06.3] accusé de réception projet échoué:', err)
+    }
+
+    // 06.3 — Alerte admin (jamais bloquante, no-op si NUXT_ADMIN_EMAIL absent).
+    await notifyAdmin({
+      subject: `Nouveau projet — ${category} — ${data.postal_code}`,
+      title: 'Nouveau projet déposé',
+      intro: `Un nouveau projet vient d'être créé sur ${matchedZone.name}.`,
+      bodyHtml: adminDetailsTable([
+        ['Catégorie', category],
+        ['Budget estimé', budgetRange],
+        ['Code postal', data.postal_code],
+        ['Zone', matchedZone.name],
+        ['Score de qualification', String(qualifyScore)],
+        ['Client', data.customer_name],
+      ]),
+      cta: { label: 'Ouvrir la console admin', href: `${siteUrl}/admin` },
+    })
 
     // Return success
     setResponseStatus(event, 201)
