@@ -49,6 +49,7 @@ export type Database = {
           apporteur_type: Database["public"]["Enums"]["b2b_apporteur_type"]
           assigned_to: string | null
           budget_range: Database["public"]["Enums"]["b2b_budget_range"] | null
+          certification_number: string | null
           consent_accepted: boolean
           consent_at: string | null
           consent_ip: string | null
@@ -68,12 +69,14 @@ export type Database = {
           qualifications_requises: string[]
           recommended_pros: string[]
           status: Database["public"]["Enums"]["b2b_request_status"]
+          travaux_suggeres: string[] | null
           updated_at: string | null
         }
         Insert: {
           apporteur_type: Database["public"]["Enums"]["b2b_apporteur_type"]
           assigned_to?: string | null
           budget_range?: Database["public"]["Enums"]["b2b_budget_range"] | null
+          certification_number?: string | null
           consent_accepted?: boolean
           consent_at?: string | null
           consent_ip?: string | null
@@ -93,12 +96,14 @@ export type Database = {
           qualifications_requises?: string[]
           recommended_pros?: string[]
           status?: Database["public"]["Enums"]["b2b_request_status"]
+          travaux_suggeres?: string[] | null
           updated_at?: string | null
         }
         Update: {
           apporteur_type?: Database["public"]["Enums"]["b2b_apporteur_type"]
           assigned_to?: string | null
           budget_range?: Database["public"]["Enums"]["b2b_budget_range"] | null
+          certification_number?: string | null
           consent_accepted?: boolean
           consent_at?: string | null
           consent_ip?: string | null
@@ -118,6 +123,7 @@ export type Database = {
           qualifications_requises?: string[]
           recommended_pros?: string[]
           status?: Database["public"]["Enums"]["b2b_request_status"]
+          travaux_suggeres?: string[] | null
           updated_at?: string | null
         }
         Relationships: []
@@ -208,6 +214,8 @@ export type Database = {
       documents_artisan: {
         Row: {
           activities_subscribed: string[]
+          alert_j30_sent_at: string | null
+          alert_j7_sent_at: string | null
           created_at: string | null
           doc_type: Database["public"]["Enums"]["artisan_doc_type"]
           expires_at: string | null
@@ -221,6 +229,8 @@ export type Database = {
         }
         Insert: {
           activities_subscribed?: string[]
+          alert_j30_sent_at?: string | null
+          alert_j7_sent_at?: string | null
           created_at?: string | null
           doc_type: Database["public"]["Enums"]["artisan_doc_type"]
           expires_at?: string | null
@@ -234,6 +244,8 @@ export type Database = {
         }
         Update: {
           activities_subscribed?: string[]
+          alert_j30_sent_at?: string | null
+          alert_j7_sent_at?: string | null
           created_at?: string | null
           doc_type?: Database["public"]["Enums"]["artisan_doc_type"]
           expires_at?: string | null
@@ -580,6 +592,64 @@ export type Database = {
           },
         ]
       }
+      pro_zones: {
+        Row: {
+          billing: string
+          created_at: string | null
+          id: string
+          price_cents: number
+          pro_id: string
+          status: string
+          stripe_subscription_id: string | null
+          updated_at: string | null
+          zone_id: string
+        }
+        Insert: {
+          billing: string
+          created_at?: string | null
+          id?: string
+          price_cents: number
+          pro_id: string
+          status?: string
+          stripe_subscription_id?: string | null
+          updated_at?: string | null
+          zone_id: string
+        }
+        Update: {
+          billing?: string
+          created_at?: string | null
+          id?: string
+          price_cents?: number
+          pro_id?: string
+          status?: string
+          stripe_subscription_id?: string | null
+          updated_at?: string | null
+          zone_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pro_zones_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pro_zones_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "view_zone_stats"
+            referencedColumns: ["zone_id"]
+          },
+          {
+            foreignKeyName: "pro_zones_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "zones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       professionals: {
         Row: {
           bio: string | null
@@ -701,6 +771,13 @@ export type Database = {
             foreignKeyName: "professionals_zone_id_fkey"
             columns: ["zone_id"]
             isOneToOne: false
+            referencedRelation: "view_zone_stats"
+            referencedColumns: ["zone_id"]
+          },
+          {
+            foreignKeyName: "professionals_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
             referencedRelation: "zones"
             referencedColumns: ["id"]
           },
@@ -787,6 +864,13 @@ export type Database = {
             foreignKeyName: "projects_zone_id_fkey"
             columns: ["zone_id"]
             isOneToOne: false
+            referencedRelation: "view_zone_stats"
+            referencedColumns: ["zone_id"]
+          },
+          {
+            foreignKeyName: "projects_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
             referencedRelation: "zones"
             referencedColumns: ["id"]
           },
@@ -845,6 +929,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "professionals"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prospects_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "view_zone_stats"
+            referencedColumns: ["zone_id"]
           },
           {
             foreignKeyName: "prospects_zone_id_fkey"
@@ -1004,6 +1095,13 @@ export type Database = {
             foreignKeyName: "zones_parent_id_fkey"
             columns: ["parent_id"]
             isOneToOne: false
+            referencedRelation: "view_zone_stats"
+            referencedColumns: ["zone_id"]
+          },
+          {
+            foreignKeyName: "zones_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
             referencedRelation: "zones"
             referencedColumns: ["id"]
           },
@@ -1058,6 +1156,17 @@ export type Database = {
           matched_projects: number | null
           matching_rate_pct: number | null
           total_projects: number | null
+        }
+        Relationships: []
+      }
+      view_zone_stats: {
+        Row: {
+          active_pros: number | null
+          annual_pros: number | null
+          monthly_pros: number | null
+          postal_codes: string[] | null
+          zone_id: string | null
+          zone_name: string | null
         }
         Relationships: []
       }
@@ -1976,6 +2085,7 @@ export type Database = {
         | "agence_immo"
         | "syndic"
         | "autre"
+        | "diagnostiqueur"
       b2b_budget_range: "<30k" | "30-100k" | "100-300k" | ">300k"
       b2b_need_type: "projet_immediat" | "partenariat_regulier"
       b2b_request_status:
@@ -1993,7 +2103,7 @@ export type Database = {
       sms_status: "queued" | "sent" | "delivered" | "failed"
       subscription_status: "active" | "canceled" | "unpaid" | "none"
       verification_status: "pending" | "approved" | "rejected"
-      zone_type: "city" | "department" | "region"
+      zone_type: "city" | "area" | "department" | "region"
     }
     CompositeTypes: {
       geometry_dump: {
@@ -2145,6 +2255,7 @@ export const Constants = {
         "agence_immo",
         "syndic",
         "autre",
+        "diagnostiqueur",
       ],
       b2b_budget_range: ["<30k", "30-100k", "100-300k", ">300k"],
       b2b_need_type: ["projet_immediat", "partenariat_regulier"],
@@ -2164,7 +2275,7 @@ export const Constants = {
       sms_status: ["queued", "sent", "delivered", "failed"],
       subscription_status: ["active", "canceled", "unpaid", "none"],
       verification_status: ["pending", "approved", "rejected"],
-      zone_type: ["city", "department", "region"],
+      zone_type: ["city", "area", "department", "region"],
     },
   },
 } as const

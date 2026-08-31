@@ -2,9 +2,6 @@
 -- 05.16 — Zones 78 & Packs Zonés (Pricing Dégressif)
 -- ============================================================
 
--- 1. Ajouter le type 'area' à l'enum zone_type
-ALTER TYPE zone_type ADD VALUE IF NOT EXISTS 'area' AFTER 'city';
-
 -- 2. Créer les 4 zones agglomération 78
 INSERT INTO zones (type, name, postal_codes, is_active) VALUES
   ('area', 'Mantes-la-Jolie',       ARRAY['78200','78520','78711','78440','78270','78930','78250','78680','78410','78580'], true),
