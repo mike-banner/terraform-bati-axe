@@ -1,0 +1,18 @@
+name: Alertes expiration décennale (J-30 / J-7)
+
+on:
+  schedule:
+    # Tous les jours à 07h00 UTC
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+jobs:
+  alerts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Déclencher le cron d'alertes décennale
+        run: |
+          curl --fail --silent --show-error \
+            -X GET "${{ secrets.CRON_BASE_URL }}/api/v1/cron/decennale-alerts" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -w "\nCode HTTP: %{http_code}\n"

@@ -1,5 +1,16 @@
-import { describe, it, expect } from 'vitest'
-import { selectAlerts, type DecennaleDoc } from '../../server/api/v1/cron/decennale-alerts.get'
+import { describe, it, expect, vi } from 'vitest'
+
+// Le module importe des utilitaires Nuxt/Supabase non résolvables hors runtime :
+// on ne teste ici que selectAlerts (fonction pure), donc un mock minimal suffit
+// pour permettre le chargement du module.
+vi.stubGlobal('defineEventHandler', (fn: Function) => fn)
+vi.stubGlobal('createError', (opts: any) => Object.assign(new Error(opts.statusMessage), opts))
+vi.stubGlobal('getHeader', () => undefined)
+vi.mock('#supabase/server', () => ({ serverSupabaseServiceRole: vi.fn() }))
+vi.mock('#imports', () => ({ useRuntimeConfig: () => ({}) }))
+
+const { selectAlerts } = await import('../../server/api/v1/cron/decennale-alerts.get')
+type DecennaleDoc = any
 
 const NOW = new Date('2026-09-01T00:00:00Z')
 
