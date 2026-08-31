@@ -251,6 +251,24 @@ export default defineEventHandler(async (event) => {
     }
     log('Upsert successful')
 
+    // 06.3 — Alerte admin à chaque nouvelle inscription pro (jamais bloquante).
+    // Distincte de l'alerte SIRET ci-dessous : celle-ci part toujours, l'autre
+    // seulement si le SIRET n'a pas pu être confirmé actif.
+    await notifyAdmin({
+      subject: `Nouvelle inscription pro — ${data.company_name}`,
+      title: 'Nouveau professionnel inscrit',
+      intro: `${data.company_name} vient de s'inscrire (${data.full_name}).`,
+      bodyHtml: adminDetailsTable([
+        ['Entreprise', data.company_name],
+        ['Contact', data.full_name],
+        ['SIRET', data.siret],
+        ['Statut SIRET', String(siretLookup.status)],
+        ['Catégories', data.categories.join(', ')],
+        ['Code postal', data.postal_code],
+      ]),
+      cta: { label: 'Ouvrir la console admin', href: `${useRuntimeConfig().public.siteUrl || 'https://bati-axe.com'}/admin` },
+    })
+
     // 7. If linked to a prospect, update prospect record
     if (prospectId) {
       log('Updating prospect record')
