@@ -1,12 +1,19 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // server/utils/email.ts et notifyAdmin.ts importent `#imports` (auto-import Nuxt),
 // non résolvable hors runtime Nuxt : on le mocke pour le test unitaire.
 const mockConfig: Record<string, any> = {}
 vi.mock('#imports', () => ({ useRuntimeConfig: () => mockConfig }))
 
+const { sendEmailMock } = vi.hoisted(() => ({ sendEmailMock: vi.fn() }))
+vi.mock('../../server/utils/email', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../server/utils/email')>()
+  return { ...actual, sendEmail: sendEmailMock }
+})
+
 import { renderEmail } from '../../server/utils/emailLayout'
 import { resolveSender } from '../../server/utils/email'
+import { notifyAdmin, adminDetailsTable } from '../../server/utils/notifyAdmin'
 
 describe('renderEmail', () => {
   it('contient le titre dans un <h1', () => {
@@ -70,5 +77,46 @@ describe('resolveSender', () => {
 
   it("notifications sans config → fallback en dur", () => {
     expect(resolveSender('notifications', {})).toBe('BÂTI-AXE <notifications@bati-axe.com>')
+  })
+})
+
+describe('notifyAdmin', () => {
+  beforeEach(() => {
+    sendEmailMock.mockReset()
+    delete mockConfig.adminEmail
+  })
+
+  it("sans adminEmail configuré → ne lève pas, aucun envoi", async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    await expect(notifyAdmin({ subject: 'Test', title: 'Test' })).resolves.toBeUndefined()
+    expect(sendEmailMock).not.toHaveBeenCalled()
+    warnSpy.mockRestore()
+  })
+
+  it("avec adminEmail → un seul sendEmail, sender notifications, subject préfixé", async () => {
+    mockConfig.adminEmail = 'admin@bati-axe.com'
+    sendEmailMock.mockResolvedValue({ success: true })
+    await notifyAdmin({ subject: 'Alerte SIRET', title: 'Alerte' })
+    expect(sendEmailMock).toHaveBeenCalledTimes(1)
+    const call = sendEmailMock.mock.calls[0][0]
+    expect(call.to).toBe('admin@bati-axe.com')
+    expect(call.sender).toBe('notifications')
+    expect(call.subject).toBe('[BÂTI-AXE ADMIN] Alerte SIRET')
+  })
+
+  it("sendEmail qui rejette → notifyAdmin résout quand même", async () => {
+    mockConfig.adminEmail = 'admin@bati-axe.com'
+    sendEmailMock.mockRejectedValue(new Error('Resend down'))
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    await expect(notifyAdmin({ subject: 'Test', title: 'Test' })).resolves.toBeUndefined()
+    errSpy.mockRestore()
+  })
+})
+
+describe('adminDetailsTable', () => {
+  it('contient les clés/valeurs passées', () => {
+    const html = adminDetailsTable([['SIRET', '123']])
+    expect(html).toContain('SIRET')
+    expect(html).toContain('123')
   })
 })
