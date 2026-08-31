@@ -83,6 +83,12 @@ export default defineNuxtConfig({
     // partagé 'onboarding@resend.dev' (ne livre qu'à l'adresse du compte Resend).
     // Override prod via NUXT_EMAIL_FROM une fois bati-axe.fr vérifié.
     emailFrom: process.env.NUXT_EMAIL_FROM || process.env.EMAIL_FROM || 'BÂTI-AXE <contact@bati-axe.com>',
+    // 06.3 — expéditeurs dédiés par nature de message (bati-axe.com)
+    emailFromNoReply: process.env.NUXT_EMAIL_FROM_NO_REPLY || process.env.EMAIL_FROM_NO_REPLY || 'BÂTI-AXE <no-reply@bati-axe.com>',
+    emailFromNotifications: process.env.NUXT_EMAIL_FROM_NOTIFICATIONS || process.env.EMAIL_FROM_NOTIFICATIONS || 'BÂTI-AXE <notifications@bati-axe.com>',
+    emailFromContact: process.env.NUXT_EMAIL_FROM_CONTACT || process.env.EMAIL_FROM_CONTACT || process.env.NUXT_EMAIL_FROM || process.env.EMAIL_FROM || 'BÂTI-AXE <contact@bati-axe.com>',
+    // 06.3 — secret partagé du cron HTTP (alertes décennale, cf. plan 06.3-02)
+    cronSecret: process.env.NUXT_CRON_SECRET || process.env.CRON_SECRET || '',
     // Email d'onboarding pro (REQ-07) — off par défaut.
     onboardingEmails: (process.env.NUXT_ONBOARDING_EMAILS || process.env.ONBOARDING_EMAILS) === 'true',
     // 05.15 — Adresse recevant les alertes admin (ex. SIRET non trouvé/en erreur au claim).
