@@ -456,12 +456,14 @@ Plans:
 
 **Goal:** Donner aux pros un recours self-service quand ils oublient leur mot de passe, et brander les e-mails Auth natifs Supabase (recovery/invite/confirmation) avec le même habillage copper/navy + footer LCEN que les e-mails métier de 06.3.
 **Contexte:** découvert lors de l'audit email de la Phase 06.3 (2026-08-30) — `app/pages/pro/claim.vue` a un login mais aucun lien de récupération ; le seul mécanisme existant est `supabase/scripts/reset-admin.mjs`, un script CLI manuel réservé au compte admin générique. Devient exploitable maintenant que le SMTP Auth Resend est branché (06.3, plus de plafond à 2 e-mails/heure).
-**Requirements**: à formaliser au planning
-**Depends on:** Phase 06.3 (SMTP Auth Resend + branding copper/navy définis)
-**Plans:** TBD (run `/gsd-plan-phase 06.4` pour découper)
+**Requirements**: AUTH-PWD-01, AUTH-PWD-02, AUTH-PWD-03, AUTH-TPL-01, AUTH-TPL-02 (formalisés au planning, ajoutés à REQUIREMENTS.md par le plan 03)
+**Depends on:** aucune dépendance bloquante — 06.3 n'a jamais été exécutée (`server/utils/emailLayout.ts` absent du disque). Les templates Supabase étant des Go templates statiques, ils ne peuvent de toute façon pas consommer ce code : la palette copper/navy et le footer LCEN sont recopiés en dur. Seul le SMTP Auth Resend (`[auth.email.smtp]`, déjà posé) est réellement en place.
+**Plans:** 3 plans en 2 vagues
 
 Plans:
-- [ ] TBD
+- [ ] 06.4-01-PLAN.md — 4 templates Auth brandés + config.toml (templates, mot de passe 8, redirect localhost) + test unitaire
+- [ ] 06.4-02-PLAN.md — Flux self-service : mesure du format d'URL réel, page /pro/reinitialiser-mot-de-passe, bouton « Mot de passe oublié ? » avec cooldown
+- [ ] 06.4-03-PLAN.md — Checklist de report Dashboard prod + exigences AUTH-* + vérification humaine bout en bout
 
 **UI hint**: yes
 

@@ -1,5 +1,6 @@
 import { useRuntimeConfig } from '#imports'
 import { sendEmail } from './email'
+import { renderEmail } from './emailLayout'
 
 // Labels français des 6 métiers (miroir de app/pages/espace/leads)
 const CATEGORY_LABELS: Record<string, string> = {
@@ -52,35 +53,21 @@ export async function notifyMatchedPros(supabase: any, project: any, category: s
 
     if (targets.length === 0) return
 
-    const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; background: #ffffff;">
-        <h2 style="color: #1e293b; margin: 0 0 8px;">Nouveau lead : ${label}</h2>
-        <p style="color: #64748b; font-size: 14px; margin: 0 0 20px;">Un projet correspond à vos catégories d'intervention.</p>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-          <tr>
-            <td style="padding: 8px 0; color: #64748b; font-size: 13px;">Budget estimé</td>
-            <td style="padding: 8px 0; text-align: right; color: #1e293b; font-weight: 600; font-size: 13px;">${project.budget_range || '—'}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 13px;">Délai souhaité</td>
-            <td style="padding: 8px 0; border-top: 1px solid #e2e8f0; text-align: right; color: #1e293b; font-weight: 600; font-size: 13px;">${project.timeline_range || 'Flexible'}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 13px;">Localisation</td>
-            <td style="padding: 8px 0; border-top: 1px solid #e2e8f0; text-align: right; color: #1e293b; font-weight: 600; font-size: 13px;">${project.postal_code || '—'}</td>
-          </tr>
-        </table>
-        <p style="color: #64748b; font-size: 13px; margin: 0 0 20px;">
-          Les coordonnées du client sont débloquées immédiatement si vous êtes Premium,
-          ou automatiquement après <strong>48 h</strong>. Connectez-vous pour voir le lead.
-        </p>
-        <a href="${siteUrl}/espace/leads/${project.id}?src=email"
-           style="display: inline-block; background: #0f172a; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">
-          Voir le lead
-        </a>
-        <p style="color: #94a3b8; font-size: 12px; margin-top: 24px;">BÂTI-AXE — Des chantiers qualifiés, sans démarchage.</p>
-      </div>
-    `
+    const detailsHtml = `
+      <table style="width:100%;border-collapse:collapse;margin:8px 0 0;">
+        <tr><td style="padding:8px 0;font-size:13px;color:#64748B;">Budget estimé</td><td style="padding:8px 0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${project.budget_range || '—'}</td></tr>
+        <tr><td style="padding:8px 0;border-top:1px solid #E2E8F0;font-size:13px;color:#64748B;">Délai souhaité</td><td style="padding:8px 0;border-top:1px solid #E2E8F0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${project.timeline_range || 'Flexible'}</td></tr>
+        <tr><td style="padding:8px 0;border-top:1px solid #E2E8F0;font-size:13px;color:#64748B;">Localisation</td><td style="padding:8px 0;border-top:1px solid #E2E8F0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${project.postal_code || '—'}</td></tr>
+      </table>`
+
+    const html = renderEmail({
+      title: `Nouveau lead : ${label}`,
+      preheader: `Un projet ${label} correspond à vos catégories d'intervention.`,
+      intro: "Un projet correspond à vos catégories d'intervention.",
+      bodyHtml: detailsHtml,
+      cta: { label: 'Voir le lead', href: `${siteUrl}/espace/leads/${project.id}?src=email` },
+      footerNote: 'Les coordonnées du client sont débloquées immédiatement si vous êtes Premium. Vous pouvez désactiver ces alertes depuis votre espace.',
+    })
 
     // Envoi séquentiel + trace d'idempotence après chaque succès.
     // Jamais bloquant : une panne email ne doit pas casser la création du projet.
@@ -88,6 +75,7 @@ export async function notifyMatchedPros(supabase: any, project: any, category: s
       try {
         const res = await sendEmail({
           to: pro.email,
+          sender: 'notifications',
           subject: `Nouveau lead : ${label} — BÂTI-AXE`,
           html,
         })

@@ -41,12 +41,16 @@ function makeSupabaseMock(opts: { currentLabels?: string[]; insertError?: string
 
   const fromMock = vi.fn().mockImplementation((table: string) => {
     if (table === 'verifications') {
-      return {
+      const verificationsObj: any = {
         insert: vi.fn().mockImplementation((payload: any) => {
           insertCalls.push({ table, payload })
           return Promise.resolve({ error: insertError ? { message: insertError } : null })
         }),
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        then: vi.fn().mockImplementation((cb: any) => cb({ data: [{ document_type: 'decennale' }, { document_type: 'kbis' }] }))
       }
+      return verificationsObj
     }
     if (table === 'professionals') {
       return {
