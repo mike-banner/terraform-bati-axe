@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: « Pilote 78 en orbite » — EN COURS
 status: Ready to execute
 stopped_at: **Phase 05.16-02 committée + push `dev` ; test P3 (retrait de zone / Subscription Schedule) validé en local via Stripe Test Clock ; Phase 06.3 (notifs email, ex-05.19) créée à partir du plan Antigravity et rattachée à la Phase 6, pas encore planifiée en détail.**
-last_updated: "2026-08-30T00:31:18.562Z"
+last_updated: "2026-08-31T17:18:23.891Z"
 progress:
   total_phases: 23
-  completed_phases: 15
-  total_plans: 75
-  completed_plans: 69
-  percent: 92
+  completed_phases: 17
+  total_plans: 84
+  completed_plans: 72
+  percent: 86
 ---
 
 # Project State
