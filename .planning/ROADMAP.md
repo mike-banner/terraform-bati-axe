@@ -459,7 +459,12 @@ Plans:
   2. Un partenaire choisit un statut à la qualification — « confirmé » ou « en attente de décision » — visible par l'artisan avant réponse.
   3. Un syndic peut sélectionner son persona dans `/b2b/partenaires` et déposer un AO couvrant plusieurs corps de métier (ex. toiture + façade + électricité), chacun stocké comme un lot distinct (`b2b_tender_lots`).
   4. Le DirCo saisit un code postal structuré (`project_postal_code`) à la qualification, exploitable par le matching zone.
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Migration `b2b_tender_lots` + colonnes description/decision_status/project_postal_code + types front
+- [ ] 07-02-PLAN.md — Backend : description obligatoire à l'intake, création des lots syndic, statut + code postal à la qualification DirCo
+- [ ] 07-03-PLAN.md — UI : description + sélecteur multi-lots dans le tunnel, statut de décision + code postal dans la fiche admin
 
 ### Phase 8: Diffusion Automatique & Confiance
 **Goal**: Le tri manuel DirCo est remplacé par un matching automatique zone+catégorie qui notifie les artisans concernés, avec les garde-fous anti-spam et le signal de confiance en place dès le lancement.
