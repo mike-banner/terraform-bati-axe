@@ -52,14 +52,22 @@ Ce que cette phase livre concrètement :
   phase) : « confirmé » → 1 seul artisan (exclusif) ; « en attente de
   décision » → jusqu'à 3 artisans (comme les leads particuliers).
 
-### Persona syndic exposé (SYNDIC-01)
-- Le persona `syndic` existe déjà dans l'enum `b2b_apporteur_type`
-  (migration `20260822000002_b2b_requests.sql`) mais n'est pas exposé
-  visuellement dans le tunnel `/b2b/partenaires` (seulement mentionné en
-  FAQ/copy sur `app/pages/partenaires/index.vue`).
-- Cette phase l'ajoute comme choix sélectionnable au même niveau que
-  architecte/agence immo/diagnostiqueur.
-- Contexte métier (pour calibrer l'UI, sans obligation légale à coder) : un
+### Persona syndic exposé (SYNDIC-01) — CORRECTION 2026-09-04
+- **Correction post-vérification code** : contrairement à ce qui était noté
+  initialement ici, le persona `syndic` est **déjà exposé** dans le tunnel
+  `/b2b/partenaires` — `app/types/b2b.ts` (`APPORTEUR_LABELS`) l'inclut déjà,
+  et `partenaires.vue` (step 1) itère `Object.entries(APPORTEUR_LABELS)`,
+  donc la carte syndic s'affiche déjà au même niveau qu'architecte/agence
+  immo/diagnostiqueur. **SYNDIC-01 est déjà satisfait par le code
+  existant — aucune tâche à créer pour l'exposition du persona lui-même.**
+- Ce qui reste réellement à construire pour le syndic dans cette phase n'est
+  PAS l'exposition du persona (déjà là) mais le **sélecteur multi-lots**
+  (TEND-05) qui n'apparaît que pour ce persona — voir section dédiée
+  ci-dessous. Le planner doit vérifier ce constat en ouvrant
+  `app/pages/b2b/partenaires.vue` avant de créer des tâches, plutôt que de
+  prendre ce CONTEXT.md pour argent comptant sur ce point précis.
+- Contexte métier (pour calibrer l'UI du statut confirmé/en attente, sans
+  obligation légale à coder) : un
   syndic gère des décisions **collectives** (vote en AG de copropriété),
   d'où le besoin du statut confirmé/en attente ci-dessus — c'est le lien
   direct entre SYNDIC-01 et TEND-02. Transparence avec les artisans jugée
