@@ -14,6 +14,19 @@ clôture v1.0** : le client priorise le lancement du volet Partenaires (v2) avan
 en prod réelle. Domaine de production officiel confirmé : `bati-axe.com` (Terraform
 corrigé le 2026-09-04, apply non lancé).
 
+## Current Milestone: v2.0 « Partenaires en scène »
+
+**Goal:** Permettre aux partenaires B2B (architectes, agents immobiliers, diagnostiqueurs, syndics) de diffuser leurs appels d'offres directement aux artisans matchés par zone/catégorie, sur le mécanisme d'abonnement existant.
+
+**Target features:**
+- Diffusion automatique des appels d'offres partenaires aux artisans (remplace le tri manuel DirCo)
+- Réutilisation du mécanisme d'accès existant (abonnement zone) — pas de nouveau rail de paiement
+- Persona syndic/copropriété exposé dans le tunnel (déjà en base, jamais mis en avant)
+
+**Explicitement hors scope v2** (décisions actées le 2026-09-04) :
+- Vitrine publique / annuaire partenaires — même logique que les particuliers : le partenaire est côté demande (il poste un besoin), pas côté offre, donc pas de profil public. Repoussable sans coût si un besoin apparaît plus tard.
+- Commission B2B / Stripe Connect (P10) — le pipeline B2B n'a jamais tourné en usage réel, prématuré d'investir dans un rail de paiement avant d'avoir du volume prouvé.
+
 ## Requirements
 
 ### Validated
@@ -26,11 +39,11 @@ corrigé le 2026-09-04, apply non lancé).
 - ✓ Notifications email transactionnelles (code) — v1.0
 
 ### Active (v2.0 « Partenaires en scène »)
-- [ ] **PART-01..04** (Phase 05.18) : Annuaire public, vitrines partenaires, dashboard privé — axe prioritaire du client pour v2.
+- [ ] Diffusion des appels d'offres partenaires aux artisans matchés (zone/catégorie), sur l'abonnement existant.
+- [ ] Persona syndic/copropriété exposé dans le tunnel B2B.
 - [ ] **P1** : brancher Umami (VPS déjà provisionné côté client) sur le funnel, continue sur `dev`.
 - [ ] **P3** : re-test Stripe avec les vraies clés prod (formalité).
 - [ ] **DNS-01** : activer DKIM/SPF/DMARC + Email Routing sur `bati-axe.com` pour la Phase 06.3.
-- [ ] **P10/P20** : commission B2B / Stripe Connect, passerelle B2B payante.
 - [ ] **06.4** : mot de passe oublié pro + templates Auth Supabase brandés.
 
 Détail complet : `.planning/REQUIREMENTS.md`.
@@ -42,7 +55,7 @@ Détail complet : `.planning/REQUIREMENTS.md`.
 
 ## Context
 - v1.0 shipped sur `dev`, prod réelle différée à la préparation v2 (décision client 2026-09-04).
-- Le client veut la partie Partenaires visible publiquement (annuaire/vitrines), pas juste un back-office interne — c'est devenu l'axe v2.
+- Le client veut que les partenaires puissent diffuser leurs appels d'offres aux artisans (pas de tri manuel DirCo, pas de vitrine publique) — c'est devenu l'axe v2.
 - Stack Serverless à faible coût mensuel (<50€) sur Cloudflare.
 - ~7 000 prospects bruts en table interne, jamais publics sans opt-in (ADR-007).
 
@@ -65,5 +78,22 @@ Détail complet : `.planning/REQUIREMENTS.md`.
 | RGPD/LCEN double opt-in (ADR-007) | Conformité légale et protection de la délivrabilité SMS | En vigueur |
 | URL hybride slug+ID (ADR-009) | SEO préservé, zéro collision, résistant aux changements de nom | Appliqué |
 
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
 ---
-*Last updated: 2026-09-04 after v1.0 milestone completion*
+*Last updated: 2026-09-04 after v2.0 milestone kickoff*

@@ -30,7 +30,9 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 
 ## Current Position
 
-Phase: v2.0 pas encore planifiée — prochaine étape : définir le découpage de phases pour 05.18 (`/gsd-new-milestone` ou `/gsd-plan-phase 05.18`). P1 (Umami) continue en tâche de fond sur `dev`, hors scope milestone.
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements — scope confirmé (2026-09-04) : diffusion des appels d'offres partenaires aux artisans matchés (zone/catégorie), sur l'abonnement existant. Pas de vitrine publique, pas de commission Stripe Connect (P10) pour ce milestone. P1 (Umami) continue en tâche de fond sur `dev`, hors scope milestone.
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
 
