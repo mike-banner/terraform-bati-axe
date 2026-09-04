@@ -206,6 +206,6 @@ variable "environment_domains" {
   default = {
     dev        = "dev.bati-axe.fr"
     staging    = "staging.bati-axe.fr"
-    production = "bati-axe.fr"
+    production = "bati-axe.com"
   }
 }
