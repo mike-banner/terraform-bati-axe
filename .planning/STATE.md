@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: « Pilote 78 en orbite » — EN COURS
-status: Executing Phase 06.3
-stopped_at: **Phase 05.16-02 committée + push `dev` ; test P3 (retrait de zone / Subscription Schedule) validé en local via Stripe Test Clock ; Phase 06.3 (notifs email, ex-05.19) créée à partir du plan Antigravity et rattachée à la Phase 6, pas encore planifiée en détail.**
-last_updated: "2026-08-31T17:25:01.868Z"
+status: Executing P1 (Umami)
+stopped_at: **Phase 06.3 (notifications email transactionnelles) terminée — 4/4 plans mergés (moteur multi-expéditeurs, alertes pros/décennale, accusés particuliers/B2B, confirmations Stripe/admin). Activation prod encore bloquée par les DNS bati-axe.com (DKIM/SPF/DMARC/Email Routing) non posés, aucune ressource Terraform correspondante trouvée. P3 explicitement différé jusqu'au lancement prod réel. P1 (Umami) démarré côté utilisateur sur son VPS.**
+last_updated: "2026-09-04T16:20:00.000Z"
 progress:
   total_phases: 23
-  completed_phases: 17
-  total_plans: 84
-  completed_plans: 72
-  percent: 86
+  completed_phases: 18
+  total_plans: 88
+  completed_plans: 76
+  percent: 89
 ---
 
 # Project State
@@ -30,11 +30,11 @@ See: .planning/PROJECT.md (updated 2026-08-25)
 
 ## Current Position
 
-Phase: 06.3 (notifications-email-transactionnelles) — EXECUTING
-Plan: 1 of 4
+Phase: P1 (Umami funnel) — À DÉMARRER (VPS déjà provisionné par l'utilisateur, configuration à faire)
 Milestone: **v1.0 « Pilote 78 en orbite »** (déclaré au ROADMAP le 2026-08-23)
 Phases complètes récentes :
 
+- **06.3 — Notifications Email Transactionnelles (bati-axe.com)** ✅ 4/4 (2026-08-31/09-04) : moteur multi-expéditeurs (`no-reply@`/`notifications@`/`contact@`) + layout HTML/LCEN (06.3-01) ; alertes pros — validation/rejet décennale, cron J-30/J-7 expiration, alerte lead sur `notifications@` (06.3-02) ; accusés particuliers (dépôt projet, déblocage lead) + accusé B2B (06.3-03) ; confirmations Stripe (souscription/retrait de zone/changement facturation) + alerte admin nouvelle inscription pro, migration alerte SIRET (06.3-04). **Activation prod encore bloquée** : DNS `bati-axe.com` (DKIM/SPF/DMARC), Cloudflare Email Routing `contact@`, `RESEND_API_KEY`/`NUXT_PUBLIC_SITE_URL` prod — rien de tout ça n'existe dans les `.tf` (vérifié 2026-09-04), à poser une fois les accès client obtenus. En attendant, `EMAIL_LIVE=false` fait retomber sur `console.log`.
 - **05.10 — Espace Partenaires & Apporteurs d'Affaires** ✅ 7/7 (2026-08-22) : landing `/b2b/partenaires`, tunnel 4 étapes, POST + presign R2, back-office admin `b2b_requests`, workflow DirCo (qualification + sélection 2-3 sous-traitants + restitution email).
 - **05.11 — Coffre-Fort Juridique & Capacité Sous-traitance** ✅ 4/4 (2026-08-23) : `documents_artisan`, alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois, vue admin documents.
 - **06.1 — Console Admin Opérationnelle** ✅ (2026-08-22) : 8 composants modulaires, sidebar, dark mode, search/pagination, audit log, onglets B2B + Documents légaux.
