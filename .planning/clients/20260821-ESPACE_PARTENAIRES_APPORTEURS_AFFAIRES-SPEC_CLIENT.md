@@ -31,12 +31,14 @@ Le ROADMAP marque `Phase 5.8: Tunnel B2B & Apporteurs d'Affaires` comme **✅ 3/
 ---
 
 ## 👤 2. Acteurs & Personas Concernés
-- [x] **Architecte / Maître d'œuvre / Décorateur** — respect des détails techniques.
-- [x] **Bureau d'Études / Ingénieur Structure** — conformité notes de calcul, décennale béton.
+- [x] **Architecte (DPLG / Intérieur) / Maître d'œuvre / Décorateur** — respect des détails techniques, besoin d'artisans qualifiés.
+- [x] **Bureau d'Études / Ingénieur Structure & Sol** — conformité notes de calcul, étude de sol, décennale béton.
+- [x] **Géomètre-Expert** — bornage, relevés et amont de la construction.
 - [x] **Agence Immobilière / Chasseur** — pré-chiffrage < 48h pour sécuriser les compromis.
-- [x] **Syndic / Gestionnaire** — réactivité, tenue des parties communes, rapports de chantier.
+- [x] **Syndic / Gestionnaire / Promoteur & Aménageur** — réactivité, tenue des parties communes, projets neufs/lourds.
 - [x] **Équipe commerciale BÂTI-AXE** — reçoit la notification prioritaire + la fiche dossier.
-- [ ] **Artisan / Prestataire** — indirect (bénéficiaire final des dossiers apportés), non visé par cette page.
+- [ ] **Artisan / Prestataire** — indirect (bénéficiaire final des dossiers apportés), besoin de plans archis pour ses clients.
+
 
 ---
 

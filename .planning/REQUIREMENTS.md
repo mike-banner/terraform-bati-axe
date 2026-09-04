@@ -48,11 +48,15 @@
 - [x] **API-01**: Lookup SIRET automatique au Claim — Au POST /api/v1/pro/claim, appeler l'API Recherche Entreprises (recherche-entreprises.api.gouv.fr) avec le SIRET saisi. Stocker raison sociale, adresse et statut dans `siret_company_name`, `siret_address`, `siret_status`. Bloquer si `etat_administratif='F'` (fermé). Ne pas bloquer sur `not_found` (non diffusible) ou `error` (API indisponible).
 - [x] **API-02**: Badge Entreprise Vérifiée — Afficher le badge `BadgeEntrepriseVerifiee` sur le dashboard pro et le profil public `/pro/[dept]/[slug]` quand `siret_status === 'active'`. Ne pas afficher si `null`, `not_found` ou `error`.
 - [x] **TRST-01**: Badge Décennale Certifiée BÂTI-AXE — L'approbation admin du dossier décennale met à jour `decennal_status` à `'valid'` et ajoute `'decennale_certified'` dans `labels` JSONB. Le badge `BadgeDecennaleCertifiee` s'affiche sur dashboard et profil public quand `decennal_status === 'valid'`.
+- [ ] **TRST-02**: Badge Label RGE (Reconnu Garant de l'Environnement) — Qualification RGE obligatoire pour les artisans opérant sur les lots Rénovation Énergétique (Génie Climatique / Plomberie, Électriciens, Menuisiers, Plaquistes/Isolateurs). Contrôle du certificat RGE + affichage du badge `BadgeRGECertifie` sur profil public & matching exclusif sur les leads MaPrimeRénov'/CEE.
+
 
 ## v2 Requirements
 - **GEO-01**: Scalabilité géographique dynamique automatisée (activation multi-villes via console admin)
 - **PAY-01**: Facturation automatisée Stripe et gestion des factures PDF
 - **SEO-01**: Annuaire public `/[metier]/[ville]` activé dynamiquement quand ≥ 5 pros opt-in par zone
+- **SEO-02**: Landing pages thématiques SEO à forte intention de recherche Google (`/renovation-energetique`, `/extension`, `/surelevation`, `/amenagement-combles`) pré-configurées avec OpenGraph, canonical URLs et balisage Schema.org (HowTo / LocalBusiness) pour alimenter directement le simulateur.
+
 
 ## Out of Scope
 | Feature | Reason |
