@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
 milestone: v2.0
-milestone_name: « Partenaires en scène » — EN PRÉPARATION
-status: v1.0 clôturée, v2.0 en attente de planification (roadmap/phases à définir)
-stopped_at: **v1.0 « Pilote 78 en orbite » archivée le 2026-09-04 (`.planning/milestones/v1.0-ROADMAP.md`, `v1.0-REQUIREMENTS.md`) — livrée sur `dev`, pas de bascule prod déclenchée : le client priorise le lancement du volet Partenaires avant la mise en prod réelle. Domaine de production corrigé `bati-axe.fr` → `bati-axe.com` dans le Terraform (confirmé actif côté Cloudflare par l'utilisateur), apply non lancé. v2.0 recentrée sur Phase 05.18 (Annuaire/Vitrines/Dashboard Partenaires) + backlog B2B reporté. P1 (Umami) continue en tâche de fond sur `dev`.**
-last_updated: "2026-09-04T19:30:00.000Z"
+milestone_name: « Partenaires en scène » — ROADMAP CRÉÉE
+status: v1.0 clôturée, roadmap v2.0 créée (Phases 7-10, + 11/12 backlog renumérotés) — prête pour planification
+stopped_at: **Roadmap v2.0 créée le 2026-09-04 (`.planning/ROADMAP.md`) : Phase 7 (Formulaire AO & Modèle Multi-Lots) → 8 (Diffusion Automatique & Confiance) → 9 (Dashboard Pro & Claim des AO) → 10 (Rattrapage Infra & Auth Pro, piste parallèle non bloquante). Anciennes phases stub « Réputation & Scale » et « PWA » renumérotées 11/12 pour libérer les numéros 7-8. Couverture 100% : TEND-01..15 + SYNDIC-01 (Phases 7-9), P1/P3/DNS-01/INFRA-DOM-01/AUTH-PWD/AUTH-TPL (Phase 10). Prochaine étape : `/gsd-plan-phase 7`.**
+last_updated: "2026-09-04T20:00:00.000Z"
 progress:
-  total_phases: 23
+  total_phases: 27
   completed_phases: 18
   total_plans: 88
   completed_plans: 76
-  percent: 89
+  percent: 67
 ---
 
 # Project State
@@ -26,13 +26,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-09-04)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: **v1.0 « Pilote 78 en orbite » clôturée** (2026-09-04). Milestone **v2.0 « Partenaires en scène »** en préparation — axe prioritaire : Phase 05.18 (Annuaire/Vitrines/Dashboard Partenaires), le client veut le volet Partenaires exploitable publiquement. Terraform prod corrigé pour `bati-axe.com` (zone confirmée active par l'utilisateur) mais apply non lancé — pas de bascule prod tant que v2 n'est pas avancée.
+**Current focus**: **v1.0 « Pilote 78 en orbite » clôturée** (2026-09-04). Milestone **v2.0 « Partenaires en scène »** — roadmap créée, axe prioritaire : diffusion automatique des appels d'offres partenaires aux artisans matchés zone/catégorie (Phases 7-9), persona syndic exposé dans le tunnel (Phase 7). Terraform prod corrigé pour `bati-axe.com` mais apply non lancé — pas de bascule prod tant que v2 n'est pas avancée (suivi en Phase 10).
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements — scope confirmé (2026-09-04) : diffusion des appels d'offres partenaires aux artisans matchés (zone/catégorie), sur l'abonnement existant. Pas de vitrine publique, pas de commission Stripe Connect (P10) pour ce milestone. P1 (Umami) continue en tâche de fond sur `dev`, hors scope milestone.
+Phase: 7 of 12 (Formulaire AO & Modèle Multi-Lots)
+Plan: TBD — pas encore planifié
+Status: Ready to plan — roadmap v2.0 créée (2026-09-04, `.planning/ROADMAP.md`) : Phase 7 → 8 → 9 exécutent le broadcast AO (schéma/matching → diffusion+confiance → dashboard/claim) ; Phase 10 (rattrapage infra/auth v1) tourne en parallèle, non bloquante. Pas de vitrine publique, pas de commission Stripe Connect (P10 métier, différé) pour ce milestone.
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
 

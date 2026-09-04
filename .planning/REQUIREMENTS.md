@@ -23,6 +23,7 @@
 - [ ] **TEND-13** : L'artisan dispose d'un moyen de signaler un AO suspect/abusif, remonté à l'admin.
 - [ ] **TEND-14** : Un badge « partenaire vérifié » (réutilise la vérification SIRET existante) est visible sur les AO diffusés — remplace le signal de confiance qu'apportait le tri manuel DirCo.
 - [ ] **TEND-15** : Le dashboard artisan explique en une phrase que l'abonnement zone couvre désormais deux flux (chantiers particuliers + appels d'offres partenaires), pour éviter toute confusion sur le périmètre payé.
+- [ ] **TEND-16** : Le partenaire reçoit un email à chaque étape clé de son AO (diffusé aux artisans, un artisan s'est déclaré intéressé) avec un format structuré et cohérent (sujet identifiable, statut clair) — permet à un partenaire outillé (Zapier/Make/n8n) d'automatiser son suivi sans API dédiée. Pas de dashboard ni de compte partenaire pour ce milestone (partenaire = déposant occasionnel, pas utilisateur récurrent).
 
 ### Persona Syndic (SYNDIC)
 
@@ -62,15 +63,38 @@
 
 | Requirement | Phase | Status |
 |---|---|---|
-| TEND-01..15 | à assigner | Pending |
-| SYNDIC-01 | à assigner | Pending |
-| P1, P3, DNS-01, INFRA-DOM-01 | à assigner | Pending |
-| AUTH-PWD-01..03, AUTH-TPL-01/02 | à assigner | Pending |
+| TEND-01 | Phase 7 | Pending |
+| TEND-02 | Phase 7 | Pending |
+| TEND-05 | Phase 7 | Pending |
+| SYNDIC-01 | Phase 7 | Pending |
+| TEND-04 | Phase 8 | Pending |
+| TEND-06 | Phase 8 | Pending |
+| TEND-10 | Phase 8 | Pending |
+| TEND-11 | Phase 8 | Pending |
+| TEND-14 | Phase 8 | Pending |
+| TEND-07 | Phase 9 | Pending |
+| TEND-03 | Phase 9 | Pending |
+| TEND-08 | Phase 9 | Pending |
+| TEND-09 | Phase 9 | Pending |
+| TEND-12 | Phase 9 | Pending |
+| TEND-13 | Phase 9 | Pending |
+| TEND-15 | Phase 9 | Pending |
+| P1 | Phase 10 | Pending |
+| P3 | Phase 10 | Pending |
+| DNS-01 | Phase 10 | Pending |
+| INFRA-DOM-01 | Phase 10 | Pending |
+| AUTH-PWD-01 | Phase 10 | Pending |
+| AUTH-PWD-02 | Phase 10 | Pending |
+| AUTH-PWD-03 | Phase 10 | Pending |
+| AUTH-TPL-01 | Phase 10 | Pending |
+| AUTH-TPL-02 | Phase 10 | Pending |
+
+| TEND-16 | Phase 9 | Pending |
 
 **Coverage:**
-- v2 requirements (TEND + SYNDIC) : 16 total
-- Reportés de v1 : 8
-- Mapped to phases : 0 (roadmap à venir)
+- v2 requirements (TEND + SYNDIC) : 17 total — 17/17 mapped ✓
+- Reportés de v1 : 8 — 8/8 mapped ✓ (Phase 10, piste parallèle non bloquante)
+- Total mapped to phases : 25/25 ✓ (Phases 7, 8, 9, 10 — voir `.planning/ROADMAP.md`)
 
 ---
 *v1.0 archivé : `.planning/milestones/v1.0-REQUIREMENTS.md`*

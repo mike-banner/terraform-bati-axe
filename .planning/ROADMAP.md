@@ -5,7 +5,7 @@
 ## Milestones
 
 - ✅ **v1.0 « Pilote 78 en orbite »** — Phases 05.10-06.4 + P4/P7/P19 (shipped 2026-09-04 sur `dev`, pas de bascule prod). Détails : `.planning/milestones/v1.0-ROADMAP.md`.
-- 🚧 **v2.0 « Partenaires en scène »** — en préparation. Cœur : Phase 05.18 (Annuaire, vitrines, dashboard Partenaires) + le reste du backlog B2B reporté.
+- 🚧 **v2.0 « Partenaires en scène »** — en préparation. Cœur : diffusion automatique des appels d'offres partenaires aux artisans matchés (zone/catégorie), persona syndic exposé dans le tunnel. Phases 7-10. Rattrapage infra/auth reporté de v1 en parallèle (Phase 10).
 
 ### ✅ Milestone v0.9.0 « Experience & Growth Pro » — CLÔTURÉ le 2026-08-19
 
@@ -42,8 +42,12 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 06.3: Notifications Email Transactionnelles (bati-axe.com)** - Moteur multi-expéditeurs (`no-reply@`/`notifications@`/`contact@bati-axe.com`), notifs décennale/Stripe/zones côté Pros, accusés réception/déblocage côté Particuliers, accusé dépôt B2B, alertes admin centralisées. **Phase complète 4/4** (code livré 2026-09-04) — activation prod (DNS DKIM/SPF/DMARC + Email Routing) reportée à la préparation prod de la v2.
 - [ ] **Phase 06.4: Mot de passe oublié (pro) & Templates Auth Supabase** - Lien "Mot de passe oublié ?" sur `/pro/claim` (`resetPasswordForEmail` + page de réinitialisation), templates d'e-mails Auth Supabase brandés (recovery/invite/confirmation) réutilisant le branding copper/navy + footer LCEN de 06.3. Découvert lors de l'audit email 06.3 (2026-08-30) : aucun recours self-service n'existe aujourd'hui pour un pro qui oublie son mot de passe.
 - [x] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
-- [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
-- [ ] **Phase 8: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
+- [ ] **Phase 7: Formulaire AO & Modèle Multi-Lots** - Description obligatoire + statut confirmé/en attente sur l'AO, persona syndic dans le tunnel, schéma `b2b_tender_lots`/`b2b_tender_claims`/`b2b_tender_notifications` + `project_postal_code`, multi-lots syndic (1 lot par corps de métier).
+- [ ] **Phase 8: Diffusion Automatique & Confiance** - Bouton diffusion DirCo (remplace le picker manuel `recommended_pros`), matching zone active × catégorie, notification email idempotente, rate-limit AO actifs/partenaire + notifications/jour/artisan, badge « partenaire vérifié ».
+- [ ] **Phase 9: Dashboard Pro & Claim des AO** - Onglet « Appels d'offres » dans `/espace/leads`, claim gaté sur `pro_zones` actif, révélation coordonnées post-claim, fermeture auto (expiration/cap), signalement AO suspect, message clarifiant les deux flux de l'abonnement, emails de statut structurés au partenaire (diffusion, artisan intéressé) — pas de dashboard/compte partenaire ce milestone.
+- [ ] **Phase 10: Rattrapage Infra & Auth Pro (parallèle)** - Umami funnel, re-test Stripe clés prod, DNS `bati-axe.com` (DKIM/SPF/DMARC) + bascule Terraform prod, mot de passe oublié pro + templates Auth Supabase brandés. Non bloquant pour les phases 7-9.
+- [ ] **Phase 11: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
+- [ ] **Phase 12: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
 
 ## Phase Details
 
@@ -446,7 +450,53 @@ Plans:
 
 **UI hint**: yes
 
-### Phase 7: Réputation & Scale
+### Phase 7: Formulaire AO & Modèle Multi-Lots
+**Goal**: Le partenaire décrit un besoin complet et qualifiable (description, statut, multi-métiers) et le persona syndic est exposé dans le tunnel ; le socle de données porte le multi-lot.
+**Depends on**: Phase 06.1 (back-office B2B), Phase 05.16 (`pro_zones`)
+**Requirements**: TEND-01, TEND-02, TEND-05, SYNDIC-01
+**Success Criteria** (what must be TRUE):
+  1. Un partenaire ne peut pas soumettre un AO sans description (≥20 caractères), en plus du budget et des documents CCTP/plans déjà supportés.
+  2. Un partenaire choisit un statut à la qualification — « confirmé » ou « en attente de décision » — visible par l'artisan avant réponse.
+  3. Un syndic peut sélectionner son persona dans `/b2b/partenaires` et déposer un AO couvrant plusieurs corps de métier (ex. toiture + façade + électricité), chacun stocké comme un lot distinct (`b2b_tender_lots`).
+  4. Le DirCo saisit un code postal structuré (`project_postal_code`) à la qualification, exploitable par le matching zone.
+**Plans**: TBD
+
+### Phase 8: Diffusion Automatique & Confiance
+**Goal**: Le tri manuel DirCo est remplacé par un matching automatique zone+catégorie qui notifie les artisans concernés, avec les garde-fous anti-spam et le signal de confiance en place dès le lancement.
+**Depends on**: Phase 7
+**Requirements**: TEND-04, TEND-06, TEND-10, TEND-11, TEND-14
+**Success Criteria** (what must be TRUE):
+  1. Quand le DirCo qualifie un AO (statut `qualifié`), un bouton « Diffuser » remplace la sélection manuelle `recommended_pros` et déclenche le matching zone active (`pro_zones`) × catégorie.
+  2. Les artisans matchés reçoivent un email de notification par lot, sans doublon si la diffusion est relancée (idempotence).
+  3. Un partenaire ne peut pas avoir plus d'AO actifs simultanés que le plafond configuré ; un artisan ne reçoit pas plus de notifications B2B par jour que le plafond configuré, tous partenaires confondus.
+  4. Chaque AO/lot diffusé affiche un badge « partenaire vérifié » réutilisant la vérification SIRET existante.
+**Plans**: TBD
+
+### Phase 9: Dashboard Pro & Claim des AO
+**Goal**: L'artisan peut consulter, réclamer et traiter les appels d'offres qui le concernent depuis son espace, sans confusion sur ce que couvre son abonnement.
+**Depends on**: Phase 8
+**Requirements**: TEND-03, TEND-07, TEND-08, TEND-09, TEND-12, TEND-13, TEND-15, TEND-16
+**Success Criteria** (what must be TRUE):
+  1. L'artisan voit un onglet « Appels d'offres » dans `/espace/leads`, visuellement distinct des chantiers particuliers, avec une phrase expliquant que son abonnement zone couvre désormais deux flux.
+  2. L'artisan peut se déclarer intéressé (claim) sur un AO/lot uniquement si son abonnement zone (`pro_zones`) est actif sur la zone du lot.
+  3. Une fois le claim effectué, les coordonnées du partenaire sont révélées à l'artisan (masquées avant), et le partenaire reçoit un email structuré (sujet/statut identifiables) l'informant qu'un artisan est intéressé.
+  4. Un lot passe automatiquement en statut « clos » à expiration ou quand son cap de claims est atteint (1 seul artisan si l'AO est « confirmé », jusqu'à 3 s'il est « en attente de décision »).
+  5. L'artisan dispose d'un moyen de signaler un AO suspect ou abusif, visible par l'admin.
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 10: Rattrapage Infra & Auth Pro (parallèle, non bloquant)
+**Goal**: Finaliser les items reportés de v1 (analytics, paiement, DNS/prod, self-service mot de passe pro) sans bloquer le lancement du broadcast AO — piste parallèle, exécutable à tout moment pendant les phases 7-9.
+**Depends on**: Nothing (parallèle aux phases 7-9)
+**Requirements**: P1, P3, DNS-01, INFRA-DOM-01, AUTH-PWD-01, AUTH-PWD-02, AUTH-PWD-03, AUTH-TPL-01, AUTH-TPL-02
+**Success Criteria** (what must be TRUE):
+  1. Umami capte les événements du funnel (simulateur → lead → contact) sur `dev`.
+  2. Un paiement Stripe complet (checkout + webhook + cron 48h) est vérifié avec les vraies clés prod.
+  3. `bati-axe.com` a DKIM/SPF/DMARC + Email Routing actifs et la bascule Terraform prod est vérifiée/finalisée.
+  4. Un pro peut réinitialiser son mot de passe oublié depuis `/pro/claim`, avec des e-mails Auth Supabase brandés (recovery/invite/confirmation).
+**Plans**: TBD
+
+### Phase 11: Réputation & Scale
 **Goal**: Pérenniser la croissance par la preuve sociale et l'expansion géographique conditionnée aux métriques pilote.
 **Depends on**: Phase 6
 **Requirements**: REP-01, REP-02, SCL-01, SCL-02 (ouverture TP), ECO-01 (modèle hybride)
@@ -460,7 +510,7 @@ Plans:
 **Plans**: TBD
 **UI hint**: yes
 
-### Phase 8: Architecture PWA Mobile-First
+### Phase 12: Architecture PWA Mobile-First
 **Goal**: Rendre Bâti-Axe installable et résilient au réseau (offline-resilient) — shell UI en cache, chargement perçu plus rapide, sans réécriture native.
 **Depends on**: Phase 4.7, Phase 6
 **Success Criteria** (what must be TRUE):
@@ -496,8 +546,12 @@ Plans:
 | 06.2 KPIs de Pilotage & Dashboard de Scalabilité | 1/1 | Complete | 2026-08-22 |
 | 05.12 Front Polish & Branding (Landing Partenaires + Logo) | 2/2 | Complete | 2026-08-23 |
 | 05.13 Dette technique + P9 Mobile QA + P5 Feedback Loop | 3/3 | Complete | 2026-08-23 |
-| 7. Réputation & Scale | 0/TBD | Not started | - |
-| 8. Architecture PWA Mobile-First | 0/TBD | Not started | - |
+| 7. Formulaire AO & Modèle Multi-Lots | 0/TBD | Not started | - |
+| 8. Diffusion Automatique & Confiance | 0/TBD | Not started | - |
+| 9. Dashboard Pro & Claim des AO | 0/TBD | Not started | - |
+| 10. Rattrapage Infra & Auth Pro | 0/TBD | Not started | - |
+| 11. Réputation & Scale | 0/TBD | Not started | - |
+| 12. Architecture PWA Mobile-First | 0/TBD | Not started | - |
 
 ## Priorités pilote v1 — Backlog (items manquants identifiés le 2026-08-19)
 
