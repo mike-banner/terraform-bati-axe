@@ -4,31 +4,8 @@
 
 ## Milestones
 
-### 🚧 **v1.0 « Pilote 78 en orbite » — EN COURS**
-
-**Verdict : la machine B2C est construite (v0.9.0 clôturé) + couche Partenaires B2B + KPIs livrés.** Reste : conditions de livraison ci-dessous + priorité pilote (backlog § « Priorités pilote v1 ») pour un go-live réel.
-
-**Livré dans ce milestone (2026-08-22 → 08-23) :**
-- ✅ **Phase 05.10 — Espace Partenaires & Apporteurs d'Affaires** (7/7) : landing `/b2b/partenaires`, tunnel 4 étapes, endpoint POST + presign R2, back-office admin `b2b_requests` (queue + pipeline + assignation + notes), workflow DirCo (qualification, sélection 2-3 sous-traitants, restitution email).
-- ✅ **Phase 05.11 — Coffre-Fort Juridique & Capacité Sous-traitance** (4/4) : table `documents_artisan`, switch alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois, vue admin documents.
-- ✅ **Phase 06.1 — Console Admin Opérationnelle** : 8 composants modulaires, sidebar 7+ onglets, dark mode, search/pagination, audit log, onglet « Dossiers B2B ».
-- ✅ **Phase 06.2 — KPIs de Pilotage & Dashboard de Scalabilité** : tables `marketing_spend_logs` + `kpi_snapshots`, endpoint kpi-engine (6 KPIs + seuils), dashboard admin. *(récupéré d'une branche jamais mergée — était « livré » par erreur dans les docs)*
-- ✅ **P4 — Notif pro nouveaux leads (email)** : `notifyProLead` sur `projects.post.ts` (opt-in `lead_alerts_email`, idempotence `lead_notifications`), page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h.
-- 🚧 **Phase 05.14 — FIX Multi-Buckets R2 & Terraform Prod** : Isolation 3 buckets R2 (`batiaxe-public-[env]`, `batiaxe-vault-[env]`, `batiaxe-b2b-[env]`) + fix bindings `NUXT_R2_*` + Terraform Prod.
-- 🚧 **Phase 05.15 — FIX Verrouillage Leads non-vérifiés** : Verrouillage du déblocage de leads sur `/espace/leads` tant que `decennal_status !== 'verified'`.
-- ✅ **Phase 05.16 — P7 Packs Zonés & Pricing Dégressif (Pilote 78)** : Quadrillage des Yvelines en 4 zones (Mantes, Rambouillet, Versailles, St-Germain), abonnement dégressif sans engagement mensuel (190€ → 350€) + annuel économique (150€ → 300€). Ajout de zone (Stripe Checkout), toggle mensuel/annuel et retrait individuel de zone via Subscription Schedule, garde-fou un seul changement Stripe en vol à la fois.
-- ✅ Migrations appliquées en prod : showcase (00), KPI (01), b2b (02), DirCo (03), coffre-fort 05.11 (×2), P4 (02).
-
-**Conditions de livraison v1 (reste à valider avant mise en prod réelle avec vrais utilisateurs) :**
-- [x] Environnement Cloudflare Dev vérifié au vert sur la branche `dev` : projet `bati-axe-dev`, domaine `dev.bati-axe.fr`, Terraform `Init/Validate/Plan/Apply` réussis le 2026-08-25.
-- [ ] Déploiement de production client vérifié avec les identifiants du client (workflow prod actuellement manuel dans la configuration Dev).
-- [x] Paiement Stripe re-testé de bout en bout en local (checkout + webhook, mode test Stripe CLI, 2026-08-30) — cron pg_cron 48h confirmé **inopérant par construction** (condition jamais atteignable, décision : ne pas corriger pour l'instant, cf. STATE.md). Reste une validation finale avec les vraies clés Stripe prod (formalité).
-- [ ] Admin minimal validé opérationnel pour le pilote — ✅ console admin 06.1/06.2 livrée (revue documents OK)
-- [x] Dette test traitée : suite Playwright câblée sur Chrome système et QA mobile validée dans la phase 05.13.
-
-**Reporté au prochain milestone** : Phase 7 (Réputation & Scale), Phase 8 (PWA Mobile-First), Web Push P4-temps-2, P11 (eIDAS/workspace), P16 (TP), P22 (Majors) + tout le bloc Deferred ci-dessous.
-
-**[2026-08-30] Recentrage v1 sur le B2C** : le pilote doit rester simple pour attirer particuliers + artisans sans complexifier le lancement. Le bloc B2B (Espace Partenaires 05.10, Coffre-fort sous-traitance 05.11, Diagnostiqueurs 05.17) reste **committé et accessible tel quel** (pas de revert, pas de dépublication) mais **n'est plus une priorité v1** : **Phase 05.18** (Annuaire, vitrines, dashboard partenaires), **P10** (Commission B2B/Stripe Connect) et **P20** (Passerelle B2B payante) sont reportés au prochain milestone, au même titre que Phase 7/8. Le module B2B existant n'a pas encore été validé en usage réel (4 endpoints critiques trouvés cassés en 500 le 2026-08-29/30, corrigés — jamais testés en conditions réelles avant ça).
+- ✅ **v1.0 « Pilote 78 en orbite »** — Phases 05.10-06.4 + P4/P7/P19 (shipped 2026-09-04 sur `dev`, pas de bascule prod). Détails : `.planning/milestones/v1.0-ROADMAP.md`.
+- 🚧 **v2.0 « Partenaires en scène »** — en préparation. Cœur : Phase 05.18 (Annuaire, vitrines, dashboard Partenaires) + le reste du backlog B2B reporté.
 
 ### ✅ Milestone v0.9.0 « Experience & Growth Pro » — CLÔTURÉ le 2026-08-19
 
@@ -62,7 +39,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
 - [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, Dossiers B2B, KPIs, Documents légaux, Journal), search + pagination, projets cliquables. Onglet B2B fusionné (05.10-06) + Documents légaux (05.11-04). (livré 2026-08-22)
 - [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). *(récupéré d'une branche jamais mergée → merge PR #45)*. Reste : brancher Matomo côté client (P1). (livré 2026-08-22)
-- [ ] **Phase 06.3: Notifications Email Transactionnelles (bati-axe.com)** - Moteur multi-expéditeurs (`no-reply@`/`notifications@`/`contact@bati-axe.com`), notifs décennale/Stripe/zones côté Pros, accusés réception/déblocage côté Particuliers, accusé dépôt B2B, alertes admin centralisées, DNS Cloudflare (DKIM/SPF/DMARC) + Email Routing. Étend EML-01 (Phase 6) — regroupé avec le SMS 06-04 différé sous la même phase parente.
+- [x] **Phase 06.3: Notifications Email Transactionnelles (bati-axe.com)** - Moteur multi-expéditeurs (`no-reply@`/`notifications@`/`contact@bati-axe.com`), notifs décennale/Stripe/zones côté Pros, accusés réception/déblocage côté Particuliers, accusé dépôt B2B, alertes admin centralisées. **Phase complète 4/4** (code livré 2026-09-04) — activation prod (DNS DKIM/SPF/DMARC + Email Routing) reportée à la préparation prod de la v2.
 - [ ] **Phase 06.4: Mot de passe oublié (pro) & Templates Auth Supabase** - Lien "Mot de passe oublié ?" sur `/pro/claim` (`resetPasswordForEmail` + page de réinitialisation), templates d'e-mails Auth Supabase brandés (recovery/invite/confirmation) réutilisant le branding copper/navy + footer LCEN de 06.3. Découvert lors de l'audit email 06.3 (2026-08-30) : aucun recours self-service n'existe aujourd'hui pour un pro qui oublie son mot de passe.
 - [x] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
 - [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).

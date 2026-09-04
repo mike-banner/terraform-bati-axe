@@ -1,109 +1,68 @@
-# Requirements: BÂTI-AXE
+# Requirements: BÂTI-AXE — v2.0 « Partenaires en scène »
 
-**Defined**: 2026-06-02
-**Core Value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment dont les garanties décennales sont vérifiées.
-
-## v1 Requirements
-
-### Infrastructure & Setup
-- [x] **INFRA-01**: Projet Nuxt 3 initialisé avec `@nuxtjs/supabase`, Pinia, Zod
-- [x] **INFRA-02**: Supabase CLI + Docker configuré pour le développement local
-- [x] **INFRA-03**: Cloudflare Pages configuré avec preset Nitro `cloudflare-pages` (Staging = Preview, Prod = main)
-- [x] **INFRA-04**: Middleware Nitro de sécurité (headers, rate limiting, Sentry, healthcheck `/api/v1/health`)
-
-### Compliance & Légal
-- [x] **LEGAL-01**: Mentions légales, politique de confidentialité, politique cookies et CGU v1 publiées sur `/legal/*`
-- [x] **LEGAL-02**: Registre des traitements RGPD maintenu dans `docs/legal/`
-
-### Capture (Simulateur Nuxt)
-- [x] **CPTR-01**: Sélection dynamique par nature de projet (icônes)
-- [x] **CPTR-02**: Localisation avec code postal (Focus 78)
-- [x] **CPTR-03**: Saisie du budget estimé et délai souhaité
-- [x] **CPTR-04**: Saisie des coordonnées de contact (nom, email, téléphone)
-- [x] **CPTR-05**: Enregistrement sécurisé du projet anonyme sans compte requis
-
-### Le Verrou (Logique de Floutage)
-- [ ] **LCK-01**: Floutage serveur (Nitro API) des coordonnées des prospects (`customer_full_name`, `customer_phone`, `customer_email`, `exact_address`)
-- [ ] **LCK-02**: Accès immédiat non flouté pour les pros PREMIUM via abonnement Stripe
-- [ ] **LCK-03**: Déblocage automatique gratuit après un délai d'attente de 24 heures pour les pros BASIC (pg_cron)
-
-### Revendication (Claim) & Vérification
-- [ ] **CLM-01**: Revendication de profil pour les prospects importés via page `/pro/{dept}/{slug}-{short_id}` (ADR-009)
-- [ ] **CLM-02**: Authentification de compte pro sécurisée (Supabase Auth)
-- [ ] **CLM-03**: Chargement et stockage isolé de la pièce d'identité, du KBIS et de l'assurance décennale sur R2 via presigned URLs
-- [ ] **CLM-04**: Statut de vérification mis à jour après validation manuelle par l'administrateur
-
-### SMS Teasing
-- [ ] **SMS-01**: Teasing par SMS instantané aux pros PREMIUM après un dépôt de projet
-- [ ] **SMS-02**: Teasing par SMS avec délai de 30 minutes aux pros BASIC
-- [ ] **SMS-03**: Consentement SMS explicite obligatoire (case distincte, RGPD / LCEN)
-
-### Administration
-- [ ] **ADM-01**: Interface de validation des documents administratifs (Kbis, décennale) stockés sur R2
-- [ ] **ADM-02**: Modération et nettoyage des leads suspects avant envoi aux artisans
-- [ ] **ADM-03**: Console d'analytics (taux d'ouverture SMS vs taux de clic)
-
-## Phase 5 : Intégration API État (SIRET) & Badges de Confiance
-
-- [x] **API-01**: Lookup SIRET automatique au Claim — Au POST /api/v1/pro/claim, appeler l'API Recherche Entreprises (recherche-entreprises.api.gouv.fr) avec le SIRET saisi. Stocker raison sociale, adresse et statut dans `siret_company_name`, `siret_address`, `siret_status`. Bloquer si `etat_administratif='F'` (fermé). Ne pas bloquer sur `not_found` (non diffusible) ou `error` (API indisponible).
-- [x] **API-02**: Badge Entreprise Vérifiée — Afficher le badge `BadgeEntrepriseVerifiee` sur le dashboard pro et le profil public `/pro/[dept]/[slug]` quand `siret_status === 'active'`. Ne pas afficher si `null`, `not_found` ou `error`.
-- [x] **TRST-01**: Badge Décennale Certifiée BÂTI-AXE — L'approbation admin du dossier décennale met à jour `decennal_status` à `'valid'` et ajoute `'decennale_certified'` dans `labels` JSONB. Le badge `BadgeDecennaleCertifiee` s'affiche sur dashboard et profil public quand `decennal_status === 'valid'`.
-- [ ] **TRST-02**: Badge Label RGE (Reconnu Garant de l'Environnement) — Qualification RGE obligatoire pour les artisans opérant sur les lots Rénovation Énergétique (Génie Climatique / Plomberie, Électriciens, Menuisiers, Plaquistes/Isolateurs). Contrôle du certificat RGE + affichage du badge `BadgeRGECertifie` sur profil public & matching exclusif sur les leads MaPrimeRénov'/CEE.
-
+**Défini** : 2026-09-04
+**Core Value** : Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment dont les garanties décennales sont vérifiées.
+**Axe v2** : le client veut le volet Partenaires (apporteurs d'affaires) visible et exploitable publiquement — pas seulement un back-office interne.
 
 ## v2 Requirements
-- **GEO-01**: Scalabilité géographique dynamique automatisée (activation multi-villes via console admin)
-- **PAY-01**: Facturation automatisée Stripe et gestion des factures PDF
-- **SEO-01**: Annuaire public `/[metier]/[ville]` activé dynamiquement quand ≥ 5 pros opt-in par zone
-- **SEO-02**: Landing pages thématiques SEO à forte intention de recherche Google (`/renovation-energetique`, `/extension`, `/surelevation`, `/amenagement-combles`) pré-configurées avec OpenGraph, canonical URLs et balisage Schema.org (HowTo / LocalBusiness) pour alimenter directement le simulateur.
 
+### Partenaires — Annuaire, Vitrines & Dashboard (cœur v2)
+- [ ] **PART-01** (ex Phase 05.18) : section Partenaires sur l'accueil `/`
+- [ ] **PART-02** (ex Phase 05.18) : annuaire public par catégorie `/partenaires/annuaire`
+- [ ] **PART-03** (ex Phase 05.18) : vitrine publique par partenaire `/partenaire/[dept]/[slug]`
+- [ ] **PART-04** (ex Phase 05.18) : dashboard privé de gestion du profil `/espace/partenaire`
+
+### Monétisation B2B (reporté de v1)
+- [ ] **P10** : Commission B2B / Stripe Connect
+- [ ] **P20** : Passerelle B2B payante
+
+### Production réelle (reporté de v1, plus un prérequis de clôture)
+- [ ] **P3** : re-test Stripe avec les vraies clés prod (formalité — logique déjà validée en mode test).
+- [ ] **DNS-01** : DKIM/SPF/DMARC + Cloudflare Email Routing sur `bati-axe.com` (Phase 06.3, code déjà livré).
+- [ ] **INFRA-DOM-01** : vérifier/finaliser la bascule Terraform prod sur `bati-axe.com` (corrigé le 2026-09-04, apply non déclenché).
+
+### Analytics
+- [ ] **P1** : Umami — VPS déjà provisionné côté client, à brancher sur le funnel (en cours sur `dev`).
+
+### Auth & confort pro (reporté de v1, recherche déjà faite)
+- [ ] **AUTH-PWD-01/02/03, AUTH-TPL-01/02** (Phase 06.4) : mot de passe oublié pro + templates Auth Supabase brandés.
+
+### Confiance & Badges
+- [ ] **TRST-02** : Badge Label RGE — qualification RGE obligatoire pour les lots Rénovation Énergétique, badge `BadgeRGECertifie`, matching exclusif leads MaPrimeRénov'/CEE.
+
+### SEO
+- [ ] **SEO-01** : Annuaire public `/[metier]/[ville]` activé dynamiquement quand ≥ 5 pros opt-in par zone.
+- [ ] **SEO-02** : Landing pages thématiques SEO (`/renovation-energetique`, `/extension`, `/surelevation`, `/amenagement-combles`) avec OpenGraph, canonical, Schema.org.
+
+### Scalabilité géographique
+- [ ] **GEO-01** : Scalabilité géographique dynamique (activation multi-villes via console admin) — pertinent seulement si un 2ᵉ département est décidé, aucune zone au-delà du 78 n'existe à ce jour.
+
+## Différé, non repris en v2 (décisions produit assumées)
+- **SMS-01/02** (teasing SMS) : différé depuis Phase 6 (2026-08-18), toujours pas de date.
+- **Phase 7** (Réputation & Scale), **Phase 8** (PWA Mobile-First) : hors scope v2, reportés au-delà.
 
 ## Out of Scope
 | Feature | Reason |
 |---|---|
-| Messagerie interne | Le contact se fait directement par téléphone et SMS. |
-| Inscription client obligatoire | Zéro friction lors de la capture du besoin. |
-| OAuth / SSO | Email/password suffisant pour la Phase 1 artisans. |
-| App mobile native | Web-first, PWA ultérieurement. |
+| Messagerie temps réel (Realtime) | Le vrai objectif est le déblocage téléphonique, pas le chat — polling actuel suffit (décision 2026-08-19). |
+| Multi-département sans décision explicite | GEO-01 attend une décision produit, pas un développement anticipé. |
 
 ## Traceability
 
-| Requirement | Phase | Status |
+| Requirement | Phase cible | Status |
 |---|---|---|
-| INFRA-01 | Phase 1 | Completed |
-| INFRA-02 | Phase 1 | Completed |
-| INFRA-03 | Phase 1 | Completed |
-| INFRA-04 | Phase 1 | Completed |
-| LEGAL-01 | Phase 1 | Completed |
-| LEGAL-02 | Phase 1 | Completed |
-| CPTR-01 | Phase 2 | Completed |
-| CPTR-02 | Phase 2 | Completed |
-| CPTR-03 | Phase 2 | Completed |
-| CPTR-04 | Phase 2 | Completed |
-| CPTR-05 | Phase 2 | Completed |
-| CLM-01 | Phase 3 | Pending |
-| CLM-02 | Phase 3 | Pending |
-| CLM-03 | Phase 3 | Pending |
-| CLM-04 | Phase 3 | Pending |
-| SMS-03 | Phase 3 | Pending |
-| ADM-01 | Phase 3 | Pending |
-| LCK-01 | Phase 4 | Pending |
-| LCK-02 | Phase 4 | Pending |
-| LCK-03 | Phase 4 | Pending |
-| SMS-01 | Phase 5 | Pending |
-| SMS-02 | Phase 5 | Pending |
-| ADM-02 | Phase 5 | Pending |
-| ADM-03 | Phase 5 | Pending |
-| API-01 | Phase 5 | Completed |
-| API-02 | Phase 5 | Completed |
-| TRST-01 | Phase 5 | Completed |
-
-**Coverage:**
-- v1 requirements: 24 total
-- Phase 5 (API+Trust): 3 additional
-- Mapped to phases: 27
-- Unmapped: 0 ✓
+| PART-01..04 | 05.18 | Not started |
+| P10 | — | Not started |
+| P20 | — | Not started |
+| P3 | — | Not started (formalité) |
+| DNS-01 | 06.3 (activation) | Not started |
+| INFRA-DOM-01 | — | Corrigé en code, apply non fait |
+| P1 | — | En cours (VPS prêt) |
+| AUTH-PWD-01..03, AUTH-TPL-01/02 | 06.4 | Recherche faite, non planifié |
+| TRST-02 | — | Not started |
+| SEO-01/02 | — | Not started |
+| GEO-01 | — | Not started (attend décision) |
 
 ---
-*Requirements defined: 2026-06-02*
-*Last updated: 2026-06-24 after Phase 5 wave 3 completion*
+*v1.0 archivé : `.planning/milestones/v1.0-REQUIREMENTS.md`*
+*Requirements v2 définis : 2026-09-04*

@@ -1,10 +1,10 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: « Pilote 78 en orbite » — EN COURS
-status: Executing P1 (Umami)
-stopped_at: **Phase 06.3 (notifications email transactionnelles) terminée — 4/4 plans mergés (moteur multi-expéditeurs, alertes pros/décennale, accusés particuliers/B2B, confirmations Stripe/admin). Activation prod encore bloquée par les DNS bati-axe.com (DKIM/SPF/DMARC/Email Routing) non posés, aucune ressource Terraform correspondante trouvée. P3 explicitement différé jusqu'au lancement prod réel. P1 (Umami) démarré côté utilisateur sur son VPS.**
-last_updated: "2026-09-04T16:20:00.000Z"
+milestone: v2.0
+milestone_name: « Partenaires en scène » — EN PRÉPARATION
+status: v1.0 clôturée, v2.0 en attente de planification (roadmap/phases à définir)
+stopped_at: **v1.0 « Pilote 78 en orbite » archivée le 2026-09-04 (`.planning/milestones/v1.0-ROADMAP.md`, `v1.0-REQUIREMENTS.md`) — livrée sur `dev`, pas de bascule prod déclenchée : le client priorise le lancement du volet Partenaires avant la mise en prod réelle. Domaine de production corrigé `bati-axe.fr` → `bati-axe.com` dans le Terraform (confirmé actif côté Cloudflare par l'utilisateur), apply non lancé. v2.0 recentrée sur Phase 05.18 (Annuaire/Vitrines/Dashboard Partenaires) + backlog B2B reporté. P1 (Umami) continue en tâche de fond sur `dev`.**
+last_updated: "2026-09-04T19:30:00.000Z"
 progress:
   total_phases: 23
   completed_phases: 18
@@ -23,16 +23,16 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-08-25)
+See: .planning/PROJECT.md (updated 2026-09-04)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Milestone **v1.0 « Pilote 78 en orbite »** EN COURS — le produit et l'environnement Cloudflare Dev sont opérationnels. La branche `dev` déploie `bati-axe-dev` sur `dev.bati-axe.fr`; elle utilise temporairement la base existante via `TF_VAR_EXISTING_DATABASE_URL`. La production client reste séparée, non modifiée et manuelle.
+**Current focus**: **v1.0 « Pilote 78 en orbite » clôturée** (2026-09-04). Milestone **v2.0 « Partenaires en scène »** en préparation — axe prioritaire : Phase 05.18 (Annuaire/Vitrines/Dashboard Partenaires), le client veut le volet Partenaires exploitable publiquement. Terraform prod corrigé pour `bati-axe.com` (zone confirmée active par l'utilisateur) mais apply non lancé — pas de bascule prod tant que v2 n'est pas avancée.
 
 ## Current Position
 
-Phase: P1 (Umami funnel) — À DÉMARRER (VPS déjà provisionné par l'utilisateur, configuration à faire)
-Milestone: **v1.0 « Pilote 78 en orbite »** (déclaré au ROADMAP le 2026-08-23)
-Phases complètes récentes :
+Phase: v2.0 pas encore planifiée — prochaine étape : définir le découpage de phases pour 05.18 (`/gsd-new-milestone` ou `/gsd-plan-phase 05.18`). P1 (Umami) continue en tâche de fond sur `dev`, hors scope milestone.
+Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
+Phases complètes récentes (v1.0) :
 
 - **06.3 — Notifications Email Transactionnelles (bati-axe.com)** ✅ 4/4 (2026-08-31/09-04) : moteur multi-expéditeurs (`no-reply@`/`notifications@`/`contact@`) + layout HTML/LCEN (06.3-01) ; alertes pros — validation/rejet décennale, cron J-30/J-7 expiration, alerte lead sur `notifications@` (06.3-02) ; accusés particuliers (dépôt projet, déblocage lead) + accusé B2B (06.3-03) ; confirmations Stripe (souscription/retrait de zone/changement facturation) + alerte admin nouvelle inscription pro, migration alerte SIRET (06.3-04). **Activation prod encore bloquée** : DNS `bati-axe.com` (DKIM/SPF/DMARC), Cloudflare Email Routing `contact@`, `RESEND_API_KEY`/`NUXT_PUBLIC_SITE_URL` prod — rien de tout ça n'existe dans les `.tf` (vérifié 2026-09-04), à poser une fois les accès client obtenus. En attendant, `EMAIL_LIVE=false` fait retomber sur `console.log`.
 - **05.10 — Espace Partenaires & Apporteurs d'Affaires** ✅ 7/7 (2026-08-22) : landing `/b2b/partenaires`, tunnel 4 étapes, POST + presign R2, back-office admin `b2b_requests`, workflow DirCo (qualification + sélection 2-3 sous-traitants + restitution email).
