@@ -1,4 +1,10 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
+
+// notifyB2bPros.ts importe server/utils/email.ts, lui-même dépendant de
+// `#imports` (auto-import Nuxt, non résolvable hors runtime Nitro).
+vi.mock('#imports', () => ({ useRuntimeConfig: () => ({ public: { siteUrl: 'https://bati-axe.com' } }) }))
+vi.mock('../../server/utils/email', () => ({ sendEmail: vi.fn().mockResolvedValue({ success: true }) }))
+
 import { selectB2bTargets, renderTenderEmail } from '../../server/utils/notifyB2bPros'
 
 describe('selectB2bTargets', () => {
