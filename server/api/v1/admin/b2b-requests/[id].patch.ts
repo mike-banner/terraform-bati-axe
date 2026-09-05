@@ -6,6 +6,8 @@ import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 const B2B_STATUS = ['nouveau', 'en_cours', 'rappele', 'qualifie', 'converti', 'perdu'] as const
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+const POSTAL_RE = /^\d{5}$/
+const DECISION_STATUS = ['confirme', 'en_attente'] as const
 
 const schema = z.object({
   status: z.enum(B2B_STATUS).optional(),
@@ -16,6 +18,9 @@ const schema = z.object({
   planning_start: z.string().regex(DATE_RE).nullable().optional(),
   planning_end: z.string().regex(DATE_RE).nullable().optional(),
   recommended_pros: z.array(z.string().uuid()).max(3).optional(),
+  // Phase 7 — TEND-02 / support TEND-04
+  decision_status: z.enum(DECISION_STATUS).optional(),
+  project_postal_code: z.string().regex(POSTAL_RE, 'Le code postal doit comporter 5 chiffres.').nullable().optional(),
 })
 
 export default defineEventHandler(async (event) => {
@@ -43,7 +48,7 @@ export default defineEventHandler(async (event) => {
     .from('b2b_requests')
     .update(changes)
     .eq('id', id)
-    .select('id, status, assigned_to, notes, qualifications_requises, planning_start, planning_end, recommended_pros, updated_at')
+    .select('id, status, assigned_to, notes, description, decision_status, project_postal_code, qualifications_requises, planning_start, planning_end, recommended_pros, updated_at')
     .single()
 
   if (error) throw createError({ statusCode: 500, statusMessage: error.message })
@@ -56,6 +61,8 @@ export default defineEventHandler(async (event) => {
   if (changes.qualifications_requises) auditMeta.qualifications = changes.qualifications_requises.length
   if ('planning_start' in changes || 'planning_end' in changes) auditMeta.planning = true
   if (changes.recommended_pros) auditMeta.recommended_pros = changes.recommended_pros.length
+  if (changes.decision_status) auditMeta.decision_status = changes.decision_status
+  if ('project_postal_code' in changes) auditMeta.postal_code = true
 
   try {
     await supabase.from('audit_logs').insert({
