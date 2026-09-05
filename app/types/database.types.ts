@@ -59,6 +59,8 @@ export type Database = {
           contact_name: string
           contact_phone: string
           created_at: string | null
+          decision_status: string
+          description: string | null
           files: Json | null
           id: string
           need_type: Database["public"]["Enums"]["b2b_need_type"]
@@ -66,6 +68,7 @@ export type Database = {
           planning_end: string | null
           planning_start: string | null
           project_location: string | null
+          project_postal_code: string | null
           qualifications_requises: string[]
           recommended_pros: string[]
           status: Database["public"]["Enums"]["b2b_request_status"]
@@ -86,6 +89,8 @@ export type Database = {
           contact_name: string
           contact_phone: string
           created_at?: string | null
+          decision_status?: string
+          description?: string | null
           files?: Json | null
           id?: string
           need_type?: Database["public"]["Enums"]["b2b_need_type"]
@@ -93,6 +98,7 @@ export type Database = {
           planning_end?: string | null
           planning_start?: string | null
           project_location?: string | null
+          project_postal_code?: string | null
           qualifications_requises?: string[]
           recommended_pros?: string[]
           status?: Database["public"]["Enums"]["b2b_request_status"]
@@ -113,6 +119,8 @@ export type Database = {
           contact_name?: string
           contact_phone?: string
           created_at?: string | null
+          decision_status?: string
+          description?: string | null
           files?: Json | null
           id?: string
           need_type?: Database["public"]["Enums"]["b2b_need_type"]
@@ -120,6 +128,7 @@ export type Database = {
           planning_end?: string | null
           planning_start?: string | null
           project_location?: string | null
+          project_postal_code?: string | null
           qualifications_requises?: string[]
           recommended_pros?: string[]
           status?: Database["public"]["Enums"]["b2b_request_status"]
@@ -127,6 +136,55 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      b2b_tender_lots: {
+        Row: {
+          category: string
+          created_at: string | null
+          id: string
+          request_id: string
+          status: string
+          zone_id: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          id?: string
+          request_id: string
+          status?: string
+          zone_id?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          id?: string
+          request_id?: string
+          status?: string
+          zone_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "b2b_tender_lots_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "b2b_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "b2b_tender_lots_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "view_zone_stats"
+            referencedColumns: ["zone_id"]
+          },
+          {
+            foreignKeyName: "b2b_tender_lots_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "zones"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       completed_projects: {
         Row: {
@@ -2127,12 +2185,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -2156,11 +2214,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -2181,11 +2239,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -2206,11 +2264,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -2223,11 +2281,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
