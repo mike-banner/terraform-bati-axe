@@ -475,7 +475,12 @@ Plans:
   2. Les artisans matchés reçoivent un email de notification par lot, sans doublon si la diffusion est relancée (idempotence).
   3. Un partenaire ne peut pas avoir plus d'AO actifs simultanés que le plafond configuré ; un artisan ne reçoit pas plus de notifications B2B par jour que le plafond configuré, tous partenaires confondus.
   4. Chaque AO/lot diffusé affiche un badge « partenaire vérifié » réutilisant la vérification SIRET existante.
-**Plans**: TBD
+     *(Ajusté en 08-CONTEXT.md D-12/D-13 : aucun SIRET partenaire n'existe en base → le badge devient « AO qualifié BÂTI-AXE », affiché dans l'email de notification.)*
+**Plans**: 3 plans
+Plans:
+- [ ] 08-01-PLAN.md — Migration `b2b_tender_notifications` + opt-in `b2b_alerts_email` + moteur `notifyMatchedB2bPros` (badge email)
+- [ ] 08-02-PLAN.md — Gardes anti-spam (plafonds D-09/D-10) + endpoint admin `diffuse.post.ts` + env vars
+- [ ] 08-03-PLAN.md — Bouton « Diffuser aux artisans » dans `AdminB2bTab.vue` + vérification humaine
 
 ### Phase 9: Dashboard Pro & Claim des AO
 **Goal**: L'artisan peut consulter, réclamer et traiter les appels d'offres qui le concernent depuis son espace, sans confusion sur ce que couvre son abonnement.
