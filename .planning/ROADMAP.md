@@ -462,9 +462,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Migration `b2b_tender_lots` + colonnes description/decision_status/project_postal_code + types front
-- [ ] 07-02-PLAN.md — Backend : description obligatoire à l'intake, création des lots syndic, statut + code postal à la qualification DirCo
-- [ ] 07-03-PLAN.md — UI : description + sélecteur multi-lots dans le tunnel, statut de décision + code postal dans la fiche admin
+- [x] 07-01-PLAN.md — Migration `b2b_tender_lots` + colonnes description/decision_status/project_postal_code + types front
+- [x] 07-02-PLAN.md — Backend : description obligatoire à l'intake, création des lots syndic, statut + code postal à la qualification DirCo
+- [x] 07-03-PLAN.md — UI : description + sélecteur multi-lots dans le tunnel, statut de décision + code postal dans la fiche admin
 
 ### Phase 8: Diffusion Automatique & Confiance
 **Goal**: Le tri manuel DirCo est remplacé par un matching automatique zone+catégorie qui notifie les artisans concernés, avec les garde-fous anti-spam et le signal de confiance en place dès le lancement.
