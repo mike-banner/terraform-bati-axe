@@ -616,3 +616,18 @@ Reportés en toute fin — exécuter seulement après que le produit soit constr
 - **Notifications navigateur (Web Push)** — voir P4 : email maintenant, Web Push natif via PWA en Phase 8.
 - **Pages légales à finaliser (CGU, confidentialité, mentions légales)** — les 3 pages existent (`app/pages/legal/`) mais avec du contenu placeholder (SAS fictive, RCS fictif, adresse fictive). À compléter avec les vraies coordonnées + faire relire par un juriste. Skills communautaires identifiés (le 2026-08-19) : `kostja94/marketing-skills@legal-page-generator`, `anthropics/claude-for-legal@legal-writing`, `anthropics/knowledge-work-plugins@legal-risk-assessment` — à confirmer avant installation (skills non vérifiés).
 - **Variante design « accueil sombre » (2026-08-18, appliquée puis revertée — en attente validation client)** — full-dark de la landing, à réappliquer si le client valide. Référence : base page `bg-slate-800` (#1E293B) + texte blanc ; cartes `bg-slate-700/40` + `border-white/10` ; corps `slate-300`, atténué `slate-400`, chiffres `slate-400` ; header sombre route-aware sur `/` (`border-white/10 bg-slate-800/95`, CTA « Déposer un projet » inversé `bg-white text-slate-900`). ⚠️ Logo PNG en RGB (fond non transparent) : prévoir une variante blanche/transparente pour header sombre. `RealisationCard` (composant partagé avec le profil pro clair) restée blanche dans la variante — ajouter une prop `dark` si retenue. Fichiers concernés : `app/pages/index.vue`, `app/layouts/default.vue`, `app/components/BeforeAfterSlider.vue` (bordure `white/15`).
+
+### Phase 13: Data Immo & Lead Vendeur DPE
+
+Qualification immo en complément du simulateur (Phase 05.9, déjà livrée — non rouverte) : objectif du projet
+(habiter/louer/vendre), question d'arbitrage financier pour détecter le vendeur DPE F/G pressé, consentement
+RGPD pour un avis de valeur post-travaux par un agent immobilier partenaire, restitution hybride (reste à
+charge travaux vs plus-value revente estimée). Prototype dev en ligne : https://bati-axe-production-ayo.pages.dev
+
+**Goal:** Générer des leads vendeurs immobiliers qualifiés (DPE F/G, propriétaires pressés) à partir du simulateur d'aides existant, sans rouvrir son flux principal.
+**Requirements**: IMMO-01, IMMO-02, IMMO-03
+**Depends on:** Phase 05.9
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 13 to break down)

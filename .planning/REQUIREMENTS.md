@@ -8,11 +8,11 @@
 
 ### Diffusion Appels d'Offres (TEND)
 
-- [ ] **TEND-01** : Le partenaire décrit son besoin avec une description obligatoire (min. 20 caractères, même contrainte que le formulaire particulier), en plus de la fourchette de budget et des documents joints (CCTP/plans) déjà supportés.
-- [ ] **TEND-02** : Chaque AO a un statut choisi à la qualification : **« confirmé »** (travaux décidés, budget arrêté) ou **« en attente de décision »** (devis à comparer avant une décision) — visible par l'artisan avant qu'il ne réponde. S'applique à tous les partenaires (pas seulement syndic).
+- [x] **TEND-01** : Le partenaire décrit son besoin avec une description obligatoire (min. 20 caractères, même contrainte que le formulaire particulier), en plus de la fourchette de budget et des documents joints (CCTP/plans) déjà supportés.
+- [x] **TEND-02** : Chaque AO a un statut choisi à la qualification : **« confirmé »** (travaux décidés, budget arrêté) ou **« en attente de décision »** (devis à comparer avant une décision) — visible par l'artisan avant qu'il ne réponde. S'applique à tous les partenaires (pas seulement syndic).
 - [ ] **TEND-03** : Un AO « confirmé » est exclusif à un seul artisan (premier arrivé, ferme le lot). Un AO « en attente de décision » accepte jusqu'à 3 artisans (comme les leads particuliers).
 - [ ] **TEND-04** : Matching automatique de l'AO aux artisans par zone active (`pro_zones`, département 78) ET catégorie/corps de métier — remplace la sélection manuelle DirCo (`recommended_pros`).
-- [ ] **TEND-05** : Un AO peut couvrir plusieurs corps de métier simultanément (ex. syndic — parties communes : toiture + façade + électricité). Chaque corps de métier devient un lot distinct, matché et claimé indépendamment.
+- [x] **TEND-05** : Un AO peut couvrir plusieurs corps de métier simultanément (ex. syndic — parties communes : toiture + façade + électricité). Chaque corps de métier devient un lot distinct, matché et claimé indépendamment.
 - [ ] **TEND-06** : Les artisans matchés reçoivent une notification email dès la diffusion de l'AO (ou du lot qui les concerne), en réutilisant l'infra transactionnelle existante (Phase 06.3).
 - [ ] **TEND-07** : L'artisan voit la liste des AO ouverts qui le concernent dans un onglet dédié « Appels d'offres » de son espace (`/espace/leads`), visuellement distinct des chantiers particuliers (badge/couleur).
 - [ ] **TEND-08** : L'artisan peut se déclarer « intéressé » (claim) sur un AO/lot — accès conditionné à un abonnement zone actif (`pro_zones`) sur la zone du lot, pas au flag `subscription_status` Premium historique.
@@ -27,9 +27,16 @@
 
 ### Persona Syndic (SYNDIC)
 
-- [ ] **SYNDIC-01** : Le persona syndic/copropriété est exposé comme choix dans le tunnel `/b2b/partenaires` (déjà en base — enum `b2b_apporteur_type` — pas encore en UI).
+- [x] **SYNDIC-01** : Le persona syndic/copropriété est exposé comme choix dans le tunnel `/b2b/partenaires` (déjà en base — enum `b2b_apporteur_type` — pas encore en UI).
+
+### Qualification Data Immo & Lead Vendeur DPE (IMMO-DATA)
+
+- [ ] **IMMO-01** : Saisie de l'objectif principal du projet dans le simulateur (Habiter / Louer / Vendre le bien).
+- [ ] **IMMO-02** : Question d'arbitrage financier ("Si le coût des travaux dépasse les aides, envisagez-vous de vendre le bien en l'état ?") pour détecter le vendeur pressé DPE F/G.
+- [ ] **IMMO-03** : Consentement RGPD explicite d'avis de valeur post-travaux par un agent partenaire local + Hook Restitution Hybride (Reste à charge travaux vs Plus-value revente estimée + CTA vente en l'état).
 
 ## Reporté de v1 (non prérequis de clôture, repris ici)
+
 
 - [ ] **P1** : brancher Umami (VPS déjà provisionné côté client) sur le funnel — continue en tâche de fond sur `dev`, hors dépendance avec le reste de v2.
 - [ ] **P3** : re-test Stripe avec les vraies clés prod (formalité — logique déjà validée en mode test).
@@ -63,10 +70,10 @@
 
 | Requirement | Phase | Status |
 |---|---|---|
-| TEND-01 | Phase 7 | Pending |
-| TEND-02 | Phase 7 | Pending |
-| TEND-05 | Phase 7 | Pending |
-| SYNDIC-01 | Phase 7 | Pending |
+| TEND-01 | Phase 7 | Done |
+| TEND-02 | Phase 7 | Done |
+| TEND-05 | Phase 7 | Done |
+| SYNDIC-01 | Phase 7 | Done |
 | TEND-04 | Phase 8 | Pending |
 | TEND-06 | Phase 8 | Pending |
 | TEND-10 | Phase 8 | Pending |
