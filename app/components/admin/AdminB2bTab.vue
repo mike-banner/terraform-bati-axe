@@ -100,6 +100,35 @@ const expandedId = ref<string | null>(null)
 const savingId = ref<string | null>(null)
 const restitutionId = ref<string | null>(null)
 
+// Phase 8 (D-01) — diffusion automatique aux artisans matchés zone × catégorie.
+const diffusingId = ref<string | null>(null)
+const diffuseResult = reactive<Record<string, string>>({})
+
+function canDiffuse(r: B2bRequest): boolean {
+  const d = ensureDraft(r.id)
+  return Boolean(d.decision_status) && /^\d{5}$/.test(d.project_postal_code || '')
+}
+
+async function diffuse(r: B2bRequest) {
+  diffusingId.value = r.id
+  errorMessage.value = null
+  delete diffuseResult[r.id]
+  try {
+    const res = await $fetch<{
+      status: string; zone: string; lots_diffused: number
+      notifications_sent: number; notifications_skipped: number; notifications_failed: number
+    }>(`/api/v1/admin/b2b-requests/${r.id}/diffuse`, { method: 'POST' })
+    diffuseResult[r.id] = `${res.lots_diffused} lot(s) diffusé(s) sur ${res.zone} — ${res.notifications_sent} artisan(s) notifié(s)`
+      + (res.notifications_skipped ? `, ${res.notifications_skipped} ignoré(s) (plafond quotidien ou déjà notifiés)` : '')
+      + (res.notifications_failed ? `, ${res.notifications_failed} échec(s) d'envoi` : '')
+    await fetchRequests()
+  } catch (err: any) {
+    errorMessage.value = err.data?.statusMessage || err.message || 'Erreur de diffusion aux artisans.'
+  } finally {
+    diffusingId.value = null
+  }
+}
+
 // Formulaires par demande (sans muter les props reçues)
 interface B2bDraft {
   status: string
@@ -490,7 +519,7 @@ function pipelineLabel(status: string): string {
             <!-- Picker sous-traitants (max 3) -->
             <div class="mt-3">
               <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">
-                Sous-traitants recommandés ({{ ensureDraft(r.id).recommended.length }}/3)
+                Sous-traitants recommandés ({{ ensureDraft(r.id).recommended.length }}/3) — restitution au donneur d'ordres uniquement
               </label>
               <div v-if="professionals.length === 0" class="text-xs text-muted-foreground border border-dashed border-border rounded-sm px-3 py-2">
                 Aucun pro vérifié disponible pour la sélection.
@@ -514,6 +543,31 @@ function pipelineLabel(status: string): string {
                   <span v-if="p.category" class="text-[10px] text-muted-foreground ml-auto shrink-0">{{ p.category }}</span>
                 </label>
               </div>
+            </div>
+
+            <!-- Phase 8 (D-01) — Diffusion automatique aux artisans matchés -->
+            <div class="mt-4 border-t border-border pt-4">
+              <div class="flex items-center justify-between gap-3 flex-wrap">
+                <p class="text-[11px] text-muted-foreground max-w-md">
+                  Diffuse tous les lots ouverts de ce dossier aux artisans vérifiés
+                  ayant une zone active correspondante et la catégorie du lot.
+                  Nécessite le statut de décision et le code postal du chantier.
+                </p>
+                <button
+                  @click="diffuse(r)"
+                  :disabled="diffusingId === r.id || !canDiffuse(r)"
+                  class="inline-flex items-center h-9 px-4 text-sm font-medium rounded-sm bg-safety text-white hover:bg-safety/90 transition-colors disabled:opacity-40"
+                >
+                  <svg v-if="diffusingId === r.id" class="w-4 h-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                  Diffuser aux artisans
+                </button>
+              </div>
+              <p v-if="!canDiffuse(r)" class="mt-1.5 text-[10px] text-muted-foreground">
+                Renseignez le statut de décision et un code postal à 5 chiffres, puis enregistrez, pour activer la diffusion.
+              </p>
+              <p v-if="diffuseResult[r.id]" class="mt-1.5 text-[11px] text-emerald-500">
+                {{ diffuseResult[r.id] }}
+              </p>
             </div>
 
             <!-- Restitution au donneur d'ordres -->
