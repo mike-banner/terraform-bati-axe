@@ -1,10 +1,24 @@
 // ─── B2B Request types ────────────────────────────────────────────────────────
 
+import { CATEGORY_LABELS } from '~/types/admin'
+
 export type B2bApporteurType = 'architecte' | 'bet' | 'agence_immo' | 'syndic' | 'diagnostiqueur' | 'autre'
 export type B2bTravauxSuggere = 'isolation' | 'chauffage' | 'electricite' | 'toiture'
 export type B2bNeedType = 'projet_immediat' | 'partenariat_regulier'
 export type B2bBudgetRange = '<30k' | '30-100k' | '100-300k' | '>300k'
 export type B2bRequestStatus = 'nouveau' | 'en_cours' | 'rappele' | 'qualifie' | 'converti' | 'perdu'
+export type B2bDecisionStatus = 'confirme' | 'en_attente'
+export type B2bLotCategory = 'maconnerie' | 'toiture' | 'electricite' | 'plomberie' | 'peinture' | 'isolation'
+export type B2bTenderLotStatus = 'open' | 'claimed' | 'closed'
+
+export interface B2bTenderLot {
+  id: string
+  request_id: string
+  category: B2bLotCategory
+  zone_id: string | null
+  status: B2bTenderLotStatus
+  created_at: string
+}
 
 export interface B2bRequestFile {
   file_key: string
@@ -22,6 +36,9 @@ export interface B2bRequest {
   files: B2bRequestFile[]
   certification_number: string | null
   travaux_suggeres: B2bTravauxSuggere[] | null
+  description: string | null
+  decision_status: B2bDecisionStatus
+  project_postal_code: string | null
   contact_name: string
   contact_company: string | null
   contact_phone: string
@@ -87,3 +104,16 @@ export const BUDGET_OPTIONS: { value: B2bBudgetRange; label: string }[] = [
   { value: '100-300k', label: '100 000 € – 300 000 €' },
   { value: '>300k', label: '> 300 000 €' },
 ]
+
+// Corps de métier sélectionnables comme lots (TEND-05) — réutilise le
+// vocabulaire unique de professionals.categories, pas de libellés dupliqués.
+export const LOT_CATEGORY_OPTIONS: { value: B2bLotCategory; label: string }[] =
+  (Object.keys(CATEGORY_LABELS) as B2bLotCategory[]).map(value => ({
+    value,
+    label: CATEGORY_LABELS[value] as string,
+  }))
+
+export const DECISION_STATUS_LABELS: Record<B2bDecisionStatus, string> = {
+  confirme: 'Confirmé — travaux décidés et budgétés',
+  en_attente: 'En attente de décision — devis à comparer avant validation (ex. avant AG)',
+}
