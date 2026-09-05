@@ -29,13 +29,21 @@
 
 - [x] **SYNDIC-01** : Le persona syndic/copropriété est exposé comme choix dans le tunnel `/b2b/partenaires` (déjà en base — enum `b2b_apporteur_type` — pas encore en UI).
 
-### Qualification Data Immo & Lead Vendeur DPE (IMMO-DATA)
+### Qualification Data Immo & Lead Vendeur DPE (IMMO-DATA — Phase 13)
 
 - [ ] **IMMO-01** : Saisie de l'objectif principal du projet dans le simulateur (Habiter / Louer / Vendre le bien).
 - [ ] **IMMO-02** : Question d'arbitrage financier ("Si le coût des travaux dépasse les aides, envisagez-vous de vendre le bien en l'état ?") pour détecter le vendeur pressé DPE F/G.
 - [ ] **IMMO-03** : Consentement RGPD explicite d'avis de valeur post-travaux par un agent partenaire local + Hook Restitution Hybride (Reste à charge travaux vs Plus-value revente estimée + CTA vente en l'état).
+- [ ] **IMMO-DVF-01** : Moteur d'estimation basé sur l'Open Data Notaires DVF pour afficher la valeur vénale du bien + la plus-value revente estimée post-travaux (alimente la restitution hybride IMMO-03). Benchmark Immo-Scan.
+
+### Évolutions Tunnel Simulateur — Benchmark HelloArtisan (TUNNEL — Phase 14)
+
+- [ ] **TUNNEL-01** : Sous-tuiles guidées par catégorie dans le simulateur (ex: Chauffage ➔ PAC / Poêle / Chaudière / Radiateurs) pour éviter l'ambiguïté.
+- [ ] **TUNNEL-02** : Question "Projets complémentaires" avant le Lead Wall pour générer 2 à 3 leads artisans qualifiés avec un seul formulaire.
+- [ ] **TUNNEL-03** : Validation du numéro de téléphone par code PIN / SMS OTP pour garantir 100% de numéros joignables aux artisans abonnés.
 
 ## Reporté de v1 (non prérequis de clôture, repris ici)
+
 
 
 - [ ] **P1** : brancher Umami (VPS déjà provisionné côté client) sur le funnel — continue en tâche de fond sur `dev`, hors dépendance avec le reste de v2.
@@ -95,6 +103,13 @@
 | AUTH-PWD-03 | Phase 10 | Pending |
 | AUTH-TPL-01 | Phase 10 | Pending |
 | AUTH-TPL-02 | Phase 10 | Pending |
+| IMMO-01 | Phase 13 | Pending |
+| IMMO-02 | Phase 13 | Pending |
+| IMMO-03 | Phase 13 | Pending |
+| IMMO-DVF-01 | Phase 13 | Pending |
+| TUNNEL-01 | Phase 14 | Pending |
+| TUNNEL-02 | Phase 14 | Pending |
+| TUNNEL-03 | Phase 14 | Pending |
 
 | TEND-16 | Phase 9 | Pending |
 

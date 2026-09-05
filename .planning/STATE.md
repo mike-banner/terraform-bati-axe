@@ -156,6 +156,8 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 - [2026-08-29] Phase ajoutée puis renumérotée : Notifications Email Transactionnelles (bati-axe.com), repris d'un plan externe Antigravity IDE. D'abord créée en 05.19 (indépendante), puis déplacée en **06.3** — rattachée à la Phase 6 qui est déjà « la phase notifications » (EML-01 email + SMS 06-04 différé). Contexte détaillé : `.planning/phases/06.3-notifications-email-transactionnelles/06.3-CONTEXT.md`.
 - [2026-09-05] **Phase 13 ajoutée : Data Immo & Lead Vendeur DPE** — qualification immo en complément du simulateur d'aides (Phase 05.9, déjà livrée, non rouverte) : objectif du projet, arbitrage financier vendeur DPE F/G pressé, consentement RGPD avis de valeur post-travaux, restitution hybride reste à charge vs plus-value revente. Exigences IMMO-01/02/03 ajoutées à REQUIREMENTS.md. Prototype dev en ligne : https://bati-axe-production-ayo.pages.dev. Pas encore planifiée (`/gsd-plan-phase 13`).
+- [2026-09-05] **IMMO-DVF-01 rattachée à la Phase 13** (au lieu de « Phase 7/05.9 » indiquée dans le document client, qui ne correspond à aucune phase existante — Phase 7 est la phase Formulaire AO déjà livrée, sans rapport) — même thématique data immo, alimente la restitution IMMO-03.
+- [2026-09-05] **Phase 14 ajoutée : Évolutions Tunnel Simulateur (Benchmark HelloArtisan)** — sous-tuiles guidées par catégorie (TUNNEL-01), question "projets complémentaires" avant le Lead Wall (TUNNEL-02), validation téléphone SMS OTP (TUNNEL-03). Document client `20260905-BENCHMARK_HELLOARTISAN_IMMOSCAN-SPEC_CLIENT.md` visait la Phase 05.9, déjà clôturée (v1.0 archivée) — nouvelle phase pour ne pas la rouvrir. Pas encore planifiée (`/gsd-plan-phase 14`).
 
 ## Session Continuity
 

@@ -622,12 +622,31 @@ Reportés en toute fin — exécuter seulement après que le produit soit constr
 Qualification immo en complément du simulateur (Phase 05.9, déjà livrée — non rouverte) : objectif du projet
 (habiter/louer/vendre), question d'arbitrage financier pour détecter le vendeur DPE F/G pressé, consentement
 RGPD pour un avis de valeur post-travaux par un agent immobilier partenaire, restitution hybride (reste à
-charge travaux vs plus-value revente estimée). Prototype dev en ligne : https://bati-axe-production-ayo.pages.dev
+charge travaux vs plus-value revente estimée). Inclut le moteur d'estimation DVF Open Data Notaires
+(IMMO-DVF-01, benchmark Immo-Scan) qui alimente en donnée réelle la plus-value revente restituée par IMMO-03 —
+même thématique data immo, rattaché ici plutôt qu'à une phase séparée. Prototype dev en ligne :
+https://bati-axe-production-ayo.pages.dev
 
 **Goal:** Générer des leads vendeurs immobiliers qualifiés (DPE F/G, propriétaires pressés) à partir du simulateur d'aides existant, sans rouvrir son flux principal.
-**Requirements**: IMMO-01, IMMO-02, IMMO-03
+**Requirements**: IMMO-01, IMMO-02, IMMO-03, IMMO-DVF-01
 **Depends on:** Phase 05.9
 **Plans:** 0 plans
 
 Plans:
 - [ ] TBD (run /gsd-plan-phase 13 to break down)
+
+### Phase 14: Évolutions Tunnel Simulateur (Benchmark HelloArtisan)
+
+Sous-tuiles guidées par catégorie dans le simulateur (TUNNEL-01), question "projets complémentaires"
+avant le Lead Wall pour générer plusieurs leads d'un seul formulaire (TUNNEL-02), validation du téléphone
+par SMS OTP avant émission du lead (TUNNEL-03). Périmètre initialement rattaché à la Phase 05.9 dans la
+spec client — 05.9 est déjà livrée et clôturée (v1.0 archivée), nouvelle phase pour ne pas la rouvrir.
+Source : `.planning/clients/20260905-BENCHMARK_HELLOARTISAN_IMMOSCAN-SPEC_CLIENT.md`.
+
+**Goal:** Reproduire les patterns UX de conversion/qualification de HelloArtisan sur le tunnel simulateur existant, sans rouvrir la Phase 05.9.
+**Requirements**: TUNNEL-01, TUNNEL-02, TUNNEL-03
+**Depends on:** Phase 05.9 (simulateur existant) — indépendante de la Phase 13
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 14 to break down)
