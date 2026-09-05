@@ -1,30 +1,10 @@
-import { z } from 'zod'
 import { serverSupabaseServiceRole } from '#supabase/server'
 import { sendEmail } from '../../../utils/email'
-
-const schema = z.object({
-  apporteur_type: z.enum(['architecte', 'bet', 'agence_immo', 'syndic', 'diagnostiqueur', 'autre']),
-  need_type: z.enum(['projet_immediat', 'partenariat_regulier']),
-  project_location: z.string().max(200).optional(),
-  budget_range: z.enum(['<30k', '30-100k', '100-300k', '>300k']).optional(),
-  certification_number: z.string().max(50).optional().nullable(),
-  travaux_suggeres: z.array(z.enum(['isolation', 'chauffage', 'electricite', 'toiture'])).max(4).optional().nullable(),
-  files: z.array(z.object({
-    file_key: z.string(),
-    filename: z.string().max(255),
-    content_type: z.string(),
-    size: z.number().max(52428800), // 50 Mo
-  })).max(10).optional().default([]),
-  contact_name: z.string().min(2).max(100),
-  contact_company: z.string().max(200).optional(),
-  contact_phone: z.string().min(8).max(20),
-  contact_email: z.string().email(),
-  consent_accepted: z.boolean().refine(v => v === true, { message: 'Le consentement est obligatoire.' }),
-})
+import { b2bRequestSchema, buildTenderLots } from '../../../utils/b2bTender'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const parsed = schema.safeParse(body)
+  const parsed = b2bRequestSchema.safeParse(body)
 
   if (!parsed.success) {
     throw createError({
@@ -45,6 +25,7 @@ export default defineEventHandler(async (event) => {
       apporteur_type: data.apporteur_type,
       need_type: data.need_type,
       project_location: data.project_location || null,
+      description: data.description?.trim() || null,
       budget_range: data.budget_range || null,
       certification_number: data.certification_number || null,
       travaux_suggeres: data.travaux_suggeres || null,
@@ -64,6 +45,16 @@ export default defineEventHandler(async (event) => {
 
   if (error) {
     throw createError({ statusCode: 500, statusMessage: 'Erreur lors de l\'enregistrement.' })
+  }
+
+  // TEND-05 — 1 lot par corps de métier (syndic). Non bloquant : la demande est
+  // déjà enregistrée, une erreur ici ne doit pas faire perdre le dossier au
+  // partenaire. ponytail: log console suffisant au pilote, à remonter dans
+  // audit_logs si le volume B2B le justifie.
+  const lots = buildTenderLots(request.id, data.apporteur_type, data.lots_categories)
+  if (lots.length > 0) {
+    const { error: lotsError } = await supabase.from('b2b_tender_lots').insert(lots)
+    if (lotsError) console.error('[b2b] échec insertion des lots', request.id, lotsError.message)
   }
 
   // Log consent in consents table (non-blocking)
@@ -109,6 +100,8 @@ export default defineEventHandler(async (event) => {
           ${data.budget_range ? `<tr><td style="padding: 8px 0; color: #64748B;">Budget</td><td style="padding: 8px 0; color: #0F172A;">${budgetLabel}</td></tr>` : ''}
           ${data.certification_number ? `<tr><td style="padding: 8px 0; color: #64748B;">N° certification</td><td style="padding: 8px 0; color: #0F172A;">${data.certification_number}</td></tr>` : ''}
           ${data.travaux_suggeres?.length ? `<tr><td style="padding: 8px 0; color: #64748B;">Travaux suggérés</td><td style="padding: 8px 0; color: #0F172A;">${data.travaux_suggeres.join(', ')}</td></tr>` : ''}
+          ${data.description ? `<tr><td style="padding: 8px 0; color: #64748B;">Description</td><td style="padding: 8px 0; color: #0F172A;">${data.description}</td></tr>` : ''}
+          ${lots.length ? `<tr><td style="padding: 8px 0; color: #64748B;">Lots (corps de métier)</td><td style="padding: 8px 0; color: #0F172A;">${lots.map(l => l.category).join(', ')}</td></tr>` : ''}
           <tr><td style="padding: 8px 0; color: #64748B;">Contact</td><td style="padding: 8px 0; color: #0F172A;">${data.contact_name}${data.contact_company ? ` (${data.contact_company})` : ''}</td></tr>
           <tr><td style="padding: 8px 0; color: #64748B;">Téléphone</td><td style="padding: 8px 0; color: #0F172A;">${data.contact_phone}</td></tr>
           <tr><td style="padding: 8px 0; color: #64748B;">Email</td><td style="padding: 8px 0; color: #0F172A;">${data.contact_email}</td></tr>
