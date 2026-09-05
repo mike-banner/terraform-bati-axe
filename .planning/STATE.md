@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
 status: executing
-stopped_at: Phase 7 UI-SPEC approved
-last_updated: "2026-09-05T14:29:05.465Z"
+stopped_at: Phase 8 context gathered
+last_updated: "2026-09-05T17:53:38.528Z"
 progress:
-  total_phases: 28
+  total_phases: 30
   completed_phases: 16
   total_plans: 81
   completed_plans: 75
@@ -161,6 +161,6 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 ## Session Continuity
 
-Last session: 2026-09-04T20:57:03.023Z
-Stopped at: Phase 7 UI-SPEC approved
+Last session: 2026-09-05T17:53:38.520Z
+Stopped at: Phase 8 context gathered
 Resume: `/gsd-plan-phase 06.3` pour découper la phase email en plans exécutables, puis **P3** (re-test Stripe/cron en conditions prod réelles quand les identifiants client seront disponibles), **P1** Umami (VPS + PostgreSQL).
