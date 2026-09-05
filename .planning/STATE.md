@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: « Pilote 78 en orbite » — EN COURS
-status: Executing Phase 06.3
-stopped_at: **Phase 05.16-02 committée + push `dev` ; test P3 (retrait de zone / Subscription Schedule) validé en local via Stripe Test Clock ; Phase 06.3 (notifs email, ex-05.19) créée à partir du plan Antigravity et rattachée à la Phase 6, pas encore planifiée en détail.**
-last_updated: "2026-08-31T17:25:01.868Z"
+milestone: v2.0
+milestone_name: « Partenaires en scène »
+status: executing
+stopped_at: Phase 7 UI-SPEC approved
+last_updated: "2026-09-05T14:29:05.465Z"
 progress:
-  total_phases: 23
-  completed_phases: 17
-  total_plans: 84
-  completed_plans: 72
-  percent: 86
+  total_phases: 28
+  completed_phases: 16
+  total_plans: 81
+  completed_plans: 75
+  percent: 93
 ---
 
 # Project State
@@ -23,18 +23,20 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-08-25)
+See: .planning/PROJECT.md (updated 2026-09-04)
 
 **Core value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment.
-**Current focus**: Milestone **v1.0 « Pilote 78 en orbite »** EN COURS — le produit et l'environnement Cloudflare Dev sont opérationnels. La branche `dev` déploie `bati-axe-dev` sur `dev.bati-axe.fr`; elle utilise temporairement la base existante via `TF_VAR_EXISTING_DATABASE_URL`. La production client reste séparée, non modifiée et manuelle.
+**Current focus**: **v1.0 « Pilote 78 en orbite » clôturée** (2026-09-04). Milestone **v2.0 « Partenaires en scène »** — roadmap créée, axe prioritaire : diffusion automatique des appels d'offres partenaires aux artisans matchés zone/catégorie (Phases 7-9), persona syndic exposé dans le tunnel (Phase 7). Terraform prod corrigé pour `bati-axe.com` mais apply non lancé — pas de bascule prod tant que v2 n'est pas avancée (suivi en Phase 10).
 
 ## Current Position
 
-Phase: 06.3 (notifications-email-transactionnelles) — EXECUTING
-Plan: 1 of 4
-Milestone: **v1.0 « Pilote 78 en orbite »** (déclaré au ROADMAP le 2026-08-23)
-Phases complètes récentes :
+Phase: 8
+Plan: Not started
+Status: Executing Phase 07
+Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
+Phases complètes récentes (v1.0) :
 
+- **06.3 — Notifications Email Transactionnelles (bati-axe.com)** ✅ 4/4 (2026-08-31/09-04) : moteur multi-expéditeurs (`no-reply@`/`notifications@`/`contact@`) + layout HTML/LCEN (06.3-01) ; alertes pros — validation/rejet décennale, cron J-30/J-7 expiration, alerte lead sur `notifications@` (06.3-02) ; accusés particuliers (dépôt projet, déblocage lead) + accusé B2B (06.3-03) ; confirmations Stripe (souscription/retrait de zone/changement facturation) + alerte admin nouvelle inscription pro, migration alerte SIRET (06.3-04). **Activation prod encore bloquée** : DNS `bati-axe.com` (DKIM/SPF/DMARC), Cloudflare Email Routing `contact@`, `RESEND_API_KEY`/`NUXT_PUBLIC_SITE_URL` prod — rien de tout ça n'existe dans les `.tf` (vérifié 2026-09-04), à poser une fois les accès client obtenus. En attendant, `EMAIL_LIVE=false` fait retomber sur `console.log`.
 - **05.10 — Espace Partenaires & Apporteurs d'Affaires** ✅ 7/7 (2026-08-22) : landing `/b2b/partenaires`, tunnel 4 étapes, POST + presign R2, back-office admin `b2b_requests`, workflow DirCo (qualification + sélection 2-3 sous-traitants + restitution email).
 - **05.11 — Coffre-Fort Juridique & Capacité Sous-traitance** ✅ 4/4 (2026-08-23) : `documents_artisan`, alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois, vue admin documents.
 - **06.1 — Console Admin Opérationnelle** ✅ (2026-08-22) : 8 composants modulaires, sidebar, dark mode, search/pagination, audit log, onglets B2B + Documents légaux.
@@ -153,9 +155,12 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 ### Roadmap Evolution
 
 - [2026-08-29] Phase ajoutée puis renumérotée : Notifications Email Transactionnelles (bati-axe.com), repris d'un plan externe Antigravity IDE. D'abord créée en 05.19 (indépendante), puis déplacée en **06.3** — rattachée à la Phase 6 qui est déjà « la phase notifications » (EML-01 email + SMS 06-04 différé). Contexte détaillé : `.planning/phases/06.3-notifications-email-transactionnelles/06.3-CONTEXT.md`.
+- [2026-09-05] **Phase 13 ajoutée : Data Immo & Lead Vendeur DPE** — qualification immo en complément du simulateur d'aides (Phase 05.9, déjà livrée, non rouverte) : objectif du projet, arbitrage financier vendeur DPE F/G pressé, consentement RGPD avis de valeur post-travaux, restitution hybride reste à charge vs plus-value revente. Exigences IMMO-01/02/03 ajoutées à REQUIREMENTS.md. Prototype dev en ligne : https://bati-axe-production-ayo.pages.dev. Pas encore planifiée (`/gsd-plan-phase 13`).
+- [2026-09-05] **IMMO-DVF-01 rattachée à la Phase 13** (au lieu de « Phase 7/05.9 » indiquée dans le document client, qui ne correspond à aucune phase existante — Phase 7 est la phase Formulaire AO déjà livrée, sans rapport) — même thématique data immo, alimente la restitution IMMO-03.
+- [2026-09-05] **Phase 14 ajoutée : Évolutions Tunnel Simulateur (Benchmark HelloArtisan)** — sous-tuiles guidées par catégorie (TUNNEL-01), question "projets complémentaires" avant le Lead Wall (TUNNEL-02), validation téléphone SMS OTP (TUNNEL-03). Document client `20260905-BENCHMARK_HELLOARTISAN_IMMOSCAN-SPEC_CLIENT.md` visait la Phase 05.9, déjà clôturée (v1.0 archivée) — nouvelle phase pour ne pas la rouvrir. Pas encore planifiée (`/gsd-plan-phase 14`).
 
 ## Session Continuity
 
-Last session: 2026-08-29
-Stopped at: **Phase 05.16-02 committée + push `dev` ; test P3 (retrait de zone / Subscription Schedule) validé en local via Stripe Test Clock ; Phase 06.3 (notifs email, ex-05.19) créée à partir du plan Antigravity et rattachée à la Phase 6, pas encore planifiée en détail.**
+Last session: 2026-09-04T20:57:03.023Z
+Stopped at: Phase 7 UI-SPEC approved
 Resume: `/gsd-plan-phase 06.3` pour découper la phase email en plans exécutables, puis **P3** (re-test Stripe/cron en conditions prod réelles quand les identifiants client seront disponibles), **P1** Umami (VPS + PostgreSQL).

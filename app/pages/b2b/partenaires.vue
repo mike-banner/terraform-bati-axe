@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { APPORTEUR_LABELS, BUDGET_OPTIONS, TRAVAUX_OPTIONS } from '~/types/b2b'
-import type { B2bApporteurType, B2bNeedType, B2bBudgetRange, B2bRequestFile, B2bTravauxSuggere } from '~/types/b2b'
+import { APPORTEUR_LABELS, BUDGET_OPTIONS, TRAVAUX_OPTIONS, LOT_CATEGORY_OPTIONS } from '~/types/b2b'
+import type { B2bApporteurType, B2bNeedType, B2bBudgetRange, B2bRequestFile, B2bTravauxSuggere, B2bLotCategory } from '~/types/b2b'
 
 useHead({ title: 'Espace Partenaires — BÂTI-AXE' })
 
@@ -26,6 +26,14 @@ function toggleTravail(t: B2bTravauxSuggere) {
   if (idx === -1) travauxSuggeres.value.push(t)
   else travauxSuggeres.value.splice(idx, 1)
 }
+const description = ref('')
+const lotsCategories = ref<B2bLotCategory[]>([])
+const isSyndic = computed(() => apporteurType.value === 'syndic')
+function toggleLot(c: B2bLotCategory) {
+  const idx = lotsCategories.value.indexOf(c)
+  if (idx === -1) lotsCategories.value.push(c)
+  else lotsCategories.value.splice(idx, 1)
+}
 const uploadedFiles = ref<B2bRequestFile[]>([])
 const uploading = ref(false)
 const uploadError = ref<string | null>(null)
@@ -43,7 +51,7 @@ const canNextStep = computed(() => {
   switch (step.value) {
     case 1: return !!apporteurType.value
     case 2: return !!needType.value
-    case 3: return true // files optional
+    case 3: return description.value.trim().length >= 20
     case 4: return contactName.value.length >= 2 && contactPhone.value.length >= 8 && contactEmail.value.includes('@') && consentAccepted.value
     default: return false
   }
@@ -160,6 +168,8 @@ async function submitRequest() {
         apporteur_type: apporteurType.value,
         need_type: needType.value,
         project_location: projectLocation.value || null,
+        description: description.value.trim() || null,
+        lots_categories: lotsCategories.value.length ? lotsCategories.value : null,
         budget_range: budgetRange.value || null,
         certification_number: isDiagnostiqueur.value ? (certificationNumber.value || null) : null,
         travaux_suggeres: isDiagnostiqueur.value && travauxSuggeres.value.length > 0 ? travauxSuggeres.value : null,
@@ -286,6 +296,46 @@ async function submitRequest() {
             placeholder="Ex : 78 — Yvelines / 75 — Paris"
             class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           />
+        </div>
+
+        <!-- Description obligatoire (TEND-01) -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-foreground mb-1.5">Décrivez votre besoin *</label>
+          <textarea
+            v-model="description"
+            rows="4"
+            maxlength="5000"
+            placeholder="Ex : Ravalement de façade + réfection toiture sur bâtiment collectif, 1200 m², parties communes uniquement."
+            class="w-full px-3 py-2 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-y"
+          />
+          <p v-if="description.trim().length > 0 && description.trim().length < 20" class="mt-1 text-xs text-destructive">
+            Description trop courte (20 caractères minimum, {{ description.trim().length }} actuellement).
+          </p>
+          <p v-else-if="description.trim().length === 0" class="mt-1 text-xs text-muted-foreground">
+            20 caractères minimum — plus l'artisan comprend l'ampleur du chantier, plus vite il vous répond.
+          </p>
+        </div>
+
+        <!-- Sélecteur multi-lots (syndic uniquement, TEND-05) -->
+        <div v-if="isSyndic" class="mb-4">
+          <label class="block text-sm font-medium text-foreground mb-1.5">Corps de métier concernés (parties communes)</label>
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="opt in LOT_CATEGORY_OPTIONS"
+              :key="opt.value"
+              type="button"
+              @click="toggleLot(opt.value)"
+              class="px-3 py-1.5 rounded-full border text-xs font-medium transition-colors"
+              :class="lotsCategories.includes(opt.value)
+                ? 'border-copper bg-copper/10 text-copper'
+                : 'border-border text-muted-foreground hover:border-muted-foreground/50'"
+            >
+              {{ opt.label }}
+            </button>
+          </div>
+          <p class="mt-1.5 text-xs text-muted-foreground">
+            Sélectionnez tous les corps de métier nécessaires — chacun sera traité comme un lot indépendant.
+          </p>
         </div>
 
         <!-- Diagnostiqueur : n° certification + types de travaux suggérés -->

@@ -1,105 +1,123 @@
-# Requirements: BÂTI-AXE
+# Requirements: BÂTI-AXE — v2.0 « Partenaires en scène »
 
-**Defined**: 2026-06-02
-**Core Value**: Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment dont les garanties décennales sont vérifiées.
-
-## v1 Requirements
-
-### Infrastructure & Setup
-- [x] **INFRA-01**: Projet Nuxt 3 initialisé avec `@nuxtjs/supabase`, Pinia, Zod
-- [x] **INFRA-02**: Supabase CLI + Docker configuré pour le développement local
-- [x] **INFRA-03**: Cloudflare Pages configuré avec preset Nitro `cloudflare-pages` (Staging = Preview, Prod = main)
-- [x] **INFRA-04**: Middleware Nitro de sécurité (headers, rate limiting, Sentry, healthcheck `/api/v1/health`)
-
-### Compliance & Légal
-- [x] **LEGAL-01**: Mentions légales, politique de confidentialité, politique cookies et CGU v1 publiées sur `/legal/*`
-- [x] **LEGAL-02**: Registre des traitements RGPD maintenu dans `docs/legal/`
-
-### Capture (Simulateur Nuxt)
-- [x] **CPTR-01**: Sélection dynamique par nature de projet (icônes)
-- [x] **CPTR-02**: Localisation avec code postal (Focus 78)
-- [x] **CPTR-03**: Saisie du budget estimé et délai souhaité
-- [x] **CPTR-04**: Saisie des coordonnées de contact (nom, email, téléphone)
-- [x] **CPTR-05**: Enregistrement sécurisé du projet anonyme sans compte requis
-
-### Le Verrou (Logique de Floutage)
-- [ ] **LCK-01**: Floutage serveur (Nitro API) des coordonnées des prospects (`customer_full_name`, `customer_phone`, `customer_email`, `exact_address`)
-- [ ] **LCK-02**: Accès immédiat non flouté pour les pros PREMIUM via abonnement Stripe
-- [ ] **LCK-03**: Déblocage automatique gratuit après un délai d'attente de 24 heures pour les pros BASIC (pg_cron)
-
-### Revendication (Claim) & Vérification
-- [ ] **CLM-01**: Revendication de profil pour les prospects importés via page `/pro/{dept}/{slug}-{short_id}` (ADR-009)
-- [ ] **CLM-02**: Authentification de compte pro sécurisée (Supabase Auth)
-- [ ] **CLM-03**: Chargement et stockage isolé de la pièce d'identité, du KBIS et de l'assurance décennale sur R2 via presigned URLs
-- [ ] **CLM-04**: Statut de vérification mis à jour après validation manuelle par l'administrateur
-
-### SMS Teasing
-- [ ] **SMS-01**: Teasing par SMS instantané aux pros PREMIUM après un dépôt de projet
-- [ ] **SMS-02**: Teasing par SMS avec délai de 30 minutes aux pros BASIC
-- [ ] **SMS-03**: Consentement SMS explicite obligatoire (case distincte, RGPD / LCEN)
-
-### Administration
-- [ ] **ADM-01**: Interface de validation des documents administratifs (Kbis, décennale) stockés sur R2
-- [ ] **ADM-02**: Modération et nettoyage des leads suspects avant envoi aux artisans
-- [ ] **ADM-03**: Console d'analytics (taux d'ouverture SMS vs taux de clic)
-
-## Phase 5 : Intégration API État (SIRET) & Badges de Confiance
-
-- [x] **API-01**: Lookup SIRET automatique au Claim — Au POST /api/v1/pro/claim, appeler l'API Recherche Entreprises (recherche-entreprises.api.gouv.fr) avec le SIRET saisi. Stocker raison sociale, adresse et statut dans `siret_company_name`, `siret_address`, `siret_status`. Bloquer si `etat_administratif='F'` (fermé). Ne pas bloquer sur `not_found` (non diffusible) ou `error` (API indisponible).
-- [x] **API-02**: Badge Entreprise Vérifiée — Afficher le badge `BadgeEntrepriseVerifiee` sur le dashboard pro et le profil public `/pro/[dept]/[slug]` quand `siret_status === 'active'`. Ne pas afficher si `null`, `not_found` ou `error`.
-- [x] **TRST-01**: Badge Décennale Certifiée BÂTI-AXE — L'approbation admin du dossier décennale met à jour `decennal_status` à `'valid'` et ajoute `'decennale_certified'` dans `labels` JSONB. Le badge `BadgeDecennaleCertifiee` s'affiche sur dashboard et profil public quand `decennal_status === 'valid'`.
+**Défini** : 2026-09-04
+**Core Value** : Mettre en relation exclusive des particuliers porteurs de projets avec des professionnels certifiés du bâtiment dont les garanties décennales sont vérifiées.
+**Axe v2** : les partenaires B2B (architectes, agents immobiliers, diagnostiqueurs, syndics de copropriété) diffusent leurs appels d'offres directement aux artisans matchés — remplace le tri manuel DirCo par un matching automatique zone + corps de métier, sans nouveau rail de paiement ni vitrine publique.
 
 ## v2 Requirements
-- **GEO-01**: Scalabilité géographique dynamique automatisée (activation multi-villes via console admin)
-- **PAY-01**: Facturation automatisée Stripe et gestion des factures PDF
-- **SEO-01**: Annuaire public `/[metier]/[ville]` activé dynamiquement quand ≥ 5 pros opt-in par zone
 
-## Out of Scope
+### Diffusion Appels d'Offres (TEND)
+
+- [x] **TEND-01** : Le partenaire décrit son besoin avec une description obligatoire (min. 20 caractères, même contrainte que le formulaire particulier), en plus de la fourchette de budget et des documents joints (CCTP/plans) déjà supportés.
+- [x] **TEND-02** : Chaque AO a un statut choisi à la qualification : **« confirmé »** (travaux décidés, budget arrêté) ou **« en attente de décision »** (devis à comparer avant une décision) — visible par l'artisan avant qu'il ne réponde. S'applique à tous les partenaires (pas seulement syndic).
+- [ ] **TEND-03** : Un AO « confirmé » est exclusif à un seul artisan (premier arrivé, ferme le lot). Un AO « en attente de décision » accepte jusqu'à 3 artisans (comme les leads particuliers).
+- [ ] **TEND-04** : Matching automatique de l'AO aux artisans par zone active (`pro_zones`, département 78) ET catégorie/corps de métier — remplace la sélection manuelle DirCo (`recommended_pros`).
+- [x] **TEND-05** : Un AO peut couvrir plusieurs corps de métier simultanément (ex. syndic — parties communes : toiture + façade + électricité). Chaque corps de métier devient un lot distinct, matché et claimé indépendamment.
+- [ ] **TEND-06** : Les artisans matchés reçoivent une notification email dès la diffusion de l'AO (ou du lot qui les concerne), en réutilisant l'infra transactionnelle existante (Phase 06.3).
+- [ ] **TEND-07** : L'artisan voit la liste des AO ouverts qui le concernent dans un onglet dédié « Appels d'offres » de son espace (`/espace/leads`), visuellement distinct des chantiers particuliers (badge/couleur).
+- [ ] **TEND-08** : L'artisan peut se déclarer « intéressé » (claim) sur un AO/lot — accès conditionné à un abonnement zone actif (`pro_zones`) sur la zone du lot, pas au flag `subscription_status` Premium historique.
+- [ ] **TEND-09** : Une fois le claim effectué, les coordonnées du partenaire sont révélées à l'artisan (masquées avant, même logique que le masquage serveur ADR-004).
+- [ ] **TEND-10** : Le broadcast se déclenche quand DirCo qualifie le dossier (transition de statut, pas à l'intake public anonyme) — garde le filtre anti-spam existant sur les demandes non vérifiées.
+- [ ] **TEND-11** : Rate-limit anti-spam : nombre d'AO actifs simultanés par partenaire plafonné (seuil bas par défaut pour le pilote, configurable) + plafond de notifications B2B par artisan par jour, tous partenaires confondus.
+- [ ] **TEND-12** : Un AO/lot passe automatiquement en statut « clos » à expiration ou quand le cap de claims est atteint.
+- [ ] **TEND-13** : L'artisan dispose d'un moyen de signaler un AO suspect/abusif, remonté à l'admin.
+- [ ] **TEND-14** : Un badge « partenaire vérifié » (réutilise la vérification SIRET existante) est visible sur les AO diffusés — remplace le signal de confiance qu'apportait le tri manuel DirCo.
+- [ ] **TEND-15** : Le dashboard artisan explique en une phrase que l'abonnement zone couvre désormais deux flux (chantiers particuliers + appels d'offres partenaires), pour éviter toute confusion sur le périmètre payé.
+- [ ] **TEND-16** : Le partenaire reçoit un email à chaque étape clé de son AO (diffusé aux artisans, un artisan s'est déclaré intéressé) avec un format structuré et cohérent (sujet identifiable, statut clair) — permet à un partenaire outillé (Zapier/Make/n8n) d'automatiser son suivi sans API dédiée. Pas de dashboard ni de compte partenaire pour ce milestone (partenaire = déposant occasionnel, pas utilisateur récurrent).
+
+### Persona Syndic (SYNDIC)
+
+- [x] **SYNDIC-01** : Le persona syndic/copropriété est exposé comme choix dans le tunnel `/b2b/partenaires` (déjà en base — enum `b2b_apporteur_type` — pas encore en UI).
+
+### Qualification Data Immo & Lead Vendeur DPE (IMMO-DATA — Phase 13)
+
+- [ ] **IMMO-01** : Saisie de l'objectif principal du projet dans le simulateur (Habiter / Louer / Vendre le bien).
+- [ ] **IMMO-02** : Question d'arbitrage financier ("Si le coût des travaux dépasse les aides, envisagez-vous de vendre le bien en l'état ?") pour détecter le vendeur pressé DPE F/G.
+- [ ] **IMMO-03** : Consentement RGPD explicite d'avis de valeur post-travaux par un agent partenaire local + Hook Restitution Hybride (Reste à charge travaux vs Plus-value revente estimée + CTA vente en l'état).
+- [ ] **IMMO-DVF-01** : Moteur d'estimation basé sur l'Open Data Notaires DVF pour afficher la valeur vénale du bien + la plus-value revente estimée post-travaux (alimente la restitution hybride IMMO-03). Benchmark Immo-Scan.
+
+### Évolutions Tunnel Simulateur — Benchmark HelloArtisan (TUNNEL — Phase 14)
+
+- [ ] **TUNNEL-01** : Sous-tuiles guidées par catégorie dans le simulateur (ex: Chauffage ➔ PAC / Poêle / Chaudière / Radiateurs) pour éviter l'ambiguïté.
+- [ ] **TUNNEL-02** : Question "Projets complémentaires" avant le Lead Wall pour générer 2 à 3 leads artisans qualifiés avec un seul formulaire.
+- [ ] **TUNNEL-03** : Validation du numéro de téléphone par code PIN / SMS OTP pour garantir 100% de numéros joignables aux artisans abonnés.
+
+## Reporté de v1 (non prérequis de clôture, repris ici)
+
+
+
+- [ ] **P1** : brancher Umami (VPS déjà provisionné côté client) sur le funnel — continue en tâche de fond sur `dev`, hors dépendance avec le reste de v2.
+- [ ] **P3** : re-test Stripe avec les vraies clés prod (formalité — logique déjà validée en mode test).
+- [ ] **DNS-01** : DKIM/SPF/DMARC + Cloudflare Email Routing sur `bati-axe.com` (Phase 06.3, code déjà livré).
+- [ ] **INFRA-DOM-01** : vérifier/finaliser la bascule Terraform prod sur `bati-axe.com` (corrigé le 2026-09-04, apply non déclenché).
+- [ ] **AUTH-PWD-01/02/03, AUTH-TPL-01/02** (Phase 06.4) : mot de passe oublié pro + templates Auth Supabase brandés.
+
+## Différé / Anti-features (décisions actées le 2026-09-04)
+
 | Feature | Reason |
 |---|---|
-| Messagerie interne | Le contact se fait directement par téléphone et SMS. |
-| Inscription client obligatoire | Zéro friction lors de la capture du besoin. |
-| OAuth / SSO | Email/password suffisant pour la Phase 1 artisans. |
-| App mobile native | Web-first, PWA ultérieurement. |
+| Vitrine publique / annuaire partenaires | Le partenaire est côté demande (il poste un besoin), pas côté offre — pas de raison fonctionnelle d'avoir un profil public, contrairement à l'artisan. Repoussable sans coût si un besoin apparaît plus tard. |
+| Commission B2B / Stripe Connect (P10) | Le pipeline B2B n'a jamais tourné en usage réel — prématuré d'investir dans un rail de paiement (KYC, split payments) avant d'avoir du volume prouvé. |
+| Passerelle B2B payante (P20) | Dépend de P10, même raison. |
+| Enchère / mise en concurrence in-app (comparaison de prix chiffrés dans l'outil) | Le partenaire compare les artisans par téléphone après claim, comme aujourd'hui côté particulier — un vrai système de devis chiffrés comparables est un chantier de plusieurs semaines pour un volume non prouvé. |
+| Upload/comparaison de devis in-app | Même raison — les documents CCTP/plans en amont suffisent à juger la charge de travail ; le devis chiffré se négocie hors plateforme. |
+| Notifications temps réel / compteur live de vues | Vanité à cette échelle (dizaines d'artisans), complexité infra (websockets) pour zéro valeur décisionnelle. |
+
+## Out of Scope
+
+| Feature | Reason |
+|---|---|
+| Real-time chat | Le contact se fait par téléphone/SMS direct. |
+| Multi-département sans décision explicite | GEO-01 attend une décision produit, le 78 reste la seule zone active. |
+| OAuth / SSO | Email/password suffisant. |
+| Tables séparées par persona (architecte_tenders, syndic_tenders...) | Fragmenterait le matching/RLS/admin 4 fois — le pattern colonnes nullables sur `b2b_requests` (déjà utilisé en 05.17) a fait ses preuves. |
 
 ## Traceability
 
+*(Remplie par le roadmap — voir `.planning/ROADMAP.md` après création)*
+
 | Requirement | Phase | Status |
 |---|---|---|
-| INFRA-01 | Phase 1 | Completed |
-| INFRA-02 | Phase 1 | Completed |
-| INFRA-03 | Phase 1 | Completed |
-| INFRA-04 | Phase 1 | Completed |
-| LEGAL-01 | Phase 1 | Completed |
-| LEGAL-02 | Phase 1 | Completed |
-| CPTR-01 | Phase 2 | Completed |
-| CPTR-02 | Phase 2 | Completed |
-| CPTR-03 | Phase 2 | Completed |
-| CPTR-04 | Phase 2 | Completed |
-| CPTR-05 | Phase 2 | Completed |
-| CLM-01 | Phase 3 | Pending |
-| CLM-02 | Phase 3 | Pending |
-| CLM-03 | Phase 3 | Pending |
-| CLM-04 | Phase 3 | Pending |
-| SMS-03 | Phase 3 | Pending |
-| ADM-01 | Phase 3 | Pending |
-| LCK-01 | Phase 4 | Pending |
-| LCK-02 | Phase 4 | Pending |
-| LCK-03 | Phase 4 | Pending |
-| SMS-01 | Phase 5 | Pending |
-| SMS-02 | Phase 5 | Pending |
-| ADM-02 | Phase 5 | Pending |
-| ADM-03 | Phase 5 | Pending |
-| API-01 | Phase 5 | Completed |
-| API-02 | Phase 5 | Completed |
-| TRST-01 | Phase 5 | Completed |
+| TEND-01 | Phase 7 | Done |
+| TEND-02 | Phase 7 | Done |
+| TEND-05 | Phase 7 | Done |
+| SYNDIC-01 | Phase 7 | Done |
+| TEND-04 | Phase 8 | Pending |
+| TEND-06 | Phase 8 | Pending |
+| TEND-10 | Phase 8 | Pending |
+| TEND-11 | Phase 8 | Pending |
+| TEND-14 | Phase 8 | Pending |
+| TEND-07 | Phase 9 | Pending |
+| TEND-03 | Phase 9 | Pending |
+| TEND-08 | Phase 9 | Pending |
+| TEND-09 | Phase 9 | Pending |
+| TEND-12 | Phase 9 | Pending |
+| TEND-13 | Phase 9 | Pending |
+| TEND-15 | Phase 9 | Pending |
+| P1 | Phase 10 | Pending |
+| P3 | Phase 10 | Pending |
+| DNS-01 | Phase 10 | Pending |
+| INFRA-DOM-01 | Phase 10 | Pending |
+| AUTH-PWD-01 | Phase 10 | Pending |
+| AUTH-PWD-02 | Phase 10 | Pending |
+| AUTH-PWD-03 | Phase 10 | Pending |
+| AUTH-TPL-01 | Phase 10 | Pending |
+| AUTH-TPL-02 | Phase 10 | Pending |
+| IMMO-01 | Phase 13 | Pending |
+| IMMO-02 | Phase 13 | Pending |
+| IMMO-03 | Phase 13 | Pending |
+| IMMO-DVF-01 | Phase 13 | Pending |
+| TUNNEL-01 | Phase 14 | Pending |
+| TUNNEL-02 | Phase 14 | Pending |
+| TUNNEL-03 | Phase 14 | Pending |
+
+| TEND-16 | Phase 9 | Pending |
 
 **Coverage:**
-- v1 requirements: 24 total
-- Phase 5 (API+Trust): 3 additional
-- Mapped to phases: 27
-- Unmapped: 0 ✓
+- v2 requirements (TEND + SYNDIC) : 17 total — 17/17 mapped ✓
+- Reportés de v1 : 8 — 8/8 mapped ✓ (Phase 10, piste parallèle non bloquante)
+- Total mapped to phases : 25/25 ✓ (Phases 7, 8, 9, 10 — voir `.planning/ROADMAP.md`)
 
 ---
-*Requirements defined: 2026-06-02*
-*Last updated: 2026-06-24 after Phase 5 wave 3 completion*
+*v1.0 archivé : `.planning/milestones/v1.0-REQUIREMENTS.md`*
+*Requirements v2 définis : 2026-09-04, après recherche domaine (`.planning/research/SUMMARY.md`)*

@@ -6,26 +6,56 @@ BÂTI-AXE est une marketplace sélective de mise en relation B2B/B2C dans le bâ
 ## Core Value
 Garantir la sécurité et la confiance des chantiers de particuliers en les mettant en relation exclusive avec des professionnels du bâtiment certifiés (assurance décennale et labels vérifiés).
 
+## Current State (v1.0 shipped 2026-09-04)
+
+Socle B2C + couche Partenaires B2B livrés (voir `.planning/milestones/v1.0-ROADMAP.md`).
+Le pilote tourne sur `dev` (`dev.bati-axe.fr`) — **pas de bascule prod déclenchée à la
+clôture v1.0** : le client priorise le lancement du volet Partenaires (v2) avant la mise
+en prod réelle. Domaine de production officiel confirmé : `bati-axe.com` (Terraform
+corrigé le 2026-09-04, apply non lancé).
+
+## Current Milestone: v2.0 « Partenaires en scène »
+
+**Goal:** Permettre aux partenaires B2B (architectes, agents immobiliers, diagnostiqueurs, syndics) de diffuser leurs appels d'offres directement aux artisans matchés par zone/catégorie, sur le mécanisme d'abonnement existant.
+
+**Target features:**
+- Diffusion automatique des appels d'offres partenaires aux artisans (remplace le tri manuel DirCo)
+- Réutilisation du mécanisme d'accès existant (abonnement zone) — pas de nouveau rail de paiement
+- Persona syndic/copropriété exposé dans le tunnel (déjà en base, jamais mis en avant)
+
+**Explicitement hors scope v2** (décisions actées le 2026-09-04) :
+- Vitrine publique / annuaire partenaires — même logique que les particuliers : le partenaire est côté demande (il poste un besoin), pas côté offre, donc pas de profil public. Repoussable sans coût si un besoin apparaît plus tard.
+- Commission B2B / Stripe Connect (P10) — le pipeline B2B n'a jamais tourné en usage réel, prématuré d'investir dans un rail de paiement avant d'avoir du volume prouvé.
+
 ## Requirements
 
 ### Validated
-- **Infrastructure Dev** : Cloudflare Pages `bati-axe-dev` déployé via Terraform depuis `dev` et vérifié le 2026-08-25.
-- **Application** : build Node 22 réussi et 73 tests unitaires réussis le 2026-08-25.
+- **Infrastructure Dev** : Cloudflare Pages `bati-axe-dev` déployé via Terraform depuis `dev`, vérifié le 2026-08-25.
+- **Terraform Production** : configuré et appliqué avec succès avec les identifiants réels du client (2026-08-25) — corrigé le 2026-09-04 pour pointer `bati-axe.com` au lieu de `bati-axe.fr`.
+- ✓ Espace Partenaires B2B (landing, tunnel, back-office, workflow DirCo) — v1.0
+- ✓ Coffre-fort juridique artisan — v1.0
+- ✓ Console admin opérationnelle + KPIs de pilotage — v1.0
+- ✓ Packs zonés 78 + pricing dégressif Stripe — v1.0
+- ✓ Notifications email transactionnelles (code) — v1.0
 
-### Remaining
-- [ ] **P3** : re-test Stripe et cron 48h avec les identifiants de production client.
-- [ ] **P1** : brancher Umami (self-hosted VPS + PostgreSQL, sans cookies) sur le funnel.
-- [ ] **P7** : confirmer les tarifs et implémenter les packs zonés/exclusivité métier.
-- [ ] **P6/P8/P10** : étude financement, compte prescripteur et commission Stripe Connect.
-- [ ] **Production client** : préparer Cloudflare, domaine, base et secrets après réception des identifiants.
+### Active (v2.0 « Partenaires en scène »)
+- [ ] Diffusion des appels d'offres partenaires aux artisans matchés (zone/catégorie), sur l'abonnement existant.
+- [ ] Persona syndic/copropriété exposé dans le tunnel B2B.
+- [ ] **P1** : brancher Umami (VPS déjà provisionné côté client) sur le funnel, continue sur `dev`.
+- [ ] **P3** : re-test Stripe avec les vraies clés prod (formalité).
+- [ ] **DNS-01** : activer DKIM/SPF/DMARC + Email Routing sur `bati-axe.com` pour la Phase 06.3.
+- [ ] **06.4** : mot de passe oublié pro + templates Auth Supabase brandés.
+
+Détail complet : `.planning/REQUIREMENTS.md`.
 
 ### Out of Scope
 - **Real-time chat** — Le contact se fait par téléphone/SMS direct.
-- **Multi-villes initial** — Restreint à Carrières-sous-Poissy pour valider le modèle.
-- **OAuth / SSO** — Email/password suffisant pour la Phase 1.
+- **Multi-département sans décision explicite** — GEO-01 attend une décision produit, le 78 reste la seule zone active.
+- **OAuth / SSO** — Email/password suffisant.
 
 ## Context
-- Phase prototype axée sur Carrières-sous-Poissy (78) pour valider la conversion avant scale.
+- v1.0 shipped sur `dev`, prod réelle différée à la préparation v2 (décision client 2026-09-04).
+- Le client veut que les partenaires puissent diffuser leurs appels d'offres aux artisans (pas de tri manuel DirCo, pas de vitrine publique) — c'est devenu l'axe v2.
 - Stack Serverless à faible coût mensuel (<50€) sur Cloudflare.
 - ~7 000 prospects bruts en table interne, jamais publics sans opt-in (ADR-007).
 
@@ -48,5 +78,22 @@ Garantir la sécurité et la confiance des chantiers de particuliers en les mett
 | RGPD/LCEN double opt-in (ADR-007) | Conformité légale et protection de la délivrabilité SMS | En vigueur |
 | URL hybride slug+ID (ADR-009) | SEO préservé, zéro collision, résistant aux changements de nom | Appliqué |
 
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
 ---
-*Last updated: 2026-08-25 after Cloudflare Dev validation and environment strategy update*
+*Last updated: 2026-09-04 after v2.0 milestone kickoff*

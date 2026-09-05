@@ -112,10 +112,36 @@
 
 ---
 
+## 11. Playbook Go-To-Market (GTM) 78 — VRP Prescripteurs & Force Commerciale
+
+**Stratégie d'acquisition** : Attaquer la tête de chaîne (les prescripteurs = VRP terrain exclusifs) pour capter les chantiers chauds, puis activer les artisans abonnés grâce au projet en main.
+
+### A. Personas VRP Terrain
+- **Diagnostiqueurs** : Relevé d'anomalies DPE / Amiante / Élec → Scan QR Partner → Injection du projet rénovation.
+- **Agents Immobiliers** : Compromis de vente avec travaux → Dépôt dossier B2B → 3 devis pros sous 48h.
+- **Architectes / MOE** : Validation des plans → Dépôt appel d'offres B2B → Allocation artisans certifiés.
+
+### B. Force Commerciale Freelance (Modèle à la performance)
+- **Missions** :
+  1. Claim & Activation des Fiches Vitrines Prescripteurs.
+  2. Vente des Abonnements Artisans au moment où un projet chaud est disponible sur la zone.
+- **Grille de Rémunération** :
+  - **50% du 1er mois** de chaque abonnement artisan signé (ex: 75€ à 150€ / signature).
+  - **10% à 20%** sur la commission Bati-Axe des chantiers B2B apportés.
+
+### C. Calendrier d'Exécution Départemental (30 jours)
+1. **J1–J10 (Infiltration Digitale)** : Scraping/Pre-population via Lead Extractor (50 fiches vitrines prescripteurs + 150 profils artisans cibles 78).
+2. **J11–J20 (Activation Prescripteurs)** : Outreach cold-call/visites pour claim gratuit de la vitrine.
+3. **J21–J30 (Capture 1er Chantier)** : Injection du 1er projet qualifié via DPE/Agence.
+4. **J31+ (Closing Artisans)** : Vente des abonnements payants en s'appuyant sur le chantier chaud disponible.
+
+---
+
 ## Dépendances & ordre
 ```
 P3 (Stripe) ─┬─ P2 (Turnstile) ✅ ─┬─ 05.10 MVP ✅ (upload public)
              │                     │
-06.1 (admin) ✴─ 06.2 (KPIs) ✅ ──┴─ P7 (packs) ─ P4/P9/P12 ─ P5
+06.1 (admin) ✴─ 06.2 (KPIs) ✅ ──┴─ P7 (packs) ─ P4/P9/P12 ─ P5 ─ GTM 78
 ```
 **Blocages externes** : clés Turnstile client (P2 — standby), PDF Book/Kit (05.10), tarifs définitifs (P7), identifiants de production client (P3).
+

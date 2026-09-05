@@ -4,31 +4,8 @@
 
 ## Milestones
 
-### 🚧 **v1.0 « Pilote 78 en orbite » — EN COURS**
-
-**Verdict : la machine B2C est construite (v0.9.0 clôturé) + couche Partenaires B2B + KPIs livrés.** Reste : conditions de livraison ci-dessous + priorité pilote (backlog § « Priorités pilote v1 ») pour un go-live réel.
-
-**Livré dans ce milestone (2026-08-22 → 08-23) :**
-- ✅ **Phase 05.10 — Espace Partenaires & Apporteurs d'Affaires** (7/7) : landing `/b2b/partenaires`, tunnel 4 étapes, endpoint POST + presign R2, back-office admin `b2b_requests` (queue + pipeline + assignation + notes), workflow DirCo (qualification, sélection 2-3 sous-traitants, restitution email).
-- ✅ **Phase 05.11 — Coffre-Fort Juridique & Capacité Sous-traitance** (4/4) : table `documents_artisan`, switch alerte capacité + effectif, suspension auto à expiration, devoir de vigilance 6 mois, vue admin documents.
-- ✅ **Phase 06.1 — Console Admin Opérationnelle** : 8 composants modulaires, sidebar 7+ onglets, dark mode, search/pagination, audit log, onglet « Dossiers B2B ».
-- ✅ **Phase 06.2 — KPIs de Pilotage & Dashboard de Scalabilité** : tables `marketing_spend_logs` + `kpi_snapshots`, endpoint kpi-engine (6 KPIs + seuils), dashboard admin. *(récupéré d'une branche jamais mergée — était « livré » par erreur dans les docs)*
-- ✅ **P4 — Notif pro nouveaux leads (email)** : `notifyProLead` sur `projects.post.ts` (opt-in `lead_alerts_email`, idempotence `lead_notifications`), page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h.
-- 🚧 **Phase 05.14 — FIX Multi-Buckets R2 & Terraform Prod** : Isolation 3 buckets R2 (`batiaxe-public-[env]`, `batiaxe-vault-[env]`, `batiaxe-b2b-[env]`) + fix bindings `NUXT_R2_*` + Terraform Prod.
-- 🚧 **Phase 05.15 — FIX Verrouillage Leads non-vérifiés** : Verrouillage du déblocage de leads sur `/espace/leads` tant que `decennal_status !== 'verified'`.
-- ✅ **Phase 05.16 — P7 Packs Zonés & Pricing Dégressif (Pilote 78)** : Quadrillage des Yvelines en 4 zones (Mantes, Rambouillet, Versailles, St-Germain), abonnement dégressif sans engagement mensuel (190€ → 350€) + annuel économique (150€ → 300€). Ajout de zone (Stripe Checkout), toggle mensuel/annuel et retrait individuel de zone via Subscription Schedule, garde-fou un seul changement Stripe en vol à la fois.
-- ✅ Migrations appliquées en prod : showcase (00), KPI (01), b2b (02), DirCo (03), coffre-fort 05.11 (×2), P4 (02).
-
-**Conditions de livraison v1 (reste à valider avant mise en prod réelle avec vrais utilisateurs) :**
-- [x] Environnement Cloudflare Dev vérifié au vert sur la branche `dev` : projet `bati-axe-dev`, domaine `dev.bati-axe.fr`, Terraform `Init/Validate/Plan/Apply` réussis le 2026-08-25.
-- [ ] Déploiement de production client vérifié avec les identifiants du client (workflow prod actuellement manuel dans la configuration Dev).
-- [x] Paiement Stripe re-testé de bout en bout en local (checkout + webhook, mode test Stripe CLI, 2026-08-30) — cron pg_cron 48h confirmé **inopérant par construction** (condition jamais atteignable, décision : ne pas corriger pour l'instant, cf. STATE.md). Reste une validation finale avec les vraies clés Stripe prod (formalité).
-- [ ] Admin minimal validé opérationnel pour le pilote — ✅ console admin 06.1/06.2 livrée (revue documents OK)
-- [x] Dette test traitée : suite Playwright câblée sur Chrome système et QA mobile validée dans la phase 05.13.
-
-**Reporté au prochain milestone** : Phase 7 (Réputation & Scale), Phase 8 (PWA Mobile-First), Web Push P4-temps-2, P11 (eIDAS/workspace), P16 (TP), P22 (Majors) + tout le bloc Deferred ci-dessous.
-
-**[2026-08-30] Recentrage v1 sur le B2C** : le pilote doit rester simple pour attirer particuliers + artisans sans complexifier le lancement. Le bloc B2B (Espace Partenaires 05.10, Coffre-fort sous-traitance 05.11, Diagnostiqueurs 05.17) reste **committé et accessible tel quel** (pas de revert, pas de dépublication) mais **n'est plus une priorité v1** : **Phase 05.18** (Annuaire, vitrines, dashboard partenaires), **P10** (Commission B2B/Stripe Connect) et **P20** (Passerelle B2B payante) sont reportés au prochain milestone, au même titre que Phase 7/8. Le module B2B existant n'a pas encore été validé en usage réel (4 endpoints critiques trouvés cassés en 500 le 2026-08-29/30, corrigés — jamais testés en conditions réelles avant ça).
+- ✅ **v1.0 « Pilote 78 en orbite »** — Phases 05.10-06.4 + P4/P7/P19 (shipped 2026-09-04 sur `dev`, pas de bascule prod). Détails : `.planning/milestones/v1.0-ROADMAP.md`.
+- 🚧 **v2.0 « Partenaires en scène »** — en préparation. Cœur : diffusion automatique des appels d'offres partenaires aux artisans matchés (zone/catégorie), persona syndic exposé dans le tunnel. Phases 7-10. Rattrapage infra/auth reporté de v1 en parallèle (Phase 10).
 
 ### ✅ Milestone v0.9.0 « Experience & Growth Pro » — CLÔTURÉ le 2026-08-19
 
@@ -62,11 +39,15 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
 - [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, Dossiers B2B, KPIs, Documents légaux, Journal), search + pagination, projets cliquables. Onglet B2B fusionné (05.10-06) + Documents légaux (05.11-04). (livré 2026-08-22)
 - [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). *(récupéré d'une branche jamais mergée → merge PR #45)*. Reste : brancher Matomo côté client (P1). (livré 2026-08-22)
-- [ ] **Phase 06.3: Notifications Email Transactionnelles (bati-axe.com)** - Moteur multi-expéditeurs (`no-reply@`/`notifications@`/`contact@bati-axe.com`), notifs décennale/Stripe/zones côté Pros, accusés réception/déblocage côté Particuliers, accusé dépôt B2B, alertes admin centralisées, DNS Cloudflare (DKIM/SPF/DMARC) + Email Routing. Étend EML-01 (Phase 6) — regroupé avec le SMS 06-04 différé sous la même phase parente.
+- [x] **Phase 06.3: Notifications Email Transactionnelles (bati-axe.com)** - Moteur multi-expéditeurs (`no-reply@`/`notifications@`/`contact@bati-axe.com`), notifs décennale/Stripe/zones côté Pros, accusés réception/déblocage côté Particuliers, accusé dépôt B2B, alertes admin centralisées. **Phase complète 4/4** (code livré 2026-09-04) — activation prod (DNS DKIM/SPF/DMARC + Email Routing) reportée à la préparation prod de la v2.
 - [ ] **Phase 06.4: Mot de passe oublié (pro) & Templates Auth Supabase** - Lien "Mot de passe oublié ?" sur `/pro/claim` (`resetPasswordForEmail` + page de réinitialisation), templates d'e-mails Auth Supabase brandés (recovery/invite/confirmation) réutilisant le branding copper/navy + footer LCEN de 06.3. Découvert lors de l'audit email 06.3 (2026-08-30) : aucun recours self-service n'existe aujourd'hui pour un pro qui oublie son mot de passe.
 - [x] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
-- [ ] **Phase 7: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
-- [ ] **Phase 8: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
+- [ ] **Phase 7: Formulaire AO & Modèle Multi-Lots** - Description obligatoire + statut confirmé/en attente sur l'AO, persona syndic dans le tunnel, schéma `b2b_tender_lots`/`b2b_tender_claims`/`b2b_tender_notifications` + `project_postal_code`, multi-lots syndic (1 lot par corps de métier).
+- [ ] **Phase 8: Diffusion Automatique & Confiance** - Bouton diffusion DirCo (remplace le picker manuel `recommended_pros`), matching zone active × catégorie, notification email idempotente, rate-limit AO actifs/partenaire + notifications/jour/artisan, badge « partenaire vérifié ».
+- [ ] **Phase 9: Dashboard Pro & Claim des AO** - Onglet « Appels d'offres » dans `/espace/leads`, claim gaté sur `pro_zones` actif, révélation coordonnées post-claim, fermeture auto (expiration/cap), signalement AO suspect, message clarifiant les deux flux de l'abonnement, emails de statut structurés au partenaire (diffusion, artisan intéressé) — pas de dashboard/compte partenaire ce milestone.
+- [ ] **Phase 10: Rattrapage Infra & Auth Pro (parallèle)** - Umami funnel, re-test Stripe clés prod, DNS `bati-axe.com` (DKIM/SPF/DMARC) + bascule Terraform prod, mot de passe oublié pro + templates Auth Supabase brandés. Non bloquant pour les phases 7-9.
+- [ ] **Phase 11: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
+- [ ] **Phase 12: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
 
 ## Phase Details
 
@@ -433,7 +414,7 @@ Plans:
 
 **UI hint**: yes
 
-### Phase 06.3: Notifications Email Transactionnelles (bati-axe.com) (INSERTED 2026-08-29)
+### Phase 06.3: Notifications Email Transactionnelles (bati-axe.com) (INSERTED 2026-08-29) ✅ 4/4 (2026-09-04)
 
 **Goal:** Standardiser l'envoi d'e-mails transactionnels sur le domaine de prod `bati-axe.com` avec expéditeur dynamique selon la nature du message (`no-reply@`, `notifications@`, `contact@`), et couvrir les parcours Pros/Particuliers/B2B/Admin encore sans notification.
 **Contexte:** repris d'un plan externe (Antigravity IDE, `implementation_plan.md` du 2026-08-29) — étend `server/utils/email.ts` (existant, EML-01/Phase 6, P4) plutôt qu'il ne le remplace. Rattaché à la Phase 6 (déjà « la phase notifications », email + SMS 06-04 différé) plutôt que laissé en phase indépendante. Points couverts : moteur multi-expéditeurs + layout HTML branding, email validation/rejet décennale (`verify.post.ts`), alertes cron J-30/J-7 expiration décennale, confirmation Stripe souscription/modification/**retrait de zone** (`webhook.post.ts` — le retrait de zone via Subscription Schedule vient d'être vérifié fonctionnellement le 2026-08-29, cf. Phase 05.16-02, il ne manque que la notif email de confirmation), accusé réception projet particulier (`projects.post.ts`), email au particulier au déblocage du lead (`handleLeadDecision.ts`), accusé dépôt B2B (`requests.post.ts`), utilitaire `notifyAdmin.ts` centralisé (Gmail admin) branché sur claim/projet/B2B.
@@ -443,10 +424,12 @@ Plans:
 **Plans:** 4 plans (2 vagues)
 
 Plans:
-- [ ] 06.3-01-PLAN.md — Moteur : sendEmail multi-expéditeurs + layout HTML/LCEN + notifyAdmin (vague 1)
-- [ ] 06.3-02-PLAN.md — Pros : validation/rejet document, alerte lead sur notifications@, cron J-30/J-7 décennale (vague 2)
-- [ ] 06.3-03-PLAN.md — Particuliers & B2B : accusé réception projet (lien magique enfin envoyé), positionnement artisan, accusé B2B (vague 2)
-- [ ] 06.3-04-PLAN.md — Stripe & Admin : confirmations souscription/retrait de zone/changement de facturation, migration alerte SIRET (vague 2)
+- [x] 06.3-01-PLAN.md — Moteur : sendEmail multi-expéditeurs + layout HTML/LCEN + notifyAdmin (vague 1)
+- [x] 06.3-02-PLAN.md — Pros : validation/rejet document, alerte lead sur notifications@, cron J-30/J-7 décennale (vague 2)
+- [x] 06.3-03-PLAN.md — Particuliers & B2B : accusé réception projet (lien magique enfin envoyé), positionnement artisan, accusé B2B (vague 2)
+- [x] 06.3-04-PLAN.md — Stripe & Admin : confirmations souscription/retrait de zone/changement de facturation, migration alerte SIRET (vague 2)
+
+**Reste bloquant pour l'activation prod réelle** (non fait, vérifié 2026-09-04 — aucune ressource Terraform correspondante) : DNS `bati-axe.com` (DKIM/SPF/DMARC), Cloudflare Email Routing `contact@`, variables d'env `RESEND_API_KEY`/`NUXT_PUBLIC_SITE_URL` en prod. Le code applicatif est prêt, seule la config d'infra manque.
 
 **Note de planning (2026-08-30):** l'e-mail « artisan a pris le lead en charge » est câblé dans `leads/[id]/claim.patch.ts` et NON dans `handleLeadDecision.ts` comme l'indiquait le CONTEXT — `handleLeadDecision` traite la décision du particulier, pas la prise en charge par un artisan. Découverte au passage : `projects.post.ts` n'envoyait AUCUN e-mail au particulier en production (le lien magique n'était qu'un `console.log` sous `import.meta.dev`).
 
@@ -467,7 +450,58 @@ Plans:
 
 **UI hint**: yes
 
-### Phase 7: Réputation & Scale
+### Phase 7: Formulaire AO & Modèle Multi-Lots
+**Goal**: Le partenaire décrit un besoin complet et qualifiable (description, statut, multi-métiers) et le persona syndic est exposé dans le tunnel ; le socle de données porte le multi-lot.
+**Depends on**: Phase 06.1 (back-office B2B), Phase 05.16 (`pro_zones`)
+**Requirements**: TEND-01, TEND-02, TEND-05, SYNDIC-01
+**Success Criteria** (what must be TRUE):
+  1. Un partenaire ne peut pas soumettre un AO sans description (≥20 caractères), en plus du budget et des documents CCTP/plans déjà supportés.
+  2. Un partenaire choisit un statut à la qualification — « confirmé » ou « en attente de décision » — visible par l'artisan avant réponse.
+  3. Un syndic peut sélectionner son persona dans `/b2b/partenaires` et déposer un AO couvrant plusieurs corps de métier (ex. toiture + façade + électricité), chacun stocké comme un lot distinct (`b2b_tender_lots`).
+  4. Le DirCo saisit un code postal structuré (`project_postal_code`) à la qualification, exploitable par le matching zone.
+**Plans**: 3 plans
+
+Plans:
+- [x] 07-01-PLAN.md — Migration `b2b_tender_lots` + colonnes description/decision_status/project_postal_code + types front
+- [x] 07-02-PLAN.md — Backend : description obligatoire à l'intake, création des lots syndic, statut + code postal à la qualification DirCo
+- [x] 07-03-PLAN.md — UI : description + sélecteur multi-lots dans le tunnel, statut de décision + code postal dans la fiche admin
+
+### Phase 8: Diffusion Automatique & Confiance
+**Goal**: Le tri manuel DirCo est remplacé par un matching automatique zone+catégorie qui notifie les artisans concernés, avec les garde-fous anti-spam et le signal de confiance en place dès le lancement.
+**Depends on**: Phase 7
+**Requirements**: TEND-04, TEND-06, TEND-10, TEND-11, TEND-14
+**Success Criteria** (what must be TRUE):
+  1. Quand le DirCo qualifie un AO (statut `qualifié`), un bouton « Diffuser » remplace la sélection manuelle `recommended_pros` et déclenche le matching zone active (`pro_zones`) × catégorie.
+  2. Les artisans matchés reçoivent un email de notification par lot, sans doublon si la diffusion est relancée (idempotence).
+  3. Un partenaire ne peut pas avoir plus d'AO actifs simultanés que le plafond configuré ; un artisan ne reçoit pas plus de notifications B2B par jour que le plafond configuré, tous partenaires confondus.
+  4. Chaque AO/lot diffusé affiche un badge « partenaire vérifié » réutilisant la vérification SIRET existante.
+**Plans**: TBD
+
+### Phase 9: Dashboard Pro & Claim des AO
+**Goal**: L'artisan peut consulter, réclamer et traiter les appels d'offres qui le concernent depuis son espace, sans confusion sur ce que couvre son abonnement.
+**Depends on**: Phase 8
+**Requirements**: TEND-03, TEND-07, TEND-08, TEND-09, TEND-12, TEND-13, TEND-15, TEND-16
+**Success Criteria** (what must be TRUE):
+  1. L'artisan voit un onglet « Appels d'offres » dans `/espace/leads`, visuellement distinct des chantiers particuliers, avec une phrase expliquant que son abonnement zone couvre désormais deux flux.
+  2. L'artisan peut se déclarer intéressé (claim) sur un AO/lot uniquement si son abonnement zone (`pro_zones`) est actif sur la zone du lot.
+  3. Une fois le claim effectué, les coordonnées du partenaire sont révélées à l'artisan (masquées avant), et le partenaire reçoit un email structuré (sujet/statut identifiables) l'informant qu'un artisan est intéressé.
+  4. Un lot passe automatiquement en statut « clos » à expiration ou quand son cap de claims est atteint (1 seul artisan si l'AO est « confirmé », jusqu'à 3 s'il est « en attente de décision »).
+  5. L'artisan dispose d'un moyen de signaler un AO suspect ou abusif, visible par l'admin.
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 10: Rattrapage Infra & Auth Pro (parallèle, non bloquant)
+**Goal**: Finaliser les items reportés de v1 (analytics, paiement, DNS/prod, self-service mot de passe pro) sans bloquer le lancement du broadcast AO — piste parallèle, exécutable à tout moment pendant les phases 7-9.
+**Depends on**: Nothing (parallèle aux phases 7-9)
+**Requirements**: P1, P3, DNS-01, INFRA-DOM-01, AUTH-PWD-01, AUTH-PWD-02, AUTH-PWD-03, AUTH-TPL-01, AUTH-TPL-02
+**Success Criteria** (what must be TRUE):
+  1. Umami capte les événements du funnel (simulateur → lead → contact) sur `dev`.
+  2. Un paiement Stripe complet (checkout + webhook + cron 48h) est vérifié avec les vraies clés prod.
+  3. `bati-axe.com` a DKIM/SPF/DMARC + Email Routing actifs et la bascule Terraform prod est vérifiée/finalisée.
+  4. Un pro peut réinitialiser son mot de passe oublié depuis `/pro/claim`, avec des e-mails Auth Supabase brandés (recovery/invite/confirmation).
+**Plans**: TBD
+
+### Phase 11: Réputation & Scale
 **Goal**: Pérenniser la croissance par la preuve sociale et l'expansion géographique conditionnée aux métriques pilote.
 **Depends on**: Phase 6
 **Requirements**: REP-01, REP-02, SCL-01, SCL-02 (ouverture TP), ECO-01 (modèle hybride)
@@ -481,7 +515,7 @@ Plans:
 **Plans**: TBD
 **UI hint**: yes
 
-### Phase 8: Architecture PWA Mobile-First
+### Phase 12: Architecture PWA Mobile-First
 **Goal**: Rendre Bâti-Axe installable et résilient au réseau (offline-resilient) — shell UI en cache, chargement perçu plus rapide, sans réécriture native.
 **Depends on**: Phase 4.7, Phase 6
 **Success Criteria** (what must be TRUE):
@@ -517,8 +551,12 @@ Plans:
 | 06.2 KPIs de Pilotage & Dashboard de Scalabilité | 1/1 | Complete | 2026-08-22 |
 | 05.12 Front Polish & Branding (Landing Partenaires + Logo) | 2/2 | Complete | 2026-08-23 |
 | 05.13 Dette technique + P9 Mobile QA + P5 Feedback Loop | 3/3 | Complete | 2026-08-23 |
-| 7. Réputation & Scale | 0/TBD | Not started | - |
-| 8. Architecture PWA Mobile-First | 0/TBD | Not started | - |
+| 7. Formulaire AO & Modèle Multi-Lots | 0/TBD | Not started | - |
+| 8. Diffusion Automatique & Confiance | 0/TBD | Not started | - |
+| 9. Dashboard Pro & Claim des AO | 0/TBD | Not started | - |
+| 10. Rattrapage Infra & Auth Pro | 0/TBD | Not started | - |
+| 11. Réputation & Scale | 0/TBD | Not started | - |
+| 12. Architecture PWA Mobile-First | 0/TBD | Not started | - |
 
 ## Priorités pilote v1 — Backlog (items manquants identifiés le 2026-08-19)
 
@@ -578,3 +616,37 @@ Reportés en toute fin — exécuter seulement après que le produit soit constr
 - **Notifications navigateur (Web Push)** — voir P4 : email maintenant, Web Push natif via PWA en Phase 8.
 - **Pages légales à finaliser (CGU, confidentialité, mentions légales)** — les 3 pages existent (`app/pages/legal/`) mais avec du contenu placeholder (SAS fictive, RCS fictif, adresse fictive). À compléter avec les vraies coordonnées + faire relire par un juriste. Skills communautaires identifiés (le 2026-08-19) : `kostja94/marketing-skills@legal-page-generator`, `anthropics/claude-for-legal@legal-writing`, `anthropics/knowledge-work-plugins@legal-risk-assessment` — à confirmer avant installation (skills non vérifiés).
 - **Variante design « accueil sombre » (2026-08-18, appliquée puis revertée — en attente validation client)** — full-dark de la landing, à réappliquer si le client valide. Référence : base page `bg-slate-800` (#1E293B) + texte blanc ; cartes `bg-slate-700/40` + `border-white/10` ; corps `slate-300`, atténué `slate-400`, chiffres `slate-400` ; header sombre route-aware sur `/` (`border-white/10 bg-slate-800/95`, CTA « Déposer un projet » inversé `bg-white text-slate-900`). ⚠️ Logo PNG en RGB (fond non transparent) : prévoir une variante blanche/transparente pour header sombre. `RealisationCard` (composant partagé avec le profil pro clair) restée blanche dans la variante — ajouter une prop `dark` si retenue. Fichiers concernés : `app/pages/index.vue`, `app/layouts/default.vue`, `app/components/BeforeAfterSlider.vue` (bordure `white/15`).
+
+### Phase 13: Data Immo & Lead Vendeur DPE
+
+Qualification immo en complément du simulateur (Phase 05.9, déjà livrée — non rouverte) : objectif du projet
+(habiter/louer/vendre), question d'arbitrage financier pour détecter le vendeur DPE F/G pressé, consentement
+RGPD pour un avis de valeur post-travaux par un agent immobilier partenaire, restitution hybride (reste à
+charge travaux vs plus-value revente estimée). Inclut le moteur d'estimation DVF Open Data Notaires
+(IMMO-DVF-01, benchmark Immo-Scan) qui alimente en donnée réelle la plus-value revente restituée par IMMO-03 —
+même thématique data immo, rattaché ici plutôt qu'à une phase séparée. Prototype dev en ligne :
+https://bati-axe-production-ayo.pages.dev
+
+**Goal:** Générer des leads vendeurs immobiliers qualifiés (DPE F/G, propriétaires pressés) à partir du simulateur d'aides existant, sans rouvrir son flux principal.
+**Requirements**: IMMO-01, IMMO-02, IMMO-03, IMMO-DVF-01
+**Depends on:** Phase 05.9
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 13 to break down)
+
+### Phase 14: Évolutions Tunnel Simulateur (Benchmark HelloArtisan)
+
+Sous-tuiles guidées par catégorie dans le simulateur (TUNNEL-01), question "projets complémentaires"
+avant le Lead Wall pour générer plusieurs leads d'un seul formulaire (TUNNEL-02), validation du téléphone
+par SMS OTP avant émission du lead (TUNNEL-03). Périmètre initialement rattaché à la Phase 05.9 dans la
+spec client — 05.9 est déjà livrée et clôturée (v1.0 archivée), nouvelle phase pour ne pas la rouvrir.
+Source : `.planning/clients/20260905-BENCHMARK_HELLOARTISAN_IMMOSCAN-SPEC_CLIENT.md`.
+
+**Goal:** Reproduire les patterns UX de conversion/qualification de HelloArtisan sur le tunnel simulateur existant, sans rouvrir la Phase 05.9.
+**Requirements**: TUNNEL-01, TUNNEL-02, TUNNEL-03
+**Depends on:** Phase 05.9 (simulateur existant) — indépendante de la Phase 13
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 14 to break down)

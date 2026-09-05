@@ -22,6 +22,9 @@ interface B2bRequest {
   status: 'nouveau' | 'en_cours' | 'rappele' | 'qualifie' | 'converti' | 'perdu'
   assigned_to: string | null
   notes: string | null
+  description: string | null
+  decision_status: 'confirme' | 'en_attente'
+  project_postal_code: string | null
   // 05.10-08 — Qualification DirCo
   qualifications_requises: string[]
   planning_start: string | null
@@ -73,6 +76,11 @@ const STATUS_LABELS: Record<string, string> = {
   perdu: 'Perdu',
 }
 
+const DECISION_LABELS: Record<string, string> = {
+  confirme: 'Confirmé — travaux décidés et budgétés',
+  en_attente: 'En attente de décision — devis à comparer avant validation (ex. avant AG)',
+}
+
 const STATUS_COLORS: Record<string, string> = {
   nouveau: 'bg-sky-500/10 text-sky-400 border-sky-500/30',
   en_cours: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
@@ -101,6 +109,8 @@ interface B2bDraft {
   planning_start: string
   planning_end: string
   recommended: string[]
+  decision_status: string
+  project_postal_code: string
 }
 
 const draft = reactive<Record<string, B2bDraft>>({})
@@ -118,6 +128,8 @@ function ensureDraft(id: string): B2bDraft {
       planning_start: r?.planning_start || '',
       planning_end: r?.planning_end || '',
       recommended: [...(r?.recommended_pros || [])],
+      decision_status: r?.decision_status || 'en_attente',
+      project_postal_code: r?.project_postal_code || '',
     }
     draft[id] = d
   }
@@ -147,6 +159,8 @@ async function fetchRequests() {
         planning_start: r.planning_start || '',
         planning_end: r.planning_end || '',
         recommended: [...(r.recommended_pros || [])],
+        decision_status: r.decision_status || 'en_attente',
+        project_postal_code: r.project_postal_code || '',
       }
     }
     if (!expandedId.value && data.requests.length > 0) {
@@ -180,6 +194,8 @@ async function saveChanges(r: B2bRequest) {
   if (d.planning_start !== (r.planning_start || '')) payload.planning_start = d.planning_start || null
   if (d.planning_end !== (r.planning_end || '')) payload.planning_end = d.planning_end || null
   if (JSON.stringify(d.recommended) !== JSON.stringify(r.recommended_pros || [])) payload.recommended_pros = d.recommended
+  if (d.decision_status !== r.decision_status) payload.decision_status = d.decision_status
+  if (d.project_postal_code !== (r.project_postal_code || '')) payload.project_postal_code = d.project_postal_code || null
 
   if (Object.keys(payload).length === 0) {
     savingId.value = null
@@ -366,6 +382,12 @@ function pipelineLabel(status: string): string {
             </div>
           </div>
 
+          <!-- Besoin décrit par le partenaire -->
+          <div v-if="r.description" class="mb-3">
+            <p class="text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Besoin décrit par le partenaire</p>
+            <p class="text-sm text-foreground whitespace-pre-line">{{ r.description }}</p>
+          </div>
+
           <!-- Gestion pipeline -->
           <div class="grid sm:grid-cols-2 gap-3">
             <div>
@@ -432,6 +454,36 @@ function pipelineLabel(status: string): string {
                     class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:border-safety"
                   />
                 </div>
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-3 mt-3">
+              <div>
+                <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Statut de la décision</label>
+                <select
+                  v-model="ensureDraft(r.id).decision_status"
+                  class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:border-safety"
+                >
+                  <option v-for="(label, value) in DECISION_LABELS" :key="value" :value="value">{{ label }}</option>
+                </select>
+                <p class="mt-1.5 text-[10px] text-muted-foreground">
+                  Visible par l'artisan avant qu'il ne réponde. Un AO confirmé se ferme au premier artisan intéressé ; un AO en attente accepte plusieurs devis.
+                </p>
+              </div>
+              <div>
+                <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Code postal du projet</label>
+                <input
+                  v-model="ensureDraft(r.id).project_postal_code"
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="5"
+                  pattern="\d{5}"
+                  placeholder="78000"
+                  class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-safety"
+                />
+                <p v-if="ensureDraft(r.id).project_postal_code && !/^\d{5}$/.test(ensureDraft(r.id).project_postal_code)" class="mt-1.5 text-[10px] text-destructive">
+                  Code postal invalide (5 chiffres attendus).
+                </p>
               </div>
             </div>
 

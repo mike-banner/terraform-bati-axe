@@ -95,7 +95,7 @@ variable "environment_domains" {
   default = {
     dev        = "dev.bati-axe.fr"
     staging    = "staging.bati-axe.fr"
-    production = "bati-axe.fr"
+    production = "bati-axe.com"
   }
 }
 
@@ -198,5 +198,5 @@ variable "turnstile_secret_key" {
 variable "site_url" {
   description = "URL publique de l'application"
   type        = string
-  default     = "https://bati-axe.fr"
+  default     = "https://bati-axe.com"
 }
