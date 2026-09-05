@@ -172,15 +172,17 @@ Non applicable — phase additive (nouvelle table, nouvelle colonne, nouvel endp
 | A1 | La valeur `clos` citée en D-09 pour `b2b_requests.status` n'existe pas dans le CHECK constraint actuel — le comptage du plafond devrait se limiter à `NOT IN ('converti', 'perdu')` pour cette phase | Common Pitfalls #1 | Si le planner code littéralement `NOT IN (..., 'clos')` sans vérifier, aucune erreur immédiate (une valeur absente dans un NOT IN ne casse rien), mais le plafond D-09 sera correct par coïncidence — le vrai risque est qu'un futur `UPDATE ... status = 'clos'` échoue en silence côté DirCo si quelqu'un l'ajoute ailleurs en pensant que la valeur est supportée |
 | A2 | Le filtre `pro_zones` actif (D-07) se fait via jointure Supabase `!inner` filtrée plutôt que deux requêtes séparées | Code Examples | Si l'embedding filtré ne fonctionne pas comme attendu avec PostgREST (précédent de bug connu sur `auth.users`), le planner doit prévoir une requête `pro_zones` séparée puis un `.in('id', proIdsActifs)` — pattern de repli plus sûr basé sur le style déjà utilisé partout ailleurs dans ce repo |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Que fait exactement le check de plafond D-09 en cas de dépassement — désactive-t-il le bouton « Diffuser », ou bloque-t-il l'action au clic avec une erreur 409 ?**
    - Ce qu'on sait : CONTEXT.md dit « le bouton est désactivé avec un message clair » ET laisse le choix du point d'implémentation à Claude's Discretion.
    - Ce qui est flou : « désactivé » suggère un état UI calculé côté client (nécessite que le compte d'AO actifs soit renvoyé par l'API de listing), alors qu'un blocage serveur au clic est plus simple à coder sans toucher au payload de listing.
    - Recommandation : le planner choisit le blocage serveur (retour 409 avec message, affiché en toast) — plus simple, cohérent avec le pattern `assertSubscriptionModifiable` déjà utilisé dans ce repo (`zoneMatcher.ts`) qui throw un `createError` 409 avec message utilisateur.
+   - **RESOLVED : 08-02-PLAN.md** — check `assertTenderQuota` côté serveur dans `diffuse.post.ts`, retour 409. Le gating client (`canDiffuse`) ne porte que sur D-02 (statut + code postal), pas sur le plafond D-09.
 
 2. **`clos` doit-il être ajouté au CHECK constraint de `b2b_requests.status`, ou le comptage D-09 doit-il simplement l'omettre ?**
    - Recommandation : omettre `clos` du `NOT IN` pour cette phase (aucun mécanisme ne fait passer un `b2b_requests.status` à `clos` dans le scope actuel) — à trancher explicitement en début de plan, pas en cours d'implémentation.
+   - **RESOLVED : 08-02-PLAN.md** — `clos` omis, implémenté en liste positive `ACTIVE_TENDER_STATUSES = ['nouveau','en_cours','rappele','qualifie']` (plus sûr qu'un `NOT IN` : une future valeur de statut est un choix explicite, pas une inclusion accidentelle).
 
 ## Environment Availability
 
