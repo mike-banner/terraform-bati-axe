@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // 5. Résolution tardive de la zone (D-06) — au clic, pas à la qualification.
-  const zone = await matchZone(req.project_postal_code)
+  const zone = await matchZone(supabase, req.project_postal_code)
   if (!zone) {
     throw createError({
       statusCode: 422,
