@@ -2179,6 +2179,8 @@ export type Database = {
         | "project_created"
         | "consent_updated"
         | "showcase_toggled"
+        | "b2b_tender_diffused"
+        | "b2b_restitution_sent"
       b2b_apporteur_type:
         | "architecte"
         | "bet"
@@ -2348,6 +2350,8 @@ export const Constants = {
         "project_created",
         "consent_updated",
         "showcase_toggled",
+        "b2b_tender_diffused",
+        "b2b_restitution_sent",
       ],
       b2b_apporteur_type: [
         "architecte",
