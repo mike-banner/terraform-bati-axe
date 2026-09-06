@@ -480,7 +480,7 @@ Plans:
 Plans:
 - [x] 08-01-PLAN.md — Migration `b2b_tender_notifications` + opt-in `b2b_alerts_email` + moteur `notifyMatchedB2bPros` (badge email)
 - [x] 08-02-PLAN.md — Gardes anti-spam (plafonds D-09/D-10) + endpoint admin `diffuse.post.ts` + env vars
-- [ ] 08-03-PLAN.md — Bouton « Diffuser aux artisans » dans `AdminB2bTab.vue` + vérification humaine
+- [x] 08-03-PLAN.md — Bouton « Diffuser aux artisans » dans `AdminB2bTab.vue` + vérification humaine
 
 ### Phase 9: Dashboard Pro & Claim des AO
 **Goal**: L'artisan peut consulter, réclamer et traiter les appels d'offres qui le concernent depuis son espace, sans confusion sur ce que couvre son abonnement.

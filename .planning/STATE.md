@@ -4,12 +4,12 @@ milestone: v2.0
 milestone_name: « Partenaires en scène »
 status: executing
 stopped_at: Phase 8 context gathered
-last_updated: "2026-09-05T17:53:38.528Z"
+last_updated: "2026-09-06T21:18:11.844Z"
 progress:
-  total_phases: 30
-  completed_phases: 16
-  total_plans: 81
-  completed_plans: 75
+  total_phases: 31
+  completed_phases: 17
+  total_plans: 84
+  completed_plans: 78
   percent: 93
 ---
 
@@ -30,9 +30,9 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 
 ## Current Position
 
-Phase: 8
+Phase: 13
 Plan: Not started
-Status: Executing Phase 07
+Status: Executing Phase 08
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
 

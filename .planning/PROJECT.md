@@ -37,9 +37,9 @@ corrigé le 2026-09-04, apply non lancé).
 - ✓ Console admin opérationnelle + KPIs de pilotage — v1.0
 - ✓ Packs zonés 78 + pricing dégressif Stripe — v1.0
 - ✓ Notifications email transactionnelles (code) — v1.0
+- ✓ Diffusion automatique des appels d'offres partenaires aux artisans matchés (zone/catégorie), garde-fous anti-spam, badge de confiance — Phase 8, validé en 2026-09-06
 
 ### Active (v2.0 « Partenaires en scène »)
-- [ ] Diffusion des appels d'offres partenaires aux artisans matchés (zone/catégorie), sur l'abonnement existant.
 - [ ] Persona syndic/copropriété exposé dans le tunnel B2B.
 - [ ] **P1** : brancher Umami (VPS déjà provisionné côté client) sur le funnel, continue sur `dev`.
 - [ ] **P3** : re-test Stripe avec les vraies clés prod (formalité).
@@ -96,4 +96,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-09-04 after v2.0 milestone kickoff*
+*Last updated: 2026-09-06 après clôture Phase 8 (diffusion automatique et confiance)*
