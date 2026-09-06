@@ -475,7 +475,12 @@ Plans:
   2. Les artisans matchés reçoivent un email de notification par lot, sans doublon si la diffusion est relancée (idempotence).
   3. Un partenaire ne peut pas avoir plus d'AO actifs simultanés que le plafond configuré ; un artisan ne reçoit pas plus de notifications B2B par jour que le plafond configuré, tous partenaires confondus.
   4. Chaque AO/lot diffusé affiche un badge « partenaire vérifié » réutilisant la vérification SIRET existante.
-**Plans**: TBD
+     *(Ajusté en 08-CONTEXT.md D-12/D-13 : aucun SIRET partenaire n'existe en base → le badge devient « AO qualifié BÂTI-AXE », affiché dans l'email de notification.)*
+**Plans**: 3 plans
+Plans:
+- [x] 08-01-PLAN.md — Migration `b2b_tender_notifications` + opt-in `b2b_alerts_email` + moteur `notifyMatchedB2bPros` (badge email)
+- [x] 08-02-PLAN.md — Gardes anti-spam (plafonds D-09/D-10) + endpoint admin `diffuse.post.ts` + env vars
+- [x] 08-03-PLAN.md — Bouton « Diffuser aux artisans » dans `AdminB2bTab.vue` + vérification humaine
 
 ### Phase 9: Dashboard Pro & Claim des AO
 **Goal**: L'artisan peut consulter, réclamer et traiter les appels d'offres qui le concernent depuis son espace, sans confusion sur ce que couvre son abonnement.
@@ -650,3 +655,18 @@ Source : `.planning/clients/20260905-BENCHMARK_HELLOARTISAN_IMMOSCAN-SPEC_CLIENT
 
 Plans:
 - [ ] TBD (run /gsd-plan-phase 14 to break down)
+
+## Backlog
+
+### Phase 999.1: Passe de revue de code avant prod (BACKLOG)
+
+Passe de revue avant mise en production : auditer le code de la diffusion automatique B2B (Phase 8) et,
+plus largement, les extensions ajoutées depuis. Si nécessaire, découper `AdminB2bTab.vue` (et composants
+similaires) en sous-composants plus petits pour améliorer le rafraîchissement/réactivité du front.
+
+**Goal:** [Captured for future planning]
+**Requirements:** TBD
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (promote with /gsd-review-backlog when ready)

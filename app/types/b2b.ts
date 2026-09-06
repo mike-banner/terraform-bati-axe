@@ -52,7 +52,16 @@ export interface B2bRequest {
   updated_at: string
 }
 
-export const APPORTEUR_LABELS: Record<B2bApporteurType, { label: string; icon: string; fear: string; promise: string }> = {
+export const APPORTEUR_LABELS: Record<B2bApporteurType, { label: string; icon: string; fear: string; promise: string; badge?: string }> = {
+  // Mis en avant en premier (v2.0) : seul persona multi-lots, celui qui bénéficie
+  // le plus de la diffusion automatique par lot (Phase 8).
+  syndic: {
+    label: 'Syndic de Copropriété / Gestionnaire',
+    icon: '🏢',
+    fear: 'Manque de réactivité, travail bâclé, copropriétaires qui hurlent',
+    promise: 'Habitués aux AG, respect du règlement de copro et rapports de chantier clairs.',
+    badge: 'Multi-lots : un dossier, plusieurs corps de métier diffusés automatiquement',
+  },
   architecte: {
     label: 'Architecte / Décorateur / Maître d\'œuvre',
     icon: '📐',
@@ -70,12 +79,6 @@ export const APPORTEUR_LABELS: Record<B2bApporteurType, { label: string; icon: s
     icon: '🏠',
     fear: 'Perdre une vente à cause d\'un devis qui met 3 semaines',
     promise: 'Un pré-chiffrage en 48h pour aider vos acheteurs à se positionner.',
-  },
-  syndic: {
-    label: 'Syndic de Copropriété / Gestionnaire',
-    icon: '🏢',
-    fear: 'Manque de réactivité, travail bâlé, copropriétaires qui hurlent',
-    promise: 'Habitués aux AG, respect du règlement de copro et rapports de chantier clairs.',
   },
   diagnostiqueur: {
     label: 'Diagnostiqueur Immobilier',

@@ -237,6 +237,9 @@ async function submitRequest() {
             <div>
               <p class="text-sm font-semibold text-foreground">{{ data.label }}</p>
               <p class="text-xs text-muted-foreground mt-0.5 line-clamp-2">{{ data.promise }}</p>
+              <span v-if="data.badge" class="inline-block mt-1.5 text-[10px] font-medium px-1.5 py-0.5 rounded-sm bg-copper/10 text-copper border border-copper/20">
+                {{ data.badge }}
+              </span>
             </div>
           </button>
         </div>

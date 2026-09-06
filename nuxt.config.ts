@@ -95,6 +95,10 @@ export default defineNuxtConfig({
     adminEmail: process.env.NUXT_ADMIN_EMAIL || process.env.ADMIN_EMAIL || '',
     // P2 — Cloudflare Turnstile (anti-spam). Clé secrète côté serveur uniquement.
     turnstileSecretKey: process.env.NUXT_TURNSTILE_SECRET_KEY || process.env.TURNSTILE_SECRET_KEY,
+    // Phase 8 (D-09/D-10) — garde-fous anti-spam de la diffusion AO partenaires.
+    // Seuils en env vars (pas de table de config : aucun besoin de réglage à chaud au pilote).
+    b2bMaxActiveTendersPerPartner: Number(process.env.NUXT_B2B_MAX_ACTIVE_TENDERS_PER_PARTNER || process.env.B2B_MAX_ACTIVE_TENDERS_PER_PARTNER || 3),
+    b2bMaxNotificationsPerArtisanPerDay: Number(process.env.NUXT_B2B_MAX_NOTIFICATIONS_PER_ARTISAN_PER_DAY || process.env.B2B_MAX_NOTIFICATIONS_PER_ARTISAN_PER_DAY || 5),
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
       // P2 — clé publique Turnstile (rendue côté client).

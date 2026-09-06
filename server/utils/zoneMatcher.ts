@@ -15,8 +15,8 @@ const ZONE_PRICING: Record<number, { monthly: number; annual: number }> = {
 /**
  * Trouve la zone correspondant à un code postal (table zones, type='area').
  */
-export async function matchZone(postalCode: string): Promise<{ id: string; name: string } | null> {
-  const { data, error } = await useSupabaseServiceRole()
+export async function matchZone(supabase: any, postalCode: string): Promise<{ id: string; name: string } | null> {
+  const { data, error } = await supabase
     .from('zones')
     .select('id, name')
     .eq('type', 'area')

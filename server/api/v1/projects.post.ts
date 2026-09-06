@@ -98,7 +98,7 @@ export default defineEventHandler(async (event) => {
     })
 
     // 2. Match postal code → zone (areas 78 ou city legacy)
-    const matchedZone = await matchZone(data.postal_code)
+    const matchedZone = await matchZone(supabase, data.postal_code)
 
     if (!matchedZone) {
       throw createError({

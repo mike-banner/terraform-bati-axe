@@ -186,6 +186,45 @@ export type Database = {
           },
         ]
       }
+      b2b_tender_notifications: {
+        Row: {
+          channel: string
+          id: string
+          lot_id: string
+          pro_id: string
+          sent_at: string
+        }
+        Insert: {
+          channel?: string
+          id?: string
+          lot_id: string
+          pro_id: string
+          sent_at?: string
+        }
+        Update: {
+          channel?: string
+          id?: string
+          lot_id?: string
+          pro_id?: string
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "b2b_tender_notifications_lot_id_fkey"
+            columns: ["lot_id"]
+            isOneToOne: false
+            referencedRelation: "b2b_tender_lots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "b2b_tender_notifications_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       completed_projects: {
         Row: {
           city: string | null
@@ -710,6 +749,7 @@ export type Database = {
       }
       professionals: {
         Row: {
+          b2b_alerts_email: boolean
           bio: string | null
           canonical_slug: string
           categories: string[] | null
@@ -747,6 +787,7 @@ export type Database = {
           zone_id: string | null
         }
         Insert: {
+          b2b_alerts_email?: boolean
           bio?: string | null
           canonical_slug: string
           categories?: string[] | null
@@ -786,6 +827,7 @@ export type Database = {
           zone_id?: string | null
         }
         Update: {
+          b2b_alerts_email?: boolean
           bio?: string | null
           canonical_slug?: string
           categories?: string[] | null
@@ -2137,6 +2179,10 @@ export type Database = {
         | "project_created"
         | "consent_updated"
         | "showcase_toggled"
+        | "b2b_tender_diffused"
+        | "b2b_restitution_sent"
+        | "b2b_request_updated"
+        | "document_artisan_updated"
       b2b_apporteur_type:
         | "architecte"
         | "bet"
@@ -2306,6 +2352,10 @@ export const Constants = {
         "project_created",
         "consent_updated",
         "showcase_toggled",
+        "b2b_tender_diffused",
+        "b2b_restitution_sent",
+        "b2b_request_updated",
+        "document_artisan_updated",
       ],
       b2b_apporteur_type: [
         "architecte",
