@@ -2181,6 +2181,8 @@ export type Database = {
         | "showcase_toggled"
         | "b2b_tender_diffused"
         | "b2b_restitution_sent"
+        | "b2b_request_updated"
+        | "document_artisan_updated"
       b2b_apporteur_type:
         | "architecte"
         | "bet"
@@ -2352,6 +2354,8 @@ export const Constants = {
         "showcase_toggled",
         "b2b_tender_diffused",
         "b2b_restitution_sent",
+        "b2b_request_updated",
+        "document_artisan_updated",
       ],
       b2b_apporteur_type: [
         "architecte",
