@@ -104,7 +104,14 @@ const restitutionId = ref<string | null>(null)
 const diffusingId = ref<string | null>(null)
 const diffuseResult = reactive<Record<string, string>>({})
 
+// État persisté (ce que l'API vérifie réellement côté serveur).
 function canDiffuse(r: B2bRequest): boolean {
+  return Boolean(r.decision_status) && /^\d{5}$/.test(r.project_postal_code || '')
+}
+
+// État du brouillon en cours de saisie — active le bouton dès une saisie valide ;
+// diffuse() enregistre automatiquement avant d'appeler l'API si besoin.
+function canDiffuseDraft(r: B2bRequest): boolean {
   const d = ensureDraft(r.id)
   return Boolean(d.decision_status) && /^\d{5}$/.test(d.project_postal_code || '')
 }
@@ -114,6 +121,14 @@ async function diffuse(r: B2bRequest) {
   errorMessage.value = null
   delete diffuseResult[r.id]
   try {
+    // Le statut de décision / code postal peuvent avoir été saisis sans clic
+    // séparé sur "Enregistrer" — on les persiste ici pour éviter le 422
+    // (l'API vérifie l'état en base, pas le brouillon local).
+    const d = ensureDraft(r.id)
+    if (d.decision_status !== r.decision_status || d.project_postal_code !== (r.project_postal_code || '')) {
+      await saveChanges(r)
+      if (!canDiffuse(r)) return
+    }
     const res = await $fetch<{
       status: string; zone: string; lots_diffused: number
       notifications_sent: number; notifications_skipped: number; notifications_failed: number
@@ -547,24 +562,30 @@ function pipelineLabel(status: string): string {
 
             <!-- Phase 8 (D-01) — Diffusion automatique aux artisans matchés -->
             <div class="mt-4 border-t border-border pt-4">
-              <div class="flex items-center justify-between gap-3 flex-wrap">
-                <p class="text-[11px] text-muted-foreground max-w-md">
-                  Diffuse tous les lots ouverts de ce dossier aux artisans vérifiés
-                  ayant une zone active correspondante et la catégorie du lot.
-                  Nécessite le statut de décision et le code postal du chantier.
-                </p>
+              <div class="flex items-center justify-end">
                 <button
                   @click="diffuse(r)"
-                  :disabled="diffusingId === r.id || !canDiffuse(r)"
+                  :disabled="diffusingId === r.id || !canDiffuseDraft(r)"
                   class="inline-flex items-center h-9 px-4 text-sm font-medium rounded-sm bg-safety text-white hover:bg-safety/90 transition-colors disabled:opacity-40"
                 >
                   <svg v-if="diffusingId === r.id" class="w-4 h-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
                   Diffuser aux artisans
                 </button>
               </div>
-              <p v-if="!canDiffuse(r)" class="mt-1.5 text-[10px] text-muted-foreground">
-                Renseignez le statut de décision et un code postal à 5 chiffres, puis enregistrez, pour activer la diffusion.
-              </p>
+              <div
+                class="mt-2 flex items-start gap-2 px-3 py-2.5 rounded-sm border text-sm"
+                :class="canDiffuseDraft(r) ? 'border-sky-500/30 bg-sky-500/10 text-sky-400' : 'border-amber-500/30 bg-amber-500/10 text-amber-500'"
+              >
+                <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
+                <span v-if="canDiffuseDraft(r)">
+                  Diffuse tous les lots ouverts de ce dossier aux artisans vérifiés ayant une zone active
+                  correspondante et la catégorie du lot.
+                </span>
+                <span v-else>
+                  Renseignez le statut de décision et un code postal à 5 chiffres, puis <strong>enregistrez</strong>,
+                  pour activer la diffusion.
+                </span>
+              </div>
               <p v-if="diffuseResult[r.id]" class="mt-1.5 text-[11px] text-emerald-500">
                 {{ diffuseResult[r.id] }}
               </p>
