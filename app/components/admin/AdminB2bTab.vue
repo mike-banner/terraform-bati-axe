@@ -33,6 +33,10 @@ interface B2bRequest {
   created_at: string
   updated_at: string
   assigned?: { email: string } | null
+  // 09-03 — Signalement d'un AO suspect (D-09/D-10, purement informatif)
+  reported_count?: number
+  reported_at?: string | null
+  report_reasons?: string[] | null
 }
 
 interface B2bPro {
@@ -370,6 +374,13 @@ function pipelineLabel(status: string): string {
               <span class="text-sm font-semibold text-foreground">{{ r.contact_name }}</span>
               <span v-if="r.contact_company" class="text-xs text-muted-foreground">{{ r.contact_company }}</span>
               <span class="text-[10px] px-1.5 py-0.5 rounded-sm border border-border text-muted-foreground">{{ APPORTEUR_LABELS[r.apporteur_type] }}</span>
+              <span
+                v-if="(r.reported_count || 0) > 0"
+                class="text-[10px] px-1.5 py-0.5 rounded-sm border border-destructive/40 bg-destructive/10 text-destructive font-semibold"
+                :title="(r.report_reasons || []).join(' · ')"
+              >
+                ⚠ Signalé{{ r.reported_count > 1 ? ` ×${r.reported_count}` : '' }}
+              </span>
             </div>
             <div class="flex items-center gap-2 mt-1 text-xs text-muted-foreground flex-wrap">
               <span>{{ NEED_LABELS[r.need_type] }}</span>
@@ -389,6 +400,19 @@ function pipelineLabel(status: string): string {
 
         <!-- Card body (détail) -->
         <div v-if="expandedId === r.id" class="border-t border-border px-4 py-4 space-y-4">
+          <!-- Signalement artisan (D-09/D-10) -->
+          <div v-if="(r.reported_count || 0) > 0" class="p-3 border border-destructive/30 bg-destructive/5 rounded-sm">
+            <p class="text-[10px] uppercase tracking-wide text-destructive font-semibold mb-1.5">
+              Signalé {{ r.reported_count }} fois par des artisans — dernier signalement {{ timeAgo(r.reported_at!) }}
+            </p>
+            <ul class="text-xs text-muted-foreground space-y-0.5">
+              <li v-for="(reason, i) in (r.report_reasons || [])" :key="i">• {{ reason }}</li>
+            </ul>
+            <p class="text-[11px] text-muted-foreground mt-2">
+              Signalement informatif : l'appel d'offres reste diffusé. À vous de décider (garder, clore, contacter le partenaire).
+            </p>
+          </div>
+
           <!-- Coordonnées -->
           <div class="grid sm:grid-cols-3 gap-3 text-sm">
             <div>

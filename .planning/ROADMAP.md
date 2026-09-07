@@ -44,7 +44,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 05.9: Extension Simulateur — API Mes Aides Réno** - Proxy Nitro `/api/v1/aides-reno`, fork aides optionnel avant le lead wall + route standalone `/calculateur-aides`, affichage aides + reste à charge, dégradation propre. Recherche + contexte terminés 2026-08-18.
 - [ ] **Phase 7: Formulaire AO & Modèle Multi-Lots** - Description obligatoire + statut confirmé/en attente sur l'AO, persona syndic dans le tunnel, schéma `b2b_tender_lots`/`b2b_tender_claims`/`b2b_tender_notifications` + `project_postal_code`, multi-lots syndic (1 lot par corps de métier).
 - [ ] **Phase 8: Diffusion Automatique & Confiance** - Bouton diffusion DirCo (remplace le picker manuel `recommended_pros`), matching zone active × catégorie, notification email idempotente, rate-limit AO actifs/partenaire + notifications/jour/artisan, badge « partenaire vérifié ».
-- [ ] **Phase 9: Dashboard Pro & Claim des AO** - Onglet « Appels d'offres » dans `/espace/leads`, claim gaté sur `pro_zones` actif, révélation coordonnées post-claim, fermeture auto (expiration/cap), signalement AO suspect, message clarifiant les deux flux de l'abonnement, emails de statut structurés au partenaire (diffusion, artisan intéressé) — pas de dashboard/compte partenaire ce milestone.
+- [x] **Phase 9: Dashboard Pro & Claim des AO** - Onglet « Appels d'offres » dans `/espace/leads`, claim gaté sur `pro_zones` actif, révélation coordonnées post-claim, fermeture auto (expiration/cap), signalement AO suspect, message clarifiant les deux flux de l'abonnement, emails de statut structurés au partenaire (diffusion, artisan intéressé) — pas de dashboard/compte partenaire ce milestone. (livré 2026-09-08)
 - [ ] **Phase 10: Rattrapage Infra & Auth Pro (parallèle)** - Umami funnel, re-test Stripe clés prod, DNS `bati-axe.com` (DKIM/SPF/DMARC) + bascule Terraform prod, mot de passe oublié pro + templates Auth Supabase brandés. Non bloquant pour les phases 7-9.
 - [ ] **Phase 11: Réputation & Scale** - Avis clients, referral program, multi-ville, sous-traitance B2B (benchmark Arti-Box).
 - [ ] **Phase 12: Architecture PWA Mobile-First** - Service Worker Offline-Resilient (@vite-pwa/nuxt), Web App Manifest Standalone, Bottom Bar Shell mobile, Safe Area Insets. (Capacitor/stores écartés — hors scope, cf. spec client 2026-08-06.)
@@ -492,7 +492,14 @@ Plans:
   3. Une fois le claim effectué, les coordonnées du partenaire sont révélées à l'artisan (masquées avant), et le partenaire reçoit un email structuré (sujet/statut identifiables) l'informant qu'un artisan est intéressé.
   4. Un lot passe automatiquement en statut « clos » à expiration ou quand son cap de claims est atteint (1 seul artisan si l'AO est « confirmé », jusqu'à 3 s'il est « en attente de décision »).
   5. L'artisan dispose d'un moyen de signaler un AO suspect ou abusif, visible par l'admin.
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [x] 09-01-PLAN.md — Fondation schéma : table `b2b_tender_claims`, colonnes clôture/signalement, push distant + types, `maskTender()`
+- [x] 09-02-PLAN.md — API artisan : liste des AO matchés, claim gaté `pro_zones` avec cap 1/3, clôture auto, email partenaire
+- [x] 09-03-PLAN.md — Cron de clôture à 14 jours + workflow GitHub Actions, signalement d'AO et badge « ⚠ signalé » admin
+- [x] 09-04-PLAN.md — UI : onglets « Chantiers particuliers » / « Appels d'offres », cartes AO, modales claim et signalement
+
 **UI hint**: yes
 
 ### Phase 10: Rattrapage Infra & Auth Pro (parallèle, non bloquant)
