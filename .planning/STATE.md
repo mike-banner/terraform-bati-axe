@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
 status: executing
-stopped_at: Phase 9 context gathered
-last_updated: "2026-09-07T07:14:12.679Z"
+stopped_at: Phase 09 complète (4/4 plans) — checkpoint 09-04 approuvé
+last_updated: "2026-09-07T22:36:13.750Z"
 progress:
   total_phases: 31
-  completed_phases: 17
+  completed_phases: 18
   total_plans: 88
-  completed_plans: 78
-  percent: 89
+  completed_plans: 82
+  percent: 93
 ---
 
 # Project State
@@ -30,9 +30,9 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 
 ## Current Position
 
-Phase: 13
-Plan: Not started
-Status: Ready to execute
+Phase: 09 (Dashboard Pro & Claim des AO) — COMPLETE (4/4 plans)
+Plan: 4 of 4
+Status: Phase complete — prochaine phase à planifier (06.4, 10, 11... selon priorité client)
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
 
@@ -77,6 +77,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 ## Decisions (récentes)
 
+- [2026-09-08] **Phase 09 (Dashboard Pro & Claim des AO) clôturée** : onglet « Appels d'offres » livré dans `/espace/leads` (cartes badgées, floutage/révélation serveur, modale d'exclusivité, modale de signalement). Bug de nommage `TenderCard`/`TenderClaimModal`/`TenderReportModal` (préfixe auto Nuxt `Espace*` non respecté par la page) trouvé et corrigé pendant le checkpoint humain, cf. `09-04-SUMMARY.md`. Email partenaire au claim non vérifiable localement (Resend `bati-axe.com` non vérifié) — à revérifier en staging/prod.
 - [2026-08-30] **Recentrage v1 sur le B2C** : le pilote doit rester simple pour attirer particuliers + artisans sans complexifier le lancement (aucune prod client aujourd'hui, tout tourne sur `dev`). Le bloc B2B (05.10 Espace Partenaires, 05.11 Coffre-fort sous-traitance, 05.17 Diagnostiqueurs) reste committé et accessible tel quel — pas de revert, code fonctionnel conservé pour v2 — mais 05.18 (Annuaire/vitrines/dashboard partenaires), P10 (Stripe Connect B2B) et P20 (passerelle B2B payante) sont reportés au prochain milestone. Ce module B2B n'avait jamais été validé en usage réel (4 endpoints critiques trouvés cassés en 500 le 2026-08-29/30, corrigés avant que cette décision soit prise).
 - [2026-08-22] **Fixes prod appliqués directement** : les migrations en attente (`20260822000000` showcase, `20260822000001` KPI, `20260822000002` b2b) ont été poussées sur la base de production via `supabase db push` (feu vert utilisateur). La table `b2b_requests` n'existait nulle part (ni local ni cloud) — c'était la cause racine de la page « Dossiers B2B » cassée.
 - [2026-08-22] **Embedding `auth.users` inutilisable sur cette instance PostgREST** (parse error) : les emails des pros assignés sont résolus via l'API admin (`listUsers`) au lieu de l'embedding — corrigé sur `b2b-requests.get.ts` et `audit-logs.get.ts` (bug latent : l'onglet Journal était cassé depuis longtemps).
@@ -149,6 +150,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - **Tarifs P7 non tranchés** : Basic 150-200 € / Premium 300 € à confirmer par le client avant d'implémenter les packs zonés.
 - **Playwright** : la suite est câblée sur Chrome système et les scénarios desktop/mobile ont été validés dans la phase 05.13. Les tests unitaires et le build passent localement avec Node 22.
 - **Test badge préexistant cassé** : `tests/badges.test.ts` attend `bg-[#F8FAFC]` alors que le composant utilise `bg-green-100` (dérive de palette antérieure) — hors périmètre des chantiers récents, à corriger dans une passe dédiée.
+- Migrations Supabase locales pas systématiquement appliquées en parallèle du push distant (constaté sur 09-01 : b2b_tender_claims absent en local) — vérifier avant tout npm run dev sur une nouvelle machine
 
 ## Accumulated Context
 
@@ -161,6 +163,6 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 ## Session Continuity
 
-Last session: 2026-09-07T00:51:41.904Z
-Stopped at: Phase 9 context gathered
+Last session: 2026-09-07T22:35:57.229Z
+Stopped at: Phase 09 complète (4/4 plans) — checkpoint 09-04 approuvé
 Resume: `/gsd-plan-phase 06.3` pour découper la phase email en plans exécutables, puis **P3** (re-test Stripe/cron en conditions prod réelles quand les identifiants client seront disponibles), **P1** Umami (VPS + PostgreSQL).
