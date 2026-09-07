@@ -656,7 +656,7 @@ async function copyToClipboard(text: string) {
 
       <!-- Tender grid -->
       <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        <TenderCard
+        <EspaceTenderCard
           v-for="t in tenders"
           :key="t.lot_id"
           :tender="t"
@@ -669,14 +669,14 @@ async function copyToClipboard(text: string) {
 
     </template>
 
-    <TenderClaimModal
+    <EspaceTenderClaimModal
       v-if="claimTarget"
       :tender="claimTarget"
       :submitting="claimSubmitting"
       @confirm="confirmClaim"
       @cancel="claimTarget = null"
     />
-    <TenderReportModal
+    <EspaceTenderReportModal
       v-if="reportTarget"
       :tender="reportTarget"
       :submitting="reportSubmitting"
