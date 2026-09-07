@@ -19,6 +19,14 @@ const CATEGORY_LABELS: Record<string, string> = {
 // sans cookie -> 401 -> "Impossible de charger les leads" au rechargement).
 const requestFetch = useRequestFetch()
 
+const route = useRoute()
+
+// Onglets « Chantiers particuliers » / « Appels d'offres » (D-01). ?tab=ao ou
+// ?src=email (liens des emails de diffusion Phase 8) ouvrent directement l'onglet AO.
+const activeTab = ref<'leads' | 'tenders'>(
+  route.query.tab === 'ao' || route.query.src === 'email' ? 'tenders' : 'leads'
+)
+
 const { data: leadsData, pending, error, refresh } = await useAsyncData('pro-leads', () =>
   requestFetch<{ leads: any[], isPremium: boolean }>('/api/v1/leads')
 )
@@ -26,6 +34,48 @@ const { data: leadsData, pending, error, refresh } = await useAsyncData('pro-lea
 const { data: profile } = await useAsyncData('pro-profile-leads', () =>
   requestFetch<{ profile: any }>('/api/v1/pro/profile/me').then(r => r.profile).catch(() => null)
 )
+
+// ─── Appels d'offres partenaires (D-01 à D-10) ─────────────────────────────────
+const { data: tendersData, pending: tendersPending, error: tendersError, refresh: refreshTenders } =
+  await useAsyncData('pro-tenders', () =>
+    requestFetch<{ tenders: any[]; zones: any[]; canClaim: boolean }>('/api/v1/tenders'))
+const tenders = computed(() => tendersData.value?.tenders || [])
+const canClaimTenders = computed(() => tendersData.value?.canClaim ?? false)
+
+const claimTarget = ref<any | null>(null)
+const reportTarget = ref<any | null>(null)
+const claimSubmitting = ref(false)
+const reportSubmitting = ref(false)
+const tenderMessage = ref<string | null>(null)
+
+async function confirmClaim() {
+  if (!claimTarget.value) return
+  claimSubmitting.value = true
+  try {
+    await $fetch(`/api/v1/tenders/${claimTarget.value.lot_id}/claim`, { method: 'POST' })
+    claimTarget.value = null
+    await refreshTenders()
+    tenderMessage.value = 'Vous êtes positionné. Les coordonnées du partenaire sont maintenant visibles.'
+  } catch (err: any) {
+    tenderMessage.value = err?.data?.statusMessage || "Impossible de vous positionner sur cet appel d'offres."
+  } finally {
+    claimSubmitting.value = false
+  }
+}
+
+async function submitReport(payload: { reason: string; details: string }) {
+  if (!reportTarget.value) return
+  reportSubmitting.value = true
+  try {
+    await $fetch(`/api/v1/tenders/${reportTarget.value.lot_id}/report`, { method: 'POST', body: payload })
+    reportTarget.value = null
+    tenderMessage.value = "Signalement transmis à l'équipe BÂTI-AXE."
+  } catch (err: any) {
+    tenderMessage.value = err?.data?.statusMessage || 'Impossible d\'envoyer le signalement.'
+  } finally {
+    reportSubmitting.value = false
+  }
+}
 
 const leads = computed(() => leadsData.value?.leads || [])
 const isPremium = computed(() => leadsData.value?.isPremium ?? false)
@@ -71,7 +121,6 @@ const paginatedLeads = computed(() => {
 
 watch([categoryFilter, sortMode], () => { currentPage.value = 1 })
 
-const route = useRoute()
 const showSuccessBanner = ref(route.query.upgrade === 'success')
 onMounted(() => {
   if (showSuccessBanner.value) setTimeout(() => { showSuccessBanner.value = false }, 6000)
@@ -120,6 +169,35 @@ async function copyToClipboard(text: string) {
 
 <template>
   <div class="flex flex-col w-full max-w-[1440px] px-6 py-3 md:px-10 md:py-8">
+
+    <!-- Onglets Chantiers particuliers / Appels d'offres (D-01) -->
+    <div class="flex items-center gap-2 mb-3">
+      <button
+        type="button"
+        class="h-11 px-4 text-sm font-semibold rounded-full transition-colors"
+        :class="activeTab === 'leads' ? 'bg-foreground text-background' : 'border border-border text-muted-foreground'"
+        @click="activeTab = 'leads'"
+      >
+        Chantiers particuliers ({{ leads.length }})
+      </button>
+      <button
+        type="button"
+        class="h-11 px-4 text-sm font-semibold rounded-full transition-colors"
+        :class="activeTab === 'tenders' ? 'bg-foreground text-background' : 'border border-border text-muted-foreground'"
+        @click="activeTab = 'tenders'"
+      >
+        Appels d'offres ({{ tenders.length }})
+      </button>
+    </div>
+
+    <!-- TEND-15 — explication du périmètre de l'abonnement -->
+    <div class="p-3 border border-border rounded-sm bg-muted/40 text-xs text-muted-foreground mb-4">
+      Votre abonnement de zone couvre désormais deux flux : les chantiers déposés par des
+      particuliers et les appels d'offres de nos partenaires professionnels (syndics,
+      architectes, bureaux d'études).
+    </div>
+
+    <template v-if="activeTab === 'leads'">
 
     <!-- Blocker: documents non vérifiés (decennal_status !== 'valid') -->
     <div v-if="profile && !canUnlockLeads" class="relative overflow-hidden rounded-lg border-2 border-red-400 bg-gradient-to-r from-red-50 via-red-50 to-red-100 p-5 sm:p-6 mb-4 shadow-md">
@@ -545,6 +623,66 @@ async function copyToClipboard(text: string) {
     </div>
 
     </div><!-- /v-else leads -->
+
+    </template><!-- /v-if activeTab === 'leads' -->
+
+    <!-- ── Onglet Appels d'offres ── -->
+    <template v-else>
+
+      <div v-if="tenderMessage" class="flex items-start gap-3 p-4 border border-foreground/30 rounded-lg mb-4">
+        <p class="text-sm text-foreground flex-1">{{ tenderMessage }}</p>
+        <button type="button" class="text-xs text-muted-foreground hover:text-foreground transition-colors" @click="tenderMessage = null">✕</button>
+      </div>
+
+      <!-- Skeleton loading -->
+      <div v-if="tendersPending" class="space-y-3">
+        <div v-for="i in 3" :key="i" class="border border-border rounded-lg h-[160px] bg-muted animate-pulse" />
+      </div>
+
+      <!-- Error -->
+      <div v-else-if="tendersError" class="p-4 border border-border rounded-lg">
+        <p class="text-sm font-semibold text-foreground mb-1">Impossible de charger les appels d'offres</p>
+        <p class="text-xs text-muted-foreground mb-3">Réessayez dans quelques instants.</p>
+        <button type="button" class="text-xs font-semibold underline underline-offset-2 hover:opacity-70 transition-opacity" @click="() => refreshTenders()">
+          Réessayer
+        </button>
+      </div>
+
+      <!-- Empty state -->
+      <div v-else-if="!tenders.length" class="py-16 text-center">
+        <p class="text-sm font-semibold text-foreground mb-1">Aucun appel d'offres partenaire pour l'instant</p>
+        <p class="text-xs text-muted-foreground">Les AO de vos corps de métier, dans vos zones abonnées, apparaîtront ici.</p>
+      </div>
+
+      <!-- Tender grid -->
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <TenderCard
+          v-for="t in tenders"
+          :key="t.lot_id"
+          :tender="t"
+          :can-claim="canClaimTenders"
+          :claiming="claimSubmitting"
+          @claim="claimTarget = tenders.find(x => x.lot_id === $event)"
+          @report="reportTarget = tenders.find(x => x.lot_id === $event)"
+        />
+      </div>
+
+    </template>
+
+    <TenderClaimModal
+      v-if="claimTarget"
+      :tender="claimTarget"
+      :submitting="claimSubmitting"
+      @confirm="confirmClaim"
+      @cancel="claimTarget = null"
+    />
+    <TenderReportModal
+      v-if="reportTarget"
+      :tender="reportTarget"
+      :submitting="reportSubmitting"
+      @submit="submitReport"
+      @cancel="reportTarget = null"
+    />
 
   </div>
 </template>
