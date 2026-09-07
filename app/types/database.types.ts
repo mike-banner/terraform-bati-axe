@@ -71,6 +71,9 @@ export type Database = {
           project_postal_code: string | null
           qualifications_requises: string[]
           recommended_pros: string[]
+          report_reasons: string[]
+          reported_at: string | null
+          reported_count: number
           status: Database["public"]["Enums"]["b2b_request_status"]
           travaux_suggeres: string[] | null
           updated_at: string | null
@@ -101,6 +104,9 @@ export type Database = {
           project_postal_code?: string | null
           qualifications_requises?: string[]
           recommended_pros?: string[]
+          report_reasons?: string[]
+          reported_at?: string | null
+          reported_count?: number
           status?: Database["public"]["Enums"]["b2b_request_status"]
           travaux_suggeres?: string[] | null
           updated_at?: string | null
@@ -131,15 +137,56 @@ export type Database = {
           project_postal_code?: string | null
           qualifications_requises?: string[]
           recommended_pros?: string[]
+          report_reasons?: string[]
+          reported_at?: string | null
+          reported_count?: number
           status?: Database["public"]["Enums"]["b2b_request_status"]
           travaux_suggeres?: string[] | null
           updated_at?: string | null
         }
         Relationships: []
       }
+      b2b_tender_claims: {
+        Row: {
+          claimed_at: string
+          id: string
+          lot_id: string
+          pro_id: string
+        }
+        Insert: {
+          claimed_at?: string
+          id?: string
+          lot_id: string
+          pro_id: string
+        }
+        Update: {
+          claimed_at?: string
+          id?: string
+          lot_id?: string
+          pro_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "b2b_tender_claims_lot_id_fkey"
+            columns: ["lot_id"]
+            isOneToOne: false
+            referencedRelation: "b2b_tender_lots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "b2b_tender_claims_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       b2b_tender_lots: {
         Row: {
           category: string
+          closed_at: string | null
+          closed_reason: string | null
           created_at: string | null
           id: string
           request_id: string
@@ -148,6 +195,8 @@ export type Database = {
         }
         Insert: {
           category: string
+          closed_at?: string | null
+          closed_reason?: string | null
           created_at?: string | null
           id?: string
           request_id: string
@@ -156,6 +205,8 @@ export type Database = {
         }
         Update: {
           category?: string
+          closed_at?: string | null
+          closed_reason?: string | null
           created_at?: string | null
           id?: string
           request_id?: string
