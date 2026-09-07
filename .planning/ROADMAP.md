@@ -492,7 +492,14 @@ Plans:
   3. Une fois le claim effectué, les coordonnées du partenaire sont révélées à l'artisan (masquées avant), et le partenaire reçoit un email structuré (sujet/statut identifiables) l'informant qu'un artisan est intéressé.
   4. Un lot passe automatiquement en statut « clos » à expiration ou quand son cap de claims est atteint (1 seul artisan si l'AO est « confirmé », jusqu'à 3 s'il est « en attente de décision »).
   5. L'artisan dispose d'un moyen de signaler un AO suspect ou abusif, visible par l'admin.
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 09-01-PLAN.md — Fondation schéma : table `b2b_tender_claims`, colonnes clôture/signalement, push distant + types, `maskTender()`
+- [ ] 09-02-PLAN.md — API artisan : liste des AO matchés, claim gaté `pro_zones` avec cap 1/3, clôture auto, email partenaire
+- [ ] 09-03-PLAN.md — Cron de clôture à 14 jours + workflow GitHub Actions, signalement d'AO et badge « ⚠ signalé » admin
+- [ ] 09-04-PLAN.md — UI : onglets « Chantiers particuliers » / « Appels d'offres », cartes AO, modales claim et signalement
+
 **UI hint**: yes
 
 ### Phase 10: Rattrapage Infra & Auth Pro (parallèle, non bloquant)
