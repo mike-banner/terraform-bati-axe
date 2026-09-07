@@ -38,6 +38,7 @@ corrigé le 2026-09-04, apply non lancé).
 - ✓ Packs zonés 78 + pricing dégressif Stripe — v1.0
 - ✓ Notifications email transactionnelles (code) — v1.0
 - ✓ Diffusion automatique des appels d'offres partenaires aux artisans matchés (zone/catégorie), garde-fous anti-spam, badge de confiance — Phase 8, validé en 2026-09-06
+- ✓ Dashboard pro & claim des AO : onglet dédié dans `/espace/leads`, claim gaté sur `pro_zones` actif, révélation coordonnées, clôture auto (expiration 14j/cap), signalement admin — Phase 9, validé en 2026-09-08 (email partenaire livré mais non vérifié visuellement — domaine Resend `bati-axe.com` non vérifié, cf. DNS-01)
 
 ### Active (v2.0 « Partenaires en scène »)
 - [ ] Persona syndic/copropriété exposé dans le tunnel B2B.
@@ -96,4 +97,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-09-06 après clôture Phase 8 (diffusion automatique et confiance)*
+*Last updated: 2026-09-08 après clôture Phase 9 (dashboard pro & claim des AO)*
