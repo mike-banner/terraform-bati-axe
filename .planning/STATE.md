@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
-status: executing
+status: completed
 stopped_at: Phase 09 complète (4/4 plans) — checkpoint 09-04 approuvé
-last_updated: "2026-09-07T22:36:13.750Z"
+last_updated: "2026-09-07T22:41:04.884Z"
 progress:
   total_phases: 31
   completed_phases: 18
@@ -30,8 +30,8 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 
 ## Current Position
 
-Phase: 09 (Dashboard Pro & Claim des AO) — COMPLETE (4/4 plans)
-Plan: 4 of 4
+Phase: 13
+Plan: Not started
 Status: Phase complete — prochaine phase à planifier (06.4, 10, 11... selon priorité client)
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
