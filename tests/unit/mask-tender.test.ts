@@ -10,7 +10,7 @@ const baseLot: TenderLotRow = {
   claimed_at: null,
   b2b_requests: {
     id: 'req-00000001',
-    description: 'Rénovation complète de la toiture avec isolation renforcée et remplacement des tuiles anciennes.',
+    description: 'Rénovation complète de la toiture avec isolation renforcée, remplacement des tuiles anciennes, reprise de la charpente et pose de nouvelles gouttières en zinc sur l\'ensemble du bâtiment principal et de la dépendance attenante côté jardin.',
     project_location: 'Carrières-sous-Poissy',
     project_postal_code: '78955',
     budget_range: '10000-20000',
