@@ -29,8 +29,8 @@ const onSimulateur = computed(() => route.path === '/simulateur')
         </NuxtLink>
         <nav class="flex items-center gap-1 sm:gap-2 min-w-0">
           <template v-if="user">
-            <NuxtLink v-if="!isAdmin && !isPartenairesPage" to="/partenaires" class="hidden md:inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 min-h-11">Partenaires</NuxtLink>
-            <NuxtLink v-if="!isAdmin && isPartenairesPage" to="/" class="hidden md:inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 min-h-11">Particuliers</NuxtLink>
+            <NuxtLink v-if="!isAdmin && !isPartenairesPage" to="/partenaires" class="inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 min-h-11">Partenaires</NuxtLink>
+            <NuxtLink v-if="!isAdmin && isPartenairesPage" to="/" class="inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 min-h-11">Particuliers</NuxtLink>
             <NuxtLink :to="espaceLink" class="inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 min-h-11">Mon espace</NuxtLink>
             <button class="flex items-center gap-2 text-sm font-medium px-2 sm:px-3 min-h-11 rounded-full border border-border hover:bg-muted transition-colors" @click="signOut">
               <span class="flex items-center justify-center w-6 h-6 shrink-0 rounded-full bg-foreground text-background text-xs font-bold">{{ userInitial }}</span>
@@ -38,8 +38,8 @@ const onSimulateur = computed(() => route.path === '/simulateur')
             </button>
           </template>
           <template v-else>
-            <NuxtLink v-if="!isPartenairesPage" to="/partenaires" class="hidden md:inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 min-h-11">Partenaires</NuxtLink>
-            <NuxtLink v-if="isPartenairesPage" to="/" class="hidden md:inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 min-h-11">Particuliers</NuxtLink>
+            <NuxtLink v-if="!isPartenairesPage" to="/partenaires" class="inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 min-h-11">Partenaires</NuxtLink>
+            <NuxtLink v-if="isPartenairesPage" to="/" class="inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 min-h-11">Particuliers</NuxtLink>
             <NuxtLink to="/pro/claim" class="inline-flex items-center h-11 px-3 sm:px-4 whitespace-nowrap text-sm font-medium rounded-full border border-border text-foreground hover:bg-muted transition-colors">Se connecter</NuxtLink>
             <NuxtLink
               v-if="!onSimulateur && !isPartenairesPage"
