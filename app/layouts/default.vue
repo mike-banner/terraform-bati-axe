@@ -44,12 +44,12 @@ const onSimulateur = computed(() => route.path === '/simulateur')
             <NuxtLink
               v-if="!onSimulateur && !isPartenairesPage"
               to="/simulateur"
-              class="inline-flex items-center h-11 px-3 sm:px-4 whitespace-nowrap text-sm font-semibold bg-foreground text-background hover:opacity-80 transition-opacity rounded-full"
+              class="hidden md:inline-flex items-center h-11 px-3 sm:px-4 whitespace-nowrap text-sm font-semibold bg-foreground text-background hover:opacity-80 transition-opacity rounded-full"
             >Déposer un projet</NuxtLink>
             <NuxtLink
               v-if="onPartenairesLanding"
               to="/b2b/partenaires"
-              class="inline-flex items-center h-11 px-3 sm:px-4 whitespace-nowrap text-sm font-semibold bg-copper text-white hover:brightness-110 transition-all rounded-full"
+              class="hidden md:inline-flex items-center h-11 px-3 sm:px-4 whitespace-nowrap text-sm font-semibold bg-copper text-white hover:brightness-110 transition-all rounded-full"
             >Déposer un dossier</NuxtLink>
           </template>
         </nav>
