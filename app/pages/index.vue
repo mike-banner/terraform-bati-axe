@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { PhShieldCheck, PhFileText, PhMapPinLine } from '@phosphor-icons/vue'
+
 useHead({
   title: 'BÂTI-AXE — Artisans certifiés, projets sécurisés',
   meta: [
@@ -65,15 +67,25 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </div>
 
         <!-- Carte bénéfices : critères contrôlés -->
-        <div class="reveal-item bento-card md:col-span-4 flex flex-col justify-center gap-5 rounded-sm bg-slate-800 p-8 text-white shadow-lg">
+        <div class="reveal-item bento-card safety-stripes relative md:col-span-4 flex flex-col justify-center gap-5 overflow-hidden rounded-sm bg-slate-800 p-8 text-white shadow-lg">
+          <PhShieldCheck :size="40" weight="duotone" class="text-safety" />
           <div>
             <p class="text-sm font-semibold text-slate-300">Contrôlés avant activation</p>
             <p class="mt-2 text-sm leading-relaxed text-slate-400">Chaque artisan passe ces vérifications avant de pouvoir vous contacter.</p>
           </div>
-          <div class="flex flex-wrap gap-2">
-            <span class="rounded-full bg-white/10 px-3 py-1 text-sm">Décennale valide</span>
-            <span class="rounded-full bg-white/10 px-3 py-1 text-sm">Kbis &lt; 3 mois</span>
-            <span class="rounded-full bg-white/10 px-3 py-1 text-sm">Zone confirmée</span>
+          <div class="flex flex-col gap-2">
+            <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm">
+              <PhShieldCheck :size="16" weight="bold" class="shrink-0 text-safety" />
+              Décennale valide
+            </span>
+            <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm">
+              <PhFileText :size="16" weight="bold" class="shrink-0 text-safety" />
+              Kbis &lt; 3 mois
+            </span>
+            <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm">
+              <PhMapPinLine :size="16" weight="bold" class="shrink-0 text-safety" />
+              Zone confirmée
+            </span>
           </div>
         </div>
 
