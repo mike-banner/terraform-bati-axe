@@ -21,7 +21,7 @@ const onSkip = () => { cout.value = null }
   <div class="min-h-[calc(100vh-3.5rem)] bg-page px-4 py-12 md:py-16">
     <div class="mx-auto w-full max-w-xl">
       <span class="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Calculateur d'aides</span>
-      <h1 class="text-2xl md:text-3xl font-black tracking-tight text-foreground text-left mt-1 mb-8 whitespace-nowrap">Estimez vos aides de rénovation</h1>
+      <h1 class="text-2xl md:text-3xl font-black tracking-tight text-foreground text-left mt-1 mb-8">Estimez vos aides de rénovation</h1>
 
       <div class="w-full bg-white rounded-sm border border-slate-200 shadow-sm p-8 md:p-10">
         <!-- Saisie du coût travaux -->

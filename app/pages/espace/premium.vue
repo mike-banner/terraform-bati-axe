@@ -591,6 +591,7 @@ async function startCheckout() {
         <div class="mb-6">
           <h3 class="text-xs font-semibold text-slate-500 tracking-widest uppercase mb-3">Mensuel — sans engagement</h3>
           <div class="bg-white border border-slate-200 rounded-sm overflow-hidden">
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-slate-200 text-xs text-slate-500">
@@ -627,6 +628,7 @@ async function startCheckout() {
                 </tr>
               </tbody>
             </table>
+            </div>
           </div>
         </div>
 
@@ -634,6 +636,7 @@ async function startCheckout() {
         <div>
           <h3 class="text-xs font-semibold text-slate-500 tracking-widest uppercase mb-3">Annuel — engagement 12 mois</h3>
           <div class="bg-white border border-slate-200 rounded-sm overflow-hidden">
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-slate-200 text-xs text-slate-500">
@@ -670,6 +673,7 @@ async function startCheckout() {
                 </tr>
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       </div>

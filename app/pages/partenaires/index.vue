@@ -129,6 +129,7 @@ const professionIcons: Record<string, Component> = {
   bet: PhBlueprint,
   agence_immo: PhHouseSimple,
   syndic: PhBuildings,
+  diagnostiqueur: PhClipboardText,
   autre: PhWrench,
 }
 

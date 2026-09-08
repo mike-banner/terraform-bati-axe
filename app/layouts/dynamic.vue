@@ -104,7 +104,7 @@ onMounted(() => {
       </aside>
 
       <!-- MAIN AREA -->
-      <main class="flex-1 min-h-0 flex flex-col bg-slate-50" :class="isAdminRoute ? 'bg-slate-900' : ''">
+      <main class="flex-1 min-w-0 min-h-0 flex flex-col bg-slate-50" :class="isAdminRoute ? 'bg-slate-900' : ''">
         
         <!-- DESKTOP HEADER -->
         <header class="hidden md:flex h-16 flex-shrink-0 items-center justify-between px-10 border-b border-border bg-page/98 z-20">
