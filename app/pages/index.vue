@@ -40,10 +40,10 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
               style="text-wrap: balance"
             >
               Trouvez l'artisan
-              <span class="text-slate-400">certifié pour vos travaux.</span>
+              <span class="text-slate-400 dark:text-slate-400">certifié pour vos travaux.</span>
             </h1>
 
-            <p class="mt-6 max-w-md text-lg text-slate-500" style="text-wrap: pretty">
+            <p class="mt-6 max-w-md text-lg text-slate-600" style="text-wrap: pretty">
               Décrivez votre projet et recevez des contacts d'artisans certifiés de votre zone. Vos coordonnées restent masquées jusqu'au contact.
             </p>
           </div>
@@ -63,15 +63,15 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
               Je suis artisan
             </NuxtLink>
           </div>
-          <p class="mt-4 text-sm text-slate-500">Gratuit pour les particuliers, sans engagement.</p>
+          <p class="mt-4 text-sm text-slate-600">Gratuit pour les particuliers, sans engagement.</p>
         </div>
 
         <!-- Carte bénéfices : critères contrôlés -->
-        <div class="reveal-item bento-card safety-stripes relative md:col-span-4 flex flex-col justify-center gap-5 overflow-hidden rounded-sm bg-slate-800 p-8 text-white shadow-lg">
+        <div class="reveal-item bento-card safety-stripes relative md:col-span-4 flex flex-col justify-center gap-5 overflow-hidden rounded-sm bg-slate-800 dark:bg-slate-900 p-8 text-white shadow-lg">
           <PhShieldCheck :size="40" weight="duotone" class="text-safety" />
           <div>
-            <p class="text-sm font-semibold text-slate-300">Contrôlés avant activation</p>
-            <p class="mt-2 text-sm leading-relaxed text-slate-400">Chaque artisan passe ces vérifications avant de pouvoir vous contacter.</p>
+            <p class="text-sm font-semibold text-slate-300 dark:text-slate-200">Contrôlés avant activation</p>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400 dark:text-slate-300">Chaque artisan passe ces vérifications avant de pouvoir vous contacter.</p>
           </div>
           <div class="flex flex-col gap-2">
             <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm">
@@ -93,7 +93,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         <div class="reveal-item bento-card md:col-span-12 relative mt-8 min-h-[240px] overflow-hidden rounded-sm border border-slate-200 shadow-lg">
           <img
             :src="heroPhoto"
-            alt="Chantier de rénovation en cours, mur en briques apparentes"
+            alt="Chantier de rénovation avec murs en briques apparentes et échafaudage de construction"
             class="absolute inset-0 h-full w-full object-cover"
             loading="eager"
             fetchpriority="high"
@@ -126,7 +126,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
                 Éco-PTZ
               </span>
             </div>
-            <p class="mt-4 text-base leading-relaxed text-slate-500">Découvrez votre reste à charge réel avant de choisir votre artisan.</p>
+            <p class="mt-4 text-base leading-relaxed text-slate-600">Découvrez votre reste à charge réel avant de choisir votre artisan.</p>
           </div>
           <NuxtLink
             to="/calculateur-aides"
@@ -140,12 +140,12 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
     </section>
 
     <!-- ───────────────── Bandeau manifeste ───────────────── -->
-    <section class="w-full bg-slate-800 text-white">
+    <section class="w-full bg-slate-800 dark:bg-slate-900 text-white">
       <div class="mx-auto w-full max-w-7xl px-6 py-[clamp(3rem,7vw,5.5rem)]">
         <p class="max-w-[24ch] text-4xl font-black tracking-tight leading-[1.1] sm:text-5xl" style="text-wrap: balance">
           Vos coordonnées restent masquées jusqu'au contact.
         </p>
-        <p class="mt-5 max-w-[52ch] text-base leading-relaxed text-white/70">
+        <p class="mt-5 max-w-[52ch] text-base leading-relaxed text-white/70 dark:text-slate-300">
           L'artisan vous écrit via la plateforme, sans voir votre numéro. Vous décidez qui peut vous joindre, et quand.
         </p>
       </div>
@@ -158,21 +158,21 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         <div class="reveal-item bento-card rounded-sm border border-slate-200 bg-white p-8 shadow-lg">
           <span class="text-5xl font-bold text-industrial select-none">01</span>
           <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Décrivez votre projet</h3>
-          <p class="text-sm leading-relaxed text-slate-500">
+          <p class="text-sm leading-relaxed text-slate-600">
             Simulateur en 6 étapes : type de travaux, localisation, budget estimé, délai. Moins de 3 minutes.
           </p>
         </div>
         <div class="reveal-item bento-card rounded-sm border border-slate-200 bg-white p-8 shadow-lg">
           <span class="text-5xl font-bold text-industrial select-none">02</span>
           <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Mise en relation</h3>
-          <p class="text-sm leading-relaxed text-slate-500">
+          <p class="text-sm leading-relaxed text-slate-600">
             Les artisans partenaires de votre zone reçoivent une alerte avec le budget et le type de chantier. Pas vos coordonnées.
           </p>
         </div>
         <div class="reveal-item bento-card rounded-sm border border-slate-200 bg-white p-8 shadow-lg">
           <span class="text-5xl font-bold text-industrial select-none">03</span>
           <h3 class="mt-4 mb-2 text-lg font-semibold text-slate-900">Contact débloqué</h3>
-          <p class="text-sm leading-relaxed text-slate-500">
+          <p class="text-sm leading-relaxed text-slate-600">
             Échangez directement avec les artisans : devis, visite, planning. Vous choisissez avec qui avancer.
           </p>
         </div>
@@ -183,7 +183,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
     <section v-if="showcasedProjects.length" class="mx-auto w-full max-w-7xl px-6 py-[clamp(3.5rem,7vw,6rem)]">
       <div class="mb-10 max-w-[52ch]">
         <h2 class="text-4xl font-black tracking-tight text-slate-900" style="text-wrap: balance">Chantiers Réalisés</h2>
-        <p class="mt-3 text-base leading-relaxed text-slate-500">
+        <p class="mt-3 text-base leading-relaxed text-slate-600">
           Découvrez les derniers travaux menés par nos artisans certifiés près de chez vous.
         </p>
       </div>
@@ -206,7 +206,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         </h2>
       </div>
       <div class="mb-5 flex items-center justify-between">
-        <span class="inline-flex items-center gap-2.5 text-2xl font-black tracking-tight text-slate-500">
+        <span class="inline-flex items-center gap-2.5 text-2xl font-black tracking-tight text-slate-600">
           <span class="inline-block h-3 w-3 rounded-full bg-slate-400" aria-hidden="true"></span>
           Avant
         </span>

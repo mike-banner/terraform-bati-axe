@@ -52,7 +52,7 @@ async function toggleLike() {
         class="absolute bottom-3 right-3 inline-flex items-center gap-1 h-11 px-3 rounded-full bg-white/90 shadow-lg"
         @click="toggleLike"
       >
-        <Heart class="w-5 h-5" :class="liked ? 'fill-[#F97316] text-[#F97316]' : 'text-slate-500'" />
+        <Heart class="w-5 h-5" :class="liked ? 'fill-safety text-safety' : 'text-slate-500'" />
         <span class="text-xs font-semibold tabular-nums">{{ likeCount }}</span>
       </button>
     </div>

@@ -11,23 +11,23 @@ defineProps<{ items: Crumb[] }>()
         <NuxtLink
           v-if="item.to && i < items.length - 1"
           :to="item.to"
-          class="text-[#64748B] hover:text-[#F97316] transition-colors duration-200"
+          class="text-primary hover:text-safety transition-colors duration-200"
         >
           {{ item.label }}
         </NuxtLink>
         <span
           v-else-if="i < items.length - 1"
-          class="text-[#64748B]"
+          class="text-primary"
         >
           {{ item.label }}
         </span>
-        <span v-else class="font-semibold text-[#F97316]">
+        <span v-else class="font-semibold text-safety">
           {{ item.label }}
         </span>
 
         <svg
           v-if="i < items.length - 1"
-          class="w-3.5 h-3.5 text-[#94A3B8] shrink-0"
+          class="w-3.5 h-3.5 text-secondary shrink-0"
           fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
           aria-hidden="true"
         >
