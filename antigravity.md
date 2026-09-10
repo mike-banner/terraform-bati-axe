@@ -14,3 +14,11 @@ Consulter systématiquement avant toute action :
 
 ## MISSION
 Protéger l'intégrité architecturale face à la complexité. Transformer les phases de la roadmap GSD en code de production "Série A".
+
+## RÈGLE STRICTE : GESTION DES SPECS & AVANCEMENT
+- **VÉRICATION D'ÉTAT OBLIGATOIRE** : À chaque fois que l'utilisateur transmet des notes, specs ou benchmarks, **VÉRIFIER SYSTÉMATIQUEMENT** l'état réel du projet (`.planning/STATE.md`, `.planning/ROADMAP.md`, et le code) pour vérifier ce qui est DÉJÀ fait.
+- **INTERDICTION SUR PHASES TERMINÉES** : Ne **JAMAIS** rattacher, inscrire ou affecter de nouvelles exigences/idées à des phases déjà terminées ou clôturées (phases marquées `[x]` ou `completed`).
+- **PLANIFICATION FUTUR SEULEMENT** : Toute nouvelle fonction ou évolution doit être positionnée uniquement dans des **phases FUTURE / ACTIVES** (ex: v2.0+ ou phases ultérieures non démarrées).
+- **TRAÇABILITÉ SPECS CLIENTS** : Dans toute spec client (`.planning/clients/*.md`), **CHAQUE POINT ET EXIGENCE DOIT SPÉCIFIER LA PHASE D'EXÉCUTION EXACTE** (Ex: `Phase 05.9`, `Phase 7`, `Item P10`) pour assurer une traçabilité 1:1 et un suivi rigoureux.
+
+

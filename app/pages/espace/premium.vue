@@ -344,7 +344,7 @@ async function startCheckout() {
         </div>
 
         <!-- Récap facturation : sert à retrouver la date de prélèvement après un changement de zones -->
-        <div class="grid grid-cols-3 gap-4 px-5 pb-5 border-t border-slate-100 pt-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 px-5 pb-5 border-t border-slate-100 pt-4">
           <div>
             <p class="text-[11px] text-slate-500 uppercase tracking-wide">Formule</p>
             <p class="text-sm font-semibold text-slate-900 mt-0.5">{{ lockedBilling === 'annual' ? 'Annuel' : 'Mensuel' }}</p>

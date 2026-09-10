@@ -141,7 +141,7 @@ const finish = () => {
 
       <div>
         <p class="text-sm font-semibold text-foreground mb-1.5">Type de logement</p>
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <button
             v-for="t in logementTypes"
             :key="t.id"
@@ -160,7 +160,7 @@ const finish = () => {
 
       <div>
         <p class="text-sm font-semibold text-foreground mb-1.5">Période de construction</p>
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <button
             v-for="p in periodesConstruction"
             :key="p.id"
@@ -176,7 +176,7 @@ const finish = () => {
 
       <div>
         <p class="text-sm font-semibold text-foreground mb-1.5">Vous êtes</p>
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <button
             v-for="s in statutsProprietaire"
             :key="s.id"
@@ -214,7 +214,7 @@ const finish = () => {
 
       <div>
         <p class="text-sm font-semibold text-foreground mb-2">Revenu du foyer</p>
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <button
             v-for="r in revenusClasses"
             :key="r.id"

@@ -236,7 +236,7 @@ const handleSubmit = async () => {
         </h1>
         <div v-if="aidesResult" class="p-5 border border-slate-200 bg-slate-50 rounded-sm mb-8">
           <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Bilan financier estimé</p>
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <p class="text-xs text-muted-foreground mb-1">Aides estimées</p>
               <p class="text-sm font-semibold text-foreground">{{ formatEuro(aidesResult.aides_estimees) }}</p>

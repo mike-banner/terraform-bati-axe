@@ -205,7 +205,7 @@ useHead(() => ({
       </div>
 
       <!-- Identity grid -->
-      <div class="grid grid-cols-2 gap-3 mb-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
         <div v-if="pro.email" class="p-4 bg-white border border-slate-200 rounded-sm">
           <p class="text-xs text-slate-500 mb-1">E-mail</p>
           <p class="text-sm font-medium text-slate-900 break-all">{{ pro.email }}</p>

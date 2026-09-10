@@ -369,7 +369,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
           <p class="text-xs font-semibold text-foreground mb-2">Attestation décennale <span class="text-muted-foreground font-normal">(PDF, JPG, PNG)</span></p>
           <div v-if="uploads.decennale.status !== 'success'" class="space-y-3">
             <!-- Champs obligatoires : numéro de police + date d'expiration -->
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs text-muted-foreground mb-1">Numéro de police <span class="text-red-500">*</span></label>
                 <input

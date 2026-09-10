@@ -505,7 +505,7 @@ function pipelineLabel(status: string): string {
                   class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-safety"
                 />
               </div>
-              <div class="grid grid-cols-2 gap-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Début planning</label>
                   <input

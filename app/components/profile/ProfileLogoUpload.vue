@@ -106,17 +106,17 @@ async function handleLogoUpload(event: Event) {
 </script>
 
 <template>
-  <div class="bento-card bg-white rounded-sm border border-slate-200 shadow-sm p-8 mb-8">
+  <div class="bento-card bg-white rounded-sm border border-slate-200 shadow-sm p-5 sm:p-8 mb-8">
     <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Logo d'entreprise</h2>
-    <div class="flex items-center gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-4">
       <div class="w-20 h-20 border border-border rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0">
         <img v-if="logoSrc && !logoFailed" :src="logoSrc" alt="Logo" class="w-full h-full object-cover" @error="logoFailed = true" />
         <svg v-else class="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z"/>
         </svg>
       </div>
-      <div>
-        <label class="inline-flex items-center gap-2 h-9 px-4 border border-slate-200 bg-white text-foreground text-xs font-semibold rounded-full hover:bg-muted transition-colors cursor-pointer">
+      <div class="min-w-0">
+        <label class="inline-flex items-center justify-center gap-2 h-9 w-full sm:w-auto px-4 border border-slate-200 bg-white text-foreground text-xs font-semibold rounded-full hover:bg-muted transition-colors cursor-pointer whitespace-nowrap">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
           </svg>

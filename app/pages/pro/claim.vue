@@ -660,7 +660,7 @@ const backToStep2 = () => {
           </div>
 
           <!-- Phone + Postal code -->
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label for="pro-phone" class="block text-sm font-heading font-500 text-text mb-2">Téléphone</label>
               <input
@@ -700,7 +700,7 @@ const backToStep2 = () => {
           <!-- Categories -->
           <div>
             <label class="block text-sm font-medium text-foreground mb-2">Corps de métier <span class="text-red-600">*</span></label>
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <button
                 v-for="cat in CATEGORIES"
                 :key="cat.id"
@@ -825,7 +825,7 @@ const backToStep2 = () => {
           </div>
 
           <div v-if="uploads.decennale.status !== 'success'" class="space-y-3">
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs text-muted-foreground mb-1">Numéro de police <span class="text-red-500">*</span></label>
                 <input
