@@ -50,9 +50,9 @@ jobs:
       TF_VAR_stripe_webhook_secret: ${{ secrets.TF_VAR_STRIPE_WEBHOOK_SECRET }}
 
       # R2 applicatif
-      TF_VAR_r2_account_id: ${{ secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}
-      TF_VAR_r2_access_key_id: ${{ secrets.R2_APP_ACCESS_KEY_ID }}
-      TF_VAR_r2_secret_access_key: ${{ secrets.R2_APP_SECRET_ACCESS_KEY }}
+      TF_VAR_r2_account_id: ${{ secrets.DEV_CLOUDFLARE_ACCOUNT_ID || secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}
+      TF_VAR_r2_access_key_id: ${{ secrets.DEV_CF_R2_ACCESS_KEY_ID || secrets.R2_APP_ACCESS_KEY_ID }}
+      TF_VAR_r2_secret_access_key: ${{ secrets.DEV_CF_R2_SECRET_ACCESS_KEY || secrets.R2_APP_SECRET_ACCESS_KEY }}
       TF_VAR_r2_bucket_name: batiaxe-documents
       TF_VAR_r2_bucket_public: batiaxe-public-dev
       TF_VAR_r2_bucket_vault: batiaxe-vault-dev

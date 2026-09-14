@@ -38,22 +38,21 @@ function addSecret(targetName, value) {
   if (!value || value.startsWith('remplir_ici_')) {
     return
   }
-  secretsToPush.push({ name: targetName, value })
-}
-
-// 1. PROD_ variables pour le compte Cloudflare du Client
-for (const [key, value] of Object.entries(envVars)) {
-  if (key.startsWith('PROD_')) {
-    // Ex: PROD_TF_VAR_CLOUDFLARE_ACCOUNT_ID -> PROD_CLOUDFLARE_ACCOUNT_ID et TF_VAR_CLOUDFLARE_ACCOUNT_ID
-    const targetName = key.replace(/^PROD_/, '')
-    addSecret(key, value)
-    addSecret(targetName, value)
+  if (!secretsToPush.some(s => s.name === targetName)) {
+    secretsToPush.push({ name: targetName, value })
   }
 }
 
-// 2. DEV_ variables pour ton compte Cloudflare Perso
+// 1. DEV_ variables pour votre compte Cloudflare / Supabase Perso
 for (const [key, value] of Object.entries(envVars)) {
   if (key.startsWith('DEV_')) {
+    addSecret(key, value)
+  }
+}
+
+// 2. PROD_ variables pour le compte Client
+for (const [key, value] of Object.entries(envVars)) {
+  if (key.startsWith('PROD_')) {
     addSecret(key, value)
   }
 }
