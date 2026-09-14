@@ -30,14 +30,14 @@ jobs:
       TF_VAR_github_owner: mike-banner
       TF_VAR_github_repo_name: terraform-bati-axe
 
-      # Base Supabase existante utilisée par Dev
-      TF_VAR_existing_database_url: ${{ secrets.TF_VAR_EXISTING_DATABASE_URL }}
+      # Base Supabase (Cloud) utilisée par Dev
+      TF_VAR_existing_database_url: ${{ secrets.DEV_EXISTING_DATABASE_URL || secrets.PROD_TF_VAR_EXISTING_DATABASE_URL }}
       TF_VAR_supabase_database_password: ""
       TF_VAR_supabase_access_token: ${{ secrets.TF_VAR_SUPABASE_ACCESS_TOKEN }}
       TF_VAR_supabase_organization_id: ${{ secrets.TF_VAR_SUPABASE_ORGANIZATION_ID }}
-      TF_VAR_supabase_url: ${{ secrets.TF_VAR_SUPABASE_URL }}
-      TF_VAR_supabase_anon_key: ${{ secrets.TF_VAR_SUPABASE_ANON_KEY }}
-      TF_VAR_supabase_service_role_key: ${{ secrets.TF_VAR_SUPABASE_SERVICE_ROLE_KEY }}
+      TF_VAR_supabase_url: ${{ secrets.DEV_SUPABASE_URL || secrets.PROD_TF_VAR_SUPABASE_URL }}
+      TF_VAR_supabase_anon_key: ${{ secrets.DEV_SUPABASE_ANON_KEY || secrets.PROD_TF_VAR_SUPABASE_ANON_KEY }}
+      TF_VAR_supabase_service_role_key: ${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || secrets.PROD_TF_VAR_SUPABASE_SERVICE_ROLE_KEY }}
       TF_VAR_supabase_region: eu-west-3
 
       # Analytics
