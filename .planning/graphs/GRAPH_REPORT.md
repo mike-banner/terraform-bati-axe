@@ -1,16 +1,16 @@
-# Graph Report - bati-axe  (2026-09-08)
+# Graph Report - bati-axe  (2026-09-15)
 
 ## Corpus Check
-- 615 files · ~1,279,201 words
+- 626 files · ~1,292,130 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 5138 nodes · 20879 edges · 587 communities (478 shown, 109 thin omitted)
+- 5261 nodes · 21392 edges · 598 communities (485 shown, 113 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d7dcef2c`
+- Built from commit: `a1a94847`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -516,18 +516,29 @@
 - [[_COMMUNITY_Community 583|Community 583]]
 - [[_COMMUNITY_Community 584|Community 584]]
 - [[_COMMUNITY_Community 585|Community 585]]
+- [[_COMMUNITY_Community 587|Community 587]]
+- [[_COMMUNITY_Community 588|Community 588]]
+- [[_COMMUNITY_Community 589|Community 589]]
+- [[_COMMUNITY_Community 590|Community 590]]
+- [[_COMMUNITY_Community 591|Community 591]]
+- [[_COMMUNITY_Community 592|Community 592]]
+- [[_COMMUNITY_Community 593|Community 593]]
+- [[_COMMUNITY_Community 594|Community 594]]
+- [[_COMMUNITY_Community 595|Community 595]]
+- [[_COMMUNITY_Community 596|Community 596]]
+- [[_COMMUNITY_Community 597|Community 597]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Communities (587 total, 109 thin omitted)` - 394 edges
-2. `Communities (586 total, 109 thin omitted)` - 393 edges
-3. `Communities (585 total, 109 thin omitted)` - 392 edges
-4. `Communities (584 total, 109 thin omitted)` - 391 edges
-5. `Communities (583 total, 109 thin omitted)` - 391 edges
-6. `Communities (580 total, 109 thin omitted)` - 390 edges
-7. `Communities (573 total, 107 thin omitted)` - 385 edges
-8. `Communities (569 total, 103 thin omitted)` - 385 edges
-9. `Communities (567 total, 103 thin omitted)` - 383 edges
-10. `Communities (566 total, 103 thin omitted)` - 382 edges
+2. `Communities (588 total, 109 thin omitted)` - 394 edges
+3. `Communities (586 total, 109 thin omitted)` - 393 edges
+4. `Communities (585 total, 109 thin omitted)` - 392 edges
+5. `Communities (584 total, 109 thin omitted)` - 391 edges
+6. `Communities (583 total, 109 thin omitted)` - 391 edges
+7. `Communities (580 total, 109 thin omitted)` - 390 edges
+8. `Communities (573 total, 107 thin omitted)` - 385 edges
+9. `Communities (569 total, 103 thin omitted)` - 385 edges
+10. `Communities (567 total, 103 thin omitted)` - 383 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `sendBillingEmail()` --calls--> `sendEmail()`  [EXTRACTED]
@@ -544,11 +555,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (587 total, 109 thin omitted)
+## Communities (598 total, 113 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.06
-Nodes (36): Phase 05.10: Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B) (RENOMMÉE — ex « Phase 5.8 »), Phase 05.11: Coffre-Fort Juridique & Capacité Sous-traitance (documents_artisan) (INSERTED 2026-08-21), Phase 05.12: Front Polish & Branding (Landing Partenaires + Logo) (INSERTED 2026-08-23), Phase 05.13: Dette technique + P9 Mobile QA + P5 Feedback Loop (INSERTED 2026-08-23), Phase 05.8: Enrichissement SIRET (forme juridique, NAF, suggestion catégories) au claim (INSERTED), Phase 05.9: Extension Simulateur — API Mes Aides Réno, Phase 06.1: Console Admin Opérationnelle (INSERTED 2026-08-19), Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité (INSERTED 2026-08-21) (+28 more)
+Cohesion: 0.05
+Nodes (38): Phase 05.10: Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B) (RENOMMÉE — ex « Phase 5.8 »), Phase 05.11: Coffre-Fort Juridique & Capacité Sous-traitance (documents_artisan) (INSERTED 2026-08-21), Phase 05.12: Front Polish & Branding (Landing Partenaires + Logo) (INSERTED 2026-08-23), Phase 05.13: Dette technique + P9 Mobile QA + P5 Feedback Loop (INSERTED 2026-08-23), Phase 05.18: Annuaire, Vitrines Publiques & Dashboard Partenaires, Phase 05.19: Refonte Arborescence & Tunnels B2C (Nomenclature Client), Phase 05.8: Enrichissement SIRET (forme juridique, NAF, suggestion catégories) au claim (INSERTED), Phase 05.9: Extension Simulateur — API Mes Aides Réno (+30 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.14
@@ -924,7 +935,7 @@ Nodes (21): Before/After Section (Lines 121–127), Brand Banner (Lines 79–88)
 
 ### Community 142 - "Community 142"
 Cohesion: 0.47
-Nodes (22): Community Hubs (Navigation), Corpus Check, God Nodes (most connected - your core abstractions), Graph Freshness, Graph Report - bati-axe  (2026-07-19), Graph Report - bati-axe  (2026-07-20), Graph Report - bati-axe  (2026-08-06), Graph Report - bati-axe  (2026-08-18) (+14 more)
+Nodes (23): Community Hubs (Navigation), Corpus Check, God Nodes (most connected - your core abstractions), Graph Freshness, Graph Report - bati-axe  (2026-07-19), Graph Report - bati-axe  (2026-07-20), Graph Report - bati-axe  (2026-08-06), Graph Report - bati-axe  (2026-08-18) (+15 more)
 
 ### Community 143 - "Community 143"
 Cohesion: 0.20
@@ -1435,8 +1446,8 @@ Cohesion: 0.13
 Nodes (14): Additive-only migrations, `app/pages/simulateur.vue` (component, request-response) — full rewrite, `app/utils/calculateur.ts` (utility, transform) — new file, client-side pricing engine (D-01), Bento tile visual/interaction pattern, File Classification, French phone/email validation, Metadata, No Analog Found (+6 more)
 
 ### Community 311 - "Community 311"
-Cohesion: 0.16
-Nodes (442): Communities (347 total, 71 thin omitted), Communities (365 total, 76 thin omitted), Communities (371 total, 76 thin omitted), Communities (373 total, 76 thin omitted), Communities (376 total, 74 thin omitted), Communities (377 total, 76 thin omitted), Communities (378 total, 76 thin omitted), Communities (389 total, 76 thin omitted) (+434 more)
+Cohesion: 0.17
+Nodes (444): Communities (347 total, 71 thin omitted), Communities (365 total, 76 thin omitted), Communities (371 total, 76 thin omitted), Communities (373 total, 76 thin omitted), Communities (376 total, 74 thin omitted), Communities (377 total, 76 thin omitted), Communities (378 total, 76 thin omitted), Communities (389 total, 76 thin omitted) (+436 more)
 
 ### Community 312 - "Community 312"
 Cohesion: 0.13
@@ -2114,24 +2125,52 @@ Nodes (13): 1. Rendu réel de l'email partenaire au claim, Anti-Patterns Found, 
 Cohesion: 0.33
 Nodes (5): Accepted Risks Log, Notes d'audit, SECURITY.md — Phase 09 : Dashboard Pro & Claim des AO, Threat Verification, Unregistered Flags
 
+### Community 587 - "Community 587"
+Cohesion: 0.33
+Nodes (5): [P2] Fixed-width text truncation mobile, [P2] Images sans lazy loading, P2 — Minor Issues (After P0/P1 Fixes), [P2] Nested bento cards (monotonie visuelle), [P2] Uppercase tracked labels ubiquitaire (80 instances)
+
+### Community 588 - "Community 588"
+Cohesion: 0.13
+Nodes (14): Batch 1 (Quick wins — replace token classes), Batch 2 (Components), Batch 3 (Admin + Edge cases), Dark Mode Strategy — P0 Priority, Estimated Effort, Implementation Order, Next Steps, Phase 1: Replace `text-slate-*` with token classes (Immediate) (+6 more)
+
+### Community 589 - "Community 589"
+Cohesion: 0.08
+Nodes (25): 1. Faire trancher le conflit V1/V2 avant tout — c'est la question prioritaire, 2. Matrice : table Supabase (Option A), pas fichier statique, 3. Renommer le rôle "Expert/MOE côté artisan" pour ne pas collisionner avec `b2b_apporteur_type`, 4. Groupes de pros : ne pas construire avant d'avoir tranché le déblocage (unitaire vs. collectif), Ajout Futur de Métiers, Assumptions Log, ⚠️ Avertissement — ce document remplace la V1, ne l'ignore pas, Cascade de Propositions (+17 more)
+
+### Community 590 - "Community 590"
+Cohesion: 0.09
+Nodes (21): Canonical References, Code Patterns, D-01 : Professional Types (Locked), D-02 : Categories (Locked), D-03 : Tunnel Étape 1 (Locked), D-04 : Tunnel Étape 2 (Locked), D-05 : Matching Logic (Locked), D-06 : Compatibility Matrix (Locked) (+13 more)
+
+### Community 591 - "Community 591"
+Cohesion: 0.10
+Nodes (19): 1. Tableau Matching (Qui reçoit quoi), 2. Arborescence UI du Tunnel (Quels items affichés), 3. Architecture Matrice Scalable (Partenaires), 4. Migration Schéma (Minimal), 5. Livrables Next (Planning), A. Rénovation Globale, B. Rénovation Énergétique, C. Prestations Ciblées (+11 more)
+
+### Community 592 - "Community 592"
+Cohesion: 0.22
+Nodes (8): 🗂️ 1. Restructuration du Header (`Header.vue`), 📄 2. Structure de la Landing `/pro/prescripteurs-partenaires`, 🔄 3. User Flow & Routing, 📌 Context & Objectif, ✅ Critères d'Acceptation, Hero Section, Les 4 Piliers Métier (Grille de Cards / Bento UI), 🛠️ Spécifications UX/UI — Restructuration Navigation Header & Landing Vitrine Prescripteurs
+
+### Community 593 - "Community 593"
+Cohesion: 0.25
+Nodes (7): 📌 Context & Objectif, ✅ Critères d'Acceptation & Verification, Schéma Unifié (3 Pôles d'Offre), 🛠️ Spécifications UX/UI & Data — Refonte de l'Arborescence & Tunnels Particuliers (B2C), 🎨 Spécifications UX/UI (Étape 1 du Tunnel), 🌳 Structure Data Normalisée (JSON Standard), 💾 Tagging Backend & Supabase (Lead Dispatching)
+
 ## Knowledge Gaps
-- **2687 isolated node(s):** `enabled`, `_auto_chain_active`, `research`, `plan_check`, `verifier` (+2682 more)
+- **2774 isolated node(s):** `enabled`, `_auto_chain_active`, `research`, `plan_check`, `verifier` (+2769 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **109 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **113 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Communities (587 total, 109 thin omitted)` connect `Community 311` to `Community 142`?**
-  _High betweenness centrality (0.001) - this node is a cross-community bridge._
-- **Why does `Communities (586 total, 109 thin omitted)` connect `Community 311` to `Community 142`?**
-  _High betweenness centrality (0.001) - this node is a cross-community bridge._
-- **Why does `sendEmail()` connect `Community 57` to `Community 528`, `Community 161`, `Community 564`, `Community 431`?**
+- **Why does `Communities (588 total, 109 thin omitted)` connect `Community 311` to `Community 142`?**
+  _High betweenness centrality (0.000) - this node is a cross-community bridge._
+- **Why does `Graph Report - bati-axe  (2026-07-20)` connect `Community 142` to `Community 311`?**
+  _High betweenness centrality (0.000) - this node is a cross-community bridge._
+- **Why does `Communities (365 total, 76 thin omitted)` connect `Community 311` to `Community 142`?**
   _High betweenness centrality (0.000) - this node is a cross-community bridge._
 - **What connects `enabled`, `_auto_chain_active`, `research` to the rest of the system?**
-  _2687 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _2774 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.05555555555555555 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05263157894736842 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
 - **Should `Community 10` be split into smaller, more focused modules?**

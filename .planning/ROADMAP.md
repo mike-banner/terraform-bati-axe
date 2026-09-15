@@ -36,6 +36,8 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 05.16: P7 Packs Zonés & Pricing Dégressif (Pilote 78)** - Quadrillage des Yvelines en 4 zones (Mantes, Rambouillet, Versailles, St-Germain) + tables `zones`/`pro_zones` + matching par code postal. Sans engagement mensuel (190€ → 350€) + annuel économique -21% (150€ → 300€). Ajout de zone, toggle mensuel/annuel et retrait individuel de zone (Subscription Schedule Stripe), garde-fou anti-conflit multi-changements. **Phase complète 2/2** (livré 2026-08-29)
 - [x] **Phase 05.17: P19 Partenaires Diagnostiqueurs Immobiliers** - Profil Diagnostiqueur ajouté au tunnel `/b2b/partenaires` existant (réutilisé plutôt qu'une page dédiée) : numéro de certification + travaux suggérés par le rapport DPE (isolation/chauffage/électricité/toiture), génération de dossier `b2b_requests` qualifié. **Phase complète 1/1** (livré 2026-08-29) — a mis au jour un bug préexistant bloquant tout le formulaire B2B (`consents.insert().catch()`), corrigé au passage.
 - [ ] **Phase 05.18: Annuaire, Vitrines Publiques & Dashboard Partenaires** — **Reportée au prochain milestone (2026-08-30)**, v1 recentrée sur le B2C. Section Partenaires sur l'accueil `/`, annuaire public par catégorie (`/partenaires/annuaire`), vitrine publique (`/partenaire/[dept]/[slug]`) et dashboard privé de gestion du profil (`/espace/partenaire`).
+- [ ] **Phase 05.19: Refonte Arborescence & Tunnels B2C (Nomenclature Client)** — Phase correctrice : remplacement de la sélection par cartes visuelles 3 pôles (Rénovation Globale, Énergétique, Prestations Ciblées), schéma JSON normalisé avec slugs d'items uniques, tagging Supabase (`selected_category`, `selected_sub_category`, `selected_items`) pour le matching des artisans.
+- [ ] **Phase 05.20: Restructuration Navigation Header & Landing Vitrine Prescripteurs** — Phase correctrice : menu déroulant Espace Pro (`/pro/artisans` vs `/pro/prescripteurs-partenaires`), landing vitrine d'acquisition 4 piliers (Agents Immo, Syndics, Archis, Courtiers), routage CTA vers `/b2b/partenaires`.
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
 - [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, Dossiers B2B, KPIs, Documents légaux, Journal), search + pagination, projets cliquables. Onglet B2B fusionné (05.10-06) + Documents légaux (05.11-04). (livré 2026-08-22)
 - [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). *(récupéré d'une branche jamais mergée → merge PR #45)*. Reste : brancher Matomo côté client (P1). (livré 2026-08-22)
@@ -345,6 +347,43 @@ Plans:
 - [x] 05.13-01 ✅ — Dette technique : suite e2e câblée (channel chrome) + specs simulateur/leads alignées + test badge réparé (2026-08-23)
 - [x] 05.13-02 ✅ — P9 Mobile QA : audit overflow/tactile, cibles ≥ 44px, état vide catégorie leads, projet Playwright mobile (2026-08-23)
 - [x] 05.13-03 ✅ — P5 Feedback loop : `handleLeadDecision.ts` extrait + 9 tests unitaires (2026-08-23)
+
+**UI hint**: yes
+
+### Phase 05.18: Annuaire, Vitrines Publiques & Dashboard Partenaires
+
+**Goal:** Construire l'annuaire public des artisans (`/partenaires/annuaire`), les vitrines publiques par département (`/partenaire/[dept]/[slug]`), et un dashboard privé de gestion du profil (`/espace/partenaire`).
+
+**Contexte:** cette phase était prévue pour v1 mais a été **reportée au prochain milestone (2026-08-30)** pour recentrer v1 sur le B2C. Le bloc Partenaires B2B (05.10 Espace Partenaires + 05.11 Coffre-fort + 05.17 Diagnostiqueurs) reste committé et fonctionnel — cette phase ajoute juste les couches publique/privée manquantes.
+
+**Depends on:** Phase 05.10 (tunnel B2B), Phase 05.17 (diagnostiqueurs), Phase 4.7 (design system)
+
+**Status:** 📋 Reportée — À planifier au prochain milestone
+
+**UI hint**: yes
+
+### Phase 05.19: Refonte Arborescence & Tunnels B2C (Nomenclature Client)
+
+**Goal:** Remplacer le sélecteur de catégorie basique du simulateur par une arborescence normalisée 3 pôles (Rénovation Globale, Énergétique, Prestations Ciblées) avec sous-catégories et items slugifiés, pour améliorer la qualification des leads et le matching artisans.
+
+**Contexte:** phase correctrice — la structure actuelle manque de précision métier (doublons d'items, slugs inégaux). La spec cliente définit 3 catégories + sous-catégories + 26 items total, chacun avec un slug unique (ex: `pac`, `isolation_ite_iti`) pour le dispatching Supabase exact.
+
+**Depends on:** Phase 5.6 (simulateur 6 étapes existant)
+
+**Requirements:** ARCH-01 (schéma JSON normalisé), ARCH-02 (UI étape 1 3 cartes), ARCH-03 (tagging Supabase selected_category/selected_sub_category/selected_items), ARCH-04 (matching artisans par slugs)
+
+**Success Criteria** (what must be TRUE):
+  1. Schéma JSON unifié consommé par le sélecteur étape 1 : 3 cartes (icône Duotone, titre, description) + états de sélection clairs.
+  2. Sous-catégories (Gros Œuvre/Second Œuvre pour Rénovation Globale) + items multi-sélectionnables affichés dynamiquement.
+  3. Données persisten en Supabase : colonnes `selected_category` (VARCHAR), `selected_sub_category` (VARCHAR, null), `selected_items` (TEXT[]) sur `projects`.
+  4. Dispatching artisans filtre sur `professionals.categories` ∩ `projects.selected_items` (inclusion complète).
+  5. L'arborescence JSON est réutilisable dans le code (fonction Nuxt ou fichier statique importable).
+
+**Plans**: 4 plans
+- [ ] 05.19-01-PLAN.md — Schema migration (professional_type, selected_*) + workTypeMatrix.ts
+- [ ] 05.19-02-PLAN.md — Tunnel UI refactor (Étape 1-2, 3 categories, multi-select items)
+- [ ] 05.19-03-PLAN.md — Matching logic (leads API overlap rule) + Pro profile (9 categories)
+- [ ] 05.19-04-PLAN.md — Unit tests (matching) + E2E tests (tunnel) + backward compat verification
 
 **UI hint**: yes
 

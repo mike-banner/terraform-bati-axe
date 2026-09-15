@@ -30,9 +30,9 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 
 ## Current Position
 
-Phase: 13
-Plan: Not started
-Status: Phase complete — prochaine phase à planifier (06.4, 10, 11... selon priorité client)
+Phase: 05.19 & 05.20
+Plan: Ready to plan
+Status: 2 Phases correctrices validées par le client — Specs rédigées (05.19 Arborescence B2C & 05.20 Vitrine Prescripteurs). Prêtes pour planification/exécution.
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
 
