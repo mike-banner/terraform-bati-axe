@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
-status: verifying
+status: executing
 stopped_at: Completed 05.19-04-PLAN.md
-last_updated: "2026-10-09T10:27:32.112Z"
+last_updated: "2026-10-09T11:08:33.820Z"
 progress:
   total_phases: 33
-  completed_phases: 19
-  total_plans: 94
+  completed_phases: 18
+  total_plans: 101
   completed_plans: 87
-  percent: 93
+  percent: 86
 ---
 
 # Project State
@@ -32,7 +32,7 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 
 Phase: 05.19 (refonte-arborescence-b2c) — EXECUTING
 Plan: 5 of 5
-Status: Phase complete — ready for verification
+Status: Ready to execute
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
 
