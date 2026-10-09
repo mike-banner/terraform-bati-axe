@@ -1,12 +1,13 @@
 import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
+import { ISO_DATE, validateRgeUpload } from '../../../../utils/rgeUpload'
 
 const schema = z.object({
-  document_type: z.enum(['kbis', 'decennale']),
+  document_type: z.enum(['kbis', 'decennale', 'rge']),
   file_key: z.string().min(1),
   // Champs obligatoires pour la décennale (auto-approbation sous responsabilité du pro)
   policy_number: z.string().max(50, 'Le numéro de police ne peut pas dépasser 50 caractères.').optional(),
-  expiration_date: z.string().optional(), // format YYYY-MM-DD
+  expiration_date: z.string().regex(ISO_DATE, 'Date invalide.').optional(), // format YYYY-MM-DD (<input type="date">)
 })
 
 export default defineEventHandler(async (event) => {
@@ -28,6 +29,10 @@ export default defineEventHandler(async (event) => {
     if (!expiration_date) throw createError({ statusCode: 422, statusMessage: "Date d'expiration requise." })
   }
 
+  // RGE : date future obligatoire, toujours en attente de revue admin (jamais auto-approuvé)
+  const rge = validateRgeUpload(document_type, expiration_date)
+  if (rge && !rge.ok) throw createError({ statusCode: 422, statusMessage: rge.error })
+
   const supabase = serverSupabaseServiceRole(event) as any
 
   // La décennale est auto-approuvée : le pro engage sa responsabilité (CGU)
@@ -41,7 +46,7 @@ export default defineEventHandler(async (event) => {
     .maybeSingle()
   const isKbisAutoApproved = document_type === 'kbis' && proRow?.siret_status === 'active'
 
-  const status = isDecennale || isKbisAutoApproved ? 'approved' : 'pending'
+  const status = rge ? rge.status : (isDecennale || isKbisAutoApproved ? 'approved' : 'pending')
 
   const { error: insertErr } = await supabase.from('verifications').insert({
     pro_id: uid,
@@ -53,6 +58,7 @@ export default defineEventHandler(async (event) => {
       expiry_date: expiration_date,
       reviewed_at: new Date().toISOString(),
     } : {}),
+    ...(rge ? { expiry_date: rge.expiry_date } : {}),
     ...(isKbisAutoApproved ? {
       reviewed_at: new Date().toISOString(),
     } : {}),

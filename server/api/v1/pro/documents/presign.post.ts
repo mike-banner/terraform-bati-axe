@@ -2,14 +2,14 @@ import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 import { AwsClient } from 'aws4fetch'
 
-// PDF ou image (les documents KBIS/décennale sont scannés ou photographiés) —
+// PDF ou image (les documents KBIS/décennale/RGE sont scannés ou photographiés) —
 // même logique d'allow-list que logo-presign.post.ts. Déclaratif seulement :
 // le client peut mentir sur ce champ, la vraie protection viendrait d'une
 // vérification des octets réels (cf. SECURITY-CHECKLIST.md §6).
 const VALID_MIME = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'] as const
 
 const presignSchema = z.object({
-  document_type: z.enum(['kbis', 'decennale']),
+  document_type: z.enum(['kbis', 'decennale', 'rge']),
   content_type: z.enum(VALID_MIME, { message: 'Le document doit être un PDF ou une image (JPEG/PNG).' }),
   filename: z.string().min(1).max(255),
   pro_id: z.string().uuid().optional()
