@@ -801,6 +801,7 @@ export type Database = {
       professionals: {
         Row: {
           professional_type: string
+          categories_reviewed_at: string
           egb_status: string
           b2b_alerts_email: boolean
           bio: string | null
@@ -841,6 +842,7 @@ export type Database = {
         }
         Insert: {
           professional_type?: string
+          categories_reviewed_at?: string
           egb_status?: string
           b2b_alerts_email?: boolean
           bio?: string | null
@@ -883,6 +885,7 @@ export type Database = {
         }
         Update: {
           professional_type?: string
+          categories_reviewed_at?: string
           egb_status?: string
           b2b_alerts_email?: boolean
           bio?: string | null
