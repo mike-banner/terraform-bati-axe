@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Professional } from '~/types/admin'
-import { CATEGORY_LABELS, STATUS_LABELS } from '~/types/admin'
+import type { Professional, DocType } from '~/types/admin'
+import { CATEGORY_LABELS, STATUS_LABELS, DOC_LABELS } from '~/types/admin'
 
 const props = defineProps<{
   pro: Professional
@@ -11,11 +11,11 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'approve', proId: string, approved: boolean): void
-  (e: 'moderate', proId: string, docType: 'kbis' | 'decennale', status: 'approved' | 'rejected'): void
+  (e: 'moderate', proId: string, docType: DocType, status: 'approved' | 'rejected'): void
   (e: 'view-doc', fileKey: string): void
   (e: 'update-expiry', key: string, value: string): void
-  (e: 'file-select', event: Event, proId: string, docType: 'kbis' | 'decennale'): void
-  (e: 'upload-doc', proId: string, docType: 'kbis' | 'decennale'): void
+  (e: 'file-select', event: Event, proId: string, docType: DocType): void
+  (e: 'upload-doc', proId: string, docType: DocType): void
 }>()
 
 const canApprove = computed(() => {
@@ -24,7 +24,7 @@ const canApprove = computed(() => {
   return !!kbis && !!decennale
 })
 
-function getDocStatus(docType: 'kbis' | 'decennale') {
+function getDocStatus(docType: DocType) {
   return props.pro.verifications?.find(v => v.document_type === docType)
 }
 
@@ -67,6 +67,7 @@ function uploadKey(proId: string, docType: string) {
             <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             En attente
           </span>
+          <span v-if="pro.rge_status === 'valid'" class="inline-flex items-center text-[11px] font-semibold px-2.5 py-0.5 rounded-full border border-emerald-400/40 text-emerald-300 bg-emerald-500/15">RGE</span>
           <!-- Category -->
           <span v-if="pro.category" class="text-[11px] px-2 py-0.5 rounded-full border border-border text-muted-foreground bg-muted/30">
             {{ CATEGORY_LABELS[pro.category] ?? pro.category }}
@@ -119,14 +120,14 @@ function uploadKey(proId: string, docType: string) {
     <!-- Documents -->
     <div class="divide-y divide-border">
       <div
-        v-for="docType in (['kbis', 'decennale'] as const)"
+        v-for="docType in (['kbis', 'decennale', 'rge'] as const)"
         :key="docType"
         class="px-5 py-4"
       >
         <div class="flex items-start justify-between gap-4">
           <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <span class="text-sm font-semibold text-foreground capitalize">{{ docType === 'decennale' ? 'Décennale' : 'KBIS' }}</span>
+              <span class="text-sm font-semibold text-foreground capitalize">{{ DOC_LABELS[docType] }}</span>
               <span
                 class="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full border"
                 :class="docStatusClasses(getDocStatus(docType)?.status)"
@@ -157,7 +158,7 @@ function uploadKey(proId: string, docType: string) {
             <template v-if="getDocStatus(docType)?.status === 'pending'">
               <button
                 @click="emit('moderate', pro.id, docType, 'approved')"
-                :disabled="actionLoading === uploadKey(pro.id, docType)"
+                :disabled="actionLoading === uploadKey(pro.id, docType) || (docType === 'rge' && !expiryDates[uploadKey(pro.id, 'rge')] && !getDocStatus('rge')?.expiry_date)"
                 class="h-8 px-3 bg-safety text-white text-xs font-semibold rounded-sm hover:brightness-110 transition-all disabled:opacity-40 flex items-center gap-1.5 shadow-sm shadow-safety/20"
               >
                 <svg v-if="actionLoading === uploadKey(pro.id, docType)" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
@@ -198,6 +199,18 @@ function uploadKey(proId: string, docType: string) {
               </p>
             </template>
           </div>
+        </div>
+
+        <!-- Date d'expiration RGE : approbation d'une pièce pending ou upload admin direct -->
+        <div v-if="docType === 'rge' && (!getDocStatus('rge') || getDocStatus('rge')?.status === 'pending')" class="mt-3">
+          <label class="block text-xs text-muted-foreground mb-1">Date d'expiration de l'attestation RGE</label>
+          <input
+            type="date"
+            required
+            :value="expiryDates[uploadKey(pro.id, 'rge')] || ''"
+            @input="emit('update-expiry', uploadKey(pro.id, 'rge'), ($event.target as HTMLInputElement).value)"
+            class="h-9 px-3 border border-border rounded-sm text-sm bg-muted/30 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          />
         </div>
 
         <!-- Expiry date input for decennale (pending) -->

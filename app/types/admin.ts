@@ -1,9 +1,12 @@
 // ─── Admin shared types ───────────────────────────────────────────────────────
 
+export type DocType = 'kbis' | 'decennale' | 'rge'
+export const DOC_LABELS: Record<DocType, string> = { kbis: 'KBIS', decennale: 'Décennale', rge: 'RGE' }
+
 export interface Verification {
   id: string
   pro_id: string
-  document_type: 'kbis' | 'decennale'
+  document_type: DocType
   file_key: string
   status: 'pending' | 'approved' | 'rejected'
   expiry_date: string | null
@@ -21,8 +24,13 @@ export interface Professional {
   canonical_slug?: string
   is_verified: boolean
   decennal_status: 'pending' | 'valid' | 'expired' | 'none'
+  rge_status?: 'none' | 'valid' | 'expired'
   verifications?: Verification[]
 }
+
+/** Dossier à traiter : pro non vérifié, ou pro vérifié ayant déposé un RGE en attente. */
+export const isPendingPro = (p: Professional) =>
+  !p.is_verified || !!p.verifications?.some(v => v.document_type === 'rge' && v.status === 'pending')
 
 export interface Project {
   id: string
