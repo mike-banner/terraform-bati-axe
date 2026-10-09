@@ -58,7 +58,7 @@ export default defineNuxtConfig({
     url: process.env.SUPABASE_URL || process.env.NUXT_PUBLIC_SUPABASE_URL || '',
     key: process.env.SUPABASE_KEY || process.env.NUXT_PUBLIC_SUPABASE_KEY || '',
     secretKey: process.env.NUXT_SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '',
-    serviceKey: process.env.NUXT_SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_KEY || ''
+    serviceKey: process.env.NUXT_SUPABASE_SERVICE_KEY || process.env.NUXT_SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || ''
   },
 
   shadcn: {
@@ -112,7 +112,7 @@ export default defineNuxtConfig({
         'Content-Security-Policy': [
           "default-src 'self'",
           "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://challenges.cloudflare.com",
-          "connect-src 'self' ws: wss: http://127.0.0.1:54321 http://localhost:54321 https://*.supabase.co https://*.supabase.in https://*.r2.cloudflarestorage.com",
+          "connect-src 'self' ws: wss: http://127.0.0.1:54331 http://localhost:54331 https://*.supabase.co https://*.supabase.in https://*.r2.cloudflarestorage.com",
           "img-src 'self' data: blob:",
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src 'self' data: https://fonts.gstatic.com",

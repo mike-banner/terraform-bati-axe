@@ -1,16 +1,16 @@
 # Graph Report - bati-axe  (2026-09-15)
 
 ## Corpus Check
-- 626 files · ~1,292,130 words
+- 626 files · ~1,304,684 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 5261 nodes · 21392 edges · 598 communities (485 shown, 113 thin omitted)
+- 5269 nodes · 21802 edges · 598 communities (485 shown, 113 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a1a94847`
+- Built from commit: `d60fba3f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -529,16 +529,16 @@
 - [[_COMMUNITY_Community 597|Community 597]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Communities (587 total, 109 thin omitted)` - 394 edges
-2. `Communities (588 total, 109 thin omitted)` - 394 edges
-3. `Communities (586 total, 109 thin omitted)` - 393 edges
-4. `Communities (585 total, 109 thin omitted)` - 392 edges
-5. `Communities (584 total, 109 thin omitted)` - 391 edges
-6. `Communities (583 total, 109 thin omitted)` - 391 edges
-7. `Communities (580 total, 109 thin omitted)` - 390 edges
-8. `Communities (573 total, 107 thin omitted)` - 385 edges
-9. `Communities (569 total, 103 thin omitted)` - 385 edges
-10. `Communities (567 total, 103 thin omitted)` - 383 edges
+1. `Communities (598 total, 113 thin omitted)` - 400 edges
+2. `Communities (587 total, 109 thin omitted)` - 394 edges
+3. `Communities (588 total, 109 thin omitted)` - 394 edges
+4. `Communities (586 total, 109 thin omitted)` - 393 edges
+5. `Communities (585 total, 109 thin omitted)` - 392 edges
+6. `Communities (584 total, 109 thin omitted)` - 391 edges
+7. `Communities (583 total, 109 thin omitted)` - 391 edges
+8. `Communities (580 total, 109 thin omitted)` - 390 edges
+9. `Communities (573 total, 107 thin omitted)` - 385 edges
+10. `Communities (569 total, 103 thin omitted)` - 385 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `sendBillingEmail()` --calls--> `sendEmail()`  [EXTRACTED]
@@ -934,8 +934,8 @@ Cohesion: 0.09
 Nodes (21): Before/After Section (Lines 121–127), Brand Banner (Lines 79–88), Ce qui a été fait, CTA Final Section (Lines 174–189), Dependency Graph, Deviations from Plan, Hero Section (Lines 19–56), Key Files (+13 more)
 
 ### Community 142 - "Community 142"
-Cohesion: 0.47
-Nodes (23): Community Hubs (Navigation), Corpus Check, God Nodes (most connected - your core abstractions), Graph Freshness, Graph Report - bati-axe  (2026-07-19), Graph Report - bati-axe  (2026-07-20), Graph Report - bati-axe  (2026-08-06), Graph Report - bati-axe  (2026-08-18) (+15 more)
+Cohesion: 0.46
+Nodes (24): Community Hubs (Navigation), Corpus Check, God Nodes (most connected - your core abstractions), Graph Freshness, Graph Report - bati-axe  (2026-07-19), Graph Report - bati-axe  (2026-07-20), Graph Report - bati-axe  (2026-08-06), Graph Report - bati-axe  (2026-08-18) (+16 more)
 
 ### Community 143 - "Community 143"
 Cohesion: 0.20
@@ -1447,7 +1447,7 @@ Nodes (14): Additive-only migrations, `app/pages/simulateur.vue` (component, req
 
 ### Community 311 - "Community 311"
 Cohesion: 0.17
-Nodes (444): Communities (347 total, 71 thin omitted), Communities (365 total, 76 thin omitted), Communities (371 total, 76 thin omitted), Communities (373 total, 76 thin omitted), Communities (376 total, 74 thin omitted), Communities (377 total, 76 thin omitted), Communities (378 total, 76 thin omitted), Communities (389 total, 76 thin omitted) (+436 more)
+Nodes (451): Communities (347 total, 71 thin omitted), Communities (365 total, 76 thin omitted), Communities (371 total, 76 thin omitted), Communities (373 total, 76 thin omitted), Communities (376 total, 74 thin omitted), Communities (377 total, 76 thin omitted), Communities (378 total, 76 thin omitted), Communities (389 total, 76 thin omitted) (+443 more)
 
 ### Community 312 - "Community 312"
 Cohesion: 0.13
@@ -2154,21 +2154,21 @@ Cohesion: 0.25
 Nodes (7): 📌 Context & Objectif, ✅ Critères d'Acceptation & Verification, Schéma Unifié (3 Pôles d'Offre), 🛠️ Spécifications UX/UI & Data — Refonte de l'Arborescence & Tunnels Particuliers (B2C), 🎨 Spécifications UX/UI (Étape 1 du Tunnel), 🌳 Structure Data Normalisée (JSON Standard), 💾 Tagging Backend & Supabase (Lead Dispatching)
 
 ## Knowledge Gaps
-- **2774 isolated node(s):** `enabled`, `_auto_chain_active`, `research`, `plan_check`, `verifier` (+2769 more)
+- **2779 isolated node(s):** `enabled`, `_auto_chain_active`, `research`, `plan_check`, `verifier` (+2774 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **113 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
+- **Why does `Communities (587 total, 109 thin omitted)` connect `Community 311` to `Community 142`?**
+  _High betweenness centrality (0.001) - this node is a cross-community bridge._
+- **Why does `Communities (598 total, 113 thin omitted)` connect `Community 311` to `Community 142`?**
+  _High betweenness centrality (0.000) - this node is a cross-community bridge._
 - **Why does `Communities (588 total, 109 thin omitted)` connect `Community 311` to `Community 142`?**
   _High betweenness centrality (0.000) - this node is a cross-community bridge._
-- **Why does `Graph Report - bati-axe  (2026-07-20)` connect `Community 142` to `Community 311`?**
-  _High betweenness centrality (0.000) - this node is a cross-community bridge._
-- **Why does `Communities (365 total, 76 thin omitted)` connect `Community 311` to `Community 142`?**
-  _High betweenness centrality (0.000) - this node is a cross-community bridge._
 - **What connects `enabled`, `_auto_chain_active`, `research` to the rest of the system?**
-  _2774 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _2779 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.05263157894736842 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
