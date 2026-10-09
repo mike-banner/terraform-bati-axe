@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { serverSupabaseServiceRole, serverSupabaseUser } from '#supabase/server'
 import crypto from 'node:crypto'
 import { notifyAdmin, adminDetailsTable } from '../../../utils/notifyAdmin'
-import { PROFESSIONAL_CATEGORIES } from '../../../../app/utils/workTypeMatrix'
+import { PROFESSIONAL_CATEGORIES, categoriesError } from '../../../../app/utils/workTypeMatrix'
 import { isEgbNaf } from '../../../utils/siretLookup'
 
 const log = (msg: string) => {
@@ -19,16 +19,12 @@ const claimSchema = z.object({
   phone: z.string().regex(/^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone invalide.'),
   postal_code: z.string().regex(/^\d{5}$/, 'Code postal invalide.'),
   professional_type: z.enum(['specialiste', 'entreprise_generale']).default('specialiste'),
-  categories: z.array(z.enum(VALID_CATEGORIES)).max(VALID_CATEGORIES.length, 'Trop de catégories sélectionnées.').default([]),
+  categories: z.array(z.enum(VALID_CATEGORIES)).max(9, 'Trop de corps de métier sélectionnés.').default([]),
   sms_opt_in: z.boolean().default(false)
 }).superRefine((d, ctx) => {
-  // Spécialiste : au moins un métier ; EGB : aucun métier (accès à tout après validation admin)
-  if (d.professional_type === 'specialiste' && d.categories.length === 0) {
-    ctx.addIssue({ code: 'custom', path: ['categories'], message: 'Sélectionnez au moins un corps de métier.' })
-  }
-  if (d.professional_type === 'entreprise_generale' && d.categories.length > 0) {
-    ctx.addIssue({ code: 'custom', path: ['categories'], message: 'Une entreprise générale ne choisit pas de métier.' })
-  }
+  // Spécialiste : 1 à 2 métiers ; EGB : 1 à 9 métiers (addendum 05.19, même liste)
+  const err = categoriesError(d.professional_type, d.categories)
+  if (err) ctx.addIssue({ code: 'custom', path: ['categories'], message: err })
 })
 
 // Helper to generate a URL-safe 8-character ID

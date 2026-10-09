@@ -1,14 +1,17 @@
 import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseClient } from '#supabase/server'
+import { PROFESSIONAL_CATEGORIES, categoriesError } from '../../../../../app/utils/workTypeMatrix'
 
 // CNV-05 D-14/D-15: editable fields; canonical_slug is immutable (T-04.5-15)
-const VALID_CATEGORIES = ['maconnerie', 'toiture', 'electricite', 'plomberie', 'peinture', 'isolation', 'carrelage', 'menuiserie', 'renovation_energetique'] as const
+const VALID_CATEGORIES = Object.keys(PROFESSIONAL_CATEGORIES) as [string, ...string[]]
 
 const patchSchema = z.object({
   bio: z.string().max(500, 'La présentation ne peut dépasser 500 caractères.').nullable().optional(),
   zone: z.string().max(200, "La zone d'intervention ne peut dépasser 200 caractères.").nullable().optional(),
   phone: z.string().regex(/^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone français invalide.').max(20).nullable().optional(),
-  categories: z.array(z.enum(VALID_CATEGORIES, { message: 'Catégorie invalide.' })).optional(),
+  categories: z.array(z.enum(VALID_CATEGORIES, { message: 'Catégorie invalide.' })).max(9, 'Trop de corps de métier sélectionnés.').optional(),
+  // Action « Pas concerné » du bandeau : l'horodatage est posé par le serveur
+  categories_reviewed: z.literal(true).optional(),
   logo_url: z.string().url('URL de logo invalide.').nullable().optional(),
   // 05.11-02 — Capacité sous-traitance (B2B-SC-02)
   is_available_subcontracting: z.boolean().optional(),
@@ -42,16 +45,27 @@ export default defineEventHandler(async (event) => {
   const parsed = patchSchema.safeParse(body)
   if (!parsed.success) throw createError({ statusCode: 400, statusMessage: parsed.error.message })
 
+  if (parsed.data.categories !== undefined) {
+    // Le type est lu en base, jamais dans le body
+    const { data: row } = await supabase.from('professionals').select('professional_type').eq('id', user.id).single()
+    const err = categoriesError(row?.professional_type, parsed.data.categories)
+    if (err) throw createError({ statusCode: 400, statusMessage: err })
+  }
+
+  const { categories_reviewed, ...fields } = parsed.data
+  const update: Record<string, unknown> = { ...fields }
+  if (categories_reviewed) update.categories_reviewed_at = new Date().toISOString()
+
   const { error } = await supabase
     .from('professionals')
-    .update(parsed.data)
+    .update(update)
     .eq('id', user.id)
 
   if (error) serverError('profile.me.patch', error)
 
   const { data: pro } = await supabase
     .from('professionals')
-    .select('id, canonical_slug, short_id, postal_code, categories, bio, zone, phone, logo_url, company_name, full_name, is_verified, subscription_status, is_available_subcontracting, workforce_size, lead_alerts_email')
+    .select('id, canonical_slug, short_id, postal_code, categories, bio, zone, phone, logo_url, company_name, full_name, is_verified, subscription_status, is_available_subcontracting, workforce_size, lead_alerts_email, professional_type, egb_status, categories_reviewed_at')
     .eq('id', user.id)
     .single()
 
