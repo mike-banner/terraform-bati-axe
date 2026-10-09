@@ -835,6 +835,7 @@ export type Database = {
           created_at: string | null
           decennal_status: Database["public"]["Enums"]["decennal_status"] | null
           egb_status: string
+          rge_status: string
           email: string
           free_leads_used: number
           full_name: string
@@ -878,6 +879,7 @@ export type Database = {
             | Database["public"]["Enums"]["decennal_status"]
             | null
           egb_status?: string
+          rge_status?: string
           email: string
           free_leads_used?: number
           full_name: string
@@ -921,6 +923,7 @@ export type Database = {
             | Database["public"]["Enums"]["decennal_status"]
             | null
           egb_status?: string
+          rge_status?: string
           email?: string
           free_leads_used?: number
           full_name?: string
