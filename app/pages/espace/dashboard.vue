@@ -13,16 +13,15 @@ interface Pro {
   is_available_subcontracting?: boolean
   workforce_size?: number | null
   lead_alerts_email?: boolean
+  professional_type?: string | null
+  categories_reviewed_at?: string | null
 }
 interface Verif {
   document_type: string; status: string; expiry_date: string | null; created_at: string
   file_key?: string; reviewed_at?: string | null
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  maconnerie: 'Maçonnerie', toiture: 'Toiture', electricite: 'Électricité',
-  plomberie: 'Plomberie', peinture: 'Peinture', isolation: 'Isolation',
-}
+import { PROFESSIONAL_CATEGORIES, CATEGORY_LIMITS, newCategoriesSince } from '~/utils/workTypeMatrix'
 
 const supabase = useSupabaseClient()
 const { user } = useRequireAuth()
@@ -49,7 +48,7 @@ async function loadProData() {
     }
     const [{ data: proData, error: proErr }, { data: verifData, error: verifErr }, { count: zoneCount }] = await Promise.all([
       supabase.from('professionals')
-        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, siret_legal_form, siret_naf_code, created_at, categories, bio, logo_url, is_available_subcontracting, workforce_size, lead_alerts_email')
+        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, siret_legal_form, siret_naf_code, created_at, categories, bio, logo_url, is_available_subcontracting, workforce_size, lead_alerts_email, professional_type, categories_reviewed_at')
         .eq('id', uid).maybeSingle(),
       supabase.from('verifications')
         .select('document_type, status, expiry_date, created_at, file_key, reviewed_at')
@@ -133,6 +132,36 @@ watch(() => pro.value, (p) => {
     leadAlerts.enabled = p.lead_alerts_email !== false
   }
 }, { immediate: true })
+
+// Bandeau « Nouveau métier disponible » (05.19) : jamais d'ajout automatique (décennale)
+const newCategories = computed(() => pro.value ? newCategoriesSince(pro.value.categories_reviewed_at, pro.value.categories ?? []) : [])
+const categoryLimitReached = computed(() => {
+  const type = pro.value?.professional_type === 'entreprise_generale' ? 'entreprise_generale' : 'specialiste'
+  return (pro.value?.categories?.length ?? 0) >= CATEGORY_LIMITS[type].max
+})
+const categoryBusy = ref(false)
+async function addNewCategory(id: string) {
+  const label = PROFESSIONAL_CATEGORIES[id] ?? id
+  if (!pro.value || !confirm(`Votre assurance décennale couvre-t-elle « ${label} » ? En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.`)) return
+  categoryBusy.value = true
+  try {
+    const categories = [...(pro.value.categories ?? []), id]
+    await $fetch('/api/v1/pro/profile/me', { method: 'PATCH', body: { categories } })
+    pro.value.categories = categories
+  } catch (err: any) {
+    alert(err.data?.statusMessage || err.message || 'Erreur de sauvegarde.')
+  } finally { categoryBusy.value = false }
+}
+async function dismissNewCategories() {
+  if (!pro.value) return
+  categoryBusy.value = true
+  try {
+    await $fetch('/api/v1/pro/profile/me', { method: 'PATCH', body: { categories_reviewed: true } })
+    pro.value.categories_reviewed_at = new Date().toISOString()
+  } catch (err: any) {
+    alert(err.data?.statusMessage || err.message || 'Erreur de sauvegarde.')
+  } finally { categoryBusy.value = false }
+}
 
 async function saveLeadAlerts() {
   leadAlerts.saving = true
@@ -305,8 +334,29 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
                 :key="cat"
                 class="inline-flex items-center text-[13px] font-semibold px-3 py-1.5 rounded-md border border-slate-200 text-slate-700 bg-white"
               >
-                {{ CATEGORY_LABELS[cat] || cat }}
+                {{ PROFESSIONAL_CATEGORIES[cat] || cat }}
               </span>
+            </div>
+            <!-- Bandeau « Nouveau métier disponible » (05.19) -->
+            <div v-if="newCategories.length" role="status" class="mt-4 p-4 rounded-sm border border-amber-300 bg-amber-50 text-amber-900 space-y-3">
+              <p class="text-sm font-semibold">{{ newCategories.length > 1 ? 'Nouveaux métiers disponibles' : 'Nouveau métier disponible' }}</p>
+              <p class="text-xs">Ajoutez uniquement un métier couvert par votre assurance décennale. Rien n'est ajouté sans votre accord.</p>
+              <ul class="space-y-2">
+                <li v-for="id in newCategories" :key="id" class="flex flex-wrap items-center gap-2">
+                  <span class="text-sm font-medium flex-1 min-w-[10rem]">{{ PROFESSIONAL_CATEGORIES[id] }}</span>
+                  <button type="button" :disabled="categoryBusy || categoryLimitReached" @click="addNewCategory(id)"
+                    class="h-9 px-3 text-xs font-bold rounded-md bg-foreground text-background disabled:opacity-40 disabled:cursor-not-allowed">
+                    Ajouter à mon profil
+                  </button>
+                </li>
+              </ul>
+              <p v-if="categoryLimitReached" class="text-xs">
+                Un spécialiste peut déclarer 2 métiers au maximum : <NuxtLink to="/espace/profil" class="underline">modifiez vos métiers depuis votre profil</NuxtLink>.
+              </p>
+              <button type="button" :disabled="categoryBusy" @click="dismissNewCategories"
+                class="h-9 px-3 text-xs font-semibold rounded-md border border-amber-300 hover:bg-amber-100 disabled:opacity-40">
+                Pas concerné
+              </button>
             </div>
           </div>
           <!-- ─── Documents (toujours visible pour permettre le renouvellement) ───── -->
