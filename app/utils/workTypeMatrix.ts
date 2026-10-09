@@ -71,3 +71,20 @@ export const COMPATIBILITY_MATRIX: Record<string, CompatRule> = {
   cloture_portail: spec('Clôture / portail', ['maconnerie']),
   assainissement: egOnly('Assainissement'),
 }
+
+/**
+ * Un pro reçoit-il ce chantier ? (règle de recouvrement, 05.19)
+ * - entreprise générale : tout
+ * - spécialiste : ≥1 poste dont specialistMatches recoupe ses catégories
+ * - sans postes (projet legacy) : repli sur la catégorie unique du projet
+ */
+export function proMatchesProject(
+  pro: { professional_type?: string | null; categories?: string[] | null },
+  project: { selected_items?: string[] | null; category?: string | null },
+): boolean {
+  if (pro.professional_type === 'entreprise_generale') return true
+  const cats = pro.categories ?? []
+  const items = project.selected_items ?? []
+  if (items.length === 0) return !!project.category && cats.includes(project.category)
+  return items.some(i => COMPATIBILITY_MATRIX[i]?.specialistMatches.some(c => cats.includes(c)))
+}

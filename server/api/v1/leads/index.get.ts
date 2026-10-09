@@ -1,5 +1,6 @@
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { maskLead } from '../../../utils/maskLead'
+import { proMatchesProject } from '../../../../app/utils/workTypeMatrix'
 
 export default defineEventHandler(async (event) => {
   const supabaseAuth = await serverSupabaseClient(event) as any
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: pro, error: proError } = await supabase
     .from('professionals')
-    .select('id, subscription_status, categories')
+    .select('id, subscription_status, categories, professional_type')
     .eq('id', user.id)
     .single()
 
@@ -32,17 +33,16 @@ export default defineEventHandler(async (event) => {
 
   const proCategories = pro.categories || []
 
-  // If pro has no categories, return empty leads
-  if (proCategories.length === 0) {
+  // Un spécialiste sans catégorie ne reçoit rien ; l'entreprise générale reçoit tout
+  if (proCategories.length === 0 && pro.professional_type !== 'entreprise_generale') {
     return { leads: [], isPremium }
   }
 
-  // Fetch projects that match pro's categories and are qualified
+  // Projets qualifiés ; le filtre par recouvrement (05.19) est appliqué ci-dessous
   const { data: projects, error: projectsError } = await supabase
     .from('projects')
-    .select('id, category, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code, qualify_score, qualify_budget, qualify_phone, qualify_description, qualify_returning, created_at, status')
+    .select('id, category, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code, qualify_score, qualify_budget, qualify_phone, qualify_description, qualify_returning, created_at, status, selected_items')
     .eq('status', 'qualified')
-    .in('category', proCategories)
     .order('created_at', { ascending: false })
 
   if (projectsError) {
@@ -58,7 +58,8 @@ export default defineEventHandler(async (event) => {
   const leadMap = new Map<string, any>((leads || []).map((l: any) => [l.project_id, l]))
 
   const now = new Date()
-  const enriched = (projects || []).map((proj: any) => {
+  const matched = (projects || []).filter((proj: any) => proMatchesProject(pro, proj))
+  const enriched = matched.map((proj: any) => {
     // Generate a virtual lead object
     const claim = leadMap.get(proj.id)
     const virtualLead = {
