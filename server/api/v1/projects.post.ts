@@ -150,11 +150,18 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // 4. P4 — Notifier par email les pros vérifiés dont les catégories matchent.
+    // 4. P4 — Notifier par e-mail les pros dont les métiers recoupent les postes (même règle que /espace/leads, gate EGB inclus).
     // La notification ne débloque rien : les coordonnées restent masquées tant
     // que le pro n'est pas Premium / free-granté / 48h écoulées (cf. maskLead).
     // Idempotence + non-bloquant gérés dans notifyMatchedPros.
-    await notifyMatchedPros(supabase, { ...project, budget_range: budgetRange, timeline_range: data.timeline_range ?? null, postal_code: data.postal_code }, category)
+    await notifyMatchedPros(supabase, {
+      ...project,
+      category,
+      selected_items: data.selected_items ?? null,
+      budget_range: budgetRange,
+      timeline_range: data.timeline_range ?? null,
+      postal_code: data.postal_code,
+    })
 
     // 5. Save CGU consent row
     const consentsToInsert: Array<{
