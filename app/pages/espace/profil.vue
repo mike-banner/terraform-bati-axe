@@ -4,7 +4,7 @@ useHead({ title: 'Mon profil public — BÂTI-AXE' })
 
 useRequireAuth()
 
-import { PROFESSIONAL_CATEGORIES } from '~/utils/workTypeMatrix'
+import { PROFESSIONAL_CATEGORIES, CATEGORY_LIMITS, categoriesError } from '~/utils/workTypeMatrix'
 
 const profile = reactive({
   bio: '',
@@ -15,7 +15,11 @@ const profile = reactive({
   dept: '',
   company_name: '',
   phone: '',
+  professional_type: 'specialiste' as string,
 })
+
+const limit = computed(() => CATEGORY_LIMITS[profile.professional_type as 'specialiste' | 'entreprise_generale']?.max ?? 2)
+const catError = computed(() => categoriesError(profile.professional_type, profile.categories))
 
 const loading = ref(true)
 const saving = ref(false)
@@ -35,6 +39,7 @@ const { refresh } = await useAsyncData('pro-profile-page', async () => {
       dept: data.profile.dept || '',
       company_name: data.profile.company_name || '',
       phone: data.profile.phone || '',
+      professional_type: data.profile.professional_type || 'specialiste',
     })
     fetchError.value = false
   } catch {
@@ -49,6 +54,11 @@ async function saveProfile() {
   saving.value = true
   saveError.value = ''
   saveSuccess.value = false
+  if (catError.value) {
+    saveError.value = catError.value
+    saving.value = false
+    return
+  }
   try {
     await $fetch('/api/v1/pro/profile/me', {
       method: 'PATCH',
@@ -56,8 +66,8 @@ async function saveProfile() {
     })
     saveSuccess.value = true
     setTimeout(() => { saveSuccess.value = false }, 3000)
-  } catch {
-    saveError.value = "Impossible d'enregistrer les modifications. Réessayez dans quelques instants."
+  } catch (e: any) {
+    saveError.value = e?.data?.statusMessage || "Impossible d'enregistrer les modifications. Réessayez dans quelques instants."
   } finally {
     saving.value = false
   }
@@ -155,10 +165,11 @@ async function saveProfile() {
             <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Catégories</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label v-for="(label, id) in PROFESSIONAL_CATEGORIES" :key="id" class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
-                <input type="checkbox" v-model="profile.categories" :value="id" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
+                <input type="checkbox" v-model="profile.categories" :value="id" :disabled="!profile.categories.includes(id) && profile.categories.length >= limit" class="disabled:opacity-40 rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
                 <span class="text-sm font-medium">{{ label }}</span>
               </label>
             </div>
+            <p v-if="catError" role="alert" class="mt-2 text-xs text-red-600">{{ catError }}</p>
             <p class="mt-3 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
           </div>
           
