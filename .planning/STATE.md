@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
-status: completed
-stopped_at: Phase 09 complète (4/4 plans) — checkpoint 09-04 approuvé
-last_updated: "2026-09-07T22:41:04.884Z"
+status: executing
+stopped_at: Completed 05.19-01-PLAN.md
+last_updated: "2026-10-09T10:13:43.353Z"
 progress:
-  total_phases: 31
+  total_phases: 33
   completed_phases: 18
-  total_plans: 88
-  completed_plans: 82
-  percent: 93
+  total_plans: 94
+  completed_plans: 83
+  percent: 88
 ---
 
 # Project State
@@ -30,9 +30,9 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 
 ## Current Position
 
-Phase: 05.19 & 05.20
-Plan: 05.19 planifiée (5 plans, dont 05.19-05 EGB) — exécution démarrée 2026-10-09
-Status: 2 Phases correctrices validées par le client — Specs rédigées (05.19 Arborescence B2C & 05.20 Vitrine Prescripteurs). Prêtes pour planification/exécution.
+Phase: 05.19 (refonte-arborescence-b2c) — EXECUTING
+Plan: 2 of 5
+Status: Ready to execute
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
 
@@ -53,6 +53,7 @@ Phases complètes récentes (v1.0) :
 Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod — inclut désormais un test webhook réel de transition de Subscription Schedule sur retrait de zone, non vérifié en conditions réelles), **P1** (Umami funnel — self-hosted VPS PostgreSQL), puis P6/P8/P10.
 
 ## Fait le 2026-10-09 (dev Cloudflare perso)
+
 - **FIX claim pro (500)** : cause = secret `NUXT_SUPABASE_SECRET_KEY` vide sur Pages `bati-axe-dev-dev`. Reposé (wrangler) + secret GitHub `PROD_TF_VAR_SUPABASE_SERVICE_ROLE_KEY` corrigé (alimente terraform dev et prod). Fix client `claim.vue` : `authedUser.id ?? authedUser.sub` (plus de `professionals?id=eq.undefined`).
 - **Parcours vérifié sur dev** : inscription → claim → étape documents → reconnexion → `/espace/dashboard` OK. Envoi réel du Kbis vers R2 non testé. Compte de test `e2e.claim.1791539508344@example.com` créé dans la base cloud partagée (à supprimer).
 - **Décisions** : type de pro « Entreprise Générale du Bâtiment » (`entreprise_generale`, validation admin, NAF = signal) → plan 05.19-05 ; `generaliste` renommé partout dans 05.19 ; **Stripe (P3) reporté en dernier** (pas de paiement tant que l'app n'est pas fonctionnelle et sans leads, qui viendront des partenaires).
@@ -169,6 +170,6 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 ## Session Continuity
 
-Last session: 2026-09-07T22:35:57.229Z
-Stopped at: Phase 09 complète (4/4 plans) — checkpoint 09-04 approuvé
+Last session: 2026-10-09T10:13:43.343Z
+Stopped at: Completed 05.19-01-PLAN.md
 Resume: `/gsd-plan-phase 06.3` pour découper la phase email en plans exécutables, puis **P3** (re-test Stripe/cron en conditions prod réelles quand les identifiants client seront disponibles), **P1** Umami (VPS + PostgreSQL).

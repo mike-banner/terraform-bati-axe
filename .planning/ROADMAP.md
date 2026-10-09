@@ -380,7 +380,7 @@ Plans:
   5. L'arborescence JSON est réutilisable dans le code (fonction Nuxt ou fichier statique importable).
 
 **Plans**: 4 plans
-- [ ] 05.19-01-PLAN.md — Schema migration (professional_type, selected_*) + workTypeMatrix.ts
+- [x] 05.19-01-PLAN.md — Schema migration (professional_type, selected_*) + workTypeMatrix.ts
 - [ ] 05.19-02-PLAN.md — Tunnel UI refactor (Étape 1-2, 3 categories, multi-select items)
 - [ ] 05.19-03-PLAN.md — Matching logic (leads API overlap rule) + Pro profile (9 categories)
 - [ ] 05.19-04-PLAN.md — Unit tests (matching) + E2E tests (tunnel) + backward compat verification
@@ -461,7 +461,7 @@ Plans:
 **Requirements**: EML-02 (moteur multi-expéditeurs + layout LCEN), EML-03 (validation/rejet document pro), EML-04 (alerte lead sur notifications@), EML-05 (cron J-30/J-7 décennale), EML-06 (confirmations Stripe zones), EML-07 (accusé réception projet particulier), EML-08 (positionnement artisan → particulier), EML-09 (accusé dépôt B2B), EML-10 (notifyAdmin centralisé) — formalisés au planning du 2026-08-30, étendent EML-01 (Phase 6, P4)
 **Depends on:** Phase 6 (moteur email existant), Phase 05.16 (webhook Stripe zones), Phase 05.10/05.11 (B2B, documents)
 **Bloquant avant activation prod:** DNS Cloudflare (DKIM/SPF/DMARC sur `bati-axe.com`), Cloudflare Email Routing sur `contact@bati-axe.com` → Gmail admin, variables d'env `RESEND_API_KEY`/`NUXT_PUBLIC_SITE_URL`.
-**Plans:** 4 plans (2 vagues)
+**Plans:** 1/5 plans executed
 
 Plans:
 - [x] 06.3-01-PLAN.md — Moteur : sendEmail multi-expéditeurs + layout HTML/LCEN + notifyAdmin (vague 1)
