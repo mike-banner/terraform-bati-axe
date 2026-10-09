@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   const supabase = await serverSupabaseServiceRole(event) as any
   const { data, error } = await supabase
     .from('professionals')
-    .select('id, company_name, full_name, email, siret, siret_status, siret_naf_code, egb_status, created_at')
+    .select('id, company_name, full_name, email, siret, siret_status, siret_naf_code, egb_status, created_at, categories, postal_code')
     .eq('egb_status', 'pending')
     .order('created_at', { ascending: true })
 
