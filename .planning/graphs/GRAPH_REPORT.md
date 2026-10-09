@@ -1,16 +1,16 @@
-# Graph Report - bati-axe  (2026-09-15)
+# Graph Report - bati-axe  (2026-10-09)
 
 ## Corpus Check
-- 626 files · ~1,304,684 words
+- 666 files · ~1,572,981 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 5269 nodes · 21802 edges · 598 communities (485 shown, 113 thin omitted)
+- 5571 nodes · 34441 edges · 632 communities (508 shown, 124 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d60fba3f`
+- Built from commit: `e9f07625`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -387,7 +387,6 @@
 - [[_COMMUNITY_Community 428|Community 428]]
 - [[_COMMUNITY_Community 429|Community 429]]
 - [[_COMMUNITY_Community 430|Community 430]]
-- [[_COMMUNITY_Community 431|Community 431]]
 - [[_COMMUNITY_Community 432|Community 432]]
 - [[_COMMUNITY_Community 433|Community 433]]
 - [[_COMMUNITY_Community 434|Community 434]]
@@ -527,35 +526,67 @@
 - [[_COMMUNITY_Community 595|Community 595]]
 - [[_COMMUNITY_Community 596|Community 596]]
 - [[_COMMUNITY_Community 597|Community 597]]
+- [[_COMMUNITY_Community 598|Community 598]]
+- [[_COMMUNITY_Community 600|Community 600]]
+- [[_COMMUNITY_Community 601|Community 601]]
+- [[_COMMUNITY_Community 602|Community 602]]
+- [[_COMMUNITY_Community 604|Community 604]]
+- [[_COMMUNITY_Community 605|Community 605]]
+- [[_COMMUNITY_Community 606|Community 606]]
+- [[_COMMUNITY_Community 607|Community 607]]
+- [[_COMMUNITY_Community 608|Community 608]]
+- [[_COMMUNITY_Community 609|Community 609]]
+- [[_COMMUNITY_Community 610|Community 610]]
+- [[_COMMUNITY_Community 611|Community 611]]
+- [[_COMMUNITY_Community 612|Community 612]]
+- [[_COMMUNITY_Community 613|Community 613]]
+- [[_COMMUNITY_Community 614|Community 614]]
+- [[_COMMUNITY_Community 615|Community 615]]
+- [[_COMMUNITY_Community 616|Community 616]]
+- [[_COMMUNITY_Community 617|Community 617]]
+- [[_COMMUNITY_Community 618|Community 618]]
+- [[_COMMUNITY_Community 620|Community 620]]
+- [[_COMMUNITY_Community 621|Community 621]]
+- [[_COMMUNITY_Community 622|Community 622]]
+- [[_COMMUNITY_Community 623|Community 623]]
+- [[_COMMUNITY_Community 624|Community 624]]
+- [[_COMMUNITY_Community 625|Community 625]]
+- [[_COMMUNITY_Community 626|Community 626]]
+- [[_COMMUNITY_Community 627|Community 627]]
+- [[_COMMUNITY_Community 628|Community 628]]
+- [[_COMMUNITY_Community 629|Community 629]]
+- [[_COMMUNITY_Community 630|Community 630]]
+- [[_COMMUNITY_Community 631|Community 631]]
+- [[_COMMUNITY_Community 632|Community 632]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Communities (598 total, 113 thin omitted)` - 400 edges
-2. `Communities (587 total, 109 thin omitted)` - 394 edges
-3. `Communities (588 total, 109 thin omitted)` - 394 edges
-4. `Communities (586 total, 109 thin omitted)` - 393 edges
-5. `Communities (585 total, 109 thin omitted)` - 392 edges
-6. `Communities (584 total, 109 thin omitted)` - 391 edges
-7. `Communities (583 total, 109 thin omitted)` - 391 edges
-8. `Communities (580 total, 109 thin omitted)` - 390 edges
-9. `Communities (573 total, 107 thin omitted)` - 385 edges
-10. `Communities (569 total, 103 thin omitted)` - 385 edges
+1. `Communities (633 total, 123 thin omitted)` - 422 edges
+2. `Communities (632 total, 122 thin omitted)` - 422 edges
+3. `Communities (633 total, 124 thin omitted)` - 421 edges
+4. `Communities (632 total, 124 thin omitted)` - 420 edges
+5. `Communities (631 total, 123 thin omitted)` - 420 edges
+6. `Communities (630 total, 123 thin omitted)` - 419 edges
+7. `Communities (630 total, 124 thin omitted)` - 418 edges
+8. `Communities (629 total, 123 thin omitted)` - 418 edges
+9. `Communities (626 total, 120 thin omitted)` - 418 edges
+10. `Communities (625 total, 120 thin omitted)` - 417 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `sendBillingEmail()` --calls--> `sendEmail()`  [EXTRACTED]
-  server/utils/handleStripeEvent.ts → server/utils/email.ts
+- `matches()` --calls--> `proMatchesProject()`  [EXTRACTED]
+  tests/unit/egb-gate.test.ts → app/utils/workTypeMatrix.ts
+- `matchesGate()` --calls--> `proMatchesProject()`  [EXTRACTED]
+  tests/unit/matching.test.ts → app/utils/workTypeMatrix.ts
+- `matches()` --calls--> `effectiveProType()`  [EXTRACTED]
+  tests/unit/egb-gate.test.ts → app/utils/workTypeMatrix.ts
+- `matchesGate()` --calls--> `effectiveProType()`  [EXTRACTED]
+  tests/unit/matching.test.ts → app/utils/workTypeMatrix.ts
 - `notifyMatchedB2bPros()` --calls--> `sendEmail()`  [EXTRACTED]
   server/utils/notifyB2bPros.ts → server/utils/email.ts
-- `sendBillingEmail()` --calls--> `renderEmail()`  [EXTRACTED]
-  server/utils/handleStripeEvent.ts → server/utils/emailLayout.ts
-- `renderTenderEmail()` --calls--> `renderEmail()`  [EXTRACTED]
-  server/utils/notifyB2bPros.ts → server/utils/emailLayout.ts
-- `renderTenderClaimEmail()` --calls--> `renderEmail()`  [EXTRACTED]
-  server/utils/tenderClaim.ts → server/utils/emailLayout.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (598 total, 113 thin omitted)
+## Communities (632 total, 124 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.05
@@ -583,7 +614,7 @@ Nodes (3): Ce qui a été fait, Résultats et Décisions, Résumé d'Exécution 
 
 ### Community 13 - "Community 13"
 Cohesion: 0.08
-Nodes (25): Accumulated Context, Backlog pilote v1 — Statut au 2026-08-23, Blockers/Concerns, Current Position, Decisions, Decisions (récentes), Deferred Ideas (hors scope, à reconsidérer plus tard), Infrastructure vérifiée le 2026-08-25 (+17 more)
+Nodes (26): Accumulated Context, Backlog pilote v1 — Statut au 2026-08-23, Blockers/Concerns, Current Position, Decisions, Decisions (récentes), Deferred Ideas (hors scope, à reconsidérer plus tard), Fait le 2026-10-09 (dev Cloudflare perso) (+18 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.25
@@ -626,16 +657,20 @@ Cohesion: 0.22
 Nodes (8): 05.16 — Comportement Stripe : gestion des zones actives, Ce qui n'est PAS géré (limite connue), Comment le webhook sait quelle zone a été retirée, Distinguer les deux types de Subscription Schedule, Garde-fou commun : `assertSubscriptionModifiable()`, Les 4 actions possibles, Matrice des cas de conflit, Modèle
 
 ### Community 27 - "Community 27"
-Cohesion: 0.43
-Nodes (3): baseLead, now, maskLead()
+Cohesion: 0.10
+Nodes (26): idSchema, patchSchema, VALID_CATEGORIES, matches(), projet, baseLead, now, matchesGate() (+18 more)
 
 ### Community 28 - "Community 28"
-Cohesion: 0.28
-Nodes (7): ALL_TRADES, ALL_TRADES, derivePrimaryCategory(), deriveTrades(), PIECE_TRADES, PRIORITY_ORDER, Trade
+Cohesion: 0.22
+Nodes (8): Comportement, Known Stubs, Phase 05.19 Plan 03 : matching par recouvrement et profil à 9 catégories, Points d'attention, Self-Check: PASSED, Tâches, Vérifications, Écarts par rapport au plan
 
 ### Community 29 - "Community 29"
 Cohesion: 0.09
 Nodes (20): availableCategories, canUnlockLeads, categoryFilter, currentPage, decennalStatus, filteredLeads, freeLeadsUsed, freeRemaining (+12 more)
+
+### Community 32 - "Community 32"
+Cohesion: 0.25
+Nodes (7): Commits, Deviations from Plan, Known Stubs, Phase 05.19 Plan 14 : qualification RGE (base + règle + points d'entrée serveur), Points à valider, Self-Check: PASSED, Vérifications réelles
 
 ### Community 33 - "Community 33"
 Cohesion: 0.17
@@ -658,8 +693,8 @@ Cohesion: 0.40
 Nodes (3): Ce qui a été fait, Impact, Résumé d'Exécution : Plan 08 (CRM Minimaliste)
 
 ### Community 43 - "Community 43"
-Cohesion: 0.24
-Nodes (4): claimSchema, VALID_CATEGORIES, lookupSiret(), SiretLookupResult
+Cohesion: 0.20
+Nodes (6): claimSchema, VALID_CATEGORIES, EGB_NAF, isEgbNaf(), lookupSiret(), SiretLookupResult
 
 ### Community 44 - "Community 44"
 Cohesion: 0.40
@@ -694,8 +729,8 @@ Cohesion: 0.15
 Nodes (11): Accomplishments, Checkpoint, Decisions Made, Deviations from Plan, Files Created/Modified, Issues Encountered, Next Phase Readiness, Performance (+3 more)
 
 ### Community 57 - "Community 57"
-Cohesion: 0.16
-Nodes (17): verifySchema, DecennaleDoc, BUDGET_LABELS, mockConfig, { sendEmailMock }, EmailSender, resolveSender(), sendEmail() (+9 more)
+Cohesion: 0.12
+Nodes (22): verifySchema, DecennaleDoc, BUDGET_LABELS, mockConfig, { sendEmailMock }, MockData, mockedSendEmail, EmailSender (+14 more)
 
 ### Community 58 - "Community 58"
 Cohesion: 0.33
@@ -935,7 +970,7 @@ Nodes (21): Before/After Section (Lines 121–127), Brand Banner (Lines 79–88)
 
 ### Community 142 - "Community 142"
 Cohesion: 0.46
-Nodes (24): Community Hubs (Navigation), Corpus Check, God Nodes (most connected - your core abstractions), Graph Freshness, Graph Report - bati-axe  (2026-07-19), Graph Report - bati-axe  (2026-07-20), Graph Report - bati-axe  (2026-08-06), Graph Report - bati-axe  (2026-08-18) (+16 more)
+Nodes (25): Community Hubs (Navigation), Corpus Check, God Nodes (most connected - your core abstractions), Graph Freshness, Graph Report - bati-axe  (2026-07-19), Graph Report - bati-axe  (2026-07-20), Graph Report - bati-axe  (2026-08-06), Graph Report - bati-axe  (2026-08-18) (+17 more)
 
 ### Community 143 - "Community 143"
 Cohesion: 0.20
@@ -961,9 +996,13 @@ Nodes (24): Checker Sign-Off, Color, Component Inventory, Copywriting Contract, 
 Cohesion: 0.14
 Nodes (12): Accomplishments, Decisions Made, Deviations from Plan, Files Created/Modified, Issues Encountered, Next Phase Readiness, Performance, Phase 4.5 Plan 01: Phase 4.5 Schema Migration Summary (+4 more)
 
+### Community 159 - "Community 159"
+Cohesion: 0.29
+Nodes (6): Commits, Déviations, Non vérifié, Phase 05.19 Plan 10 : métiers à l'inscription et au profil Summary, Réalisé, Vérifications réelles
+
 ### Community 161 - "Community 161"
-Cohesion: 0.40
-Nodes (5): idSchema, CATEGORY_LABELS, renderTenderClaimEmail(), shouldCloseLot(), tenderCap()
+Cohesion: 0.22
+Nodes (9): idSchema, baseLot, CATEGORY_LABELS, maskTender(), TenderLotRow, truncate(), renderTenderClaimEmail(), shouldCloseLot() (+1 more)
 
 ### Community 165 - "Community 165"
 Cohesion: 0.22
@@ -1000,6 +1039,10 @@ Nodes (10): CompositeTypes, Constants, Database, DatabaseWithoutInternals, Defau
 ### Community 175 - "Community 175"
 Cohesion: 0.20
 Nodes (9): Carte du code (graphify), CLAUDE.md — BÂTI-AXE, Commits, Dev & tests, Invariants à ne jamais casser, Langue, Patterns de code, Priorité de lecture (+1 more)
+
+### Community 176 - "Community 176"
+Cohesion: 0.20
+Nodes (8): catError, fetchError, handleLogoUpload(), loading, putWithProgress(), saveError, saveSuccess, saving
 
 ### Community 177 - "Community 177"
 Cohesion: 0.25
@@ -1430,7 +1473,7 @@ Cohesion: 0.20
 Nodes (6): city, description, formError, submitting, title, uploading
 
 ### Community 304 - "Community 304"
-Cohesion: 0.20
+Cohesion: 0.17
 Nodes (4): currentStepIndex, decennale, steps, uploads
 
 ### Community 305 - "Community 305"
@@ -1446,8 +1489,8 @@ Cohesion: 0.13
 Nodes (14): Additive-only migrations, `app/pages/simulateur.vue` (component, request-response) — full rewrite, `app/utils/calculateur.ts` (utility, transform) — new file, client-side pricing engine (D-01), Bento tile visual/interaction pattern, File Classification, French phone/email validation, Metadata, No Analog Found (+6 more)
 
 ### Community 311 - "Community 311"
-Cohesion: 0.17
-Nodes (451): Communities (347 total, 71 thin omitted), Communities (365 total, 76 thin omitted), Communities (371 total, 76 thin omitted), Communities (373 total, 76 thin omitted), Communities (376 total, 74 thin omitted), Communities (377 total, 76 thin omitted), Communities (378 total, 76 thin omitted), Communities (389 total, 76 thin omitted) (+443 more)
+Cohesion: 0.23
+Nodes (504): Communities (347 total, 71 thin omitted), Communities (365 total, 76 thin omitted), Communities (371 total, 76 thin omitted), Communities (373 total, 76 thin omitted), Communities (376 total, 74 thin omitted), Communities (377 total, 76 thin omitted), Communities (378 total, 76 thin omitted), Communities (389 total, 76 thin omitted) (+496 more)
 
 ### Community 312 - "Community 312"
 Cohesion: 0.13
@@ -1666,8 +1709,8 @@ Cohesion: 0.20
 Nodes (9): Accomplissements, Decisions Made, Deviations from Plan, Files Created/Modified, Issues Encountered, Next Phase Readiness, Performance, Phase 07: Formulaire AO & Modèle Multi-Lots — Plan 02 Summary (+1 more)
 
 ### Community 410 - "Community 410"
-Cohesion: 0.08
-Nodes (23): CATEGORY_LABELS, Overview, Professional, Project, Realisation, STATUS_LABELS, Verification, APPORTEUR_LABELS (+15 more)
+Cohesion: 0.07
+Nodes (25): CATEGORY_LABELS, DOC_LABELS, DocType, Overview, Professional, Project, Realisation, STATUS_LABELS (+17 more)
 
 ### Community 411 - "Community 411"
 Cohesion: 0.25
@@ -1748,10 +1791,6 @@ Nodes (5): 1. Section Accueil (`/`) & Annuaire Public (`/partenaires/annuaire`),
 ### Community 430 - "Community 430"
 Cohesion: 0.33
 Nodes (5): 👤 1. Particuliers (Porteurs de projet / B2C), 👷 2. Artisans & Entreprises du BTP (Abonnés SaaS), 📐 3. Prescripteurs & Partenaires (Architectes, Diagnostiqueurs, Syndics), 💶 4. Courtiers en Financement & Fournisseurs BTP, Spec Client : Synthèse des User Stories de l'Écosystème BÂTI-AXE
-
-### Community 431 - "Community 431"
-Cohesion: 0.31
-Nodes (7): MockData, mockedSendEmail, handleStripeEvent(), resolveProEmail(), resolveZoneName(), sendBillingEmail(), calculateZonePrice()
 
 ### Community 432 - "Community 432"
 Cohesion: 0.40
@@ -1958,8 +1997,8 @@ Cohesion: 0.29
 Nodes (7): schema, base, B2B_LOT_CATEGORIES, B2bLotCategory, B2bRequestInput, b2bRequestSchema, buildTenderLots()
 
 ### Community 529 - "Community 529"
-Cohesion: 0.17
-Nodes (7): ALLOWED_EXTENSIONS, schema, base, computeQualifyScore(), QualifyInput, QualifyResult, verifyTurnstile()
+Cohesion: 0.28
+Nodes (7): ALL_TRADES, ALL_TRADES, derivePrimaryCategory(), deriveTrades(), PIECE_TRADES, PRIORITY_ORDER, Trade
 
 ### Community 530 - "Community 530"
 Cohesion: 0.14
@@ -2070,16 +2109,16 @@ Cohesion: 0.15
 Nodes (12): Accomplissements, Decisions Made, Deviations from Plan, Files Created/Modified, Issues Encountered, Next Phase Readiness, Performance, Phase 08: Diffusion automatique et confiance — Plan 02 Summary (+4 more)
 
 ### Community 562 - "Community 562"
-Cohesion: 0.27
-Nodes (5): ACTIVE_TENDER_STATUSES, assertDiffusable(), assertTenderQuota(), matchZone(), ZONE_PRICING
+Cohesion: 0.18
+Nodes (10): ACTIVE_TENDER_STATUSES, assertDiffusable(), assertTenderQuota(), B2bTargetPro, CATEGORY_LABELS, notifyMatchedB2bPros(), renderTenderEmail(), selectB2bTargets() (+2 more)
 
 ### Community 563 - "Community 563"
 Cohesion: 0.18
 Nodes (10): Accomplissements, Decisions Made, Deviations from Plan, Files Created/Modified, Issues Encountered, Next Phase Readiness, Performance, Phase 08: Diffusion automatique et confiance — Plan 01 Summary (+2 more)
 
 ### Community 564 - "Community 564"
-Cohesion: 0.48
-Nodes (5): B2bTargetPro, CATEGORY_LABELS, notifyMatchedB2bPros(), renderTenderEmail(), selectB2bTargets()
+Cohesion: 0.46
+Nodes (6): candidateCategories(), CATEGORY_LABELS, filterMatchedPros(), notifyMatchedPros(), projectLabel(), ProjectLike
 
 ### Community 565 - "Community 565"
 Cohesion: 0.17
@@ -2106,8 +2145,8 @@ Cohesion: 0.20
 Nodes (9): Accomplishments, Dependency graph, Deviations from Plan, Files Created/Modified, Performance, Phase 9 Plan 01: Fondation base + masquage AO partenaire Summary, Self-Check: PASSED, Task Commits (+1 more)
 
 ### Community 575 - "Community 575"
-Cohesion: 0.48
-Nodes (4): baseLot, maskTender(), TenderLotRow, truncate()
+Cohesion: 0.33
+Nodes (5): 🗂️ Architecture de Navigation Recommandée (Header), 🚀 Brief Dev — Restructuration Espace Pro & Vitrine Prescripteurs / Partenaires, 📄 Contenu Requis sur la Landing Page `/pro/prescripteurs-partenaires`, 🔄 Flux de Navigation (User Flow), 📌 Problème identifié
 
 ### Community 576 - "Community 576"
 Cohesion: 0.50
@@ -2138,8 +2177,8 @@ Cohesion: 0.08
 Nodes (25): 1. Faire trancher le conflit V1/V2 avant tout — c'est la question prioritaire, 2. Matrice : table Supabase (Option A), pas fichier statique, 3. Renommer le rôle "Expert/MOE côté artisan" pour ne pas collisionner avec `b2b_apporteur_type`, 4. Groupes de pros : ne pas construire avant d'avoir tranché le déblocage (unitaire vs. collectif), Ajout Futur de Métiers, Assumptions Log, ⚠️ Avertissement — ce document remplace la V1, ne l'ignore pas, Cascade de Propositions (+17 more)
 
 ### Community 590 - "Community 590"
-Cohesion: 0.09
-Nodes (21): Canonical References, Code Patterns, D-01 : Professional Types (Locked), D-02 : Categories (Locked), D-03 : Tunnel Étape 1 (Locked), D-04 : Tunnel Étape 2 (Locked), D-05 : Matching Logic (Locked), D-06 : Compatibility Matrix (Locked) (+13 more)
+Cohesion: 0.08
+Nodes (24): Addendum 2026-10-09 (2) — Case « rénovation énergétique » et tunnel d'aides au financement (décision utilisateur), Addendum 2026-10-09 (3) — Qualification RGE pour la rénovation énergétique (décisions utilisateur), Addendum 2026-10-09 — Révision modèle EGB (décision utilisateur, à faire valider par le client), Canonical References, Code Patterns, D-01 : Professional Types (Locked), D-02 : Categories (Locked), D-03 : Tunnel Étape 1 (Locked) (+16 more)
 
 ### Community 591 - "Community 591"
 Cohesion: 0.10
@@ -2153,22 +2192,94 @@ Nodes (8): 🗂️ 1. Restructuration du Header (`Header.vue`), 📄 2. Structur
 Cohesion: 0.25
 Nodes (7): 📌 Context & Objectif, ✅ Critères d'Acceptation & Verification, Schéma Unifié (3 Pôles d'Offre), 🛠️ Spécifications UX/UI & Data — Refonte de l'Arborescence & Tunnels Particuliers (B2C), 🎨 Spécifications UX/UI (Étape 1 du Tunnel), 🌳 Structure Data Normalisée (JSON Standard), 💾 Tagging Backend & Supabase (Lead Dispatching)
 
+### Community 598 - "Community 598"
+Cohesion: 0.33
+Nodes (5): 05.19-05 — Pro « Entreprise Générale du Bâtiment » (EGB), Dépendance, Hors périmètre, Règles, Tâches
+
+### Community 600 - "Community 600"
+Cohesion: 0.29
+Nodes (6): Known Stubs, Phase 05.19 Plan 01 : fondation schéma et matrice de compatibilité, Self-Check: PASSED, Tâches, À faire (hors plan), Écarts par rapport au plan
+
+### Community 601 - "Community 601"
+Cohesion: 0.29
+Nodes (6): Known Stubs, Phase 05.19 Plan 02 : tunnel catégorie puis postes de travaux, Points d'attention, Self-Check: PASSED, Tâches, Écarts par rapport au plan
+
+### Community 602 - "Community 602"
+Cohesion: 0.20
+Nodes (7): ENERGETIQUE, energyOptIn, GROS_OEUVRE, OPT_IN_CATEGORIES, PRESTATIONS, SECOND_OEUVRE, showEnergyOptIn
+
+### Community 604 - "Community 604"
+Cohesion: 0.22
+Nodes (8): Couverture matching, Known Stubs, Phase 05.19 Plan 04 : tests unitaires et e2e du nouveau tunnel, Résultats réels, Self-Check: PASSED, Tâches, Vérifications manuelles du plan (tâche 3), Écarts par rapport au plan
+
+### Community 606 - "Community 606"
+Cohesion: 0.22
+Nodes (8): Comportement, Known Stubs, Phase 05.19 Plan 05 : Entreprise Générale du Bâtiment (EGB), Points d'attention, Self-Check: PASSED, Tâches, Vérifications, Écarts par rapport au plan
+
+### Community 607 - "Community 607"
+Cohesion: 0.15
+Nodes (12): Anti-patterns / notes, Cohérence des 4 endpoints, Conclusion, Gaps de la 1re vérification, Invariants CLAUDE.md, Phase 05.19 : Re-vérification (2e passe), Phase 05.19 : Vérification, Revérifications demandées (+4 more)
+
+### Community 615 - "Community 615"
+Cohesion: 0.33
+Nodes (3): ALLOWED_EXTENSIONS, schema, verifyTurnstile()
+
+### Community 616 - "Community 616"
+Cohesion: 0.40
+Nodes (4): base, computeQualifyScore(), QualifyInput, QualifyResult
+
+### Community 617 - "Community 617"
+Cohesion: 0.25
+Nodes (7): A faire valider par le client : mapping egbMatches (choix de discrétion), Commits, Deviations, Phase 05.19 Plan 06 : modèle EGB par recouvrement Summary, Réalisé, Résultats de vérification, Stubs / menaces
+
+### Community 618 - "Community 618"
+Cohesion: 0.29
+Nodes (6): Commits, Phase 05.19 Plan 07 : categories_reviewed_at et verrou EGB, Point de sécurité à traiter (hors périmètre), Preuve du verrou (base locale, transactions annulées), Self-Check: PASSED, Écarts
+
+### Community 620 - "Community 620"
+Cohesion: 0.29
+Nodes (6): Deviations, Known Stubs, Phase 05.19 Plan 08 : onglet admin « Entreprises générales » Summary, Self-Check: PASSED, Tâches, Vérifications réelles
+
+### Community 621 - "Community 621"
+Cohesion: 0.29
+Nodes (6): Commits, Déviations, Phase 05.19 Plan 09 : alertes e-mail alignées sur le matching Summary, Réalisé, Self-Check: PASSED, Vérifications réelles
+
+### Community 622 - "Community 622"
+Cohesion: 0.40
+Nodes (4): Déviations, Phase 05.19 Plan 11 : bandeau nouveau métier Summary, Réalisé, Vérifications réelles
+
+### Community 624 - "Community 624"
+Cohesion: 0.33
+Nodes (5): Commits, Deviations, Phase 05.19 Plan 13 : case rénovation énergétique et fork aides conditionnel, Self-Check: PASSED, Vérifications réelles
+
+### Community 625 - "Community 625"
+Cohesion: 0.50
+Nodes (3): 05.19-12 — Contrôles, vérification UI et application cloud, Points restants (hors plan), Réalisé
+
+### Community 630 - "Community 630"
+Cohesion: 0.29
+Nodes (6): Commits, Deviations from Plan, Known Stubs, Phase 05.19 Plan 15 : interface RGE (pro et admin), Self-Check: PASSED, Vérifications réelles
+
+### Community 631 - "Community 631"
+Cohesion: 0.40
+Nodes (4): Commits, Deviations from Plan, Phase 05.19 Plan 17 : endpoints du coffre-fort RGE, Vérifications réelles
+
 ## Knowledge Gaps
-- **2779 isolated node(s):** `enabled`, `_auto_chain_active`, `research`, `plan_check`, `verifier` (+2774 more)
+- **2924 isolated node(s):** `enabled`, `_auto_chain_active`, `research`, `plan_check`, `verifier` (+2919 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **113 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **124 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Communities (587 total, 109 thin omitted)` connect `Community 311` to `Community 142`?**
-  _High betweenness centrality (0.001) - this node is a cross-community bridge._
-- **Why does `Communities (598 total, 113 thin omitted)` connect `Community 311` to `Community 142`?**
+- **Why does `Phase 4: Le Verrou & Stripe Billing — Research` connect `Community 1` to `Community 14`, `Community 111`, `Community 112`, `Community 113`, `Community 114`, `Community 115`, `Community 116`, `Community 90`?**
   _High betweenness centrality (0.000) - this node is a cross-community bridge._
-- **Why does `Communities (588 total, 109 thin omitted)` connect `Community 311` to `Community 142`?**
+- **Why does `sendEmail()` connect `Community 57` to `Community 528`, `Community 161`, `Community 562`, `Community 564`?**
+  _High betweenness centrality (0.000) - this node is a cross-community bridge._
+- **Why does `Common Pitfalls` connect `Community 14` to `Community 1`?**
   _High betweenness centrality (0.000) - this node is a cross-community bridge._
 - **What connects `enabled`, `_auto_chain_active`, `research` to the rest of the system?**
-  _2779 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _2924 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.05263157894736842 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
