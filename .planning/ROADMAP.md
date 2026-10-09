@@ -379,12 +379,19 @@ Plans:
   4. Dispatching artisans filtre sur `professionals.categories` ∩ `projects.selected_items` (inclusion complète).
   5. L'arborescence JSON est réutilisable dans le code (fonction Nuxt ou fichier statique importable).
 
-**Plans**: 4 plans
+**Plans**: 12 plans (5 exécutés + 7 de rattrapage)
 - [x] 05.19-01-PLAN.md — Schema migration (professional_type, selected_*) + workTypeMatrix.ts
 - [x] 05.19-02-PLAN.md — Tunnel UI refactor (Étape 1-2, 3 categories, multi-select items)
 - [x] 05.19-03-PLAN.md — Matching logic (leads API overlap rule) + Pro profile (9 categories)
 - [x] 05.19-04-PLAN.md — Unit tests (matching) + E2E tests (tunnel) + backward compat verification
 - [x] 05.19-05-PLAN.md — Type de pro « Entreprise Générale du Bâtiment » (EGB) : choix à l'inscription, validation admin (signal NAF), reçoit tous les chantiers
+- [ ] 05.19-06-PLAN.md — (rattrapage) Matching révisé : EGB approuvé par recouvrement, règles 1-2 / 1-9, dates d'ajout des métiers, alerte de coordination
+- [ ] 05.19-07-PLAN.md — (rattrapage) Migration categories_reviewed_at + verrou egb_status/professional_type (local)
+- [ ] 05.19-08-PLAN.md — (rattrapage) Onglet admin « Entreprises générales » (validation EGB)
+- [ ] 05.19-09-PLAN.md — (rattrapage) notifyMatchedPros aligné sur proMatchesProject + selected_items
+- [ ] 05.19-10-PLAN.md — (rattrapage) Inscription et profil : spécialiste 1-2 / EGB 1-9, source unique PROFESSIONAL_CATEGORIES
+- [ ] 05.19-11-PLAN.md — (rattrapage) Bandeau « Nouveau métier disponible » sur le dashboard pro
+- [ ] 05.19-12-PLAN.md — (rattrapage) Contrôle final, validation UI, migrations cloud avec GO utilisateur, types régénérés
 
 **UI hint**: yes
 
