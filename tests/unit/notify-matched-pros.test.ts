@@ -23,15 +23,21 @@ describe('candidateCategories', () => {
 })
 
 describe('filterMatchedPros', () => {
-  const spec = (c: string) => ({ id: c, professional_type: 'specialiste', categories: [c] })
+  const Q = { rge_status: 'valid', decennal_status: 'valid' }
+  const spec = (c: string) => ({ id: c, professional_type: 'specialiste', categories: [c], ...Q })
   const egb = (status: string) => ({
     id: 'egb-' + status, professional_type: 'entreprise_generale', egb_status: status,
-    categories: ['renovation_energetique'],
+    categories: ['renovation_energetique'], ...Q,
   })
   const ids = (l: any[]) => l.map(p => p.id)
 
   it('pac : spécialiste plomberie exclu, EGB approuvé inclus, EGB pending exclu', () => {
     const r = filterMatchedPros([spec('plomberie'), egb('approved'), egb('pending')], { selected_items: ['pac'] })
+    expect(ids(r)).toEqual(['egb-approved'])
+  })
+  it('pac (RGE) : EGB approuvé RGE inclus, non RGE exclu, pending RGE exclu', () => {
+    const nonRge = { ...egb('approved'), id: 'egb-non-rge', rge_status: 'none' }
+    const r = filterMatchedPros([egb('approved'), nonRge, egb('pending')], { selected_items: ['pac'] })
     expect(ids(r)).toEqual(['egb-approved'])
   })
   it('revetement_sol : carrelage inclus, peinture exclu', () => {

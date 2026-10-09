@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
+import { canAccessLead } from '../../../../../app/utils/workTypeMatrix'
 
 const idSchema = z.string().uuid('Identifiant de lead invalide.')
 
@@ -16,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: pro, error: proError } = await supabase
     .from('professionals')
-    .select('id, subscription_status, decennal_status')
+    .select('id, subscription_status, decennal_status, categories, professional_type, egb_status, rge_status')
     .eq('id', user.id)
     .single()
 
@@ -39,12 +40,17 @@ export default defineEventHandler(async (event) => {
   // Verify project exists
   const { data: project, error: projectError } = await supabase
     .from('projects')
-    .select('id, status')
+    .select('id, status, category, selected_items')
     .eq('id', id)
     .single()
 
   if (projectError || !project) {
     throw createError({ statusCode: 404, statusMessage: 'Projet introuvable.' })
+  }
+
+  // 05.19-14 : métiers + qualification RGE (postes énergétiques) vérifiés avant tout claim
+  if (!canAccessLead(pro, project)) {
+    throw createError({ statusCode: 403, statusMessage: 'Ce chantier ne correspond pas à vos métiers ou qualifications (RGE requis pour la rénovation énergétique).' })
   }
 
   // Check how many siblings are already claimed (Cap at 3)

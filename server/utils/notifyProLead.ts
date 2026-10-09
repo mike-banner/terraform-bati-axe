@@ -17,7 +17,7 @@ export function candidateCategories(project: ProjectLike): string[] {
 }
 
 /** Même règle que GET /api/v1/leads (/espace/leads). */
-export function filterMatchedPros<T extends { professional_type?: string | null; egb_status?: string | null; categories?: string[] | null }>(pros: T[], project: ProjectLike): T[] {
+export function filterMatchedPros<T extends { professional_type?: string | null; egb_status?: string | null; categories?: string[] | null; rge_status?: string | null; decennal_status?: string | null }>(pros: T[], project: ProjectLike): T[] {
   return pros.filter(p => proMatchesProject(effectiveProType(p), project))
 }
 
@@ -49,7 +49,7 @@ export async function notifyMatchedPros(supabase: any, project: any): Promise<vo
     // Pros vérifiés, opt-in email actif ; pré-filtre SQL par recouvrement de catégories
     const { data: pros, error: prosError } = await supabase
       .from('professionals')
-      .select('id, email, company_name, full_name, categories, professional_type, egb_status')
+      .select('id, email, company_name, full_name, categories, professional_type, egb_status, rge_status, decennal_status')
       .overlaps('categories', cats)
       .eq('is_verified', true)
       .eq('lead_alerts_email', true)
