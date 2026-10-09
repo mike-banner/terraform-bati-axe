@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseClient } from '#supabase/server'
 
 // CNV-05 D-14/D-15: editable fields; canonical_slug is immutable (T-04.5-15)
-const VALID_CATEGORIES = ['maconnerie', 'toiture', 'electricite', 'plomberie', 'peinture', 'isolation'] as const
+const VALID_CATEGORIES = ['maconnerie', 'toiture', 'electricite', 'plomberie', 'peinture', 'isolation', 'carrelage', 'menuiserie', 'renovation_energetique'] as const
 
 const patchSchema = z.object({
   bio: z.string().max(500, 'La présentation ne peut dépasser 500 caractères.').nullable().optional(),

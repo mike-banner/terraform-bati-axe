@@ -4,6 +4,8 @@ useHead({ title: 'Mon profil public — BÂTI-AXE' })
 
 useRequireAuth()
 
+import { PROFESSIONAL_CATEGORIES } from '~/utils/workTypeMatrix'
+
 const profile = reactive({
   bio: '',
   categories: [] as string[],
@@ -152,29 +154,9 @@ async function saveProfile() {
           <div class="bento-card bg-white rounded-sm border border-slate-200 shadow-sm p-8">
             <h2 class="text-xs font-heading font-semibold text-text tracking-widest uppercase mb-4">Catégories</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
-                <input type="checkbox" v-model="profile.categories" value="maconnerie" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
-                <span class="text-sm font-medium">Maçonnerie &amp; Gros Œuvre</span>
-              </label>
-              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
-                <input type="checkbox" v-model="profile.categories" value="toiture" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
-                <span class="text-sm font-medium">Charpente &amp; Toiture</span>
-              </label>
-              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
-                <input type="checkbox" v-model="profile.categories" value="electricite" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
-                <span class="text-sm font-medium">Électricité</span>
-              </label>
-              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
-                <input type="checkbox" v-model="profile.categories" value="plomberie" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
-                <span class="text-sm font-medium">Plomberie &amp; Chauffage</span>
-              </label>
-              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
-                <input type="checkbox" v-model="profile.categories" value="peinture" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
-                <span class="text-sm font-medium">Peinture &amp; Finitions</span>
-              </label>
-              <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
-                <input type="checkbox" v-model="profile.categories" value="isolation" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
-                <span class="text-sm font-medium">Isolation &amp; Cloisons</span>
+              <label v-for="(label, id) in PROFESSIONAL_CATEGORIES" :key="id" class="flex items-center gap-3 p-3 border border-slate-200 rounded-sm cursor-pointer hover:bg-muted/50 transition-colors">
+                <input type="checkbox" v-model="profile.categories" :value="id" class="rounded border-border text-cta focus:ring-primary/20 cursor-pointer">
+                <span class="text-sm font-medium">{{ label }}</span>
               </label>
             </div>
             <p class="mt-3 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
