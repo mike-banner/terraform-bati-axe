@@ -25,6 +25,10 @@ module "platform" {
   r2_access_key_id           = var.r2_access_key_id
   r2_secret_access_key       = var.r2_secret_access_key
   r2_bucket_name             = var.r2_bucket_name
+  # Buckets propres au staging (sans cela, le module hérite des noms de PROD et entre en collision)
+  r2_bucket_public           = "batiaxe-public-staging"
+  r2_bucket_vault            = "batiaxe-vault-staging"
+  r2_bucket_b2b              = "batiaxe-b2b-staging"
   resend_api_key             = var.resend_api_key
   email_from                 = var.email_from
   onboarding_emails          = var.onboarding_emails

@@ -23,6 +23,26 @@ module "supabase_project" {
   region            = var.supabase_region
 }
 
+# ─── Module R2 (buckets + CORS) ─────────────────────────
+# Les envois de fichiers partent du navigateur vers R2 (URL présignées) : sans CORS sur le bucket,
+# le navigateur bloque la requête. Origines = site *.pages.dev, domaine personnalisé, localhost hors prod.
+
+module "r2_storage" {
+  source = "../r2_storage"
+
+  account_id = var.cloudflare_account_id
+  buckets = {
+    public = var.r2_bucket_public
+    vault  = var.r2_bucket_vault
+    b2b    = var.r2_bucket_b2b
+  }
+  allowed_origins = concat(
+    [module.cloudflare_pages.project_url],
+    lookup(var.environment_domains, var.environment, "") != "" ? ["https://${lookup(var.environment_domains, var.environment, "")}"] : [],
+    var.environment == "production" ? [] : ["http://localhost:3000"]
+  )
+}
+
 # ─── Module Cloudflare Pages ─────────────────────────────────────────────────
 
 module "cloudflare_pages" {
