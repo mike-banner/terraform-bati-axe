@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PROFESSIONAL_CATEGORIES } from '~/utils/workTypeMatrix'
+import { PROFESSIONAL_CATEGORIES, CATEGORY_LIMITS, categoriesError } from '~/utils/workTypeMatrix'
 import { ref, reactive, computed, watch } from 'vue'
 
 useHead({
@@ -132,17 +132,19 @@ const isProFormValid = computed(() =>
   RE_NAME.test(proForm.full_name) &&
   RE_PHONE_FR.test(proForm.phone) &&
   RE_CP.test(proForm.postal_code) &&
-  (proForm.professional_type === 'entreprise_generale' || proForm.categories.length > 0) &&
+  !categoriesErr.value &&
   proForm.cgu_accepted
 )
 
 const categoriesTouched = ref(false)
+const maxCategories = computed(() => CATEGORY_LIMITS[proForm.professional_type].max)
+const categoriesErr = computed(() => categoriesError(proForm.professional_type, proForm.categories))
 
 const toggleCategory = (id: string) => {
   categoriesTouched.value = true
   if (proForm.categories.includes(id)) {
     proForm.categories = proForm.categories.filter(c => c !== id)
-  } else {
+  } else if (proForm.categories.length < maxCategories.value) {
     proForm.categories.push(id)
   }
 }
@@ -169,7 +171,7 @@ async function fetchSuggestedCategories() {
       companyNameAutoFilled.value = true
     }
     if (res.suggested_categories?.length && !categoriesTouched.value && proForm.categories.length === 0 && proForm.professional_type === 'specialiste') {
-      proForm.categories = [...res.suggested_categories]
+      proForm.categories = res.suggested_categories.slice(0, maxCategories.value)
     }
   } catch {
     // Suggestion UX uniquement : une erreur reseau ne doit jamais bloquer le formulaire.
@@ -345,7 +347,7 @@ const handleRegisterCompany = async () => {
         phone:        proForm.phone.replace(/\s/g, ''),
         postal_code:  proForm.postal_code,
         professional_type: proForm.professional_type,
-        categories:   proForm.professional_type === 'entreprise_generale' ? [] : proForm.categories,
+        categories:   proForm.categories,
         sms_opt_in:   proForm.sms_opt_in
       }
     })
@@ -698,10 +700,11 @@ const backToStep2 = () => {
             <label class="block text-sm font-medium text-foreground mb-2">Type d'entreprise <span class="text-red-600">*</span></label>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <button
-                v-for="t in [{ id: 'specialiste', label: 'Spécialiste (un ou plusieurs métiers)' }, { id: 'entreprise_generale', label: 'Entreprise Générale du Bâtiment' }]"
+                v-for="t in [{ id: 'specialiste', label: 'Spécialiste (1 ou 2 métiers)' }, { id: 'entreprise_generale', label: 'Entreprise Générale du Bâtiment (plusieurs métiers)' }]"
                 :key="t.id"
                 type="button"
-                @click="proForm.professional_type = t.id as 'specialiste' | 'entreprise_generale'; if (t.id === 'entreprise_generale') proForm.categories = []"
+                @click="proForm.professional_type = t.id as 'specialiste' | 'entreprise_generale'"
+                :aria-pressed="proForm.professional_type === t.id"
                 class="min-h-10 px-3 py-2 rounded-sm border text-sm font-medium text-left transition-colors"
                 :class="proForm.professional_type === t.id
                   ? 'bg-foreground text-background border-foreground'
@@ -710,19 +713,21 @@ const backToStep2 = () => {
                 {{ t.label }}
               </button>
             </div>
-            <p v-if="proForm.professional_type === 'entreprise_generale'" class="mt-2 text-xs text-muted-foreground">Une entreprise générale est validée manuellement par notre équipe avant de recevoir des chantiers.</p>
+            <p v-if="proForm.professional_type === 'entreprise_generale'" class="mt-2 text-xs text-muted-foreground">Une entreprise générale est validée manuellement par notre équipe avant de recevoir des chantiers. Elle ne reçoit que les chantiers correspondant aux métiers cochés.</p>
           </div>
 
           <!-- Categories -->
-          <div v-if="proForm.professional_type === 'specialiste'">
-            <label class="block text-sm font-medium text-foreground mb-2">Corps de métier <span class="text-red-600">*</span></label>
+          <div>
+            <label class="block text-sm font-medium text-foreground mb-2">Corps de métier ({{ proForm.professional_type === 'specialiste' ? '1 ou 2' : '1 à 9' }}) <span class="text-red-600">*</span></label>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <button
                 v-for="cat in CATEGORIES"
                 :key="cat.id"
                 type="button"
                 @click="toggleCategory(cat.id)"
-                class="h-10 px-3 rounded-sm border text-sm font-medium text-left transition-colors"
+                :aria-pressed="proForm.categories.includes(cat.id)"
+                :disabled="!proForm.categories.includes(cat.id) && proForm.categories.length >= maxCategories"
+                class="h-10 px-3 rounded-sm border text-sm font-medium text-left transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 :class="proForm.categories.includes(cat.id)
                   ? 'bg-foreground text-background border-foreground'
                   : 'border-border text-foreground hover:bg-muted'"
@@ -730,7 +735,7 @@ const backToStep2 = () => {
                 {{ cat.label }}
               </button>
             </div>
-            <p v-if="proForm.categories.length === 0 && proTouched.cgu_accepted" class="mt-2 text-xs text-red-600 font-500">Sélectionnez au moins un corps de métier.</p>
+            <p v-if="categoriesErr && (categoriesTouched || proTouched.cgu_accepted)" role="alert" class="mt-2 text-xs text-red-600 font-500">{{ categoriesErr }}</p>
             <p class="mt-2 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
           </div>
 
