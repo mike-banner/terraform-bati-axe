@@ -203,7 +203,7 @@ const router = useRouter()
 // admin → console, sinon étape 2 (renseigner l'entreprise).
 async function routeAuthedUser(authedUser: any) {
   const { data: pro } = await supabase
-    .from('professionals').select('id').eq('id', authedUser.id).maybeSingle()
+    .from('professionals').select('id').eq('id', authedUser.id ?? authedUser.sub).maybeSingle()
   if (pro) return router.push('/espace/dashboard')
   if (authedUser.app_metadata?.role === 'admin') return router.push('/admin')
   if (authedUser.user_metadata?.full_name) proForm.full_name = authedUser.user_metadata.full_name
