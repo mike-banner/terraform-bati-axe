@@ -38,6 +38,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [ ] **Phase 05.18: Annuaire, Vitrines Publiques & Dashboard Partenaires** — **Reportée au prochain milestone (2026-08-30)**, v1 recentrée sur le B2C. Section Partenaires sur l'accueil `/`, annuaire public par catégorie (`/partenaires/annuaire`), vitrine publique (`/partenaire/[dept]/[slug]`) et dashboard privé de gestion du profil (`/espace/partenaire`).
 - [x] **Phase 05.19: Refonte Arborescence & Tunnels B2C (Nomenclature Client)** — Phase correctrice : remplacement de la sélection par cartes visuelles 3 pôles (Rénovation Globale, Énergétique, Prestations Ciblées), schéma JSON normalisé avec slugs d'items uniques, tagging Supabase (`selected_category`, `selected_sub_category`, `selected_items`) pour le matching des artisans. (completed 2026-10-09) (completed 2026-10-09)
 - [ ] **Phase 05.20: Restructuration Navigation Header & Landing Vitrine Prescripteurs** — Chantier à faire en détail. Menu déroulant Espace Pro (`/pro/artisans` vs `/pro/prescripteurs-partenaires`), landing vitrine d'acquisition 4 piliers (Agents Immo, Syndics, Archis, Courtiers), routage CTA vers `/b2b/partenaires`. Spec client : `.planning/clients/20261009-VITRINE_PRESCRIPTEURS_PARTENAIRES-SPEC_CLIENT.md`
+- [ ] 🚨 **Phase 05.21: Verrou Juridique B2B (Anti-Contournement) & Stripe Connect Split Payment** — **[URGENT - Oubli V1/V2]** Signature numérique du contrat d'apport d'affaires avant assignation d'un lead B2B à un artisan (Verrou Juridique), et intégration du séquestre financier (Stripe Connect) pour sécuriser automatiquement la commission de la plateforme sans recouvrement manuel.
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
 - [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, Dossiers B2B, KPIs, Documents légaux, Journal), search + pagination, projets cliquables. Onglet B2B fusionné (05.10-06) + Documents légaux (05.11-04). (livré 2026-08-22)
 - [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). *(récupéré d'une branche jamais mergée → merge PR #45)*. Reste : brancher Matomo côté client (P1). (livré 2026-08-22)
@@ -379,7 +380,7 @@ Plans:
   4. Dispatching artisans filtre sur `professionals.categories` ∩ `projects.selected_items` (inclusion complète).
   5. L'arborescence JSON est réutilisable dans le code (fonction Nuxt ou fichier statique importable).
 
-**Plans**: 13 plans (5 exécutés + 8 de rattrapage, dont 12 terminés ; le 12 attend ta validation)
+**Plans**: 17 plans (5 exécutés + 12 de rattrapage ; 14 à 17 : qualification RGE, à exécuter)
 - [x] 05.19-01-PLAN.md — Schema migration (professional_type, selected_*) + workTypeMatrix.ts
 - [x] 05.19-02-PLAN.md — Tunnel UI refactor (Étape 1-2, 3 categories, multi-select items)
 - [x] 05.19-03-PLAN.md — Matching logic (leads API overlap rule) + Pro profile (9 categories)
@@ -393,6 +394,10 @@ Plans:
 - [x] 05.19-11-PLAN.md — (rattrapage) Bandeau « Nouveau métier disponible » sur le dashboard pro
 - [x] 05.19-12-PLAN.md — (rattrapage) Contrôle final, validation UI, migrations cloud avec GO utilisateur, types régénérés
 - [x] 05.19-13-PLAN.md — (rattrapage) Case « J’envisage aussi de la rénovation énergétique » et fork aides conditionnel
+- [x] 05.19-14-PLAN.md — (rattrapage) Qualification RGE : migration rge_status (trigger + cron, local), règle canDoEnergy dans le matching / l'alerte, garde canAccessLead sur le détail et le déblocage
+- [x] 05.19-15-PLAN.md — (rattrapage) UI RGE : message et dépôt sur le dashboard/profil pro, validation dans la console admin
+- [x] 05.19-17-PLAN.md — (rattrapage) Document « rge » dans les endpoints du coffre-fort (dépôt pro avec validateRgeUpload testée, validation admin, lectures)
+- [ ] 05.19-16-PLAN.md — (rattrapage) Contrôle local, validation visuelle RGE, migration cloud avec GO utilisateur, types régénérés
 
 **UI hint**: yes
 

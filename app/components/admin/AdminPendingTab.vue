@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { Professional } from '~/types/admin'
+import type { Professional, DocType } from '~/types/admin'
+import { isPendingPro } from '~/types/admin'
 
-defineProps<{
+const props = defineProps<{
   professionals: Professional[]
   isLoading: boolean
   actionLoading: string | null
@@ -11,12 +12,13 @@ defineProps<{
 
 defineEmits<{
   (e: 'approve', proId: string, approved: boolean): void
-  (e: 'moderate', proId: string, docType: 'kbis' | 'decennale', status: 'approved' | 'rejected'): void
+  (e: 'moderate', proId: string, docType: DocType, status: 'approved' | 'rejected'): void
   (e: 'view-doc', fileKey: string): void
   (e: 'update-expiry', key: string, value: string): void
-  (e: 'file-select', event: Event, proId: string, docType: 'kbis' | 'decennale'): void
-  (e: 'upload-doc', proId: string, docType: 'kbis' | 'decennale'): void
+  (e: 'file-select', event: Event, proId: string, docType: DocType): void
+  (e: 'upload-doc', proId: string, docType: DocType): void
 }>()
+const pending = computed(() => props.professionals.filter(isPendingPro))
 </script>
 
 <template>
@@ -25,13 +27,13 @@ defineEmits<{
   </div>
 
   <template v-else>
-    <div v-if="professionals.filter(p => !p.is_verified).length === 0" class="py-16 text-center border border-dashed border-border rounded-sm">
+    <div v-if="pending.length === 0" class="py-16 text-center border border-dashed border-border rounded-sm">
       <p class="text-sm text-muted-foreground">Aucun dossier en attente.</p>
     </div>
 
     <div v-else class="space-y-3">
       <AdminProCard
-        v-for="pro in professionals.filter(p => !p.is_verified)"
+        v-for="pro in pending"
         :key="pro.id"
         :pro="pro"
         :action-loading="actionLoading"

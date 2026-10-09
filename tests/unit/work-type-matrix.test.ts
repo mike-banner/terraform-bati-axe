@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest'
+import { readFileSync } from 'node:fs'
 import {
   CATEGORY_ADDED_AT,
+  canAccessLead,
+  canDoEnergy,
   COMPATIBILITY_MATRIX,
   ENERGY_ITEMS,
   hasEnergyItems,
@@ -12,8 +15,9 @@ import {
   proMatchesProject,
 } from '../../app/utils/workTypeMatrix'
 
-const spec = (categories: string[]) => ({ professional_type: 'specialiste', categories })
-const egb = (categories: string[], egb_status = 'approved') => ({ professional_type: 'entreprise_generale', egb_status, categories })
+const QUALIFIE = { rge_status: 'valid', decennal_status: 'valid' }
+const spec = (categories: string[]) => ({ professional_type: 'specialiste', categories, ...QUALIFIE })
+const egb = (categories: string[], egb_status = 'approved') => ({ professional_type: 'entreprise_generale', egb_status, categories, ...QUALIFIE })
 
 describe('proMatchesProject', () => {
   it('EGB approuvé : recouvrement egbMatches sur un poste réservé', () => {
@@ -111,5 +115,73 @@ describe('hasEnergyItems (05.19-13)', () => {
   it('borne Zod : prestations (11) + énergétique ≤ 30', () => {
     // cf. .max(30) de server/api/v1/projects.post.ts
     expect(11 + ENERGY_ITEMS.length).toBeLessThanOrEqual(30)
+  })
+})
+
+describe('qualification RGE (05.19-14)', () => {
+  const nonRge = { rge_status: 'none', decennal_status: 'valid' }
+  it('canDoEnergy exige RGE valide ET décennale valide', () => {
+    expect(canDoEnergy({ rge_status: 'valid', decennal_status: 'valid' })).toBe(true)
+    for (const [r, d] of [['valid', 'none'], ['valid', 'expired'], ['expired', 'valid'], ['none', 'valid']]) {
+      expect(canDoEnergy({ rge_status: r, decennal_status: d })).toBe(false)
+    }
+    expect(canDoEnergy({})).toBe(false)
+  })
+  it('spécialiste isolation non RGE : poste énergétique refusé, RGE accepté', () => {
+    expect(proMatchesProject({ ...spec(['isolation']), ...nonRge }, { selected_items: ['isolation_ite_iti'] })).toBe(false)
+    expect(proMatchesProject(spec(['isolation']), { selected_items: ['isolation_ite_iti'] })).toBe(true)
+  })
+  it('poste non énergétique retenu : projet mixte accessible', () => {
+    expect(proMatchesProject({ ...spec(['isolation']), ...nonRge }, { selected_items: ['isolation_ite_iti', 'isolation_platrerie'] })).toBe(true)
+  })
+  it('EGB approuvé non RGE : garde ses autres postes, pas les énergétiques seuls', () => {
+    const pro = { ...egb(['renovation_energetique', 'menuiserie']), ...nonRge }
+    expect(proMatchesProject(pro, { selected_items: ['pac', 'cuisine'] })).toBe(true)
+    expect(proMatchesProject(pro, { selected_items: ['pac'] })).toBe(false)
+    expect(proMatchesProject(egb(['renovation_energetique']), { selected_items: ['pac'] })).toBe(true)
+  })
+  it('RGE valide mais décennale expirée : refusé', () => {
+    const exp = { rge_status: 'valid', decennal_status: 'expired' }
+    expect(proMatchesProject({ ...egb(['renovation_energetique']), ...exp }, { selected_items: ['pac'] })).toBe(false)
+    expect(proMatchesProject({ ...spec(['plomberie']), ...exp }, { selected_items: ['chaudiere_reno'] })).toBe(false)
+  })
+  it('projet legacy sans postes : repli catégorie inchangé', () => {
+    expect(proMatchesProject({ ...spec(['plomberie']), ...nonRge }, { selected_items: [], category: 'plomberie' })).toBe(true)
+  })
+  it('chaque poste ENERGY_ITEMS est refusé à un pro non RGE ayant toutes les catégories', () => {
+    const pro = { ...egb(Object.keys(PROFESSIONAL_CATEGORIES)), ...nonRge }
+    for (const item of ENERGY_ITEMS) expect(proMatchesProject(pro, { selected_items: [item] })).toBe(false)
+  })
+})
+
+describe('garde canAccessLead — GET /api/v1/leads/[id] et PATCH /api/v1/leads/[id]/claim (05.19-14)', () => {
+  const nonRge = { rge_status: 'none', decennal_status: 'valid' }
+  it('chantier énergétique : refusé non RGE, accepté RGE', () => {
+    expect(canAccessLead({ ...spec(['plomberie']), ...nonRge }, { selected_items: ['chaudiere_reno'] })).toBe(false)
+    expect(canAccessLead(spec(['plomberie']), { selected_items: ['chaudiere_reno'] })).toBe(true)
+  })
+  it('chantier non énergétique : accepté sans RGE', () => {
+    expect(canAccessLead({ ...spec(['menuiserie']), ...nonRge }, { selected_items: ['cuisine'] })).toBe(true)
+    expect(canAccessLead({ ...spec(['isolation']), ...nonRge }, { selected_items: ['isolation_platrerie'] })).toBe(true)
+  })
+  it('EGB non RGE : non énergétique et mixte acceptés (R-03 bis)', () => {
+    const pro = { ...egb(['renovation_energetique', 'menuiserie']), ...nonRge }
+    expect(canAccessLead(pro, { selected_items: ['cuisine'] })).toBe(true)
+    expect(canAccessLead(pro, { selected_items: ['pac', 'cuisine'] })).toBe(true)
+  })
+  it('projet ancien sans postes (null et []) : repli catégorie, RGE ou non', () => {
+    for (const selected_items of [null, []]) {
+      expect(canAccessLead({ ...spec(['plomberie']), ...nonRge }, { selected_items, category: 'plomberie' })).toBe(true)
+      expect(canAccessLead(spec(['plomberie']), { selected_items, category: 'toiture' })).toBe(false)
+    }
+  })
+  it('lead déjà débloqué : accès conservé', () => {
+    expect(canAccessLead({ ...spec(['plomberie']), ...nonRge }, { selected_items: ['pac'] }, true)).toBe(true)
+  })
+  it.each(['server/api/v1/leads/[id].get.ts', 'server/api/v1/leads/[id]/claim.patch.ts'])('%s appelle la garde', (f) => {
+    const src = readFileSync(new URL('../../' + f, import.meta.url), 'utf8')
+    expect(src).toContain('canAccessLead(')
+    expect(src).toContain('statusCode: 403')
+    expect(src).toContain('selected_items')
   })
 })

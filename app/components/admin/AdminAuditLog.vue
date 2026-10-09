@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { DocType } from '~/types/admin'
+import { DOC_LABELS } from '~/types/admin'
 interface AuditLog {
   id: string
   actor_id: string
@@ -32,7 +34,7 @@ function actionInfo(action: string) {
 function metaSummary(log: AuditLog): string {
   const m = log.metadata || {}
   if (log.action === 'doc_validated') {
-    const doc = m.document_type === 'decennale' ? 'Décennale' : 'KBIS'
+    const doc = DOC_LABELS[m.document_type as DocType] ?? 'KBIS'
     const st = m.status === 'approved' ? 'approuvé' : 'rejeté'
     return `${doc} ${st}`
   }

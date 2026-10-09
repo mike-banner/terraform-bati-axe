@@ -16,6 +16,7 @@ const profile = reactive({
   company_name: '',
   phone: '',
   professional_type: 'specialiste' as string,
+  rge_status: '',
 })
 
 const limit = computed(() => CATEGORY_LIMITS[profile.professional_type as 'specialiste' | 'entreprise_generale']?.max ?? 2)
@@ -40,6 +41,7 @@ const { refresh } = await useAsyncData('pro-profile-page', async () => {
       company_name: data.profile.company_name || '',
       phone: data.profile.phone || '',
       professional_type: data.profile.professional_type || 'specialiste',
+      rge_status: data.profile.rge_status || '',
     })
     fetchError.value = false
   } catch {
@@ -171,6 +173,11 @@ async function saveProfile() {
             </div>
             <p v-if="catError" role="alert" class="mt-2 text-xs text-red-600">{{ catError }}</p>
             <p class="mt-3 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
+            <p v-if="profile.rge_status === 'valid'" class="mt-2 text-xs font-semibold text-foreground" data-testid="profil-rge">Qualification RGE : validée</p>
+            <p v-else-if="profile.categories.includes('renovation_energetique')" class="mt-2 text-xs text-muted-foreground" data-testid="profil-rge">
+              Rénovation énergétique : ajoutez votre attestation RGE pour recevoir ces chantiers.
+              <NuxtLink to="/espace/dashboard" class="font-semibold underline underline-offset-2">Déposer mon attestation</NuxtLink>
+            </p>
           </div>
           
         </div>

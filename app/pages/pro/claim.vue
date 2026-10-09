@@ -245,12 +245,16 @@ if (prospectId.value) {
 }
 
 // ─── Upload state ─────────────────────────────────────────────────────────────
-const files = reactive({ kbis: null as File | null, decennale: null as File | null })
+const files = reactive({ kbis: null as File | null, decennale: null as File | null, rge: null as File | null })
 const uploads = reactive({
   kbis:      { status: 'idle' as 'idle' | 'uploading' | 'success' | 'error', error: '' },
   decennale: { status: 'idle' as 'idle' | 'uploading' | 'success' | 'error', error: '',
-    policyNumber: '', expirationDate: '' }
+    policyNumber: '', expirationDate: '' },
+  rge:       { status: 'idle' as 'idle' | 'uploading' | 'success' | 'error', error: '', expirationDate: '' }
 })
+// RGE : proposé seulement si le pro a déclaré la rénovation énergétique ; facultatif à l'inscription
+const showRgeUpload = computed(() => proForm.categories.includes('renovation_energetique'))
+const minRgeDate = new Date(Date.now() + 86400000).toISOString().slice(0, 10)
 
 // ─── Handlers ─────────────────────────────────────────────────────────────────
 const touchAllAuth = () => {
@@ -370,7 +374,7 @@ const handleRegisterCompany = async () => {
   }
 }
 
-const handleFileSelect = (event: Event, type: 'kbis' | 'decennale') => {
+const handleFileSelect = (event: Event, type: 'kbis' | 'decennale' | 'rge') => {
   const target = event.target as HTMLInputElement
   if (target.files?.[0]) {
     files[type] = target.files[0]
@@ -379,10 +383,11 @@ const handleFileSelect = (event: Event, type: 'kbis' | 'decennale') => {
   }
 }
 
-const uploadDocument = async (type: 'kbis' | 'decennale') => {
+const uploadDocument = async (type: 'kbis' | 'decennale' | 'rge') => {
   const file = files[type]
   if (!file) return
   if (type === 'decennale' && (!uploads.decennale.policyNumber || !uploads.decennale.expirationDate)) return
+  if (type === 'rge' && !uploads.rge.expirationDate) return
 
   uploads[type].status = 'uploading'
   uploads[type].error  = ''
@@ -406,6 +411,7 @@ const uploadDocument = async (type: 'kbis' | 'decennale') => {
       uploadBody.policy_number   = uploads.decennale.policyNumber
       uploadBody.expiration_date = uploads.decennale.expirationDate
     }
+    if (type === 'rge') uploadBody.expiration_date = uploads.rge.expirationDate
     await $fetch('/api/v1/pro/documents/upload', { method: 'POST', body: uploadBody })
 
     uploads[type].status = 'success'
@@ -882,6 +888,47 @@ const backToStep2 = () => {
             >
               <svg v-if="uploads.decennale.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
               {{ uploads.decennale.status === 'uploading' ? 'Envoi en cours…' : 'Envoyer la décennale' }}
+            </button>
+          </div>
+        </div>
+
+        <div v-if="showRgeUpload" class="bento-card border border-slate-200 rounded-sm p-8" :class="uploads.rge.status === 'success' ? 'border-foreground/30' : ''" data-testid="claim-rge">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <p class="text-sm font-semibold text-foreground">Attestation RGE <span class="text-muted-foreground font-normal">(facultatif)</span></p>
+              <p class="text-xs text-muted-foreground mt-0.5">Rénovation énergétique : ajoutez votre attestation RGE pour recevoir ces chantiers. Vous pourrez aussi la déposer plus tard depuis votre espace.</p>
+            </div>
+            <div v-if="uploads.rge.status === 'success'" class="flex items-center gap-1.5 text-xs font-semibold text-green-700">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              Envoyée
+            </div>
+          </div>
+
+          <div v-if="uploads.rge.status !== 'success'" class="space-y-3">
+            <div>
+              <label class="block text-xs text-muted-foreground mb-1" for="rge-expiration">Date d'expiration <span class="text-red-500">*</span></label>
+              <input
+                id="rge-expiration"
+                v-model="uploads.rge.expirationDate"
+                type="date"
+                required
+                :min="minRgeDate"
+                class="h-9 w-full sm:w-1/2 px-3 border border-border rounded-sm text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
+              />
+            </div>
+            <label class="flex items-center gap-3 cursor-pointer text-sm">
+              <input type="file" @change="handleFileSelect($event, 'rge')" accept=".pdf,image/*" class="sr-only" />
+              <span class="h-9 px-4 border border-border rounded-sm text-xs font-medium hover:bg-muted transition-colors flex items-center gap-2">Choisir un fichier</span>
+              <span class="text-xs text-muted-foreground truncate max-w-[180px]">{{ files.rge ? files.rge.name : 'Aucun fichier sélectionné' }}</span>
+            </label>
+            <div v-if="uploads.rge.status === 'error'" role="alert" class="text-xs text-red-600">{{ uploads.rge.error }}</div>
+            <button
+              v-if="files.rge"
+              @click="uploadDocument('rge')"
+              :disabled="uploads.rge.status === 'uploading' || !uploads.rge.expirationDate"
+              class="h-9 px-4 bg-foreground text-background text-xs font-semibold rounded-sm hover:opacity-80 transition-opacity disabled:opacity-50"
+            >
+              {{ uploads.rge.status === 'uploading' ? 'Envoi en cours…' : "Envoyer l'attestation RGE" }}
             </button>
           </div>
         </div>

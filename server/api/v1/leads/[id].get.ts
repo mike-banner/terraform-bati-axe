@@ -1,5 +1,6 @@
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { maskLead } from '../../../utils/maskLead'
+import { canAccessLead } from '../../../../app/utils/workTypeMatrix'
 
 export default defineEventHandler(async (event) => {
   const supabaseAuth = await serverSupabaseClient(event) as any
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: pro, error: proError } = await supabase
     .from('professionals')
-    .select('id, subscription_status, free_leads_used')
+    .select('id, subscription_status, free_leads_used, categories, professional_type, egb_status, rge_status, decennal_status')
     .eq('id', user.id)
     .single()
 
@@ -36,7 +37,7 @@ export default defineEventHandler(async (event) => {
   // 1. Check if project exists
   const { data: project, error: projectError } = await supabase
     .from('projects')
-    .select('id, category, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code, created_at, qualify_score, qualify_budget, qualify_phone, qualify_description, qualify_returning')
+    .select('id, category, selected_items, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code, created_at, qualify_score, qualify_budget, qualify_phone, qualify_description, qualify_returning')
     .eq('id', id)
     .single()
 
@@ -51,6 +52,11 @@ export default defineEventHandler(async (event) => {
     .eq('project_id', id)
     .eq('pro_id', user.id)
     .single()
+
+  // 05.19-14 : garde métiers + RGE avant tout free-grant ; un lead déjà débloqué reste accessible
+  if (!canAccessLead(pro, project, !!lead)) {
+    throw createError({ statusCode: 403, statusMessage: 'Ce chantier ne correspond pas à vos métiers ou qualifications (RGE requis pour la rénovation énergétique).' })
+  }
 
   const virtualLead = {
     id: lead?.id || project.id,

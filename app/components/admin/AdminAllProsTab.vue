@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Professional } from '~/types/admin'
+import type { Professional, DocType } from '~/types/admin'
 import { CATEGORY_LABELS } from '~/types/admin'
 
 const props = defineProps<{
@@ -12,11 +12,11 @@ const props = defineProps<{
 
 defineEmits<{
   (e: 'approve', proId: string, approved: boolean): void
-  (e: 'moderate', proId: string, docType: 'kbis' | 'decennale', status: 'approved' | 'rejected'): void
+  (e: 'moderate', proId: string, docType: DocType, status: 'approved' | 'rejected'): void
   (e: 'view-doc', fileKey: string): void
   (e: 'update-expiry', key: string, value: string): void
-  (e: 'file-select', event: Event, proId: string, docType: 'kbis' | 'decennale'): void
-  (e: 'upload-doc', proId: string, docType: 'kbis' | 'decennale'): void
+  (e: 'file-select', event: Event, proId: string, docType: DocType): void
+  (e: 'upload-doc', proId: string, docType: DocType): void
 }>()
 
 const searchQuery = ref('')

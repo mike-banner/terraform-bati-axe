@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { Professional, Project, Realisation, Overview } from '~/types/admin'
+import type { Professional, Project, Realisation, Overview, DocType } from '~/types/admin'
+import { isPendingPro } from '~/types/admin'
 
 definePageMeta({ layout: 'admin' })
 
@@ -23,7 +24,7 @@ const uploadState = reactive<Record<string, { file: File | null, status: 'idle' 
 
 // ─── Access ───────────────────────────────────────────────────────────────────
 const isAdmin = computed(() => (user.value as any)?.app_metadata?.role === 'admin')
-const pendingCount = computed(() => professionals.value.filter(p => !p.is_verified).length)
+const pendingCount = computed(() => professionals.value.filter(isPendingPro).length)
 
 // ─── Data fetching ────────────────────────────────────────────────────────────
 async function fetchAll() {
@@ -77,7 +78,7 @@ async function approvePro(proId: string, approved: boolean) {
   }
 }
 
-async function moderateDocument(proId: string, docType: 'kbis' | 'decennale', status: 'approved' | 'rejected') {
+async function moderateDocument(proId: string, docType: DocType, status: 'approved' | 'rejected') {
   const key = `${proId}-${docType}`
   actionLoading.value = key
   errorMessage.value = null
@@ -95,15 +96,20 @@ async function moderateDocument(proId: string, docType: 'kbis' | 'decennale', st
 }
 
 // ─── Upload admin documents ───────────────────────────────────────────────────
-function onFileSelect(e: Event, proId: string, docType: 'kbis' | 'decennale') {
+function onFileSelect(e: Event, proId: string, docType: DocType) {
   const f = (e.target as HTMLInputElement).files?.[0]
   if (f) uploadState[`${proId}-${docType}`] = { file: f, status: 'idle', error: '' }
 }
 
-async function uploadAdminDoc(proId: string, docType: 'kbis' | 'decennale') {
+async function uploadAdminDoc(proId: string, docType: DocType) {
   const key = `${proId}-${docType}`
   const state = uploadState[key]
   if (!state?.file) return
+  // CHECK base : un justificatif RGE porte toujours une date d'expiration
+  if (docType === 'rge' && !expiryDates.value[key]) {
+    state.error = "Date d'expiration requise pour l'attestation RGE."
+    return
+  }
   state.status = 'uploading'
   state.error = ''
   try {
@@ -115,7 +121,8 @@ async function uploadAdminDoc(proId: string, docType: 'kbis' | 'decennale') {
     const res = await fetch(presign.signedUrl, { method: 'PUT', headers: { 'Content-Type': state.file.type }, body: state.file })
     if (!res.ok) throw new Error('Échec du transfert vers Cloudflare R2.')
     await (supabase as any).from('verifications').insert({
-      pro_id: proId, document_type: docType, file_key: presign.fileKey, status: 'approved'
+      pro_id: proId, document_type: docType, file_key: presign.fileKey, status: 'approved',
+      ...(docType === 'rge' ? { expiry_date: expiryDates.value[key] } : {}),
     })
     state.status = 'idle'
     state.file = null

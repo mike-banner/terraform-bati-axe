@@ -10,7 +10,7 @@ import { maskLead } from '../../server/utils/maskLead'
 // Complète work-type-matrix.test.ts et egb-gate.test.ts : intégrité de la matrice,
 // combinaison gate EGB x projet legacy, multi-catégories, masquage ADR-004.
 
-const eg = (egb_status: string, categories: string[] = ['electricite', 'toiture']) => ({ professional_type: 'entreprise_generale', egb_status, categories })
+const eg = (egb_status: string, categories: string[] = ['electricite', 'toiture']) => ({ professional_type: 'entreprise_generale', egb_status, categories, rge_status: 'valid', decennal_status: 'valid' })
 const matchesGate = (pro: any, projet: any) => proMatchesProject(effectiveProType(pro), projet)
 
 describe('intégrité de COMPATIBILITY_MATRIX', () => {
@@ -76,7 +76,7 @@ describe('gate EGB x projets', () => {
   })
 
   it('spécialiste multi-catégories : un seul recouvrement suffit', () => {
-    const pro = { professional_type: 'specialiste', categories: ['plomberie', 'carrelage'] }
+    const pro = { professional_type: 'specialiste', categories: ['plomberie', 'carrelage'], rge_status: 'valid', decennal_status: 'valid' }
     expect(proMatchesProject(pro, { selected_items: ['salle_de_bain'] })).toBe(true)
     expect(proMatchesProject(pro, { selected_items: ['maconnerie', 'chaudiere_reno'] })).toBe(true)
     expect(proMatchesProject(pro, { selected_items: ['maconnerie', 'peinture_finitions'] })).toBe(false)

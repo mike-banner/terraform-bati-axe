@@ -3,7 +3,7 @@ import { effectiveProType, proMatchesProject } from '../../app/utils/workTypeMat
 import { maskLead } from '../../server/utils/maskLead'
 
 const projet = { selected_items: ['pac'], category: 'plomberie' }
-const matches = (pro: any) => proMatchesProject(effectiveProType(pro), projet)
+const matches = (pro: any) => proMatchesProject(effectiveProType({ rge_status: 'valid', decennal_status: 'valid', ...pro }), projet)
 
 describe('gate EGB', () => {
   it('EGB approved sans catégorie : rien', () => {

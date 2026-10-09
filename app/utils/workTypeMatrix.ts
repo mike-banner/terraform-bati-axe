@@ -83,15 +83,21 @@ export const ENERGY_ITEMS = ['pac', 'chaudiere_reno', 'borne_irve', 'vmc_chauffa
 export const hasEnergyItems = (items: readonly string[] | null | undefined): boolean =>
   !!items?.some(i => (ENERGY_ITEMS as readonly string[]).includes(i))
 
+/** Qualification RGE (05.19-14) : attestation RGE validée ET décennale valide. Seule source de la règle. */
+export const canDoEnergy = (pro: { rge_status?: string | null; decennal_status?: string | null }): boolean =>
+  pro.rge_status === 'valid' && pro.decennal_status === 'valid'
+
 /**
  * Un pro reçoit-il ce chantier ? (règle de recouvrement, 05.19)
  * - EGB non approuvé : jamais
  * - spécialiste : ≥1 poste dont specialistMatches recoupe ses catégories
  * - EGB approuvé : idem, avec en plus egbMatches (postes réservés EGB)
+ * - postes ENERGY_ITEMS : seulement si canDoEnergy (RGE + décennale valides) ; un projet mixte
+ *   retenu via un poste non énergétique reste accessible en entier (aucun masquage poste par poste)
  * - sans postes (projet legacy) : repli sur la catégorie unique du projet
  */
 export function proMatchesProject(
-  pro: { professional_type?: string | null; egb_status?: string | null; categories?: string[] | null },
+  pro: { professional_type?: string | null; egb_status?: string | null; categories?: string[] | null; rge_status?: string | null; decennal_status?: string | null },
   project: { selected_items?: string[] | null; category?: string | null },
 ): boolean {
   const isEgb = pro.professional_type === 'entreprise_generale'
@@ -99,7 +105,9 @@ export function proMatchesProject(
   const cats = pro.categories ?? []
   const items = project.selected_items ?? []
   if (items.length === 0) return !!project.category && cats.includes(project.category)
+  const energyOk = canDoEnergy(pro)
   return items.some((i) => {
+    if (!energyOk && (ENERGY_ITEMS as readonly string[]).includes(i)) return false
     const r = COMPATIBILITY_MATRIX[i]
     if (!r) return false
     const m = isEgb ? [...r.specialistMatches, ...(r.egbMatches ?? [])] : r.specialistMatches
@@ -111,12 +119,19 @@ export function proMatchesProject(
  * Gate EGB (05.19-05) : une entreprise générale non approuvée est traitée comme
  * un spécialiste sans catégorie (aucun lead).
  */
-export function effectiveProType<T extends { professional_type?: string | null; egb_status?: string | null; categories?: string[] | null }>(pro: T): T {
+export function effectiveProType<T extends { professional_type?: string | null; egb_status?: string | null; categories?: string[] | null; rge_status?: string | null; decennal_status?: string | null }>(pro: T): T {
   if (pro.professional_type === 'entreprise_generale' && pro.egb_status !== 'approved') {
     return { ...pro, professional_type: 'specialiste', categories: [] }
   }
   return pro
 }
+
+/** Garde d'accès au détail / déblocage d'un chantier (05.19-14). Une ligne `leads` existante conserve l'accès (chantier déjà débloqué avant une perte de RGE). */
+export const canAccessLead = (
+  pro: Parameters<typeof proMatchesProject>[0],
+  project: Parameters<typeof proMatchesProject>[1],
+  hasExistingLead = false,
+): boolean => hasExistingLead || proMatchesProject(effectiveProType(pro), project)
 
 export const CATEGORY_LIMITS: Record<ProfessionalType, { min: number; max: number }> = {
   specialiste: { min: 1, max: 2 },

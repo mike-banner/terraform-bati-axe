@@ -15,6 +15,7 @@ interface Pro {
   lead_alerts_email?: boolean
   professional_type?: string | null
   categories_reviewed_at?: string | null
+  rge_status?: 'none' | 'valid' | 'expired' | null
 }
 interface Verif {
   document_type: string; status: string; expiry_date: string | null; created_at: string
@@ -48,7 +49,7 @@ async function loadProData() {
     }
     const [{ data: proData, error: proErr }, { data: verifData, error: verifErr }, { count: zoneCount }] = await Promise.all([
       supabase.from('professionals')
-        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, siret_legal_form, siret_naf_code, created_at, categories, bio, logo_url, is_available_subcontracting, workforce_size, lead_alerts_email, professional_type, categories_reviewed_at')
+        .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, siret_legal_form, siret_naf_code, created_at, categories, bio, logo_url, is_available_subcontracting, workforce_size, lead_alerts_email, professional_type, categories_reviewed_at, rge_status')
         .eq('id', uid).maybeSingle(),
       supabase.from('verifications')
         .select('document_type, status, expiry_date, created_at, file_key, reviewed_at')
@@ -79,6 +80,7 @@ watch(user, () => loadProData(), { immediate: true })
 
 const kbis      = computed(() => verifs.value?.find(v => v.document_type === 'kbis'))
 const decennale = computed(() => verifs.value?.find(v => v.document_type === 'decennale'))
+const rge       = computed(() => verifs.value?.find(v => v.document_type === 'rge'))
 
 // Nom de fichier lisible (dernier segment de la clé R2) + dates
 const docFileName = (key?: string) => key ? key.split('/').pop() : ''
@@ -100,7 +102,7 @@ const docStatus = (doc: any) => {
       if (daysLeft < 0) {
         return { label: 'Expiré ⚠️', cls: 'text-red-700 border-red-200 bg-red-50' }
       }
-      const warningDays = doc.document_type === 'decennale' ? 30 : 14
+      const warningDays = doc.document_type === 'decennale' || doc.document_type === 'rge' ? 30 : 14
       if (daysLeft <= warningDays) {
         return { label: 'Expire bientôt', cls: 'text-amber-700 border-amber-300 bg-amber-50' }
       }
@@ -117,6 +119,20 @@ const uploads = reactive({
   kbis:      { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '' },
   decennale: { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '',
     policyNumber: '', expirationDate: '' },
+  rge:       { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '', expirationDate: '' },
+})
+
+// Attribut min du champ date RGE : demain (le serveur exige une date strictement future)
+const minRgeDate = new Date(Date.now() + 86400000).toISOString().slice(0, 10)
+
+// Libellé du statut RGE (R-04) : rge_status vient de professionals (lecture seule), la ligne verifications affine pending/rejected
+const rgeLabel = computed(() => {
+  if (pro.value?.rge_status === 'valid') return `Validée jusqu'au ${docFmtDate(rge.value?.expiry_date)}`
+  if (pro.value?.rge_status === 'expired') return 'Expirée — renvoyez votre attestation'
+  if (!rge.value) return 'Non envoyée'
+  if (rge.value.status === 'pending') return 'En attente de validation'
+  if (rge.value.status === 'rejected') return 'Refusée — renvoyez une attestation'
+  return 'Non envoyée'
 })
 
 // ─── Capacité sous-traitance (05.11-02) ─────────────────────────────────────
@@ -200,12 +216,12 @@ async function saveCapacity() {
   }
 }
 
-function onFileSelect(e: Event, type: 'kbis' | 'decennale') {
+function onFileSelect(e: Event, type: 'kbis' | 'decennale' | 'rge') {
   const f = (e.target as HTMLInputElement).files?.[0]
   if (f) { uploads[type].file = f; uploads[type].status = 'idle'; uploads[type].error = '' }
 }
 
-async function uploadDoc(type: 'kbis' | 'decennale') {
+async function uploadDoc(type: 'kbis' | 'decennale' | 'rge') {
   const file = uploads[type].file
   if (!file) return
   uploads[type].status = 'uploading'
@@ -230,13 +246,14 @@ async function uploadDoc(type: 'kbis' | 'decennale') {
       uploadBody.policy_number  = uploads.decennale.policyNumber
       uploadBody.expiration_date = uploads.decennale.expirationDate
     }
+    if (type === 'rge') uploadBody.expiration_date = uploads.rge.expirationDate
     const { error: insertErr } = await $fetch<{ error: string | null }>('/api/v1/pro/documents/upload', { method: 'POST', body: uploadBody })
     if (insertErr) throw new Error(insertErr)
     uploads[type].status = 'success'
     await loadProData() // refresh badges
   } catch (err: any) {
     uploads[type].status = 'error'
-    const errorMsg = err.data?.message || err.message || 'Erreur.'
+    const errorMsg = err.data?.statusMessage || err.data?.message || err.message || 'Erreur.'
     // Différencier l'erreur pour aider au debug
     if (errorMsg === 'Failed to fetch') {
       uploads[type].error = 'Erreur réseau (CORS ou blocage navigateur) lors du transfert vers R2.'
@@ -266,6 +283,9 @@ const currentStepIndex = computed(() => {
 })
 
 const docsComplete = computed(() => !!kbis.value && !!decennale.value)
+// Le dépôt RGE n'est proposé qu'aux pros qui ont déclaré la rénovation énergétique (ou qui ont déjà un RGE en cours/validé)
+const showRge = computed(() =>
+  !!pro.value?.categories?.includes('renovation_energetique') || (!!pro.value?.rge_status && pro.value.rge_status !== 'none'))
 </script>
 
 <template>
@@ -479,6 +499,56 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
           </div>
           <p v-if="docPeriod(decennale)" class="mt-1 ml-6 text-sm text-foreground leading-snug">
             {{ docPeriod(decennale)!.prefix }}<span class="text-base font-bold">{{ docPeriod(decennale)!.date1 }}</span>{{ docPeriod(decennale)!.middle }}<span v-if="docPeriod(decennale)!.date2" class="text-base font-bold">{{ docPeriod(decennale)!.date2 }}</span>
+          </p>
+        </div>
+
+        <!-- Attestation RGE (R-04) : facultative, n'entre pas dans docsComplete -->
+        <div v-if="showRge" class="mt-4 pt-4 border-t border-border/50" data-testid="rge-block">
+          <p class="text-xs font-semibold text-foreground mb-1">Attestation RGE <span class="text-muted-foreground font-normal">(PDF, JPG, PNG)</span></p>
+          <template v-if="pro?.rge_status !== 'valid'">
+            <p class="text-xs font-semibold text-foreground" data-testid="rge-invite">Rénovation énergétique : ajoutez votre attestation RGE pour recevoir ces chantiers</p>
+            <p class="text-xs text-muted-foreground mt-0.5 mb-2">Les chantiers de pompe à chaleur, solaire, isolation thermique… ne sont proposés qu'aux entreprises RGE dont la décennale est valide.</p>
+          </template>
+          <p class="text-xs mb-2 flex items-center gap-2 flex-wrap">
+            <span class="text-muted-foreground">Statut :</span>
+            <span :class="docStatus(rge).cls" class="px-2 py-0.5 border rounded-full font-semibold" data-testid="rge-status">{{ rgeLabel }}</span>
+          </p>
+          <div v-if="rge?.status !== 'pending' && uploads.rge.status !== 'success'" class="space-y-3">
+            <div>
+              <label class="block text-xs text-muted-foreground mb-1">Date de fin de validité de la qualification <span class="text-red-500">*</span></label>
+              <input
+                v-model="uploads.rge.expirationDate"
+                type="date"
+                required
+                :min="minRgeDate"
+                class="h-9 w-full sm:w-60 px-3 border border-border rounded-sm text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
+              />
+            </div>
+            <div class="flex items-center gap-3 flex-wrap">
+              <label class="cursor-pointer">
+                <input type="file" @change="onFileSelect($event, 'rge')" accept=".pdf,image/jpeg,image/png,image/webp" class="sr-only" />
+                <span class="h-9 px-4 border border-border rounded-sm text-xs font-medium bg-white hover:bg-muted transition-colors flex items-center gap-2">Choisir</span>
+              </label>
+              <span class="text-xs text-muted-foreground truncate max-w-[180px]">{{ uploads.rge.file ? uploads.rge.file.name : 'Aucun fichier' }}</span>
+              <button
+                v-if="uploads.rge.file"
+                type="button"
+                @click="uploadDoc('rge')"
+                :disabled="uploads.rge.status === 'uploading' || !uploads.rge.expirationDate || uploads.rge.expirationDate < minRgeDate"
+                class="h-9 px-5 bg-safety text-white text-xs font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-50"
+              >
+                {{ uploads.rge.status === 'uploading' ? 'Envoi…' : "Envoyer l'attestation RGE" }}
+              </button>
+            </div>
+          </div>
+          <p v-if="uploads.rge.status === 'error'" class="text-xs text-red-600 mt-1">{{ uploads.rge.error }}</p>
+          <p v-if="uploads.rge.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ Attestation RGE envoyée — validation par notre équipe sous 48 h ouvrées</p>
+        </div>
+        <div v-else class="mt-4 pt-4 border-t border-border/50" data-testid="rge-hint">
+          <p class="text-xs text-muted-foreground">
+            Vous faites de la rénovation énergétique ? Ajoutez ce métier dans
+            <NuxtLink to="/espace/profil" class="font-semibold underline underline-offset-2">votre profil</NuxtLink>
+            pour déposer votre attestation RGE.
           </p>
         </div>
 

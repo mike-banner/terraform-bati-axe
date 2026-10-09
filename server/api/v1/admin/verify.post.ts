@@ -2,12 +2,13 @@ import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 import { sendEmail } from '../../../utils/email'
 import { renderEmail } from '../../../utils/emailLayout'
+import { ISO_DATE } from '../../../utils/rgeUpload'
 
 const verifySchema = z.object({
   pro_id: z.string().uuid(),
-  document_type: z.enum(['kbis', 'decennale']),
+  document_type: z.enum(['kbis', 'decennale', 'rge']),
   status: z.enum(['approved', 'rejected']),
-  expiry_date: z.string().optional(), // Optional date format YYYY-MM-DD
+  expiry_date: z.string().regex(ISO_DATE, 'Date invalide.').optional(), // format YYYY-MM-DD
   rejection_reason: z.string().min(5, 'Le motif doit faire au moins 5 caractères.').max(500, 'Le motif ne peut dépasser 500 caractères.').optional(),
 })
 
@@ -52,7 +53,7 @@ export default defineEventHandler(async (event) => {
     // First, find the latest pending verification row to update
     const { data: latestVerification } = await supabase
       .from('verifications')
-      .select('id')
+      .select('id, expiry_date')
       .eq('pro_id', pro_id)
       .eq('document_type', document_type)
       .order('created_at', { ascending: false })
@@ -61,13 +62,20 @@ export default defineEventHandler(async (event) => {
 
     const verificationStatus = status === 'approved' ? 'approved' : 'rejected'
 
+    // RGE : une échéance est obligatoire (CHECK base) ; on ne l'écrase jamais par null.
+    // Le statut RGE du profil est dérivé par trigger SQL, jamais écrit ici.
+    const isRge = document_type === 'rge'
+    if (isRge && !expiry_date && !latestVerification?.expiry_date) {
+      throw createError({ statusCode: 400, statusMessage: "Date d'expiration requise pour l'attestation RGE." })
+    }
+
     if (latestVerification) {
       // Update existing record
       await supabase
         .from('verifications')
         .update({
           status: verificationStatus,
-          expiry_date: expiry_date || null,
+          ...(isRge ? (expiry_date ? { expiry_date } : {}) : { expiry_date: expiry_date || null }),
           reviewed_by: userId,
           reviewed_at: new Date().toISOString()
         })
@@ -113,8 +121,8 @@ export default defineEventHandler(async (event) => {
           .update({ is_verified: true })
           .eq('id', pro_id)
       }
-    } else {
-      // If rejected, remove verified state
+    } else if (!isRge) {
+      // If rejected, remove verified state (un refus RGE ne dé-vérifie pas le pro)
       await supabase
         .from('professionals')
         .update({ is_verified: false })
@@ -145,7 +153,7 @@ export default defineEventHandler(async (event) => {
 
       if (pro?.email) {
         const siteUrl = useRuntimeConfig().public.siteUrl || 'https://bati-axe.com'
-        const docLabel = document_type === 'decennale' ? 'attestation décennale' : 'extrait Kbis'
+        const docLabel = document_type === 'decennale' ? 'attestation décennale' : document_type === 'rge' ? 'attestation RGE' : 'extrait Kbis'
         const approved = status === 'approved'
         await sendEmail({
           to: pro.email,
