@@ -76,6 +76,13 @@ export const COMPATIBILITY_MATRIX: Record<string, CompatRule> = {
 
 export const isEgbReserved = (item: string): boolean => COMPATIBILITY_MATRIX[item]?.defaultRole === 'entreprise_generale'
 
+// Postes de la carte « Rénovation Énergétique » ; aussi proposés via la case opt-in de l'étape 2 (05.19-13)
+export const ENERGY_ITEMS = ['pac', 'chaudiere_reno', 'borne_irve', 'vmc_chauffage', 'isolation_ite_iti', 'geothermie', 'poele_bois_granules', 'photovoltaique', 'menuiserie_ext_rge'] as const
+
+/** Le projet contient-il au moins un poste énergétique ? (conditionne le fork aides du simulateur) */
+export const hasEnergyItems = (items: readonly string[] | null | undefined): boolean =>
+  !!items?.some(i => (ENERGY_ITEMS as readonly string[]).includes(i))
+
 /**
  * Un pro reçoit-il ce chantier ? (règle de recouvrement, 05.19)
  * - EGB non approuvé : jamais
