@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
-import { ChefHat, Bath, Sofa, BedDouble, Trees, LayoutGrid } from 'lucide-vue-next'
 import { computeEstimate } from '~/utils/calculateur'
 
 useHead({
@@ -11,20 +10,6 @@ useHead({
 })
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
-const renovationTypes = [
-  { id: 'totale',  label: 'Rénovation totale', desc: 'Ensemble du logement, de A à Z' },
-  { id: 'pieces',  label: 'Pièce par pièce',   desc: 'Une ou plusieurs pièces ciblées' },
-]
-
-const piecesList = [
-  { id: 'cuisine',       label: 'Cuisine',        icon: ChefHat },
-  { id: 'salle_de_bain', label: 'Salle de bain',  icon: Bath },
-  { id: 'salon',         label: 'Salon',          icon: Sofa },
-  { id: 'chambre',       label: 'Chambre',        icon: BedDouble },
-  { id: 'exterieur',     label: 'Extérieur',      icon: Trees },
-  { id: 'autre',         label: 'Autre',          icon: LayoutGrid },
-]
-
 const gammes = [
   { id: 'leger',    label: 'Rafraîchissement', desc: 'Finitions, peinture, petites réparations' },
   { id: 'standard', label: 'Standard',         desc: 'Rénovation complète, matériaux courants' },
@@ -46,6 +31,10 @@ const showAidesTunnel = ref(false)          // affiche <AidesMiniTunnel>
 const aidesResult     = ref<null | { aides_estimees: number; reste_a_charge_min: number; reste_a_charge_max: number }>(null)
 
 const form = reactive({
+  selected_category:     '',
+  selected_sub_category: null as string | null,
+  selected_items:        [] as string[],
+  // Hérités (estimation + validation serveur), dérivés de selected_* ; voir syncLegacy
   renovation_type: '',
   pieces:          [] as string[],
   surface_m2:      0,
@@ -68,8 +57,8 @@ const RE_PHONE_FR = /^(?:(?:\+|00)33[\s.-]?|0)[1-9](?:[\s.-]*\d{2}){4}$/
 // ─── Validation ───────────────────────────────────────────────────────────────
 const isStepValid = computed(() => {
   switch (step.value) {
-    case 1: return !!form.renovation_type
-    case 2: return form.renovation_type === 'totale' ? true : form.pieces.length > 0
+    case 1: return !!form.selected_category
+    case 2: return form.selected_items.length > 0
     case 3: return form.surface_m2 > 0
     case 4: return !!form.gamme
     case 5: return form.postal_code === '78955'
@@ -92,8 +81,8 @@ const contactErrors = computed(() => ({
 const progress = computed(() => Math.round(((step.value - 1) / totalSteps) * 100))
 
 const stepLabels: Record<number, string> = {
-  1: 'Type de rénovation',
-  2: 'Pièces concernées',
+  1: 'Catégorie de travaux',
+  2: 'Postes de travaux',
   3: 'Surface',
   4: 'Niveau de prestation',
   5: 'Localisation',
@@ -120,13 +109,23 @@ const nextStep = () => {
       return
     }
     step.value++
-    // Rénovation totale : pas de sélection de pièces, on saute l'étape 2.
-    if (step.value === 2 && form.renovation_type === 'totale') step.value = 3
     submitError.value = null
   }
 }
 
-const selectRenovationType = (id: string) => { form.renovation_type = id; nextStep() }
+// Les champs hérités alimentent computeEstimate et le schéma serveur actuel (calculator_data)
+const PIECES_PAR_POSTE: Record<string, string> = { cuisine: 'cuisine', salle_de_bain: 'salle_de_bain', terrasse: 'exterieur', cloture_portail: 'exterieur' }
+const syncLegacy = () => {
+  form.renovation_type = form.selected_category === 'renovation_globale' ? 'totale' : 'pieces'
+  form.pieces = [...new Set(form.selected_items.map(i => PIECES_PAR_POSTE[i] ?? 'autre'))]
+}
+const selectCategory = ({ category }: { category: string }) => {
+  if (category !== form.selected_category) form.selected_items = []
+  form.selected_category = category
+  syncLegacy()
+  nextStep()
+}
+const setItems = (items: string[]) => { form.selected_items = items; syncLegacy() }
 const selectGamme = (id: string) => { form.gamme = id; nextStep() }
 
 // ─── Fork aides (Phase 05.9) ─────────────────────────────────────────────────
@@ -139,17 +138,9 @@ const onAidesComplete = (p: { aides_estimees: number; reste_a_charge_min: number
 }
 const onAidesSkip = () => { showAidesTunnel.value = false; step.value = 6 }
 
-const togglePiece = (id: string) => {
-  const i = form.pieces.indexOf(id)
-  if (i === -1) form.pieces.push(id)
-  else form.pieces.splice(i, 1)
-}
-
 const prevStep = () => {
   if (step.value > 1) {
     step.value--
-    // Retour : sauter l'étape 2 si rénovation totale (pas de pièces à choisir).
-    if (step.value === 2 && form.renovation_type === 'totale') step.value = 1
     submitError.value = null
   }
 }
@@ -189,6 +180,9 @@ const handleSubmit = async () => {
     const data = await $fetch<{ status: string; projectId: string; zoneName: string; accessToken?: string }>('/api/v1/projects', {
       method: 'POST',
       body: {
+        selected_category:     form.selected_category,
+        selected_sub_category: form.selected_sub_category,
+        selected_items:        form.selected_items,
         calculator_data: {
           renovation_type: form.renovation_type,
           pieces:          form.pieces,
@@ -333,54 +327,21 @@ const handleSubmit = async () => {
           />
         </div>
 
-        <!-- ─── Step 1: Type de rénovation ──────────────────────────────── -->
+        <!-- ─── Step 1: Catégorie de travaux ─────────────────────────────── -->
         <div v-else-if="step === 1" key="step1" class="space-y-4 reveal">
           <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground" style="text-wrap: balance">
-            Quel type de rénovation ?
+            Quel type de projet ?
           </h1>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
-            <button
-              v-for="t in renovationTypes"
-              :key="t.id"
-              type="button"
-              @click="selectRenovationType(t.id)"
-              class="bento-card reveal-item flex items-center justify-between p-4 border rounded-sm text-left transition-colors min-h-11"
-              :class="form.renovation_type === t.id
-                ? 'border-orange-500 bg-orange-50 text-slate-900'
-                : 'border-border hover:border-foreground/40 hover:bg-muted'"
-            >
-              <div>
-                <p class="text-sm font-semibold">{{ t.label }}</p>
-                <p class="text-xs mt-0.5 text-muted-foreground">{{ t.desc }}</p>
-              </div>
-              <svg v-if="form.renovation_type === t.id" class="w-4 h-4 shrink-0 ml-3 text-safety" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-              </svg>
-            </button>
-          </div>
+          <SimulateurStep1 :selected="form.selected_category" @select-category="selectCategory" />
         </div>
 
-        <!-- ─── Step 2: Pièces concernées (multi-select) ─────────────────── -->
+        <!-- ─── Step 2: Postes de travaux (multi-select) ─────────────────── -->
         <div v-else-if="step === 2" key="step2" class="space-y-4 reveal">
           <h1 class="text-3xl md:text-4xl font-black tracking-tight text-foreground" style="text-wrap: balance">
-            Quelles pièces sont concernées ?
+            Quels travaux envisagez-vous ?
           </h1>
-          <p class="text-sm text-muted-foreground">Sélectionnez une ou plusieurs pièces.</p>
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-2 pt-2">
-            <button
-              v-for="p in piecesList"
-              :key="p.id"
-              type="button"
-              @click="togglePiece(p.id)"
-              class="bento-card reveal-item flex flex-col items-center justify-center gap-2 p-4 border rounded-sm text-center transition-colors min-h-11"
-              :class="form.pieces.includes(p.id)
-                ? 'border-orange-500 bg-orange-50 text-slate-900'
-                : 'border-border hover:border-foreground/40 hover:bg-muted'"
-            >
-              <component :is="p.icon" class="w-5 h-5" :class="form.pieces.includes(p.id) ? 'text-safety' : 'text-muted-foreground'" />
-              <span class="text-sm font-semibold">{{ p.label }}</span>
-            </button>
-          </div>
+          <p class="text-sm text-muted-foreground">Sélectionnez un ou plusieurs postes.</p>
+          <SimulateurStep2 :selected-category="form.selected_category" :selected-items="form.selected_items" @update:selected-items="setItems" />
         </div>
 
         <!-- ─── Step 3: Surface ───────────────────────────────────────────── -->
