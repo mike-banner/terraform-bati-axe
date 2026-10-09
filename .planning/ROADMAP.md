@@ -37,7 +37,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 05.17: P19 Partenaires Diagnostiqueurs Immobiliers** - Profil Diagnostiqueur ajouté au tunnel `/b2b/partenaires` existant (réutilisé plutôt qu'une page dédiée) : numéro de certification + travaux suggérés par le rapport DPE (isolation/chauffage/électricité/toiture), génération de dossier `b2b_requests` qualifié. **Phase complète 1/1** (livré 2026-08-29) — a mis au jour un bug préexistant bloquant tout le formulaire B2B (`consents.insert().catch()`), corrigé au passage.
 - [ ] **Phase 05.18: Annuaire, Vitrines Publiques & Dashboard Partenaires** — **Reportée au prochain milestone (2026-08-30)**, v1 recentrée sur le B2C. Section Partenaires sur l'accueil `/`, annuaire public par catégorie (`/partenaires/annuaire`), vitrine publique (`/partenaire/[dept]/[slug]`) et dashboard privé de gestion du profil (`/espace/partenaire`).
 - [ ] **Phase 05.19: Refonte Arborescence & Tunnels B2C (Nomenclature Client)** — Phase correctrice : remplacement de la sélection par cartes visuelles 3 pôles (Rénovation Globale, Énergétique, Prestations Ciblées), schéma JSON normalisé avec slugs d'items uniques, tagging Supabase (`selected_category`, `selected_sub_category`, `selected_items`) pour le matching des artisans.
-- [ ] **Phase 05.20: Restructuration Navigation Header & Landing Vitrine Prescripteurs** — Phase correctrice : menu déroulant Espace Pro (`/pro/artisans` vs `/pro/prescripteurs-partenaires`), landing vitrine d'acquisition 4 piliers (Agents Immo, Syndics, Archis, Courtiers), routage CTA vers `/b2b/partenaires`.
+- [ ] **Phase 05.20: Restructuration Navigation Header & Landing Vitrine Prescripteurs** — Chantier à faire en détail. Menu déroulant Espace Pro (`/pro/artisans` vs `/pro/prescripteurs-partenaires`), landing vitrine d'acquisition 4 piliers (Agents Immo, Syndics, Archis, Courtiers), routage CTA vers `/b2b/partenaires`. Spec client : `.planning/clients/20261009-VITRINE_PRESCRIPTEURS_PARTENAIRES-SPEC_CLIENT.md`
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
 - [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, Dossiers B2B, KPIs, Documents légaux, Journal), search + pagination, projets cliquables. Onglet B2B fusionné (05.10-06) + Documents légaux (05.11-04). (livré 2026-08-22)
 - [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). *(récupéré d'une branche jamais mergée → merge PR #45)*. Reste : brancher Matomo côté client (P1). (livré 2026-08-22)
@@ -384,7 +384,7 @@ Plans:
 - [x] 05.19-02-PLAN.md — Tunnel UI refactor (Étape 1-2, 3 categories, multi-select items)
 - [x] 05.19-03-PLAN.md — Matching logic (leads API overlap rule) + Pro profile (9 categories)
 - [ ] 05.19-04-PLAN.md — Unit tests (matching) + E2E tests (tunnel) + backward compat verification
-- [ ] 05.19-05-PLAN.md — Type de pro « Entreprise Générale du Bâtiment » (EGB) : choix à l'inscription, validation admin (signal NAF), reçoit tous les chantiers
+- [x] 05.19-05-PLAN.md — Type de pro « Entreprise Générale du Bâtiment » (EGB) : choix à l'inscription, validation admin (signal NAF), reçoit tous les chantiers
 
 **UI hint**: yes
 
@@ -461,7 +461,7 @@ Plans:
 **Requirements**: EML-02 (moteur multi-expéditeurs + layout LCEN), EML-03 (validation/rejet document pro), EML-04 (alerte lead sur notifications@), EML-05 (cron J-30/J-7 décennale), EML-06 (confirmations Stripe zones), EML-07 (accusé réception projet particulier), EML-08 (positionnement artisan → particulier), EML-09 (accusé dépôt B2B), EML-10 (notifyAdmin centralisé) — formalisés au planning du 2026-08-30, étendent EML-01 (Phase 6, P4)
 **Depends on:** Phase 6 (moteur email existant), Phase 05.16 (webhook Stripe zones), Phase 05.10/05.11 (B2B, documents)
 **Bloquant avant activation prod:** DNS Cloudflare (DKIM/SPF/DMARC sur `bati-axe.com`), Cloudflare Email Routing sur `contact@bati-axe.com` → Gmail admin, variables d'env `RESEND_API_KEY`/`NUXT_PUBLIC_SITE_URL`.
-**Plans:** 3/5 plans executed
+**Plans:** 4/5 plans executed
 
 Plans:
 - [x] 06.3-01-PLAN.md — Moteur : sendEmail multi-expéditeurs + layout HTML/LCEN + notifyAdmin (vague 1)

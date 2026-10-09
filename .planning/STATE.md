@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
 status: executing
-stopped_at: Completed 05.19-03-PLAN.md
-last_updated: "2026-10-09T10:18:07.565Z"
+stopped_at: Completed 05.19-05-PLAN.md
+last_updated: "2026-10-09T10:21:32.707Z"
 progress:
   total_phases: 33
   completed_phases: 18
   total_plans: 94
-  completed_plans: 85
-  percent: 90
+  completed_plans: 86
+  percent: 91
 ---
 
 # Project State
@@ -31,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 ## Current Position
 
 Phase: 05.19 (refonte-arborescence-b2c) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
@@ -170,6 +170,6 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 ## Session Continuity
 
-Last session: 2026-10-09T10:18:07.557Z
-Stopped at: Completed 05.19-03-PLAN.md
+Last session: 2026-10-09T10:21:32.698Z
+Stopped at: Completed 05.19-05-PLAN.md
 Resume: `/gsd-plan-phase 06.3` pour découper la phase email en plans exécutables, puis **P3** (re-test Stripe/cron en conditions prod réelles quand les identifiants client seront disponibles), **P1** Umami (VPS + PostgreSQL).
