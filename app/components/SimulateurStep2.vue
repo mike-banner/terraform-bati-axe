@@ -29,8 +29,8 @@ const blocks = computed<Block[]>(() => {
   let main: Block[] = []
   if (props.selectedCategory === 'renovation_globale') {
     main = [{ title: 'Gros Œuvre', items: GROS_OEUVRE }, { title: 'Second Œuvre', items: SECOND_OEUVRE }]
-  } else if (props.selectedCategory === 'renovation_energetique') return [{ items: [...ENERGY_ITEMS] }]
-  else if (props.selectedCategory === 'prestations_ciblees') main = [{ items: PRESTATIONS }]
+  } else if (props.selectedCategory === 'renovation_energetique') return [{ title: 'Rénovation énergétique', items: [...ENERGY_ITEMS] }]
+  else if (props.selectedCategory === 'prestations_ciblees') main = [{ title: 'Rénovation ciblée', items: PRESTATIONS }]
   if (!main.length) return []
   main[main.length - 1]!.optIn = true
   return energyOptIn.value ? [...main, { title: 'Rénovation énergétique', items: [...ENERGY_ITEMS], id: 'bloc-energie' }] : main
@@ -63,8 +63,13 @@ const reservedLabels = computed(() =>
       {{ reservedLabels.join(', ') }} : ces travaux nécessitent une coordination. Nous vous proposerons une entreprise générale du bâtiment.
     </div>
 
-    <div v-for="(block, i) in blocks" :id="block.id" :key="i">
-      <h2 v-if="block.title" class="text-base font-bold mb-3">{{ block.title }}</h2>
+    <div
+      v-for="(block, i) in blocks"
+      :id="block.id"
+      :key="i"
+      :class="block.id ? 'mt-8 pt-6 border-t-2 border-orange-200' : ''"
+    >
+      <h2 v-if="block.title" class="text-base font-bold mb-3" :class="block.id ? 'text-orange-600 uppercase tracking-wide' : ''">{{ block.title }}</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <label
           v-for="id in block.items"
