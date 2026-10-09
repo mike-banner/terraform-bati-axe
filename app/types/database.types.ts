@@ -835,7 +835,6 @@ export type Database = {
           created_at: string | null
           decennal_status: Database["public"]["Enums"]["decennal_status"] | null
           egb_status: string
-          rge_status: string
           email: string
           free_leads_used: number
           full_name: string
@@ -850,6 +849,7 @@ export type Database = {
           phone: string
           postal_code: string | null
           professional_type: string
+          rge_status: string
           short_id: string
           siret: string
           siret_address: string | null
@@ -879,7 +879,6 @@ export type Database = {
             | Database["public"]["Enums"]["decennal_status"]
             | null
           egb_status?: string
-          rge_status?: string
           email: string
           free_leads_used?: number
           full_name: string
@@ -894,6 +893,7 @@ export type Database = {
           phone: string
           postal_code?: string | null
           professional_type?: string
+          rge_status?: string
           short_id: string
           siret: string
           siret_address?: string | null
@@ -923,7 +923,6 @@ export type Database = {
             | Database["public"]["Enums"]["decennal_status"]
             | null
           egb_status?: string
-          rge_status?: string
           email?: string
           free_leads_used?: number
           full_name?: string
@@ -938,6 +937,7 @@ export type Database = {
           phone?: string
           postal_code?: string | null
           professional_type?: string
+          rge_status?: string
           short_id?: string
           siret?: string
           siret_address?: string | null
@@ -1530,6 +1530,7 @@ export type Database = {
       enablelongtransactions: { Args: never; Returns: string }
       equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
       expire_artisan_documents: { Args: never; Returns: undefined }
+      expire_rge_status: { Args: never; Returns: undefined }
       geometry: { Args: { "": string }; Returns: unknown }
       geometry_above: {
         Args: { geom1: unknown; geom2: unknown }
@@ -2254,6 +2255,7 @@ export type Database = {
         Returns: unknown
       }
       sync_professional_subcontracting: { Args: never; Returns: undefined }
+      sync_rge_status: { Args: { p_pro: string }; Returns: undefined }
       unlockrows: { Args: { "": string }; Returns: number }
       updategeometrysrid: {
         Args: {
