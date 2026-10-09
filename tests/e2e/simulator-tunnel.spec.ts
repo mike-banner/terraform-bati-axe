@@ -23,17 +23,23 @@ test.describe('Simulateur — tunnel catégorie puis postes', () => {
     await expect(page.getByText('Peinture et finitions')).toHaveCount(0)
   })
 
-  test('étape 2 : alerte de coordination seulement si tous les postes sont EG-only', async ({ page }) => {
+  test('étape 2 : alerte de coordination dès qu\'un poste réservé EGB est coché', async ({ page }) => {
     await gotoSimulateur(page)
     await page.getByRole('radio', { name: 'Rénovation Énergétique' }).click()
     const alerte = page.getByText(/nécessitent une coordination/)
-    await page.getByText('Pompe à chaleur').click()
-    await page.getByText('Géothermie').click()
-    await expect(page.locator('input[type="checkbox"]:checked')).toHaveCount(2)
+    const poste = (nom: string) => page.locator('label', { hasText: nom })
+    await poste('Pompe à chaleur').click()
     await expect(alerte).toBeVisible()
-    // un poste couvert par un spécialiste lève l'alerte
-    await page.getByText('Isolation thermique (ITE/ITI)').click()
+    // un poste couvert par un spécialiste ne lève plus l'alerte
+    await poste('Rénovation d’une chaudière').click()
+    await expect(alerte).toBeVisible()
+    await poste('Pompe à chaleur').click()
     await expect(alerte).toHaveCount(0)
+    // démolition (Prestations ciblées) est aussi réservée EGB
+    await page.getByRole('button', { name: 'Retour' }).click()
+    await page.getByRole('radio', { name: 'Prestations / Rénovation Ciblée' }).click()
+    await poste('Démolition').click()
+    await expect(alerte).toBeVisible()
   })
 
   test('changer de catégorie réinitialise les postes', async ({ page }) => {

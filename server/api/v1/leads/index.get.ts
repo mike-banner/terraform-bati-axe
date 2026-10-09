@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   if (proError || !pro) {
     throw createError({ statusCode: 404, statusMessage: 'Profil professionnel introuvable.' })
   }
-  // 05.19-05 : un EGB non approuvé par l'admin n'a pas accès à « tous les chantiers »
+  // 05.19 : un EGB non approuvé par l'admin ne reçoit aucun chantier ; approuvé, il est matché par recouvrement sur ses métiers
   const proEff = effectiveProType(pro)
 
   const isPremium = pro.subscription_status === 'active'
@@ -35,8 +35,8 @@ export default defineEventHandler(async (event) => {
 
   const proCategories = proEff.categories || []
 
-  // Un spécialiste sans catégorie ne reçoit rien ; l'entreprise générale reçoit tout
-  if (proCategories.length === 0 && proEff.professional_type !== 'entreprise_generale') {
+  // Sans catégorie (ou EGB non approuvé, dont effectiveProType vide les catégories) : aucun lead
+  if (proCategories.length === 0) {
     return { leads: [], isPremium }
   }
 

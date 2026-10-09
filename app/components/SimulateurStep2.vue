@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { COMPATIBILITY_MATRIX } from '~/utils/workTypeMatrix'
+import { COMPATIBILITY_MATRIX, isEgbReserved } from '~/utils/workTypeMatrix'
 
 const props = defineProps<{
   selectedCategory: string
@@ -34,22 +34,19 @@ function toggle(id: string) {
   emit('update:selectedItems', next)
 }
 
-// Postes sans spécialiste (PAC, géothermie, photovoltaïque) : on prévient qu'une entreprise générale sera proposée
-const needsCoordinator = computed(() =>
-  props.selectedCategory === 'renovation_energetique'
-  && props.selectedItems.length > 0
-  && props.selectedItems.every(i => COMPATIBILITY_MATRIX[i]?.defaultRole === 'entreprise_generale'),
-)
+// Postes réservés aux entreprises générales (pac, géothermie, photovoltaïque, démolition, assainissement)
+const reservedLabels = computed(() =>
+  props.selectedItems.filter(isEgbReserved).map(i => COMPATIBILITY_MATRIX[i]!.label))
 </script>
 
 <template>
   <div class="space-y-6 pt-2">
     <div
-      v-if="needsCoordinator"
+      v-if="reservedLabels.length"
       role="status"
       class="p-3 text-sm rounded-sm border border-yellow-300 bg-yellow-50 text-yellow-900"
     >
-      Certains équipements nécessitent une coordination — nous vous proposerons une entreprise générale.
+      {{ reservedLabels.join(', ') }} : ces travaux nécessitent une coordination. Nous vous proposerons une entreprise générale du bâtiment.
     </div>
 
     <div v-for="(block, i) in blocks" :key="i">
