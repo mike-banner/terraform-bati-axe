@@ -394,7 +394,7 @@ Plans:
 - [x] 05.19-12-PLAN.md — (rattrapage) Contrôle final, validation UI, migrations cloud avec GO utilisateur, types régénérés
 - [x] 05.19-13-PLAN.md — (rattrapage) Case « J’envisage aussi de la rénovation énergétique » et fork aides conditionnel
 - [x] 05.19-14-PLAN.md — (rattrapage) Qualification RGE : migration rge_status (trigger + cron, local), règle canDoEnergy dans le matching / l'alerte, garde canAccessLead sur le détail et le déblocage
-- [ ] 05.19-15-PLAN.md — (rattrapage) UI RGE : message et dépôt sur le dashboard/profil pro, validation dans la console admin
+- [x] 05.19-15-PLAN.md — (rattrapage) UI RGE : message et dépôt sur le dashboard/profil pro, validation dans la console admin
 - [ ] 05.19-17-PLAN.md — (rattrapage) Document « rge » dans les endpoints du coffre-fort (dépôt pro avec validateRgeUpload testée, validation admin, lectures)
 - [ ] 05.19-16-PLAN.md — (rattrapage) Contrôle local, validation visuelle RGE, migration cloud avec GO utilisateur, types régénérés
 
