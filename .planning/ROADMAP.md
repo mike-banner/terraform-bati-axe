@@ -384,6 +384,7 @@ Plans:
 - [ ] 05.19-02-PLAN.md — Tunnel UI refactor (Étape 1-2, 3 categories, multi-select items)
 - [ ] 05.19-03-PLAN.md — Matching logic (leads API overlap rule) + Pro profile (9 categories)
 - [ ] 05.19-04-PLAN.md — Unit tests (matching) + E2E tests (tunnel) + backward compat verification
+- [ ] 05.19-05-PLAN.md — Type de pro « Entreprise Générale du Bâtiment » (EGB) : choix à l'inscription, validation admin (signal NAF), reçoit tous les chantiers
 
 **UI hint**: yes
 
@@ -617,7 +618,7 @@ Items hors roadmap détectés en relisant les specs client (18/08 Arti-Box, 06/0
 |---|---|---|---|---|
 | P1 | **Analytics de conversion** (simulateur → lead → contact → chantier signé). **Décidé le 2026-08-27 : Umami (Self-hosted VPS + PostgreSQL)** (open-source, GDPR sans cookies, léger, partage PostgreSQL du VPS). Déploiement : conteneur Docker Umami sur le VPS du porteur de projet. Script Nuxt3 minimal sans bandeau de cookies nécessaire. Axiom / Matomo écartés. | Avis mentor + décision utilisateur | Sans mesure, impossible de savoir si le pilote fonctionne — plus critique que l'admin | ✅ décidé — à implémenter (funnel → Phase 06.2 / P1) |
 | P2 | **Anti-spam capture** — Turnstile (Cloudflare) sur `POST /projects` public | Checklist sécurité (optionnel → obligatoire) | Un bot flood tue la qualité du marché + la délivrabilité email | ✅ code livré — **standby** (clés client, à créer sur son Cloudflare au transfert) |
-| P3 | **Stripe (checkout + webhook) + cron pg_cron 48h re-testés en prod** | Condition de livraison v0.9 | Jamais re-testés depuis Phase 4/4.5 ; vérifier que le job pg_cron `auto-unlock-leads-48h` existe bien en prod | ❌ à faire en premier |
+| P3 | **Stripe (checkout + webhook) + cron pg_cron 48h re-testés en prod** | Condition de livraison v0.9 | Jamais re-testés depuis Phase 4/4.5 ; vérifier que le job pg_cron `auto-unlock-leads-48h` existe bien en prod | ⏸️ **dernier (décision 2026-10-09)** : pas de paiement des pros tant que l'app n'est pas fonctionnelle et sans leads (les leads viendront surtout des partenaires) |
 | P4 | **Notif pro nouveaux leads** — email livré le 2026-08-23 via `notifyProLead` sur `projects.post.ts`; opt-in `lead_alerts_email`, idempotence `lead_notifications`, aucun déblocage automatique par email; coordonnées accessibles selon Premium/free-grant/48h. Web Push reporté à la Phase 8. |
 | P5 | **Feedback loop refus → remise au marché** : testé ? | Avis mentor | Messagerie testée, ce chemin-là non | ✅ testé (2026-08-23, phase 05.13-03 : `handleLeadDecision` + 9 tests) |
 | P6 | **US-PAR-02 : étude de financement courtier partenaire** (1 CTA + envoi) | Spec 18/08 | Levier de monétisation simple | ❌ absent |
