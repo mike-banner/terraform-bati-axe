@@ -5,7 +5,7 @@ import { test, expect, type Page } from '@playwright/test'
 // Étape 2 : postes de travaux, multi-sélection (bouton « Suivant »)
 // Étape 3 : surface (bouton « Suivant »)
 // Étape 4 : niveau de prestation / gamme (auto-advance)
-// Étape 5 : localisation (bouton « Continuer ») → fork aides
+// Étape 5 : localisation (bouton « Continuer ») → fork aides seulement si poste énergétique
 // Étape 6 : coordonnées + CGU → submit
 
 const DESC = 'Refaire entièrement la toiture de la maison, tuiles à remplacer.'
@@ -35,12 +35,6 @@ async function fillGamme(page: Page) {
   // Étape 4 → auto-advance vers l'étape 5
   await page.getByRole('button', { name: /Standard/ }).click()
   await page.getByRole('heading', { name: 'Où se situe le chantier ?' }).waitFor({ state: 'visible' })
-}
-
-async function skipAidesFork(page: Page) {
-  // Après l'étape 5, fork aides → on choisit « Non, voir mon estimation »
-  await page.getByRole('button', { name: /Non, voir mon estimation/ }).click()
-  await page.getByRole('heading', { name: /Votre estimation est prête/ }).waitFor({ state: 'visible' })
 }
 
 async function goToStep5(page: Page) {
@@ -114,7 +108,9 @@ test.describe('Simulateur — flux complet zone valide jusqu\'à confirmation', 
     // Étape 5 — code postal valide → fork aides → étape 6
     await page.getByPlaceholder('78955').fill('78955')
     await page.getByRole('button', { name: 'Continuer' }).click()
-    await skipAidesFork(page)
+    // Sans poste énergétique : pas de fork, lead wall direct
+    await page.getByRole('heading', { name: /Votre estimation est prête/ }).waitFor({ state: 'visible' })
+    await expect(page.getByText('Connaissez-vous vos aides au financement ?')).toHaveCount(0)
 
     // Étape 6 — coordonnées (normalizePhone produit +33 6 12 34 56 78 qui passe la regex fixée)
     await page.getByPlaceholder('Jean Dupont').fill('Marie Dupont')
