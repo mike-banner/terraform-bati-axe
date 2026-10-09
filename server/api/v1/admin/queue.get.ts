@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: pros, error: e1 } = await supabase
     .from('professionals')
-    .select('id, company_name, siret, full_name, email, phone, canonical_slug, category, is_verified, is_claimed, decennal_status, created_at')
+    .select('id, company_name, siret, full_name, email, phone, canonical_slug, category, is_verified, is_claimed, decennal_status, rge_status, created_at')
     .order('created_at', { ascending: false })
 
   if (e1) throw createError({ statusCode: 500, statusMessage: e1.message })
