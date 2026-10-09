@@ -1,3 +1,4 @@
+import { buildLogoPublicUrl } from '../../../../utils/logoUrl'
 import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 import { AwsClient } from 'aws4fetch'
@@ -60,7 +61,7 @@ export default defineEventHandler(async (event) => {
       aws: { signQuery: true }
     })
 
-    const publicUrl = r2PublicBaseUrl ? `${r2PublicBaseUrl}/${fileKey}` : ''
+    const publicUrl = buildLogoPublicUrl({ r2PublicBaseUrl, fileKey, origin: getRequestURL(event).origin, slug: pro?.canonical_slug })
 
     return { status: 'SUCCESS', signedUrl: request.url, fileKey, publicUrl }
   } catch (err: any) {
