@@ -390,7 +390,7 @@ Plans:
 - [x] 05.19-08-PLAN.md — (rattrapage) Onglet admin « Entreprises générales » (validation EGB)
 - [x] 05.19-09-PLAN.md — (rattrapage) notifyMatchedPros aligné sur proMatchesProject + selected_items
 - [x] 05.19-10-PLAN.md — (rattrapage) Inscription et profil : spécialiste 1-2 / EGB 1-9, source unique PROFESSIONAL_CATEGORIES
-- [ ] 05.19-11-PLAN.md — (rattrapage) Bandeau « Nouveau métier disponible » sur le dashboard pro
+- [x] 05.19-11-PLAN.md — (rattrapage) Bandeau « Nouveau métier disponible » sur le dashboard pro
 - [ ] 05.19-12-PLAN.md — (rattrapage) Contrôle final, validation UI, migrations cloud avec GO utilisateur, types régénérés
 
 **UI hint**: yes
@@ -468,7 +468,7 @@ Plans:
 **Requirements**: EML-02 (moteur multi-expéditeurs + layout LCEN), EML-03 (validation/rejet document pro), EML-04 (alerte lead sur notifications@), EML-05 (cron J-30/J-7 décennale), EML-06 (confirmations Stripe zones), EML-07 (accusé réception projet particulier), EML-08 (positionnement artisan → particulier), EML-09 (accusé dépôt B2B), EML-10 (notifyAdmin centralisé) — formalisés au planning du 2026-08-30, étendent EML-01 (Phase 6, P4)
 **Depends on:** Phase 6 (moteur email existant), Phase 05.16 (webhook Stripe zones), Phase 05.10/05.11 (B2B, documents)
 **Bloquant avant activation prod:** DNS Cloudflare (DKIM/SPF/DMARC sur `bati-axe.com`), Cloudflare Email Routing sur `contact@bati-axe.com` → Gmail admin, variables d'env `RESEND_API_KEY`/`NUXT_PUBLIC_SITE_URL`.
-**Plans:** 10/12 plans executed
+**Plans:** 11/12 plans executed
 
 Plans:
 - [x] 06.3-01-PLAN.md — Moteur : sendEmail multi-expéditeurs + layout HTML/LCEN + notifyAdmin (vague 1)
