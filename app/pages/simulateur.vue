@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import { computeEstimate } from '~/utils/calculateur'
+import { hasEnergyItems } from '~/utils/workTypeMatrix'
 
 useHead({
   title: 'Simulateur de Travaux — BÂTI-AXE',
@@ -102,11 +103,14 @@ const formatEuro = (n: number) => n.toLocaleString('fr-FR') + ' €'
 // ─── Handlers ─────────────────────────────────────────────────────────────────
 const nextStep = () => {
   if (step.value < totalSteps && isStepValid.value) {
-    // Phase 05.9 : l'étape 5 ouvre le fork aides au lieu de sauter au lead wall.
+    // Phase 05.9 / 05.19-13 : fork aides seulement si au moins un poste énergétique
     if (step.value === 5) {
-      atAidesFork.value = true
-      submitError.value = null
-      return
+      if (hasEnergyItems(form.selected_items)) {
+        atAidesFork.value = true
+        submitError.value = null
+        return
+      }
+      aidesResult.value = null // aucune aide périmée dans calculator_data
     }
     step.value++
     submitError.value = null
