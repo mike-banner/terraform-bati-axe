@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { serverSupabaseUser, serverSupabaseClient } from '#supabase/server'
+import { serverSupabaseUser, serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { PROFESSIONAL_CATEGORIES, categoriesError } from '../../../../../app/utils/workTypeMatrix'
 
 // CNV-05 D-14/D-15: editable fields; canonical_slug is immutable (T-04.5-15)
@@ -25,6 +25,11 @@ export default defineEventHandler(async (event) => {
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
 
+  // Authentification via le jeton du pro ; les accès à professionals passent par le service role (RLS en
+  // lecture seule depuis 20260918 : un UPDATE avec le jeton du pro ne modifierait aucune ligne, sans erreur).
+  // Chaque requête reste bornée à `user.id` : un pro ne peut toucher que sa propre ligne.
+  const db = await serverSupabaseServiceRole(event) as any
+
   const body = await readBody(event)
   if (body.bio === '') body.bio = null
   if (body.zone === '') body.zone = null
@@ -47,7 +52,7 @@ export default defineEventHandler(async (event) => {
 
   if (parsed.data.categories !== undefined) {
     // Le type est lu en base, jamais dans le body
-    const { data: row } = await supabase.from('professionals').select('professional_type').eq('id', user.id).single()
+    const { data: row } = await db.from('professionals').select('professional_type').eq('id', user.id).single()
     const err = categoriesError(row?.professional_type, parsed.data.categories)
     if (err) throw createError({ statusCode: 400, statusMessage: err })
   }
@@ -56,14 +61,17 @@ export default defineEventHandler(async (event) => {
   const update: Record<string, unknown> = { ...fields }
   if (categories_reviewed) update.categories_reviewed_at = new Date().toISOString()
 
-  const { error } = await supabase
+  const { data: updated, error } = await db
     .from('professionals')
     .update(update)
     .eq('id', user.id)
+    .select('id')
 
   if (error) serverError('profile.me.patch', error)
+  // Aucune ligne modifiée = profil introuvable : ne jamais répondre « ok » sans avoir écrit
+  if (!updated?.length) throw createError({ statusCode: 404, statusMessage: 'Profil professionnel introuvable.' })
 
-  const { data: pro } = await supabase
+  const { data: pro } = await db
     .from('professionals')
     .select('id, canonical_slug, short_id, postal_code, categories, bio, zone, phone, logo_url, company_name, full_name, is_verified, subscription_status, is_available_subcontracting, workforce_size, lead_alerts_email, professional_type, egb_status, categories_reviewed_at')
     .eq('id', user.id)
