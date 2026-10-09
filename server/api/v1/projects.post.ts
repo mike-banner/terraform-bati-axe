@@ -6,6 +6,7 @@ import { verifyTurnstile } from '../../utils/verifyTurnstile'
 import { notifyMatchedPros } from '../../utils/notifyProLead'
 import { sendEmail } from '../../utils/email'
 import { renderEmail } from '../../utils/emailLayout'
+import { COMPATIBILITY_MATRIX } from '../../../app/utils/workTypeMatrix'
 import { notifyAdmin, adminDetailsTable } from '../../utils/notifyAdmin'
 
 // French phone validation regex
@@ -42,6 +43,11 @@ const createProjectSchema = z.object({
   cgu_accepted: z.literal(true, 'Vous devez accepter les CGU.'),
   sms_opt_in: z.boolean().default(false),
   turnstile_token: z.string().optional(),
+  // 05.19 — sélection du tunnel ; chaque poste doit être une clé de la matrice
+  selected_category: z.enum(['renovation_globale', 'renovation_energetique', 'prestations_ciblees']).optional(),
+  selected_sub_category: z.string().max(100).nullable().optional(),
+  selected_items: z.array(z.string().max(100).refine(i => i in COMPATIBILITY_MATRIX, 'Poste de travaux invalide.'))
+    .max(30, 'Trop de postes sélectionnés.').default([]),
   timeline_range: z.enum(['1_semaine', '1_mois', '3_mois', '6_mois', 'flexible']).optional()
 })
 
@@ -120,6 +126,9 @@ export default defineEventHandler(async (event) => {
         budget_range: budgetRange,
         calculator_data: { ...data.calculator_data, trades },
         timeline_range: data.timeline_range ?? null,
+        selected_category: data.selected_category ?? null,
+        selected_sub_category: data.selected_sub_category ?? null,
+        selected_items: data.selected_items,
         postal_code: data.postal_code,
         zone_id: matchedZone.id,
         status: 'qualified',
