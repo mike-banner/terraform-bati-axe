@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import {
   CATEGORY_ADDED_AT,
+  COMPATIBILITY_MATRIX,
+  ENERGY_ITEMS,
+  hasEnergyItems,
   PROFESSIONAL_CATEGORIES,
   categoriesError,
   effectiveProType,
@@ -82,5 +85,31 @@ describe('CATEGORY_ADDED_AT / newCategoriesSince', () => {
     expect(newCategoriesSince('2026-10-08T00:00:00Z', ['carrelage'])).toEqual(['menuiserie', 'renovation_energetique'])
     expect(newCategoriesSince('2026-10-10T00:00:00Z', [])).toEqual([])
     expect(newCategoriesSince(null, [])).toEqual([])
+  })
+})
+
+describe('hasEnergyItems (05.19-13)', () => {
+  it('faux sans poste énergétique', () => {
+    expect(hasEnergyItems([])).toBe(false)
+    expect(hasEnergyItems(['cuisine', 'peinture_finitions'])).toBe(false)
+  })
+  it('vrai dès un poste énergétique', () => {
+    expect(hasEnergyItems(['cuisine', 'pac'])).toBe(true)
+    expect(hasEnergyItems(['menuiserie_ext_rge'])).toBe(true)
+  })
+  it('clé voisine non énergétique ignorée', () => {
+    expect(hasEnergyItems(['menuiserie_ext'])).toBe(false)
+  })
+  it('null et undefined tolérés', () => {
+    expect(hasEnergyItems(null)).toBe(false)
+    expect(hasEnergyItems(undefined)).toBe(false)
+  })
+  it('ENERGY_ITEMS : 9 clés, toutes dans la matrice', () => {
+    expect(ENERGY_ITEMS).toHaveLength(9)
+    for (const k of ENERGY_ITEMS) expect(k in COMPATIBILITY_MATRIX).toBe(true)
+  })
+  it('borne Zod : prestations (11) + énergétique ≤ 30', () => {
+    // cf. .max(30) de server/api/v1/projects.post.ts
+    expect(11 + ENERGY_ITEMS.length).toBeLessThanOrEqual(30)
   })
 })
