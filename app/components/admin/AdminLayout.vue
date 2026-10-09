@@ -38,6 +38,12 @@ const navItems = computed(() => [
     badge: null,
   },
   {
+    key: 'egb',
+    label: 'Entreprises générales',
+    icon: 'shield',
+    badge: null,
+  },
+  {
     key: 'projects',
     label: 'Projets',
     icon: 'folder',

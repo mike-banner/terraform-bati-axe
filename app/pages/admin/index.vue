@@ -12,7 +12,7 @@ const user = useSupabaseUser()
 const isLoading = ref(true)
 const actionLoading = ref<string | null>(null)
 const errorMessage = ref<string | null>(null)
-const activeTab = ref<'overview' | 'pending' | 'all' | 'projects' | 'realisations' | 'b2b' | 'kpi' | 'documents' | 'audit'>('overview')
+const activeTab = ref<'overview' | 'pending' | 'all' | 'egb' | 'projects' | 'realisations' | 'b2b' | 'kpi' | 'documents' | 'audit'>('overview')
 
 const professionals = ref<Professional[]>([])
 const projects = ref<Project[]>([])
@@ -210,6 +210,9 @@ async function toggleShowcase(projectId: string, isShowcased: boolean) {
       @file-select="onFileSelect"
       @upload-doc="uploadAdminDoc"
     />
+
+    <!-- Tab: Entreprises générales (05.19) -->
+    <AdminEgbTab v-else-if="activeTab === 'egb'" />
 
     <!-- Tab: Projects -->
     <AdminProjectsTab
