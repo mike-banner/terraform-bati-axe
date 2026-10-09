@@ -88,3 +88,14 @@ export function proMatchesProject(
   if (items.length === 0) return !!project.category && cats.includes(project.category)
   return items.some(i => COMPATIBILITY_MATRIX[i]?.specialistMatches.some(c => cats.includes(c)))
 }
+
+/**
+ * Gate EGB (05.19-05) : une entreprise générale non approuvée par l'admin
+ * est traitée comme un spécialiste (sans catégorie = aucun lead).
+ */
+export function effectiveProType<T extends { professional_type?: string | null; egb_status?: string | null }>(pro: T): T {
+  if (pro.professional_type === 'entreprise_generale' && pro.egb_status !== 'approved') {
+    return { ...pro, professional_type: 'specialiste' }
+  }
+  return pro
+}

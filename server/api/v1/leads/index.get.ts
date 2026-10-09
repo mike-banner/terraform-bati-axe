@@ -1,6 +1,6 @@
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { maskLead } from '../../../utils/maskLead'
-import { proMatchesProject } from '../../../../app/utils/workTypeMatrix'
+import { proMatchesProject, effectiveProType } from '../../../../app/utils/workTypeMatrix'
 
 export default defineEventHandler(async (event) => {
   const supabaseAuth = await serverSupabaseClient(event) as any
@@ -14,13 +14,15 @@ export default defineEventHandler(async (event) => {
 
   const { data: pro, error: proError } = await supabase
     .from('professionals')
-    .select('id, subscription_status, categories, professional_type')
+    .select('id, subscription_status, categories, professional_type, egb_status')
     .eq('id', user.id)
     .single()
 
   if (proError || !pro) {
     throw createError({ statusCode: 404, statusMessage: 'Profil professionnel introuvable.' })
   }
+  // 05.19-05 : un EGB non approuvé par l'admin n'a pas accès à « tous les chantiers »
+  const proEff = effectiveProType(pro)
 
   const isPremium = pro.subscription_status === 'active'
 
@@ -31,10 +33,10 @@ export default defineEventHandler(async (event) => {
     .eq('pro_id', user.id)
   const grantedSet = new Set((grants || []).map((g: any) => g.lead_id))
 
-  const proCategories = pro.categories || []
+  const proCategories = proEff.categories || []
 
   // Un spécialiste sans catégorie ne reçoit rien ; l'entreprise générale reçoit tout
-  if (proCategories.length === 0 && pro.professional_type !== 'entreprise_generale') {
+  if (proCategories.length === 0 && proEff.professional_type !== 'entreprise_generale') {
     return { leads: [], isPremium }
   }
 
@@ -58,7 +60,7 @@ export default defineEventHandler(async (event) => {
   const leadMap = new Map<string, any>((leads || []).map((l: any) => [l.project_id, l]))
 
   const now = new Date()
-  const matched = (projects || []).filter((proj: any) => proMatchesProject(pro, proj))
+  const matched = (projects || []).filter((proj: any) => proMatchesProject(proEff, proj))
   const enriched = matched.map((proj: any) => {
     // Generate a virtual lead object
     const claim = leadMap.get(proj.id)
