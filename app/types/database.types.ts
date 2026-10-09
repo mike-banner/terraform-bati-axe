@@ -801,6 +801,7 @@ export type Database = {
       professionals: {
         Row: {
           professional_type: string
+          egb_status: string
           b2b_alerts_email: boolean
           bio: string | null
           canonical_slug: string
@@ -840,6 +841,7 @@ export type Database = {
         }
         Insert: {
           professional_type?: string
+          egb_status?: string
           b2b_alerts_email?: boolean
           bio?: string | null
           canonical_slug: string
@@ -881,6 +883,7 @@ export type Database = {
         }
         Update: {
           professional_type?: string
+          egb_status?: string
           b2b_alerts_email?: boolean
           bio?: string | null
           canonical_slug?: string
@@ -2246,6 +2249,7 @@ export type Database = {
         | "b2b_restitution_sent"
         | "b2b_request_updated"
         | "document_artisan_updated"
+        | "egb_decided"
       b2b_apporteur_type:
         | "architecte"
         | "bet"

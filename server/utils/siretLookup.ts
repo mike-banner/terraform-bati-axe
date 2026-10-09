@@ -44,3 +44,12 @@ export async function lookupSiret(siret: string): Promise<SiretLookupResult> {
     return { status: 'error', verified_at }
   }
 }
+
+// Codes NAF rév. 2 du bâtiment « tous corps d'état » : construction de maisons
+// individuelles (41.20A), d'autres bâtiments (41.20B), maçonnerie générale et
+// gros œuvre (43.99C). Simple signal pour l'admin, jamais une décision.
+const EGB_NAF = new Set(['4120A', '4120B', '4399C'])
+
+export function isEgbNaf(naf?: string | null): boolean {
+  return !!naf && EGB_NAF.has(naf.replace(/[.\s]/g, '').toUpperCase())
+}
