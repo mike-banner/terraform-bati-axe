@@ -1,8 +1,8 @@
 import { test, expect, type Page } from '@playwright/test'
 
-// ─── Helpers (flux actuel 6 étapes, cf. simulateur.vue) ───────────────────────
-// Étape 1 : type de rénovation (auto-advance)
-// Étape 2 : pièces concernées (sautée pour « Rénovation totale »)
+// ─── Helpers (flux 6 étapes, cf. simulateur.vue, phase 05.19) ─────────────────
+// Étape 1 : catégorie de travaux (auto-advance)
+// Étape 2 : postes de travaux, multi-sélection (bouton « Suivant »)
 // Étape 3 : surface (bouton « Suivant »)
 // Étape 4 : niveau de prestation / gamme (auto-advance)
 // Étape 5 : localisation (bouton « Continuer ») → fork aides
@@ -16,8 +16,11 @@ async function gotoSimulateur(page: Page) {
 }
 
 async function fillRenovationTotale(page: Page) {
-  // Étape 1 → auto-advance directe vers l'étape 3 (pièces sautées pour « totale »)
-  await page.getByRole('button', { name: /Rénovation totale/i }).click()
+  // Étape 1 → étape 2 (postes), on coche un poste puis Suivant → étape 3
+  await page.getByRole('radio', { name: 'Rénovation Globale' }).click()
+  await page.getByRole('heading', { name: 'Quels travaux envisagez-vous ?' }).waitFor({ state: 'visible' })
+  await page.getByText('Peinture et finitions').click()
+  await page.getByRole('button', { name: 'Suivant' }).click()
   await page.getByRole('heading', { name: 'Quelle surface au total ?' }).waitFor({ state: 'visible' })
 }
 
@@ -131,15 +134,22 @@ test.describe('Simulateur — flux complet zone valide jusqu\'à confirmation', 
 })
 
 test.describe('Simulateur — navigation progressive', () => {
-  test('étapes 1 et 4 auto-advance, étapes 3/5 via bouton', async ({ page }) => {
+  test('étapes 1 et 4 auto-advance, étapes 2/3/5 via bouton', async ({ page }) => {
     await gotoSimulateur(page)
 
     // Étape 1 : pas de bouton Suivant/Continuer, juste "Sélectionnez une option"
     await expect(page.getByText(/Étape 1/)).toBeVisible()
     await expect(page.getByText('Sélectionnez une option')).toBeVisible()
 
-    // Clic → auto-advance (pièces sautées pour « totale ») → étape 3
-    await page.getByRole('button', { name: /Rénovation totale/i }).click()
+    // Clic → auto-advance → étape 2 (postes), Suivant désactivé sans sélection
+    await page.getByRole('radio', { name: 'Rénovation Globale' }).click()
+    await expect(page.getByText(/Étape 2/)).toBeVisible()
+    const suivant = page.getByRole('button', { name: 'Suivant' })
+    await expect(suivant).toBeDisabled()
+    await page.getByText('Peinture et finitions').click()
+    await expect(suivant).toBeEnabled()
+    await suivant.click()
+
     await expect(page.getByText(/Étape 3/)).toBeVisible()
     await page.getByPlaceholder('50').fill('50')
     await page.getByRole('button', { name: 'Suivant' }).click()
@@ -149,23 +159,5 @@ test.describe('Simulateur — navigation progressive', () => {
     await page.getByRole('button', { name: /Standard/ }).click()
     await expect(page.getByText(/Étape 5/)).toBeVisible()
     await expect(page.getByPlaceholder('78955')).toBeVisible()
-  })
-
-  test('parcours "Pièce par pièce" — l\'étape 2 pièces s\'affiche et valide', async ({ page }) => {
-    await gotoSimulateur(page)
-
-    await page.getByRole('button', { name: /Pièce par pièce/i }).click()
-    await expect(page.getByText(/Étape 2/)).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Quelles pièces sont concernées ?' })).toBeVisible()
-
-    // Le bouton Suivant est désactivé tant qu'aucune pièce n'est choisie
-    const suivant = page.getByRole('button', { name: 'Suivant' })
-    await expect(suivant).toBeDisabled()
-
-    await page.getByRole('button', { name: /Cuisine/ }).click()
-    await expect(suivant).toBeEnabled()
-    await suivant.click()
-
-    await expect(page.getByText(/Étape 3/)).toBeVisible()
   })
 })
