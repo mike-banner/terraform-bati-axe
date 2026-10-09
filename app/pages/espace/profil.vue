@@ -174,7 +174,7 @@ async function saveProfile() {
             <p v-if="catError" role="alert" class="mt-2 text-xs text-red-600">{{ catError }}</p>
             <p class="mt-3 text-xs text-muted-foreground">Vos catégories doivent correspondre aux travaux couverts par votre assurance décennale. En cas de sinistre hors couverture, votre responsabilité personnelle est engagée.</p>
             <p v-if="profile.rge_status === 'valid'" class="mt-2 text-xs font-semibold text-foreground" data-testid="profil-rge">Qualification RGE : validée</p>
-            <p v-else class="mt-2 text-xs text-muted-foreground" data-testid="profil-rge">
+            <p v-else-if="profile.categories.includes('renovation_energetique')" class="mt-2 text-xs text-muted-foreground" data-testid="profil-rge">
               Rénovation énergétique : ajoutez votre attestation RGE pour recevoir ces chantiers.
               <NuxtLink to="/espace/dashboard" class="font-semibold underline underline-offset-2">Déposer mon attestation</NuxtLink>
             </p>

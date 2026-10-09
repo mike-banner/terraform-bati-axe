@@ -283,6 +283,9 @@ const currentStepIndex = computed(() => {
 })
 
 const docsComplete = computed(() => !!kbis.value && !!decennale.value)
+// Le dépôt RGE n'est proposé qu'aux pros qui ont déclaré la rénovation énergétique (ou qui ont déjà un RGE en cours/validé)
+const showRge = computed(() =>
+  !!pro.value?.categories?.includes('renovation_energetique') || (!!pro.value?.rge_status && pro.value.rge_status !== 'none'))
 </script>
 
 <template>
@@ -500,7 +503,7 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
         </div>
 
         <!-- Attestation RGE (R-04) : facultative, n'entre pas dans docsComplete -->
-        <div class="mt-4 pt-4 border-t border-border/50" data-testid="rge-block">
+        <div v-if="showRge" class="mt-4 pt-4 border-t border-border/50" data-testid="rge-block">
           <p class="text-xs font-semibold text-foreground mb-1">Attestation RGE <span class="text-muted-foreground font-normal">(PDF, JPG, PNG)</span></p>
           <template v-if="pro?.rge_status !== 'valid'">
             <p class="text-xs font-semibold text-foreground" data-testid="rge-invite">Rénovation énergétique : ajoutez votre attestation RGE pour recevoir ces chantiers</p>
@@ -540,6 +543,13 @@ const docsComplete = computed(() => !!kbis.value && !!decennale.value)
           </div>
           <p v-if="uploads.rge.status === 'error'" class="text-xs text-red-600 mt-1">{{ uploads.rge.error }}</p>
           <p v-if="uploads.rge.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ Attestation RGE envoyée — validation par notre équipe sous 48 h ouvrées</p>
+        </div>
+        <div v-else class="mt-4 pt-4 border-t border-border/50" data-testid="rge-hint">
+          <p class="text-xs text-muted-foreground">
+            Vous faites de la rénovation énergétique ? Ajoutez ce métier dans
+            <NuxtLink to="/espace/profil" class="font-semibold underline underline-offset-2">votre profil</NuxtLink>
+            pour déposer votre attestation RGE.
+          </p>
         </div>
 
         <!-- Responsabilité -->
