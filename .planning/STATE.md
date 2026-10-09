@@ -31,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 ## Current Position
 
 Phase: 05.19 & 05.20
-Plan: Ready to plan
+Plan: 05.19 planifiée (5 plans, dont 05.19-05 EGB) — exécution démarrée 2026-10-09
 Status: 2 Phases correctrices validées par le client — Specs rédigées (05.19 Arborescence B2C & 05.20 Vitrine Prescripteurs). Prêtes pour planification/exécution.
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
@@ -51,6 +51,12 @@ Phases complètes récentes (v1.0) :
 - **P4 — Notif pro nouveaux leads (email)** ✅ (2026-08-23, PR #48 mergé) : `notifyProLead` sur `projects.post.ts`, opt-in `lead_alerts_email`, idempotence `lead_notifications`, page « Lead non accessible » (Premium ou 48h), déblocage auto 72h → 48h. Le délai 48h est retenu pour v1 ; 72h ou une autre valeur pourra être décidé dans une version ultérieure avec le client.
 
 Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod — inclut désormais un test webhook réel de transition de Subscription Schedule sur retrait de zone, non vérifié en conditions réelles), **P1** (Umami funnel — self-hosted VPS PostgreSQL), puis P6/P8/P10.
+
+## Fait le 2026-10-09 (dev Cloudflare perso)
+- **FIX claim pro (500)** : cause = secret `NUXT_SUPABASE_SECRET_KEY` vide sur Pages `bati-axe-dev-dev`. Reposé (wrangler) + secret GitHub `PROD_TF_VAR_SUPABASE_SERVICE_ROLE_KEY` corrigé (alimente terraform dev et prod). Fix client `claim.vue` : `authedUser.id ?? authedUser.sub` (plus de `professionals?id=eq.undefined`).
+- **Parcours vérifié sur dev** : inscription → claim → étape documents → reconnexion → `/espace/dashboard` OK. Envoi réel du Kbis vers R2 non testé. Compte de test `e2e.claim.1791539508344@example.com` créé dans la base cloud partagée (à supprimer).
+- **Décisions** : type de pro « Entreprise Générale du Bâtiment » (`entreprise_generale`, validation admin, NAF = signal) → plan 05.19-05 ; `generaliste` renommé partout dans 05.19 ; **Stripe (P3) reporté en dernier** (pas de paiement tant que l'app n'est pas fonctionnelle et sans leads, qui viendront des partenaires).
+- **Prod client non déployée** : avant bascule, poser `NUXT_SUPABASE_SECRET_KEY` sur `bati-axe-production` (via terraform-prod) et `NUXT_ADMIN_EMAIL` (alertes admin ignorées sinon).
 
 ## Infrastructure vérifiée le 2026-08-25
 
