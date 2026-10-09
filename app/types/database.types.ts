@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       audit_logs: {
@@ -800,17 +825,16 @@ export type Database = {
       }
       professionals: {
         Row: {
-          professional_type: string
-          categories_reviewed_at: string
-          egb_status: string
           b2b_alerts_email: boolean
           bio: string | null
           canonical_slug: string
           categories: string[] | null
+          categories_reviewed_at: string
           category: string | null
           company_name: string
           created_at: string | null
           decennal_status: Database["public"]["Enums"]["decennal_status"] | null
+          egb_status: string
           email: string
           free_leads_used: number
           full_name: string
@@ -824,6 +848,7 @@ export type Database = {
           onboarding_email_sent_at: string | null
           phone: string
           postal_code: string | null
+          professional_type: string
           short_id: string
           siret: string
           siret_address: string | null
@@ -841,19 +866,18 @@ export type Database = {
           zone_id: string | null
         }
         Insert: {
-          professional_type?: string
-          categories_reviewed_at?: string
-          egb_status?: string
           b2b_alerts_email?: boolean
           bio?: string | null
           canonical_slug: string
           categories?: string[] | null
+          categories_reviewed_at?: string
           category?: string | null
           company_name: string
           created_at?: string | null
           decennal_status?:
             | Database["public"]["Enums"]["decennal_status"]
             | null
+          egb_status?: string
           email: string
           free_leads_used?: number
           full_name: string
@@ -867,6 +891,7 @@ export type Database = {
           onboarding_email_sent_at?: string | null
           phone: string
           postal_code?: string | null
+          professional_type?: string
           short_id: string
           siret: string
           siret_address?: string | null
@@ -884,19 +909,18 @@ export type Database = {
           zone_id?: string | null
         }
         Update: {
-          professional_type?: string
-          categories_reviewed_at?: string
-          egb_status?: string
           b2b_alerts_email?: boolean
           bio?: string | null
           canonical_slug?: string
           categories?: string[] | null
+          categories_reviewed_at?: string
           category?: string | null
           company_name?: string
           created_at?: string | null
           decennal_status?:
             | Database["public"]["Enums"]["decennal_status"]
             | null
+          egb_status?: string
           email?: string
           free_leads_used?: number
           full_name?: string
@@ -910,6 +934,7 @@ export type Database = {
           onboarding_email_sent_at?: string | null
           phone?: string
           postal_code?: string | null
+          professional_type?: string
           short_id?: string
           siret?: string
           siret_address?: string | null
@@ -945,9 +970,6 @@ export type Database = {
       }
       projects: {
         Row: {
-          selected_category: string | null
-          selected_items: string[]
-          selected_sub_category: string | null
           access_token: string | null
           budget_range: string
           calculator_data: Json | null
@@ -968,14 +990,14 @@ export type Database = {
           qualify_score: number
           relaunch_count: number
           retention_until: string
+          selected_category: string | null
+          selected_items: string[]
+          selected_sub_category: string | null
           status: string
           timeline_range: string | null
           zone_id: string | null
         }
         Insert: {
-          selected_category?: string | null
-          selected_items?: string[]
-          selected_sub_category?: string | null
           access_token?: string | null
           budget_range: string
           calculator_data?: Json | null
@@ -996,14 +1018,14 @@ export type Database = {
           qualify_score?: number
           relaunch_count?: number
           retention_until?: string
+          selected_category?: string | null
+          selected_items?: string[]
+          selected_sub_category?: string | null
           status?: string
           timeline_range?: string | null
           zone_id?: string | null
         }
         Update: {
-          selected_category?: string | null
-          selected_items?: string[]
-          selected_sub_category?: string | null
           access_token?: string | null
           budget_range?: string
           calculator_data?: Json | null
@@ -1024,6 +1046,9 @@ export type Database = {
           qualify_score?: number
           relaunch_count?: number
           retention_until?: string
+          selected_category?: string | null
+          selected_items?: string[]
+          selected_sub_category?: string | null
           status?: string
           timeline_range?: string | null
           zone_id?: string | null
@@ -2411,6 +2436,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       artisan_doc_status: ["pending", "valid", "expired", "suspended"],
@@ -2426,6 +2454,7 @@ export const Constants = {
         "b2b_restitution_sent",
         "b2b_request_updated",
         "document_artisan_updated",
+        "egb_decided",
       ],
       b2b_apporteur_type: [
         "architecte",
