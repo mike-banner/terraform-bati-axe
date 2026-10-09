@@ -370,7 +370,7 @@ test.describe('Leads — filtre par catégorie', () => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ profile: { free_leads_used: 0 } }),
+        body: JSON.stringify({ profile: { free_leads_used: 0, categories: ['maconnerie', 'electricite'] } }),
       })
     )
 
@@ -388,7 +388,7 @@ test.describe('Leads — filtre par catégorie', () => {
 
     // Après filtre : 2 leads maçonnerie
     await expect(page.getByText('2 opportunités')).toBeVisible()
-    await expect(page.getByText(/Maçonnerie & Gros Œuvre/).first()).toBeVisible()
+    await expect(page.getByText(/Maçonnerie & Gros Œuvre/).and(page.locator(':not(option)')).first()).toBeVisible()
   })
 
   test('filtre sur catégorie sans résultat affiche l\'état vide de catégorie', async ({ page }) => {
@@ -409,7 +409,7 @@ test.describe('Leads — filtre par catégorie', () => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ profile: { free_leads_used: 0 } }),
+        body: JSON.stringify({ profile: { free_leads_used: 0, categories: ['maconnerie', 'electricite'] } }),
       })
     )
 
