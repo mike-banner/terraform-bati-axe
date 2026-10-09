@@ -10,7 +10,7 @@ import { maskLead } from '../../server/utils/maskLead'
 // Complète work-type-matrix.test.ts et egb-gate.test.ts : intégrité de la matrice,
 // combinaison gate EGB x projet legacy, multi-catégories, masquage ADR-004.
 
-const eg = (egb_status: string) => ({ professional_type: 'entreprise_generale', egb_status, categories: [] as string[] })
+const eg = (egb_status: string, categories: string[] = ['electricite', 'toiture']) => ({ professional_type: 'entreprise_generale', egb_status, categories })
 const matchesGate = (pro: any, projet: any) => proMatchesProject(effectiveProType(pro), projet)
 
 describe('intégrité de COMPATIBILITY_MATRIX', () => {
@@ -39,6 +39,14 @@ describe('intégrité de COMPATIBILITY_MATRIX', () => {
       else expect(r.specialistMatches.length).toBeGreaterThan(0)
     }
   })
+
+  it('un poste EG-only a egbMatches non vide, ne référençant que des catégories connues', () => {
+    for (const [, r] of entries) {
+      if (r.defaultRole !== 'entreprise_generale') continue
+      expect(r.egbMatches?.length).toBeGreaterThan(0)
+      for (const c of r.egbMatches!) expect(PROFESSIONAL_CATEGORIES[c]).toBeDefined()
+    }
+  })
 })
 
 describe('gate EGB x projets', () => {
@@ -48,6 +56,10 @@ describe('gate EGB x projets', () => {
   it('EGB approved reçoit les projets avec postes et legacy', () => {
     expect(matchesGate(eg('approved'), avecPostes)).toBe(true)
     expect(matchesGate(eg('approved'), legacy)).toBe(true)
+  })
+
+  it('EGB approved sans recouvrement : false', () => {
+    expect(matchesGate(eg('approved', ['peinture']), avecPostes)).toBe(false)
   })
 
   it('EGB pending / rejected ne reçoit rien, même un projet legacy', () => {
@@ -81,7 +93,7 @@ describe('masquage ADR-004 inchangé par le matching', () => {
       id: 'p1', status: 'new', unlocked_at: null, created_at: new Date().toISOString(),
       projects: { id: 'p1', category: 'toiture', customer_name: 'Jean Dupont', customer_email: 'j@x.fr', customer_phone: '0600000000', postal_code: '78300', description: 'x' },
     }
-    expect(matchesGate(eg('approved'), { selected_items: ['pac'] })).toBe(true)
+    expect(matchesGate(eg('approved', ['plomberie']), { selected_items: ['pac'] })).toBe(true)
     const json = JSON.stringify(maskLead(lead as any, false, new Date(), false))
     for (const secret of ['Jean Dupont', '0600000000', 'j@x.fr']) expect(json).not.toContain(secret)
   })

@@ -6,12 +6,15 @@ const projet = { selected_items: ['pac'], category: 'plomberie' }
 const matches = (pro: any) => proMatchesProject(effectiveProType(pro), projet)
 
 describe('gate EGB', () => {
-  it('EGB approved : tous les chantiers', () => {
-    expect(matches({ professional_type: 'entreprise_generale', egb_status: 'approved', categories: [] })).toBe(true)
+  it('EGB approved sans catégorie : rien', () => {
+    expect(matches({ professional_type: 'entreprise_generale', egb_status: 'approved', categories: [] })).toBe(false)
   })
-  it('EGB pending / rejected / none : rien', () => {
+  it('EGB approved avec recouvrement : reçoit', () => {
+    expect(matches({ professional_type: 'entreprise_generale', egb_status: 'approved', categories: ['plomberie'] })).toBe(true)
+  })
+  it('EGB pending / rejected / none : rien, même avec des métiers cochés', () => {
     for (const egb_status of ['pending', 'rejected', 'none']) {
-      expect(matches({ professional_type: 'entreprise_generale', egb_status, categories: [] })).toBe(false)
+      expect(matches({ professional_type: 'entreprise_generale', egb_status, categories: ['plomberie', 'renovation_energetique'] })).toBe(false)
     }
   })
   it('spécialiste inchangé', () => {
