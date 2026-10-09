@@ -22,18 +22,16 @@ const OPT_IN_CATEGORIES = ['renovation_globale', 'prestations_ciblees']
 const showEnergyOptIn = computed(() => OPT_IN_CATEGORIES.includes(props.selectedCategory))
 const energyOptIn = ref(hasEnergyItems(props.selectedItems))
 
-type Block = { title?: string; items: string[]; id?: string; optIn?: boolean }
+type Block = { title?: string; items: string[] }
 
-// Blocs affichés selon la catégorie ; la case opt-in est rendue à la fin du dernier bloc principal
+// Blocs affichés selon la catégorie ; la rénovation énergétique a sa propre section séparée (case + liste)
 const blocks = computed<Block[]>(() => {
   let main: Block[] = []
   if (props.selectedCategory === 'renovation_globale') {
     main = [{ title: 'Gros Œuvre', items: GROS_OEUVRE }, { title: 'Second Œuvre', items: SECOND_OEUVRE }]
   } else if (props.selectedCategory === 'renovation_energetique') return [{ title: 'Rénovation énergétique', items: [...ENERGY_ITEMS] }]
   else if (props.selectedCategory === 'prestations_ciblees') main = [{ title: 'Rénovation ciblée', items: PRESTATIONS }]
-  if (!main.length) return []
-  main[main.length - 1]!.optIn = true
-  return energyOptIn.value ? [...main, { title: 'Rénovation énergétique', items: [...ENERGY_ITEMS], id: 'bloc-energie' }] : main
+  return main
 })
 
 function toggleEnergyOptIn(checked: boolean) {
@@ -63,13 +61,8 @@ const reservedLabels = computed(() =>
       {{ reservedLabels.join(', ') }} : ces travaux nécessitent une coordination. Nous vous proposerons une entreprise générale du bâtiment.
     </div>
 
-    <div
-      v-for="(block, i) in blocks"
-      :id="block.id"
-      :key="i"
-      :class="block.id ? 'mt-8 pt-6 border-t-2 border-orange-200' : ''"
-    >
-      <h2 v-if="block.title" class="text-base font-bold mb-3" :class="block.id ? 'text-orange-600 uppercase tracking-wide' : ''">{{ block.title }}</h2>
+    <div v-for="(block, i) in blocks" :key="i">
+      <h2 v-if="block.title" class="text-base font-bold mb-3">{{ block.title }}</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <label
           v-for="id in block.items"
@@ -88,10 +81,12 @@ const reservedLabels = computed(() =>
           <span class="text-sm font-semibold">{{ COMPATIBILITY_MATRIX[id]?.label }}</span>
         </label>
       </div>
-      <label
-        v-if="block.optIn && showEnergyOptIn"
-        class="flex items-center gap-3 p-3 mt-3 border border-dashed rounded-sm cursor-pointer min-h-11 focus-within:ring-2 focus-within:ring-orange-500"
-      >
+    </div>
+
+    <!-- Section séparée : rénovation énergétique (case, puis liste dépliée dessous) -->
+    <section v-if="showEnergyOptIn" class="mt-8 pt-6 border-t-2 border-orange-200">
+      <h2 class="text-base font-bold mb-3 text-orange-600 uppercase tracking-wide">Rénovation énergétique</h2>
+      <label class="flex items-center gap-3 p-3 border border-dashed rounded-sm cursor-pointer min-h-11 focus-within:ring-2 focus-within:ring-orange-500">
         <input
           type="checkbox"
           class="accent-safety w-4 h-4 shrink-0"
@@ -102,6 +97,24 @@ const reservedLabels = computed(() =>
         />
         <span class="text-sm font-semibold">J’envisage aussi de la rénovation énergétique</span>
       </label>
-    </div>
+      <div v-if="energyOptIn" id="bloc-energie" class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <label
+          v-for="id in ENERGY_ITEMS"
+          :key="id"
+          class="flex items-center gap-3 p-3 border rounded-sm cursor-pointer transition-colors min-h-11 focus-within:ring-2 focus-within:ring-orange-500"
+          :class="selectedItems.includes(id)
+            ? 'border-orange-500 bg-orange-50 text-slate-900'
+            : 'border-border hover:border-foreground/40 hover:bg-muted'"
+        >
+          <input
+            type="checkbox"
+            class="accent-safety w-4 h-4 shrink-0"
+            :checked="selectedItems.includes(id)"
+            @change="toggle(id)"
+          />
+          <span class="text-sm font-semibold">{{ COMPATIBILITY_MATRIX[id]?.label }}</span>
+        </label>
+      </div>
+    </section>
   </div>
 </template>
