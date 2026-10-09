@@ -800,6 +800,7 @@ export type Database = {
       }
       professionals: {
         Row: {
+          professional_type: string
           b2b_alerts_email: boolean
           bio: string | null
           canonical_slug: string
@@ -838,6 +839,7 @@ export type Database = {
           zone_id: string | null
         }
         Insert: {
+          professional_type?: string
           b2b_alerts_email?: boolean
           bio?: string | null
           canonical_slug: string
@@ -878,6 +880,7 @@ export type Database = {
           zone_id?: string | null
         }
         Update: {
+          professional_type?: string
           b2b_alerts_email?: boolean
           bio?: string | null
           canonical_slug?: string
@@ -936,6 +939,9 @@ export type Database = {
       }
       projects: {
         Row: {
+          selected_category: string | null
+          selected_items: string[]
+          selected_sub_category: string | null
           access_token: string | null
           budget_range: string
           calculator_data: Json | null
@@ -961,6 +967,9 @@ export type Database = {
           zone_id: string | null
         }
         Insert: {
+          selected_category?: string | null
+          selected_items?: string[]
+          selected_sub_category?: string | null
           access_token?: string | null
           budget_range: string
           calculator_data?: Json | null
@@ -986,6 +995,9 @@ export type Database = {
           zone_id?: string | null
         }
         Update: {
+          selected_category?: string | null
+          selected_items?: string[]
+          selected_sub_category?: string | null
           access_token?: string | null
           budget_range?: string
           calculator_data?: Json | null
