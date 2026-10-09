@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { PROFESSIONAL_CATEGORIES } from '~/utils/workTypeMatrix'
 import { ref, reactive, computed, watch } from 'vue'
 
 useHead({
@@ -35,14 +36,7 @@ const showPassword = ref(false)
 const claimSlug = ref('')
 
 const authForm = reactive({ email: '', password: '', full_name: '' })
-const CATEGORIES = [
-  { id: 'maconnerie',  label: 'Maçonnerie & Gros Œuvre' },
-  { id: 'toiture',    label: 'Charpente & Toiture' },
-  { id: 'electricite',label: 'Électricité' },
-  { id: 'plomberie',  label: 'Plomberie & Chauffage' },
-  { id: 'peinture',   label: 'Peinture & Finitions' },
-  { id: 'isolation',  label: 'Isolation & Cloisons' },
-]
+const CATEGORIES = Object.entries(PROFESSIONAL_CATEGORIES).map(([id, label]) => ({ id, label }))
 
 const proForm  = reactive({
   company_name: '',
@@ -50,6 +44,7 @@ const proForm  = reactive({
   full_name: '',
   phone: '',
   postal_code: '',
+  professional_type: 'specialiste' as 'specialiste' | 'entreprise_generale',
   categories: [] as string[],
   sms_opt_in: false,
   cgu_accepted: false
@@ -137,7 +132,7 @@ const isProFormValid = computed(() =>
   RE_NAME.test(proForm.full_name) &&
   RE_PHONE_FR.test(proForm.phone) &&
   RE_CP.test(proForm.postal_code) &&
-  proForm.categories.length > 0 &&
+  (proForm.professional_type === 'entreprise_generale' || proForm.categories.length > 0) &&
   proForm.cgu_accepted
 )
 
@@ -173,7 +168,7 @@ async function fetchSuggestedCategories() {
       proForm.company_name = siretPreview.companyName
       companyNameAutoFilled.value = true
     }
-    if (res.suggested_categories?.length && !categoriesTouched.value && proForm.categories.length === 0) {
+    if (res.suggested_categories?.length && !categoriesTouched.value && proForm.categories.length === 0 && proForm.professional_type === 'specialiste') {
       proForm.categories = [...res.suggested_categories]
     }
   } catch {
@@ -349,7 +344,8 @@ const handleRegisterCompany = async () => {
         full_name:    proForm.full_name.trim(),
         phone:        proForm.phone.replace(/\s/g, ''),
         postal_code:  proForm.postal_code,
-        categories:   proForm.categories,
+        professional_type: proForm.professional_type,
+        categories:   proForm.professional_type === 'entreprise_generale' ? [] : proForm.categories,
         sms_opt_in:   proForm.sms_opt_in
       }
     })
@@ -697,8 +693,28 @@ const backToStep2 = () => {
             </div>
           </div>
 
-          <!-- Categories -->
+          <!-- Type de pro -->
           <div>
+            <label class="block text-sm font-medium text-foreground mb-2">Type d'entreprise <span class="text-red-600">*</span></label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <button
+                v-for="t in [{ id: 'specialiste', label: 'Spécialiste (un ou plusieurs métiers)' }, { id: 'entreprise_generale', label: 'Entreprise Générale du Bâtiment' }]"
+                :key="t.id"
+                type="button"
+                @click="proForm.professional_type = t.id as 'specialiste' | 'entreprise_generale'; if (t.id === 'entreprise_generale') proForm.categories = []"
+                class="min-h-10 px-3 py-2 rounded-sm border text-sm font-medium text-left transition-colors"
+                :class="proForm.professional_type === t.id
+                  ? 'bg-foreground text-background border-foreground'
+                  : 'border-border text-foreground hover:bg-muted'"
+              >
+                {{ t.label }}
+              </button>
+            </div>
+            <p v-if="proForm.professional_type === 'entreprise_generale'" class="mt-2 text-xs text-muted-foreground">Une entreprise générale est validée manuellement par notre équipe avant de recevoir des chantiers.</p>
+          </div>
+
+          <!-- Categories -->
+          <div v-if="proForm.professional_type === 'specialiste'">
             <label class="block text-sm font-medium text-foreground mb-2">Corps de métier <span class="text-red-600">*</span></label>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <button

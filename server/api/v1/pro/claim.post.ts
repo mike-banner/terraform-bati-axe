@@ -2,12 +2,14 @@ import { z } from 'zod'
 import { serverSupabaseServiceRole, serverSupabaseUser } from '#supabase/server'
 import crypto from 'node:crypto'
 import { notifyAdmin, adminDetailsTable } from '../../../utils/notifyAdmin'
+import { PROFESSIONAL_CATEGORIES } from '../../../../app/utils/workTypeMatrix'
+import { isEgbNaf } from '../../../utils/siretLookup'
 
 const log = (msg: string) => {
   console.log(`[claim.post] ${new Date().toISOString()} - ${msg}`)
 }
 
-const VALID_CATEGORIES = ['maconnerie', 'toiture', 'electricite', 'plomberie', 'peinture', 'isolation'] as const
+const VALID_CATEGORIES = Object.keys(PROFESSIONAL_CATEGORIES) as [string, ...string[]]
 
 const claimSchema = z.object({
   prospect_id: z.string().uuid().optional(),
@@ -16,8 +18,17 @@ const claimSchema = z.object({
   full_name: z.string().min(2, 'Le nom du gérant est requis.').max(100, 'Le nom du gérant ne peut dépasser 100 caractères.'),
   phone: z.string().regex(/^(?:(?:\+|00)33|0)[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone invalide.'),
   postal_code: z.string().regex(/^\d{5}$/, 'Code postal invalide.'),
-  categories: z.array(z.enum(VALID_CATEGORIES)).min(1, 'Sélectionnez au moins un corps de métier.').max(VALID_CATEGORIES.length, 'Trop de catégories sélectionnées.'),
+  professional_type: z.enum(['specialiste', 'entreprise_generale']).default('specialiste'),
+  categories: z.array(z.enum(VALID_CATEGORIES)).max(VALID_CATEGORIES.length, 'Trop de catégories sélectionnées.').default([]),
   sms_opt_in: z.boolean().default(false)
+}).superRefine((d, ctx) => {
+  // Spécialiste : au moins un métier ; EGB : aucun métier (accès à tout après validation admin)
+  if (d.professional_type === 'specialiste' && d.categories.length === 0) {
+    ctx.addIssue({ code: 'custom', path: ['categories'], message: 'Sélectionnez au moins un corps de métier.' })
+  }
+  if (d.professional_type === 'entreprise_generale' && d.categories.length > 0) {
+    ctx.addIssue({ code: 'custom', path: ['categories'], message: 'Une entreprise générale ne choisit pas de métier.' })
+  }
 })
 
 // Helper to generate a URL-safe 8-character ID
@@ -212,6 +223,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // 6. Upsert professional record
+    const isEgb = data.professional_type === 'entreprise_generale'
     log('Upserting professional...')
     const { data: newPro, error: proError } = await supabase
       .from('professionals')
@@ -227,6 +239,8 @@ export default defineEventHandler(async (event) => {
         postal_code: data.postal_code,
         zone_id: zoneId,
         categories: data.categories,
+        professional_type: data.professional_type,
+        egb_status: isEgb ? 'pending' : 'none',
         is_verified: false,
         is_claimed: true,
         decennal_status: 'none',
@@ -263,7 +277,9 @@ export default defineEventHandler(async (event) => {
         ['Contact', data.full_name],
         ['SIRET', data.siret],
         ['Statut SIRET', String(siretLookup.status)],
-        ['Catégories', data.categories.join(', ')],
+        ['Type', isEgb ? 'Entreprise Générale du Bâtiment (validation requise)' : 'Spécialiste'],
+        ['Catégories', data.categories.join(', ') || '—'],
+        ...(isEgb ? [['NAF', `${siretLookup.naf_code ?? 'inconnu'} — ${isEgbNaf(siretLookup.naf_code) ? 'NAF cohérent' : 'NAF incohérent'}`] as [string, string]] : []),
         ['Code postal', data.postal_code],
       ]),
       cta: { label: 'Ouvrir la console admin', href: `${useRuntimeConfig().public.siteUrl || 'https://bati-axe.com'}/admin` },
