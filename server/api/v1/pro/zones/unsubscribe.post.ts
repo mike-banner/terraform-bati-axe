@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
   let currentPhase: Stripe.SubscriptionSchedule.Phase
   try {
     const schedule = await stripe.subscriptionSchedules.create({ from_subscription: subscriptionId })
-    currentPhase = schedule.phases[0]
+    currentPhase = schedule.phases[0]!
 
     await stripe.subscriptionSchedules.update(schedule.id, {
       phases: [

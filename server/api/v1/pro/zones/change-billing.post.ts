@@ -67,7 +67,7 @@ export default defineEventHandler(async (event) => {
   try {
     // Convertit l'abonnement en schedule pour programmer la transition à la fin de la période en cours.
     const schedule = await stripe.subscriptionSchedules.create({ from_subscription: subscriptionId })
-    currentPhase = schedule.phases[0]
+    currentPhase = schedule.phases[0]!
 
     await stripe.subscriptionSchedules.update(schedule.id, {
       phases: [

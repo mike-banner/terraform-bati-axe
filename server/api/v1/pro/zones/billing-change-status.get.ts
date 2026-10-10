@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
   if (scheduleId) {
     const schedule = await stripe.subscriptionSchedules.retrieve(scheduleId)
     if (schedule.status === 'active' && schedule.phases.length >= 2) {
-      const nextPhase = schedule.phases[1]
+      const nextPhase = schedule.phases[1]!
       if (schedule.metadata?.kind === 'zone_removal') {
         pendingZoneRemoval = {
           zone_id: schedule.metadata.zone_id as string,
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
           effective_date: nextPhase.start_date,
         }
       } else {
-        const nextPrice = await stripe.prices.retrieve(nextPhase.items[0].price as string)
+        const nextPrice = await stripe.prices.retrieve(nextPhase.items[0]!.price as string)
         pending = {
           target_billing: nextPrice.recurring?.interval === 'year' ? 'annual' : 'monthly',
           effective_date: nextPhase.start_date,

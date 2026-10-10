@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
     .eq('pro_id', user.id)
     .eq('status', 'active')
 
-  if (activeZones?.some(z => z.zone_id === zone_id)) {
+  if (activeZones?.some((z: { zone_id: string }) => z.zone_id === zone_id)) {
     throw createError({ statusCode: 409, statusMessage: 'Déjà abonné à cette zone.' })
   }
 
@@ -109,7 +109,7 @@ export default defineEventHandler(async (event) => {
       const existingSub = await stripe.subscriptions.retrieve(existingSubscriptionId)
       assertSubscriptionModifiable(existingSub)
       await stripe.subscriptions.update(existingSubscriptionId, {
-        items: [{ id: existingSub.items.data[0].id, price: priceObj.id }],
+        items: [{ id: existingSub.items.data[0]!.id, price: priceObj.id }],
         proration_behavior: 'always_invoice', // débit immédiat du prorata, pas d'attente du prochain renouvellement
       })
       subscriptionId = existingSubscriptionId
