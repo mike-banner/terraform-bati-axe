@@ -379,7 +379,7 @@ function pipelineLabel(status: string): string {
                 class="text-[10px] px-1.5 py-0.5 rounded-sm border border-destructive/40 bg-destructive/10 text-destructive font-semibold"
                 :title="(r.report_reasons || []).join(' · ')"
               >
-                ⚠ Signalé{{ r.reported_count > 1 ? ` ×${r.reported_count}` : '' }}
+                ⚠ Signalé{{ (r.reported_count ?? 0) > 1 ? ` ×${r.reported_count}` : '' }}
               </span>
             </div>
             <div class="flex items-center gap-2 mt-1 text-xs text-muted-foreground flex-wrap">

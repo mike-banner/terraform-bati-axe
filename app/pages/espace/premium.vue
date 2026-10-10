@@ -183,13 +183,13 @@ const PRICING: Record<number, { monthly: number; annual: number }> = {
 const selectedPrice = computed(() => {
   if (totalZoneCount.value === 0) return 0
   const tier = Math.min(totalZoneCount.value, 4)
-  return PRICING[tier][billing.value]
+  return PRICING[tier]![billing.value]
 })
 
 const annualSavings = computed(() => {
   if (totalZoneCount.value === 0) return 0
   const tier = Math.min(totalZoneCount.value, 4)
-  return (PRICING[tier].monthly - PRICING[tier].annual) * 12
+  return (PRICING[tier]!.monthly - PRICING[tier]!.annual) * 12
 })
 
 // ─── Récap facturation — montant réellement facturé sur les zones actives ───
@@ -197,7 +197,7 @@ const activePrice = computed(() => {
   const count = activeZoneIds.value.size
   if (count === 0 || !lockedBilling.value) return 0
   const tier = Math.min(count, 4)
-  return PRICING[tier][lockedBilling.value]
+  return PRICING[tier]![lockedBilling.value]
 })
 
 // ─── Checkout ──────────────────────────────────────────────────
@@ -459,7 +459,7 @@ async function startCheckout() {
               :key="zoneId"
               class="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-md bg-slate-100 text-slate-700"
             >
-              {{ zones.find(z => z.id === zoneId)?.name }}
+              {{ zones?.find(z => z.id === zoneId)?.name }}
             </span>
           </div>
         </div>
