@@ -1,4 +1,4 @@
-# 🧭 Plan de Vol BÂTI-AXE — Synthèse de Pilotage (mise à jour 2026-08-25)
+# 🧭 Plan de Vol BÂTI-AXE — Synthèse de Pilotage (mise à jour 2026-10-10)
 
 > Source : specs client consolidées (`.planning/clients/`) + ROADMAP + backlog P1→P22.
 > Objectif : répondre à « ce qui est fait, ce qui reste dans l'ordre, ce qui constitue V1/V2/V3, et les milestones ».
@@ -20,6 +20,10 @@
 | Calculateur + simulateur aides (Mes Aides Réno + reste à charge) | Phase 5.6 + 05.9 |
 | Durcissement inputs (Zod ↔ HTML) | Phase 5.7 |
 | Messagerie + espace client + email onboarding | Phase 6 |
+| Arborescence B2C : 3 catégories + postes, case rénovation énergétique, tunnel d'aides conditionnel | Phase 05.19 |
+| Types de pros (spécialiste / Entreprise Générale du Bâtiment, validation admin) + qualification RGE | Phase 05.19 |
+| Sécurité pros : écritures serveur uniquement, RLS en lecture seule, verrous de revue des justificatifs | Phase 05.19 / ADR-012 |
+| Stockage R2 reproductible (module Terraform `r2_storage`, CORS) | Phase 05.19 / 05.14 |
 
 **En résumé : la machine B2C est construite (Milestone v0.9.0 clôturé).** Il manque le **lancement réel** + toute la **couche B2B/commission** (la marge).
 
@@ -30,7 +34,7 @@
 ### 🟢 V1 — Lancement pilote 78 (objectif : machine B2C qui tourne + premières archis/immo)
 | # | Item | Statut | Réf |
 | :--- | :--- | :--- | :--- |
-| 1 | **Stripe + cron 48h re-testés en prod** | ⏳ runbook prêt; accès aux identifiants client requis | P3 |
+| 1 | **Stripe + cron 48h re-testés en prod** | ⏸️ **en dernier** (décision 2026-10-09) ; runbook prêt, accès client requis | P3 |
 | 2 | **Turnstile anti-spam** | ✅ code livré (standby clés) | P2 |
 | 3 | **Console admin opérationnelle** | ✅ livré (composants, dark, KPIs, audit) | 06.1 |
 | 4 | **KPIs de pilotage (dashboard)** | ✅ livré; Umami (VPS + PostgreSQL) reste à brancher | 06.2/P1 |

@@ -104,3 +104,10 @@ CREATE INDEX idx_leads_created_at ON leads(created_at DESC);
 - Jamais de `DROP` sans sauvegarde et ADR
 - Toujours inclure un rollback commenté
 - Migrations versionnées et séquentielles
+
+## Écritures par les utilisateurs (ajout 2026-10-10 — ADR-012)
+
+- Une table qui porte un état de confiance (`professionals`, `verifications`) n'accorde au jeton utilisateur que la **lecture** de ses propres lignes. Les écritures passent par Nitro avec le service role, **bornées à `user.id`**.
+- Un `UPDATE` bloqué par la RLS ne renvoie **aucune erreur** (0 ligne) : toute écriture serveur doit vérifier qu'au moins une ligne a été modifiée (`.select('id')` puis 404 sinon) et être couverte par un test de non-régression.
+- Les champs de revue (`status`, `reviewed_*`, `egb_status`, `professional_type`, `rge_status`) sont protégés par triggers de garde ; les valeurs dérivées (`rge_status`) sont calculées par trigger, jamais par le code applicatif.
+- Toute migration appliquée au cloud suit : dry-run (`supabase db push --linked --dry-run`) → liste exacte → accord explicite → push → `migration list --linked` → régénération des types. La base cloud est partagée dev/prod.

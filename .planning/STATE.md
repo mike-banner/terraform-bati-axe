@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
-status: verifying
-stopped_at: Completed 05.19-17-PLAN.md
+status: executing
+stopped_at: "Phase 05.19 terminée (17/17), fusionnée dans dev et déployée — 2026-10-10"
 last_updated: "2026-10-09T13:56:36.989Z"
 progress:
   total_phases: 33
@@ -30,9 +30,9 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 
 ## Current Position
 
-Phase: 05.19 (refonte-arborescence-b2c) — EXECUTING
-Plan: 5 of 5
-Status: Phase complete — ready for verification
+Phase: 05.19 (refonte-arborescence-b2c) — ✅ TERMINÉE le 2026-10-10 (17/17 plans, vérifiée, fusionnée dans `dev`, déployée sur Pages dev)
+Prochaine phase : voir « À faire dans l'immédiat » ci-dessous (05.21 marquée URGENTE au ROADMAP, puis 05.20, 06.4)
+Status: aucune phase en cours d'exécution
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
 
@@ -52,12 +52,25 @@ Phases complètes récentes (v1.0) :
 
 Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** (Stripe + cron re-test prod — inclut désormais un test webhook réel de transition de Subscription Schedule sur retrait de zone, non vérifié en conditions réelles), **P1** (Umami funnel — self-hosted VPS PostgreSQL), puis P6/P8/P10.
 
-## Fait le 2026-10-09 (dev Cloudflare perso)
+## Fait les 9 et 10 octobre 2026 (dev Cloudflare perso — rien en prod chez le client)
 
-- **FIX claim pro (500)** : cause = secret `NUXT_SUPABASE_SECRET_KEY` vide sur Pages `bati-axe-dev-dev`. Reposé (wrangler) + secret GitHub `PROD_TF_VAR_SUPABASE_SERVICE_ROLE_KEY` corrigé (alimente terraform dev et prod). Fix client `claim.vue` : `authedUser.id ?? authedUser.sub` (plus de `professionals?id=eq.undefined`).
-- **Parcours vérifié sur dev** : inscription → claim → étape documents → reconnexion → `/espace/dashboard` OK. Envoi réel du Kbis vers R2 non testé. Compte de test `e2e.claim.1791539508344@example.com` créé dans la base cloud partagée (à supprimer).
-- **Décisions** : type de pro « Entreprise Générale du Bâtiment » (`entreprise_generale`, validation admin, NAF = signal) → plan 05.19-05 ; `generaliste` renommé partout dans 05.19 ; **Stripe (P3) reporté en dernier** (pas de paiement tant que l'app n'est pas fonctionnelle et sans leads, qui viendront des partenaires).
-- **Prod client non déployée** : avant bascule, poser `NUXT_SUPABASE_SECRET_KEY` sur `bati-axe-production` (via terraform-prod) et `NUXT_ADMIN_EMAIL` (alertes admin ignorées sinon).
+- **Phase 05.19 terminée (17/17)** : types de pros `specialiste` (1-2 métiers) / `entreprise_generale` (EGB, plusieurs métiers, validation admin `egb_status`), 9 catégories, matching par recouvrement (`proMatchesProject`, `canAccessLead`), simulateur étape 1 catégorie / étape 2 postes + case « rénovation énergétique » (tunnel d'aides conditionnel), bandeau « Nouveau métier disponible », console admin « Entreprises générales ».
+- **Qualification RGE** : un seul statut `rge_status` (none/valid/expired) calculé par trigger SQL depuis le justificatif « rge » (expiration auto par pg_cron), règle `canDoEnergy` (RGE valide + décennale valide) pour les postes énergétiques ; dépôt à l'inscription (facultatif) et sur le dashboard ; validation admin avec date d'expiration. Voir ADR-011.
+- **Sécurité** : un pro ne peut plus s'auto-valider (RLS `professionals` en lecture seule, verrous sur `verifications`) ; toutes les écritures passent par le serveur en service role, bornées à `user.id`. Voir ADR-012. Régression du profil (PATCH silencieusement sans effet) corrigée et testée.
+- **Fix claim pro (500)** : secret `NUXT_SUPABASE_SECRET_KEY` vide sur Pages dev, reposé ; secret GitHub `PROD_TF_VAR_SUPABASE_SERVICE_ROLE_KEY` corrigé.
+- **R2** : buckets `batiaxe-{public,vault,b2b}-dev` n'existaient pas (tous les dépôts de fichiers échouaient) → créés, CORS posé, puis adoptés par Terraform (module `r2_storage`). Test en ligne : Kbis OK, RGE OK, logo OK (après correctif de l'URL).
+- **Base cloud (partagée dev/prod)** nettoyée : `admin@batiaxe.com` + `pro.egb@batiaxe.test` (EGB approuvé) + `pro.specialiste@batiaxe.test` ; migrations 20260915 → 20260919 appliquées ; types régénérés.
+- **Décisions** : Stripe (P3) reporté **en dernier** (pas de paiement tant que l'app n'est pas fonctionnelle et sans leads, qui viendront des partenaires) ; RGE = statut unique oui/non, pas de gestion de sous-traitance ; projets mixtes visibles en entier pour un pro non RGE retenu par un autre poste.
+- **Bascule prod** : voir `docs/PROD-BASCULE-CLIENT-RUNBOOK.md` (à exécuter uniquement sur demande de Mike).
+
+## À faire dans l'immédiat (hors préparation prod)
+
+1. **Validation visuelle par Mike** de l'interface : simulateur (titres « Rénovation ciblée » / « Rénovation énergétique », case et liste), inscription spécialiste/EGB + carte RGE à l'étape « Documents », profil et dashboard (module RGE qui apparaît/disparaît avec le métier), console admin (onglet « Entreprises générales », validation RGE avec date), bandeau « Nouveau métier ».
+2. **Tests en ligne non encore faits** (dev) : dépôt de la décennale, dossier B2B (bucket `b2b`), réalisations du portfolio (bucket `public`).
+3. **Phase 05.21 (URGENTE au ROADMAP)** : verrou juridique B2B anti-contournement + Stripe Connect split payment (ajoutée hors session) → à cadrer (`/gsd-discuss-phase 05.21`). Puis **05.20** (navigation header + landing prescripteurs) et **06.4** (mot de passe oublié pro + templates Auth).
+4. **Dette courte** : `decennal_status` ne passe jamais à « expiré » automatiquement (la règle RGE peut s'appuyer sur une décennale échue) ; audit des politiques `manage_own_*` restantes (`completed_projects`, `consents`, `verifications`) ; faire valider par le client la correspondance des postes réservés EGB (`egbMatches`) ; 46 erreurs de typecheck préexistantes (`server/utils/maskTender.ts`, `server/api/v1/pro/zones/*`, `server/utils/zoneMatcher.ts`, `app/pages/espace/premium.vue`, `AdminB2bTab.vue`) ; e2e manquants pour l'onglet admin EGB, le bandeau et le plafond de métiers.
+5. **Ménage dépôt** : supprimer `terraform/environments/dev/imports.tf` (devenu inutile ; son push relance un apply CI sans effet) ; décider du sort des fichiers `.planning/graphs/*` modifiés à chaque commit par le hook graphify (les ignorer ou les commiter à part).
+6. **Option produit** : notifier le pro (e-mail ou bandeau) quand il ajoute le métier « Rénovation énergétique » (aujourd'hui le module apparaît seulement à l'ouverture du dashboard).
 
 ## Infrastructure vérifiée le 2026-08-25
 
@@ -109,6 +122,12 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 **Migration + types** : après tout `supabase db push`, régénérer `app/types/database.types.ts` via `npx supabase gen types typescript --project-id xpwoczcbyamnjknloxgz --schema public > app/types/database.types.ts` (fichier committé — il était périmé depuis le 19/08, régénéré le 2026-08-23).
 
+**Écritures sur `professionals`** : toujours côté serveur (Nitro) avec `serverSupabaseServiceRole`, bornées à `user.id` ; la RLS est en lecture seule pour le jeton du pro depuis `20260918` (un `UPDATE` avec le jeton ne modifie aucune ligne, sans erreur). Ne jamais écrire `egb_status`, `professional_type`, `rge_status`, `is_verified`, `subscription_status` depuis une requête utilisateur. Voir ADR-012.
+
+**Matching pros / chantiers** : uniquement via `proMatchesProject` et `canAccessLead` (`app/utils/workTypeMatrix.ts`) — liste, e-mails, détail et déblocage utilisent la même règle (EGB approuvé, `canDoEnergy` pour les postes énergétiques). Voir ADR-011.
+
+**Terraform** : tout push de `terraform/**` sur `dev` lance `terraform apply -auto-approve` (workflow `terraform-dev.yml`) ; le workflow prod est manuel. Valider d'abord avec un `terraform plan -lock=false` en lecture seule.
+
 **Nouvelle migration** : ajouter le fichier dans `supabase/migrations/` puis `npx supabase db push --yes` (projet lié : `xpwoczcbyamnjknloxgz`, session CLI authentifiée). Ne jamais rééditer une migration déjà appliquée en remote.
 
 ## Backlog pilote v1 — Statut au 2026-08-23
@@ -117,7 +136,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 |---|---|
 | **P1** Umami funnel | ❌ à implémenter (décidé : Umami VPS PostgreSQL, sans cookie) |
 | **P2** Turnstile anti-spam | ✅ code livré — standby (clés client à créer au transfert Cloudflare) |
-| **P3** Stripe + cron re-test prod | ❌ à faire en premier (runbook prêt ; accès prod client nécessaire) |
+| **P3** Stripe + cron re-test prod | ⏸️ **en dernier** (décision 2026-10-09 : pas de paiement des pros avant une app fonctionnelle et des leads) |
 | **P4** Notif leads email | ✅ livré (PR #48 mergé) — Web Push reporté à la Phase 8 |
 | **P5** Feedback loop refus→marché testé | ✅ testé (2026-08-23, 05.13-03 — reste vérif sur données réelles au go-live) |
 | **P6** Étude financement courtier | ❌ absent |
@@ -126,7 +145,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 | **P9** Mobile QA + états vides | ✅ fait (2026-08-23, 05.13-02 — projet e2e mobile 48/48) |
 | **P10** Commission B2B + Stripe Connect | 📝 doc only — reporté au prochain milestone (2026-08-30, recentrage B2C) |
 | **P11** eIDAS / workspace archi | ❌ Phase 7+ |
-| **P12** Page pro public digne | ❌ à faire (CTA devis ajouté, avis = Phase 7) |
+| **P12** Page pro public digne | 🔶 logo affiché (proxy), CTA devis ajouté, avis = Phase 7 |
 | **P13** White-label Terraform | 📝 fondation existe |
 | **P14** Monitoring Axiom | ❌ à faire |
 | **P15** Messagerie temps réel | 📝 noté — polling OK |
@@ -159,6 +178,9 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - **Test badge préexistant cassé** : `tests/badges.test.ts` attend `bg-[#F8FAFC]` alors que le composant utilise `bg-green-100` (dérive de palette antérieure) — hors périmètre des chantiers récents, à corriger dans une passe dédiée.
 - Migrations Supabase locales pas systématiquement appliquées en parallèle du push distant (constaté sur 09-01 : b2b_tender_claims absent en local) — vérifier avant tout npm run dev sur une nouvelle machine
 
+- **Décennale jamais « expirée » automatiquement** (découvert 2026-10-09) : `decennal_status` n'est mis à jour par aucun job ; le cron `expire-rge-status` ne concerne que le RGE. À traiter (voir « À faire dans l'immédiat »).
+- **Base Supabase cloud partagée dev/prod** : toute migration ou suppression y touche la prod → GO explicite obligatoire (voir runbook prod).
+
 ## Accumulated Context
 
 ### Roadmap Evolution
@@ -170,6 +192,6 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 ## Session Continuity
 
-Last session: 2026-10-09T13:56:36.980Z
-Stopped at: Completed 05.19-17-PLAN.md
-Resume: `/gsd-plan-phase 06.3` pour découper la phase email en plans exécutables, puis **P3** (re-test Stripe/cron en conditions prod réelles quand les identifiants client seront disponibles), **P1** Umami (VPS + PostgreSQL).
+Last session: 2026-10-10
+Stopped at: Phase 05.19 terminée, fusionnée dans dev, déployée
+Resume: voir « À faire dans l'immédiat » (validation visuelle par Mike, puis `/gsd-discuss-phase 05.21`)

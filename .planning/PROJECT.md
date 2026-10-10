@@ -40,10 +40,14 @@ corrigé le 2026-09-04, apply non lancé).
 - ✓ Diffusion automatique des appels d'offres partenaires aux artisans matchés (zone/catégorie), garde-fous anti-spam, badge de confiance — Phase 8, validé en 2026-09-06
 - ✓ Dashboard pro & claim des AO : onglet dédié dans `/espace/leads`, claim gaté sur `pro_zones` actif, révélation coordonnées, clôture auto (expiration 14j/cap), signalement admin — Phase 9, validé en 2026-09-08 (email partenaire livré mais non vérifié visuellement — domaine Resend `bati-axe.com` non vérifié, cf. DNS-01)
 
+- ✓ Arborescence B2C (catégories + postes, case énergétique, aides conditionnelles), types de pros spécialiste / EGB avec validation admin, qualification RGE (statut, expiration auto, matching des postes énergétiques), verrouillage des écritures pros (ADR-011, ADR-012) — Phase 05.19, 2026-10-10
+
 ### Active (v2.0 « Partenaires en scène »)
+- [ ] 🚨 **05.21** : verrou juridique B2B (contrat d'apport signé avant assignation) + Stripe Connect split payment.
+- [ ] **05.20** : navigation header (Espace Pro) + landing vitrine prescripteurs.
 - [ ] Persona syndic/copropriété exposé dans le tunnel B2B.
 - [ ] **P1** : brancher Umami (VPS déjà provisionné côté client) sur le funnel, continue sur `dev`.
-- [ ] **P3** : re-test Stripe avec les vraies clés prod (formalité).
+- [ ] **P3** : re-test Stripe avec les vraies clés prod (formalité) — **en dernier** (décision 2026-10-09).
 - [ ] **DNS-01** : activer DKIM/SPF/DMARC + Email Routing sur `bati-axe.com` pour la Phase 06.3.
 - [ ] **06.4** : mot de passe oublié pro + templates Auth Supabase brandés.
 

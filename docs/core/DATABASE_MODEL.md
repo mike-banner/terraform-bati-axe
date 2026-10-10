@@ -38,6 +38,12 @@
 - `stripe_customer_id`
 - `subscription_status` (ENUM: active, canceled, unpaid, none)
 - `created_at`
+- `categories` (TEXT[] — métiers déclarés ; spécialiste 1-2, EGB 1-9, source unique `PROFESSIONAL_CATEGORIES`)
+- `professional_type` (TEXT, CHECK : `specialiste` | `entreprise_generale`, défaut `specialiste`) — voir ADR-011
+- `egb_status` (TEXT, CHECK : `none` | `pending` | `approved` | `rejected`) — validation admin d'une EGB
+- `categories_reviewed_at` (TIMESTAMPTZ — dernière revue des métiers, bandeau « Nouveau métier »)
+- `rge_status` (TEXT, CHECK : `none` | `valid` | `expired`) — **dérivé par trigger** depuis `verifications` (jamais écrit par le code applicatif)
+- `siret_status`, `siret_naf_code`, … (réponse API Recherche Entreprises au claim)
 
 ### `consents` (Journal RGPD / LCEN — voir ADR-007)
 - `id` (UUID, PK)
@@ -75,7 +81,7 @@
 ### `verifications` (Documents R2)
 - `id` (UUID, PK)
 - `pro_id` (UUID, FK professionals)
-- `document_type` (Decennale, Kbis)
+- `document_type` (`decennale`, `kbis`, `rge` — un justificatif `rge` exige `expiry_date`)
 - `file_key` (R2 object key — pas d'URL publique)
 - `status` (Pending, Approved, Rejected)
 - `expiry_date` (Date de fin de validité)
@@ -110,6 +116,10 @@
 - **Select on prospects** : interdit côté client (`USING (false)`), accessible uniquement via Service Role pour les opérations d'opt-in.
 
 ---
+
+- **professionals (depuis `20260918`)** : le jeton d'un pro n'a que `SELECT` sur sa propre ligne (`select_own_professional`) ; toute écriture passe par le serveur en service role (ADR-012). Triggers de garde : `trg_guard_professional_admin_fields` (`professional_type`, `egb_status`) et `trg_guard_verification_review_fields` (un non-admin ne modifie ni `status`, ni dates, ni type d'un justificatif ; ses dépôts sont forcés en `pending`).
+- **rge_status** : calculé par `sync_rge_status(pro)` (trigger sur `verifications`) et `expire_rge_status()` (pg_cron `expire-rge-status`, toutes les heures) ; fonctions `SECURITY DEFINER` non exécutables par `anon`/`authenticated`.
+- **projects** : `selected_category`, `selected_sub_category`, `selected_items` (TEXT[]) alimentent le matching.
 
 ## Notes Migration
 - Toutes les migrations versionnées via Supabase CLI (`supabase/migrations/`).

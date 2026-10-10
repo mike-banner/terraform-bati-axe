@@ -122,3 +122,10 @@ type PaginatedResponse<T> = {
   hasMore: boolean;
 };
 ```
+
+## Règles ajoutées le 2026-10-10
+
+- **Accès par chantier** : toute route qui lit ou débloque un chantier utilise `canAccessLead` / `proMatchesProject` (`app/utils/workTypeMatrix.ts`) — liste, détail, déblocage, e-mails. Le masquage des coordonnées reste côté serveur (ADR-004).
+- **Dépôts de fichiers** : URL présignée R2 générée par Nitro ; la date d'expiration d'un justificatif `rge` est obligatoire, au format `YYYY-MM-DD`, strictement future ; un dépôt part toujours en `pending` (validation admin).
+- **Champs interdits au pro** : `PATCH /api/v1/pro/profile/me` est `.strict()` ; `professional_type`, `egb_status`, `rge_status`, `is_verified`, `subscription_status` y sont refusés (400).
+- **Endpoints admin EGB** : `GET /api/v1/admin/egb` et `PATCH /api/v1/admin/egb/[id]` (rôle `app_metadata.role === 'admin'`, trace dans `audit_logs`).

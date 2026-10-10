@@ -36,7 +36,7 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [x] **Phase 05.16: P7 Packs Zonés & Pricing Dégressif (Pilote 78)** - Quadrillage des Yvelines en 4 zones (Mantes, Rambouillet, Versailles, St-Germain) + tables `zones`/`pro_zones` + matching par code postal. Sans engagement mensuel (190€ → 350€) + annuel économique -21% (150€ → 300€). Ajout de zone, toggle mensuel/annuel et retrait individuel de zone (Subscription Schedule Stripe), garde-fou anti-conflit multi-changements. **Phase complète 2/2** (livré 2026-08-29)
 - [x] **Phase 05.17: P19 Partenaires Diagnostiqueurs Immobiliers** - Profil Diagnostiqueur ajouté au tunnel `/b2b/partenaires` existant (réutilisé plutôt qu'une page dédiée) : numéro de certification + travaux suggérés par le rapport DPE (isolation/chauffage/électricité/toiture), génération de dossier `b2b_requests` qualifié. **Phase complète 1/1** (livré 2026-08-29) — a mis au jour un bug préexistant bloquant tout le formulaire B2B (`consents.insert().catch()`), corrigé au passage.
 - [ ] **Phase 05.18: Annuaire, Vitrines Publiques & Dashboard Partenaires** — **Reportée au prochain milestone (2026-08-30)**, v1 recentrée sur le B2C. Section Partenaires sur l'accueil `/`, annuaire public par catégorie (`/partenaires/annuaire`), vitrine publique (`/partenaire/[dept]/[slug]`) et dashboard privé de gestion du profil (`/espace/partenaire`).
-- [x] **Phase 05.19: Refonte Arborescence & Tunnels B2C (Nomenclature Client)** — Phase correctrice : remplacement de la sélection par cartes visuelles 3 pôles (Rénovation Globale, Énergétique, Prestations Ciblées), schéma JSON normalisé avec slugs d'items uniques, tagging Supabase (`selected_category`, `selected_sub_category`, `selected_items`) pour le matching des artisans. (completed 2026-10-09) (completed 2026-10-09)
+- [x] **Phase 05.19: Refonte Arborescence & Tunnels B2C (Nomenclature Client)** — Phase correctrice : remplacement de la sélection par cartes visuelles 3 pôles (Rénovation Globale, Énergétique, Prestations Ciblées), schéma JSON normalisé avec slugs d'items uniques, tagging Supabase (`selected_category`, `selected_sub_category`, `selected_items`) pour le matching des artisans. (completed 2026-10-10 — 17/17 plans, fusionnée dans `dev` et déployée)
 - [ ] **Phase 05.20: Restructuration Navigation Header & Landing Vitrine Prescripteurs** — Chantier à faire en détail. Menu déroulant Espace Pro (`/pro/artisans` vs `/pro/prescripteurs-partenaires`), landing vitrine d'acquisition 4 piliers (Agents Immo, Syndics, Archis, Courtiers), routage CTA vers `/b2b/partenaires`. Spec client : `.planning/clients/20261009-VITRINE_PRESCRIPTEURS_PARTENAIRES-SPEC_CLIENT.md`
 - [ ] 🚨 **Phase 05.21: Verrou Juridique B2B (Anti-Contournement) & Stripe Connect Split Payment** — **[URGENT - Oubli V1/V2]** Signature numérique du contrat d'apport d'affaires avant assignation d'un lead B2B à un artisan (Verrou Juridique), et intégration du séquestre financier (Stripe Connect) pour sécuriser automatiquement la commission de la plateforme sans recouvrement manuel.
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
@@ -380,7 +380,7 @@ Plans:
   4. Dispatching artisans filtre sur `professionals.categories` ∩ `projects.selected_items` (inclusion complète).
   5. L'arborescence JSON est réutilisable dans le code (fonction Nuxt ou fichier statique importable).
 
-**Plans**: 17 plans (5 exécutés + 12 de rattrapage ; 14 à 17 : qualification RGE, à exécuter)
+**Plans**: 17 plans — **tous terminés** (5 initiaux + 12 de rattrapage : EGB multi-métiers, notifications, console admin, bandeau « nouveau métier », case énergétique, qualification RGE)
 - [x] 05.19-01-PLAN.md — Schema migration (professional_type, selected_*) + workTypeMatrix.ts
 - [x] 05.19-02-PLAN.md — Tunnel UI refactor (Étape 1-2, 3 categories, multi-select items)
 - [x] 05.19-03-PLAN.md — Matching logic (leads API overlap rule) + Pro profile (9 categories)
@@ -397,7 +397,14 @@ Plans:
 - [x] 05.19-14-PLAN.md — (rattrapage) Qualification RGE : migration rge_status (trigger + cron, local), règle canDoEnergy dans le matching / l'alerte, garde canAccessLead sur le détail et le déblocage
 - [x] 05.19-15-PLAN.md — (rattrapage) UI RGE : message et dépôt sur le dashboard/profil pro, validation dans la console admin
 - [x] 05.19-17-PLAN.md — (rattrapage) Document « rge » dans les endpoints du coffre-fort (dépôt pro avec validateRgeUpload testée, validation admin, lectures)
-- [ ] 05.19-16-PLAN.md — (rattrapage) Contrôle local, validation visuelle RGE, migration cloud avec GO utilisateur, types régénérés
+- [x] 05.19-16-PLAN.md — (rattrapage) Contrôle local, validation visuelle RGE, migration cloud avec GO utilisateur, types régénérés
+
+**Livré hors plans pendant la clôture (2026-10-09/10)** :
+- Faille de sécurité fermée (migration `20260918` : RLS `professionals` en lecture seule, verrou des champs de revue sur `verifications`) puis correctif de la régression induite sur `PATCH /api/v1/pro/profile/me` (écriture via service role, hotfix `e9f0762`, test de non-régression).
+- Logo : l'URL du proxy `/api/v1/pro/logo/[slug]` est enregistrée quand aucune URL publique de bucket n'est configurée (`6156c3d`).
+- Buckets R2 de dev + CORS adoptés par Terraform (module `terraform/modules/r2_storage`, `9d39582`) ; staging corrigé (noms `-staging`).
+- Migrations `20260915` à `20260919` appliquées au cloud (base partagée dev/prod), types régénérés.
+- Runbook de bascule prod : `docs/PROD-BASCULE-CLIENT-RUNBOOK.md`. ADR-011 (types de pros / EGB / RGE) et ADR-012 (écritures serveur, RLS lecture seule).
 
 **UI hint**: yes
 
@@ -608,6 +615,7 @@ Plans:
 | 5.6. Calculateur de Prix & Refonte Simulateur | 3/3 | Complete   | 2026-07-19 |
 | 5.7. Durcissement Validation des Inputs | 2/2 | Complete   | 2026-07-20 |
 | 05.8 Enrichissement SIRET (forme juridique/NAF) | 3/3 | Complete | 2026-07-20 |
+| 05.19 Refonte Arborescence & Tunnels B2C (EGB, RGE, simulateur énergétique) | 17/17 | Complete | 2026-10-10 |
 | 05.10 Espace Partenaires & Apporteurs d'Affaires (Tunnel B2B) | 7/7 | Complete | 2026-08-22 |
 | 05.11 Coffre-Fort Juridique & Capacité Sous-traitance | 4/4 | Complete | 2026-08-23 |
 | 6. Messagerie & Espace Client | 2/2 livrés (2 différés) | Complete | 2026-08-19 |
