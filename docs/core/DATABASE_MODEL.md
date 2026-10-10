@@ -119,6 +119,7 @@
 
 - **professionals (depuis `20260918`)** : le jeton d'un pro n'a que `SELECT` sur sa propre ligne (`select_own_professional`) ; toute écriture passe par le serveur en service role (ADR-012). Triggers de garde : `trg_guard_professional_admin_fields` (`professional_type`, `egb_status`) et `trg_guard_verification_review_fields` (un non-admin ne modifie ni `status`, ni dates, ni type d'un justificatif ; ses dépôts sont forcés en `pending`).
 - **rge_status** : calculé par `sync_rge_status(pro)` (trigger sur `verifications`) et `expire_rge_status()` (pg_cron `expire-rge-status`, toutes les heures) ; fonctions `SECURITY DEFINER` non exécutables par `anon`/`authenticated`.
+- **Durcissement (migration `20260920`)** : `consents` en lecture seule pour l'utilisateur ; trigger sur `completed_projects` (un non-admin ne peut ni activer ni modifier `is_showcased`) ; `expire_decennale_status()` + job pg_cron `expire-decennale-status` (décennale échue → `decennal_status = expired`, sans toucher `is_verified` ni l'abonnement).
 - **projects** : `selected_category`, `selected_sub_category`, `selected_items` (TEXT[]) alimentent le matching.
 
 ## Notes Migration

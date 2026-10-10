@@ -89,8 +89,8 @@ Le workflow `supabase-keep-alive.yml` pinge la base (secrets `TF_VAR_SUPABASE_UR
 **Acquis (dev, cloud partagé) :** RLS `professionals` en lecture seule (seul `select_own_professional`) ; trigger `trg_guard_professional_admin_fields` (professional_type / egb_status) ; trigger `trg_guard_verification_review_fields` (un pro ne modifie ni statut, ni dates, ni type d'un justificatif) ; `rge_status` calculé par trigger SQL, fonctions `SECURITY DEFINER` non exécutables par `anon`/`authenticated` ; masquage serveur des coordonnées (ADR-004) inchangé ; toutes les écritures sur `professionals` passent par le serveur avec la clé `service_role`, **bornées à `user.id`** (`profile/me.patch.ts`).
 
 **À traiter / vérifier avant l'ouverture :**
-- **`decennal_status` ne passe jamais à « expiré » automatiquement** : la règle RGE (`canDoEnergy`) peut s'appuyer sur une décennale échue. Phase dédiée à prévoir.
-- Autres politiques « FOR ALL » côté pro à auditer : `completed_projects`, `consents`, `verifications` (INSERT permis, mais `status` forcé à `pending`).
+- **Expiration de la décennale** : job `expire-decennale-status` (migration `20260920`, à appliquer avec les autres) — vérifier qu'il figure dans `select jobname from cron.job;`. Une approbation admin sans date d'expiration reste « valide » indéfiniment (voulu).
+- Politiques côté pro auditées le 2026-10-10 : `consents` en lecture seule, `completed_projects` (écriture permise, `is_showcased` réservé à l'admin par trigger), `verifications` verrouillée — via la migration `20260920`, à appliquer.
 - Toute nouvelle écriture serveur sur `professionals` doit utiliser le service role (un `UPDATE` avec le jeton du pro ne modifie **aucune ligne, sans erreur** : défaut déjà rencontré, test de non-régression `tests/unit/profile-patch-service-role.test.ts`).
 - Turnstile (anti-spam) : clés de prod à créer côté client (`PROD_TURNSTILE_SECRET_KEY`, `NUXT_PUBLIC_TURNSTILE_SITE_KEY`).
 

@@ -17,4 +17,4 @@ Après la migration `20260918`, `PATCH /api/v1/pro/profile/me` (écriture avec l
 
 ## Conséquences
 - Tout nouvel endpoint qui écrit sur `professionals` ou `verifications` utilise le service role.
-- Autres politiques `FOR ALL` à auditer : `completed_projects`, `consents`.
+- Audit du 2026-10-10 (migration `20260920`) : `consents` passe en lecture seule (toutes ses écritures viennent du serveur) ; `completed_projects` conserve son écriture (les endpoints `pro/realisations` écrivent avec le jeton du pro) mais `is_showcased` est réservé à l'admin par trigger.
