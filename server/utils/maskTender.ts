@@ -30,7 +30,7 @@ function truncate(s: string | null | undefined, n: number): string | null {
  * géolocalisante ne sort du serveur (ADR-004).
  */
 export function maskTender(lot: TenderLotRow, claimed: boolean): Record<string, any> {
-  const req = lot.b2b_requests || {}
+  const req: Partial<NonNullable<TenderLotRow['b2b_requests']>> = lot.b2b_requests || {}
 
   const common = {
     lot_id: lot.id,

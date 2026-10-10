@@ -34,7 +34,7 @@ export async function matchZone(supabase: any, postalCode: string): Promise<{ id
  */
 export function calculateZonePrice(zoneCount: number, billing: 'monthly' | 'annual'): number {
   const tier = Math.min(Math.max(zoneCount, 1), 4)
-  return ZONE_PRICING[tier][billing]
+  return ZONE_PRICING[tier]![billing]
 }
 
 /**
