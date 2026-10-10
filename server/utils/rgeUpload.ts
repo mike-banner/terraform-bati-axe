@@ -4,6 +4,20 @@ export type RgeUploadCheck =
   | { ok: false; error: string }
   | { ok: true; status: 'pending'; expiry_date: string }
 
+/** Date YYYY-MM-DD réelle (rejette 2027-02-30), strictement postérieure à today. */
+export function validateFutureExpiry(
+  expirationDate: string | undefined,
+  today = new Date().toISOString().slice(0, 10),
+): { ok: false; error: string } | { ok: true; expiry_date: string } {
+  if (!expirationDate) return { ok: false, error: "Date d'expiration requise." }
+  const d = expirationDate
+  if (!ISO_DATE.test(d) || isNaN(Date.parse(d)) || new Date(d).toISOString().slice(0, 10) !== d) {
+    return { ok: false, error: 'Date invalide.' }
+  }
+  if (d <= today) return { ok: false, error: "La date d'expiration doit être future." }
+  return { ok: true, expiry_date: d }
+}
+
 /**
  * Dépôt d'une attestation RGE (05.19-17) : date YYYY-MM-DD réelle, strictement future,
  * obligatoire ; jamais auto-approuvée (statut forcé « pending »).
@@ -15,12 +29,6 @@ export function validateRgeUpload(
   today = new Date().toISOString().slice(0, 10),
 ): RgeUploadCheck | null {
   if (documentType !== 'rge') return null
-  if (!expirationDate) return { ok: false, error: "Date d'expiration requise." }
-  const d = expirationDate
-  // Rejette aussi les dates inexistantes (2027-02-30) par aller-retour ISO
-  if (!ISO_DATE.test(d) || isNaN(Date.parse(d)) || new Date(d).toISOString().slice(0, 10) !== d) {
-    return { ok: false, error: 'Date invalide.' }
-  }
-  if (d <= today) return { ok: false, error: "La date d'expiration doit être future." }
-  return { ok: true, status: 'pending', expiry_date: d }
+  const r = validateFutureExpiry(expirationDate, today)
+  return r.ok ? { ok: true, status: 'pending', expiry_date: r.expiry_date } : r
 }

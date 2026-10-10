@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateRgeUpload } from '../../server/utils/rgeUpload'
+import { validateFutureExpiry, validateRgeUpload } from '../../server/utils/rgeUpload'
 
 const today = '2026-10-09'
 
@@ -22,5 +22,19 @@ describe('validateRgeUpload', () => {
   })
   it('accepte une date future et force pending', () => {
     expect(validateRgeUpload('rge', '2026-10-10', today)).toEqual({ ok: true, status: 'pending', expiry_date: '2026-10-10' })
+  })
+})
+
+describe('validateFutureExpiry', () => {
+  it('refuse absente, mal formée, passée, aujourd\'hui, 2027-02-30', () => {
+    expect(validateFutureExpiry(undefined, today)).toEqual({ ok: false, error: "Date d'expiration requise." })
+    expect(validateFutureExpiry('31/12/2027', today)).toEqual({ ok: false, error: 'Date invalide.' })
+    expect(validateFutureExpiry('2027-02-30', today)).toEqual({ ok: false, error: 'Date invalide.' })
+    const err = { ok: false, error: "La date d'expiration doit être future." }
+    expect(validateFutureExpiry('2026-10-08', today)).toEqual(err)
+    expect(validateFutureExpiry('2026-10-09', today)).toEqual(err)
+  })
+  it('accepte demain', () => {
+    expect(validateFutureExpiry('2026-10-10', today)).toEqual({ ok: true, expiry_date: '2026-10-10' })
   })
 })

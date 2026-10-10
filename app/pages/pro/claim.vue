@@ -867,6 +867,8 @@ const backToStep2 = () => {
                 <input
                   v-model="uploads.decennale.expirationDate"
                   type="date"
+                  :min="minRgeDate"
+                  required
                   class="h-9 w-full px-3 border border-border rounded-sm text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
                 />
               </div>

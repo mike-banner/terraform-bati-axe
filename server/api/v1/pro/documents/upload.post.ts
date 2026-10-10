@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
-import { ISO_DATE, validateRgeUpload } from '../../../../utils/rgeUpload'
+import { ISO_DATE, validateFutureExpiry, validateRgeUpload } from '../../../../utils/rgeUpload'
 
 const schema = z.object({
   document_type: z.enum(['kbis', 'decennale', 'rge']),
@@ -26,7 +26,8 @@ export default defineEventHandler(async (event) => {
   // Pour la décennale, le numéro de police et la date d'expiration sont obligatoires
   if (document_type === 'decennale') {
     if (!policy_number?.trim()) throw createError({ statusCode: 422, statusMessage: 'Numéro de police requis.' })
-    if (!expiration_date) throw createError({ statusCode: 422, statusMessage: "Date d'expiration requise." })
+    const exp = validateFutureExpiry(expiration_date)
+    if (!exp.ok) throw createError({ statusCode: 422, statusMessage: exp.error })
   }
 
   // RGE : date future obligatoire, toujours en attente de revue admin (jamais auto-approuvé)
