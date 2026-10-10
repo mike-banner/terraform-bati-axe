@@ -129,3 +129,4 @@ type PaginatedResponse<T> = {
 - **Dépôts de fichiers** : URL présignée R2 générée par Nitro ; la date d'expiration d'un justificatif `rge` est obligatoire, au format `YYYY-MM-DD`, strictement future ; un dépôt part toujours en `pending` (validation admin).
 - **Champs interdits au pro** : `PATCH /api/v1/pro/profile/me` est `.strict()` ; `professional_type`, `egb_status`, `rge_status`, `is_verified`, `subscription_status` y sont refusés (400).
 - **Endpoints admin EGB** : `GET /api/v1/admin/egb` et `PATCH /api/v1/admin/egb/[id]` (rôle `app_metadata.role === 'admin'`, trace dans `audit_logs`).
+- **Invitation RGE** : `PATCH /api/v1/pro/profile/me` envoie un e-mail (`notifications@`) invitant à déposer l'attestation RGE quand le métier `renovation_energetique` est AJOUTÉ (absent avant, présent après) et que `rge_status !== 'valid'` (`server/utils/rgeInvite.ts`). Jamais bloquant : un échec d'envoi est loggé, la requête réussit.

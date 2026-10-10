@@ -70,7 +70,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 3. **Phase 05.21 (URGENTE au ROADMAP)** : verrou juridique B2B anti-contournement + Stripe Connect split payment (ajoutée hors session) → à cadrer (`/gsd-discuss-phase 05.21`). Puis **05.20** (navigation header + landing prescripteurs) et **06.4** (mot de passe oublié pro + templates Auth).
 4. **Dette courte** : `decennal_status` ne passe jamais à « expiré » automatiquement (la règle RGE peut s'appuyer sur une décennale échue) ; audit des politiques `manage_own_*` restantes (`completed_projects`, `consents`, `verifications`) ; faire valider par le client la correspondance des postes réservés EGB (`egbMatches`) ; 46 erreurs de typecheck préexistantes (`server/utils/maskTender.ts`, `server/api/v1/pro/zones/*`, `server/utils/zoneMatcher.ts`, `app/pages/espace/premium.vue`, `AdminB2bTab.vue`) ; e2e manquants pour l'onglet admin EGB, le bandeau et le plafond de métiers.
 5. **Ménage dépôt** : supprimer `terraform/environments/dev/imports.tf` (devenu inutile ; son push relance un apply CI sans effet) ; décider du sort des fichiers `.planning/graphs/*` modifiés à chaque commit par le hook graphify (les ignorer ou les commiter à part).
-6. **Option produit** : notifier le pro (e-mail ou bandeau) quand il ajoute le métier « Rénovation énergétique » (aujourd'hui le module apparaît seulement à l'ouverture du dashboard).
+6. **Option produit (livrée)** : e-mail d'invitation RGE envoyé au pro quand il ajoute le métier « Rénovation énergétique ».
 
 ## Infrastructure vérifiée le 2026-08-25
 

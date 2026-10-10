@@ -1,5 +1,7 @@
 import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
+import { sendEmail } from '../../../../utils/email'
+import { shouldInviteToRge, buildRgeInviteEmail } from '../../../../utils/rgeInvite'
 import { PROFESSIONAL_CATEGORIES, categoriesError } from '../../../../../app/utils/workTypeMatrix'
 
 // CNV-05 D-14/D-15: editable fields; canonical_slug is immutable (T-04.5-15)
@@ -50,9 +52,10 @@ export default defineEventHandler(async (event) => {
   const parsed = patchSchema.safeParse(body)
   if (!parsed.success) throw createError({ statusCode: 400, statusMessage: parsed.error.message })
 
+  let row: any = null
   if (parsed.data.categories !== undefined) {
-    // Le type est lu en base, jamais dans le body
-    const { data: row } = await db.from('professionals').select('professional_type').eq('id', user.id).single()
+    // Le type est lu en base, jamais dans le body (catégories actuelles lues avant l'update : invitation RGE)
+    ;({ data: row } = await db.from('professionals').select('professional_type, categories, rge_status, email, full_name').eq('id', user.id).single())
     const err = categoriesError(row?.professional_type, parsed.data.categories)
     if (err) throw createError({ statusCode: 400, statusMessage: err })
   }
@@ -70,6 +73,16 @@ export default defineEventHandler(async (event) => {
   if (error) serverError('profile.me.patch', error)
   // Aucune ligne modifiée = profil introuvable : ne jamais répondre « ok » sans avoir écrit
   if (!updated?.length) throw createError({ statusCode: 404, statusMessage: 'Profil professionnel introuvable.' })
+
+  // Invitation RGE à l'ajout du métier : jamais bloquante, l'échec est seulement loggé
+  if (row?.email && shouldInviteToRge({ previousCategories: row.categories, nextCategories: parsed.data.categories, rgeStatus: row.rge_status })) {
+    try {
+      const mail = buildRgeInviteEmail((useRuntimeConfig().public?.siteUrl as string) || 'https://bati-axe.pages.dev')
+      await sendEmail({ to: row.email, subject: mail.subject, html: mail.html, sender: 'notifications' })
+    } catch (err) {
+      console.error('[rgeInvite] échec envoi e-mail:', err)
+    }
+  }
 
   const { data: pro } = await db
     .from('professionals')
