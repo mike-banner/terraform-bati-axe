@@ -52,3 +52,5 @@ design-system/
 *.tfstate.*
 crash.log
 crash.*.log
+# Graphe graphify : régénéré à chaque commit par le hook local, trop volumineux pour être suivi
+.planning/graphs/
