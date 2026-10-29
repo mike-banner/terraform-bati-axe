@@ -48,6 +48,8 @@ deleted_at  TIMESTAMPTZ   DEFAULT NULL  -- soft delete
 ## Row Level Security (RLS)
 
 - **RLS activé sur 100% des tables sans exception.**
+- **Toute migration contenant un `CREATE TABLE` doit contenir son `ALTER TABLE … ENABLE ROW LEVEL SECURITY` dans le même fichier.** Supabase crée les tables sans RLS. Une table lue/écrite uniquement par le serveur (service role) garde la RLS activée **sans policy**. Oubli constaté sur `lead_notifications` (corrigé par `20261028000000`).
+- Contrôle après chaque migration appliquée : `supabase db query --linked "select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and c.relkind in ('r','p') and not c.relrowsecurity;"` → seule `spatial_ref_sys` (PostGIS) est tolérée.
 - Politique par défaut : `DENY ALL`
 - Politique explicite pour chaque rôle : `authenticated`, `anon`, `service_role`
 
