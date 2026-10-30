@@ -174,15 +174,15 @@ variable "turnstile_secret_key" {
 variable "site_url" {
   description = "URL publique de l'application staging"
   type        = string
-  default     = "https://staging.bati-axe.fr"
+  default     = "https://bati-axe-staging.pages.dev"
 }
 
 variable "environment_domains" {
   description = "Mapping workspace → domaine personnalisé (laisser vide pour désactiver le domaine custom)"
   type        = map(string)
   default = {
-    dev        = "dev.bati-axe.fr"
-    staging    = "staging.bati-axe.fr"
-    production = "bati-axe.fr"
+    dev        = ""
+    staging    = ""
+    production = "bati-axe.com"
   }
 }

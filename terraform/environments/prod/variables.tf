@@ -93,8 +93,8 @@ variable "environment_domains" {
   description = "Mapping workspace → domaine personnalisé (laisser vide pour désactiver le domaine custom)"
   type        = map(string)
   default = {
-    dev        = "dev.bati-axe.fr"
-    staging    = "staging.bati-axe.fr"
+    dev        = ""
+    staging    = ""
     production = "bati-axe.com"
   }
 }
