@@ -77,3 +77,14 @@ describe('maskTender', () => {
     expect(result.description.endsWith('…')).toBe(false)
   })
 })
+
+import { isTenderRevealed } from '../../server/utils/maskTender'
+
+describe('isTenderRevealed (05.21)', () => {
+  const claim = { claimed_at: '2026-10-01T00:00:00Z' }
+  const amendment = { id: 'a1', status: 'signed' }
+  it('ni claim ni avenant → false', () => expect(isTenderRevealed(null, null)).toBe(false))
+  it('claim sans avenant → false (pas de rattrapage, D-03)', () => expect(isTenderRevealed(claim, null)).toBe(false))
+  it('avenant sans claim → false', () => expect(isTenderRevealed(null, amendment)).toBe(false))
+  it('claim et avenant → true', () => expect(isTenderRevealed(claim, amendment)).toBe(true))
+})

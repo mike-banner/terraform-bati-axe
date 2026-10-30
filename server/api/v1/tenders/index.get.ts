@@ -1,5 +1,6 @@
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
-import { maskTender } from '../../../utils/maskTender'
+import { maskTender, isTenderRevealed } from '../../../utils/maskTender'
+import { findSignedFramework } from '../../../utils/signature'
 
 export default defineEventHandler(async (event) => {
   const supabaseAuth = await serverSupabaseClient(event) as any
@@ -19,6 +20,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const canClaim = pro.is_verified === true && pro.decennal_status === 'valid'
+  const frameworkSigned = Boolean(await findSignedFramework(supabase, { type: 'framework_pro', proId: user.id }))
 
   const { data: proZones } = await supabase
     .from('pro_zones')
@@ -29,7 +31,7 @@ export default defineEventHandler(async (event) => {
   const zoneIds = (proZones ?? []).map((z: any) => z.zone_id)
 
   if (zoneIds.length === 0 || !pro.categories?.length) {
-    return { tenders: [], zones: [], canClaim }
+    return { tenders: [], zones: [], canClaim, frameworkSigned }
   }
 
   const { data: lots, error: lotsError } = await supabase
@@ -51,6 +53,14 @@ export default defineEventHandler(async (event) => {
 
   const claimByLotId = new Map<string, any>((claims ?? []).map((c: any) => [c.lot_id, c]))
 
+  const { data: amendments } = await supabase
+    .from('b2b_engagements')
+    .select('id, lot_id, status, declared_amount_cents, confirmed_amount_cents, commission_cents, signed_at')
+    .eq('type', 'lot_amendment')
+    .eq('pro_id', user.id)
+
+  const amendmentByLotId = new Map<string, any>((amendments ?? []).map((a: any) => [a.lot_id, a]))
+
   const { data: zonesRows } = await supabase
     .from('zones')
     .select('id, name')
@@ -65,11 +75,27 @@ export default defineEventHandler(async (event) => {
     })
     .map((lot: any) => {
       const claim = claimByLotId.get(lot.id)
-      return maskTender(
+      const amendment = amendmentByLotId.get(lot.id)
+      // Phase 05.21 : démasquage seulement si claim ET avenant signé (D-03).
+      const revealed = isTenderRevealed(claim, amendment)
+      const masked = maskTender(
         { ...lot, zone_name: zoneNameById.get(lot.zone_id) ?? null, claimed_at: claim?.claimed_at ?? null },
-        Boolean(claim),
+        revealed,
       )
+      return {
+        ...masked,
+        engagement: revealed
+          ? {
+              id: amendment.id,
+              status: amendment.status,
+              declared_amount_cents: amendment.declared_amount_cents,
+              confirmed_amount_cents: amendment.confirmed_amount_cents,
+              commission_cents: amendment.commission_cents,
+              signed_at: amendment.signed_at,
+            }
+          : null,
+      }
     })
 
-  return { tenders, zones: zonesRows ?? [], canClaim }
+  return { tenders, zones: zonesRows ?? [], canClaim, frameworkSigned }
 })

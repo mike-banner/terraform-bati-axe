@@ -68,3 +68,8 @@ export function maskTender(lot: TenderLotRow, claimed: boolean): Record<string, 
     contact_email: req.contact_email ?? null,
   }
 }
+
+// Phase 05.21 — règle UNIQUE de démasquage d'un AO : claim ET avenant signé.
+export function isTenderRevealed(claim: { claimed_at?: string | null } | null | undefined, amendment: { id: string } | null | undefined): boolean {
+  return Boolean(claim) && Boolean(amendment?.id)
+}
