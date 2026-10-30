@@ -1,4 +1,6 @@
 <script setup lang="ts">
+definePageMeta({ layout: false })
+
 useHead({
   title: 'Espace partenaire — BÂTI-AXE',
   meta: [{ name: 'robots', content: 'noindex, nofollow' }, { name: 'referrer', content: 'no-referrer' }],
@@ -17,7 +19,7 @@ interface EngagementView {
 
 const token = useRoute().params.token as string
 // Client uniquement : le jeton n'apparaît ni dans le rendu SSR ni dans les caches.
-const { data, error, refresh, pending } = useFetch<EngagementView>(`/api/v1/b2b/engagement/${token}`, { server: false })
+const { data, error, refresh } = useFetch<EngagementView>(`/api/v1/b2b/engagement/${token}`, { server: false })
 
 const STATUS_LABELS: Record<string, string> = {
   signed: 'Avenant signé — devis à déclarer',
@@ -105,7 +107,7 @@ async function confirm(a: Amendment) {
     </header>
 
     <main class="flex-grow max-w-3xl w-full mx-auto px-6 py-10 space-y-8">
-      <p v-if="pending && !data" class="text-sm text-muted-foreground">Chargement…</p>
+      <p v-if="!data && !error" class="text-sm text-muted-foreground">Chargement…</p>
 
       <div v-else-if="error" class="border border-border rounded-sm p-6 text-center">
         <h1 class="text-xl font-bold mb-2">Lien invalide ou expiré</h1>
