@@ -503,7 +503,7 @@ Plans:
 
 Plans:
 - [ ] 06.4-01-PLAN.md — 4 templates Auth brandés + config.toml (templates, mot de passe 8, redirect localhost) + test unitaire
-- [ ] 06.4-02-PLAN.md — Flux self-service : mesure du format d'URL réel, page /pro/reinitialiser-mot-de-passe, bouton « Mot de passe oublié ? » avec cooldown
+- [x] 06.4-02-PLAN.md — Flux self-service : page /pro/reinitialiser-mot-de-passe, bouton « Mot de passe oublié ? » avec message neutre et cooldown 60 s (livré 2026-10-30, e2e `artisans-mot-de-passe.spec.ts`). Tâche 1 (mesure du format réel de l'URL) non faite : pas de Supabase local (Docker absent) — la page gère les deux formats (query et hash) ; à confirmer au premier test réel.
 - [ ] 06.4-03-PLAN.md — Checklist de report Dashboard prod + exigences AUTH-* + vérification humaine bout en bout
 
 **UI hint**: yes
@@ -630,7 +630,7 @@ Plans:
 | 05.18 Annuaire & Vitrines Partenaires | 0/TBD | Reportée (milestone suivant) | - |
 | 05.20 Navigation Header & Landing Prescripteurs | 0/TBD | Not started (spec reçue 2026-10-09) | - |
 | 05.21 Verrou Juridique B2B & Stripe Connect | 0/TBD | Not started — à arbitrer (contredit le recentrage B2C du 2026-08-30) | - |
-| 06.4 Mot de passe oublié & Templates Auth | 0/3 (plans prêts) | Planned | - |
+| 06.4 Mot de passe oublié & Templates Auth | 1/3 (flux livré ; templates brandés + checklist prod restants) | In progress | - |
 | 7. Formulaire AO & Modèle Multi-Lots | 3/3 | Complete | 2026-09-04 |
 | 8. Diffusion Automatique & Confiance | 3/3 | Complete | 2026-09-05 |
 | 9. Dashboard Pro & Claim des AO | 4/4 | Complete | 2026-09-08 |

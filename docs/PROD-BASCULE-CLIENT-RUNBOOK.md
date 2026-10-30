@@ -94,6 +94,18 @@ Le workflow `supabase-keep-alive.yml` pinge la base (secrets `TF_VAR_SUPABASE_UR
 - Toute nouvelle écriture serveur sur `professionals` doit utiliser le service role (un `UPDATE` avec le jeton du pro ne modifie **aucune ligne, sans erreur** : défaut déjà rencontré, test de non-régression `tests/unit/profile-patch-service-role.test.ts`).
 - Turnstile (anti-spam) : clés de prod à créer côté client (`PROD_TURNSTILE_SECRET_KEY`, `NUXT_PUBLIC_TURNSTILE_SITE_KEY`).
 
+## 8 bis. Contenus et promesses à contrôler avant l'ouverture (ajouté le 2026-10-30)
+
+- [ ] **Mentions légales, CGU, confidentialité** (`app/pages/legal/`) : remplacer la société fictive (RCS `123 456 789`, 12 rue de la Paix, TVA fictive) par les vraies coordonnées du client ; le nom du directeur de publication doit être celui du client. Domaines incohérents à aligner (`bati-axe.fr` dans les mentions, `bati-axe.com` en prod). Relecture juriste recommandée.
+- [x] Promesse « premier contact sous 2 minutes » retirée du simulateur (2026-10-30).
+- [x] Aucun délai chiffré promis aux particuliers, artisans et partenaires (« au plus vite » partout, e-mails compris) — règle : ne jamais réintroduire d'heure ou de délai garanti.
+- [ ] Vérifier qu'aucun texte n'annonce de **SMS** : non implémentés. Les cases de consentement SMS (simulateur, inscription pro) restent, à retirer ou à garder selon la décision d'activer un fournisseur.
+- [ ] **Vérification des documents** : la décennale est approuvée automatiquement au dépôt (n° de police + date future exigés), le Kbis aussi si le SIRET est actif. Les textes ont été alignés le 2026-10-30 ; à faire valider par le client (garder l'auto-validation ou revenir à une revue manuelle) — le badge « Décennale certifiée » en dépend.
+- [ ] Page `/partenaires` : les mentions « décennales vérifiées par API » / « audités en continu » restent à corriger (seul le SIRET est vérifié par API) — chantier partenaire reporté.
+- [ ] **Zones ouvertes** : le simulateur lit la table `zones` (`/api/v1/zones/check`). Ouvrir un secteur = activer une zone en base, sans modifier le code. Vérifier en prod : `select name, is_active from zones where type = 'area';` → 4 zones du 78 actives.
+- [ ] **Mot de passe oublié** : Dashboard Supabase → Authentication → URL Configuration → ajouter `https://<domaine>/pro/reinitialiser-mot-de-passe` (et `https://dev.bati-axe.fr/**` pour le dev) aux Redirect URLs, sinon le lien du mail renvoie sur l'accueil. Templates d'e-mails Auth brandés (plan 06.4-01) non encore posés : les e-mails partent avec le modèle Supabase par défaut.
+- [ ] **Longueur minimale du mot de passe** : passer à 8 dans le Dashboard (Authentication → Policies) pour coller au formulaire (le `config.toml` ne vaut que pour le local).
+
 ## 9. Test de fumée après déploiement (à rejouer en prod, comptes de test jetables)
 
 1. Inscription spécialiste puis EGB (`/pro/claim`) : choix du type, 1–2 métiers (spécialiste) / jusqu'à 9 (EGB), claim sans erreur 500.
@@ -104,7 +116,9 @@ Le workflow `supabase-keep-alive.yml` pinge la base (secrets `TF_VAR_SUPABASE_UR
 6. Simulateur : case « rénovation énergétique » dans Globale/Ciblée ; tunnel d'aides affiché **seulement** s'il y a un poste énergétique.
 7. API : `PATCH /api/v1/pro/profile/me` avec `professional_type`, `egb_status`, `is_verified`, `subscription_status` ou `rge_status` → **400**.
 8. Tâches planifiées (§5) : 200.
-9. Nettoyage des comptes et fichiers de test (base + buckets).
+9. Simulateur : un code postal de chacune des 4 zones (ex. 78000 Versailles, 78955 Carrières, 78200 Mantes, 78120 Rambouillet) passe l'étape 5 ; un code hors 78 est refusé sans promesse de rappel.
+10. Mot de passe oublié depuis `/pro/claim` : e-mail reçu, lien → `/pro/reinitialiser-mot-de-passe`, nouveau mot de passe accepté, connexion OK ; un lien réutilisé affiche « Ce lien n'est plus valide ».
+11. Nettoyage des comptes et fichiers de test (base + buckets).
 
 ## 10. Décisions produit à faire valider par le client
 

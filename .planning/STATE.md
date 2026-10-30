@@ -79,6 +79,15 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - **Resynchronisation des documents de suivi avec le code** : ROADMAP (05.14 et 06.2 cochées, phases 7/8/9 et 05.14→06.4 dans le tableau de progression, statuts P4/P7/P18/P19), `STATUS_SPECS_CLIENT.md` réécrit, blocages périmés retirés ci-dessous. Tests unitaires : 238/238.
 - **À noter** : le connecteur Supabase MCP de Claude pointe sur une autre organisation (`vtc-demo-production`) ; les vérifications cloud passent par le CLI lié (`supabase db query --linked`).
 
+## Fait le 30 octobre 2026 — verrouillage particulier et pro
+
+- **Simulateur** : l'étape « localisation » lit la table `zones` via `/api/v1/zones/check` (au lieu du code postal `78955` en dur) → les 4 zones du 78 sont ouvertes, et ouvrir un secteur ne demande plus de code. Pilote affiché « Yvelines (78) ».
+- **Textes alignés sur la réalité** : plus aucun délai chiffré promis (2 minutes, 24 h, 48 h, 4 h → « au plus vite », e-mails compris) ; plus de « contrôle manuel » ni d'« alerte SMS » annoncés côté particulier et pro (la décennale est auto-approuvée au dépôt, cf. runbook §8 bis).
+- **Page `/pro/artisans`** (« Je suis artisan ») entre l'accueil et l'inscription : fonctionnement, conditions, tarifs, FAQ, CTA vers `/pro/claim?mode=inscription`. Lien « Artisans » dans le header et le footer.
+- **Mot de passe oublié** (06.4-02) : bouton branché, page `/pro/reinitialiser-mot-de-passe`. Reste : Redirect URLs dans le Dashboard Supabase dev/prod, templates brandés (06.4-01).
+- **Runbook prod §8 bis** : contrôles de contenu avant ouverture (mentions légales fictives, SMS, vérification des documents, page partenaires).
+- Tests : 238 unitaires, e2e simulateur + tunnel + admin-login + nouveau `artisans-mot-de-passe.spec.ts` (21/21).
+
 ## Infrastructure vérifiée le 2026-08-25
 
 - Branche active : `dev`, propre et synchronisée avec `origin/dev`.
