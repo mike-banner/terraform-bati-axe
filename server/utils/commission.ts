@@ -2,7 +2,7 @@
 // Tout en centimes entiers (pas de flottant sur des montants).
 import { COMMISSION_THRESHOLD_CENTS, COMMISSION_RATE_LOW_PCT, COMMISSION_RATE_HIGH_PCT, AMOUNT_SERVER_REGEX } from '../../app/utils/commissionTiers'
 export { COMMISSION_THRESHOLD_CENTS, COMMISSION_RATE_LOW_PCT, COMMISSION_RATE_HIGH_PCT }
-export const MAX_AMOUNT_CENTS = 99_999_999_999 // 999 999 999,99 €
+export const MAX_AMOUNT_CENTS = 99_999_999_999 // plafond : 999 999 999 euros et 99 centimes
 
 export function computeCommission(amountHtCents: number): number {
   if (!Number.isSafeInteger(amountHtCents) || amountHtCents < 0 || amountHtCents > MAX_AMOUNT_CENTS) {
