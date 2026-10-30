@@ -30,7 +30,7 @@ const TUNNEL_URL = '/b2b/partenaires'
 const faqs = [
   {
     q: 'En combien de temps obtenez-vous un chiffrage ?',
-    a: 'Dès le dépôt de votre dossier (plans, CCTP ou compromis), un chargé d\'affaires vous rappelle sous 4 heures ouvrées. Un pré-chiffrage peut vous être remis sous 48h pour aider vos clients à se positionner, puis le chiffrage détaillé suit avec les entreprises retenues.',
+    a: 'Dès le dépôt de votre dossier (plans, CCTP ou compromis), un chargé d\'affaires vous rappelle au plus vite. Un pré-chiffrage peut vous être remis pour aider vos clients à se positionner, puis le chiffrage détaillé suit avec les entreprises retenues.',
   },
   {
     q: 'Comment garantissez-vous la fiabilité des artisans ?',
@@ -46,7 +46,7 @@ const faqs = [
   },
   {
     q: 'Que proposez-vous pour un partenariat régulier ?',
-    a: 'Un traitement prioritaire de vos dossiers, un chargé d\'affaires dédié, des tarifs préférentiels et la possibilité de déposer vos futurs chantiers en quelques clics. Sélectionnez « partenariat régulier » dans le formulaire, nous vous recontactons sous 4h.',
+    a: 'Un traitement prioritaire de vos dossiers, un chargé d\'affaires dédié, des tarifs préférentiels et la possibilité de déposer vos futurs chantiers en quelques clics. Sélectionnez « partenariat régulier » dans le formulaire, nous vous recontactons au plus vite.',
   },
 ]
 
@@ -61,7 +61,7 @@ const steps = [
   },
   {
     n: '02',
-    title: 'Analyse sous 4h',
+    title: 'Analyse rapide',
     desc: 'Un chargé d\'affaires étudie vos pièces, valide le périmètre et vous rappelle avec un premier positionnement.',
   },
   {
@@ -85,7 +85,7 @@ const pains = [
 
 const solutions = [
   'Un réseau audité en continu par API : INSEE, juridique, décennales : suspension automatique en cas d\'expiration.',
-  'Des chiffrages réactifs : rappel garanti sous 4h, pré-chiffrage sous 48h pour aider vos acheteurs à se positionner.',
+  'Des chiffrages réactifs : rappel au plus vite et pré-chiffrage pour aider vos acheteurs à se positionner.',
   'Un chargé d\'affaires dédié qui suit votre dossier jusqu\'à la livraison. Vous ne relancez plus personne.',
 ]
 
@@ -94,7 +94,7 @@ const services: { icon: Component; title: string; desc: string }[] = [
   {
     icon: PhClock,
     title: 'Chiffrage réactif',
-    desc: 'Déposez plans, CCTP ou compromis : pré-chiffrage sous 48h pour vos acheteurs, chiffrage détaillé et rappel sous 4h ouvrées.',
+    desc: 'Déposez plans, CCTP ou compromis : pré-chiffrage pour vos acheteurs, chiffrage détaillé et rappel au plus vite.',
   },
   {
     icon: PhShieldCheck,
@@ -135,8 +135,8 @@ const professionIcons: Record<string, Component> = {
 
 // ─── Promesses (barre de confiance) ───────────────────────────────────────────
 const promises = [
-  'Rappel garanti sous 4h après dépôt du dossier',
-  'Pré-chiffrage sous 48h pour vos acheteurs',
+  'Rappel au plus vite après dépôt du dossier',
+  'Pré-chiffrage pour vos acheteurs',
   'Décennales vérifiées par API',
   'Dépôt de dossier sécurisé 24/7',
 ]
@@ -339,7 +339,7 @@ const promises = [
         <div class="lg:sticky lg:top-24 lg:self-start">
           <h2 class="text-2xl md:text-3xl font-bold text-foreground text-balance">Vos questions, nos réponses.</h2>
           <p class="mt-3 text-sm text-muted-foreground leading-relaxed max-w-xs">
-            Un doute qui n'est pas couvert ici ? Écrivez-nous, un chargé d'affaires vous répond sous 4 heures ouvrées.
+            Un doute qui n'est pas couvert ici ? Écrivez-nous, un chargé d'affaires vous répond au plus vite.
           </p>
           <a
             href="mailto:partenaires@bati-axe.com"
@@ -389,7 +389,7 @@ const promises = [
           Un chantier à faire chiffrer, ou un partenariat à construire&nbsp;?
         </h2>
         <p class="mt-4 text-slate-400 leading-relaxed">
-          Déposez votre dossier maintenant : un chargé d'affaires vous rappelle sous 4 heures ouvrées,
+          Déposez votre dossier maintenant : un chargé d'affaires vous rappelle au plus vite,
           avec les bonnes entreprises, déjà auditées.
         </p>
         <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -407,7 +407,7 @@ const promises = [
             Nous écrire
           </a>
         </div>
-        <p class="mt-6 text-xs text-slate-500">Dépôt sécurisé · Réponse sous 4h ouvrées · Sans engagement</p>
+        <p class="mt-6 text-xs text-slate-500">Dépôt sécurisé · Réponse rapide · Sans engagement</p>
       </div>
     </section>
   </div>

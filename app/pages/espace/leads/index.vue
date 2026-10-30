@@ -214,7 +214,7 @@ async function copyToClipboard(text: string) {
             <p class="text-sm text-red-700 mt-1 leading-relaxed">
               Vous devez fournir vos documents légaux <strong>(KBIS + Décennale)</strong> pour débloquer l'accès aux leads gratuits.
             </p>
-            <p class="text-xs text-red-600 mt-1.5">Accès débloqué sous 24h ouvrées après vérification par notre équipe.</p>
+            <p class="text-xs text-red-600 mt-1.5">Accès débloqué dès la validation de vos documents.</p>
           </div>
         </div>
         <NuxtLink

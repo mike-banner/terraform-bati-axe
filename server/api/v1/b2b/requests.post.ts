@@ -108,7 +108,7 @@ export default defineEventHandler(async (event) => {
           ${data.files.length > 0 ? `<tr><td style="padding: 8px 0; color: #64748B;">Fichiers</td><td style="padding: 8px 0; color: #0F172A;">${data.files.length} pièce(s) jointe(s)</td></tr>` : ''}
         </table>
         <p style="margin-top: 16px; font-size: 13px; color: #64748B;">
-          ⏰ Engagement : rappel sous 4h ouvrées.
+          ⏰ À rappeler au plus vite.
         </p>
         <p style="margin-top: 8px;">
           <a href="${config.public?.siteUrl || 'https://bati-axe.pages.dev'}/admin" style="display: inline-block; padding: 10px 20px; background: #EA580C; color: white; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 14px;">
@@ -134,7 +134,7 @@ export default defineEventHandler(async (event) => {
       <p style="color: #334155; font-size: 14px; line-height: 1.6;">
         Bonjour ${data.contact_name},<br><br>
         Nous avons bien reçu votre dossier. Un chargé d'affaires dédié analyse vos pièces
-        et vous sera recontacté <strong>sous 4 heures ouvrées</strong>.
+        et vous recontactera <strong>au plus vite</strong>.
       </p>
       <p style="color: #64748B; font-size: 13px; margin-top: 24px;">
         Référence : ${request.id.slice(0, 8).toUpperCase()}<br>
@@ -145,7 +145,7 @@ export default defineEventHandler(async (event) => {
 
   await sendEmail({
     to: data.contact_email,
-    subject: '[BÂTI-AXE] Votre dossier a bien été reçu — Rappel sous 4h',
+    subject: '[BÂTI-AXE] Votre dossier a bien été reçu',
     html: confirmationHtml,
   }).catch(() => {})
 

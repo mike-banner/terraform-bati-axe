@@ -26,7 +26,7 @@
           Lien invalide ou expiré
         </h1>
         <p class="text-sm text-muted-foreground leading-relaxed mb-8">
-          Nous n'avons pas pu trouver de projet correspondant à ce lien sécurisé. Vérifiez votre SMS ou email d'origine.
+          Nous n'avons pas pu trouver de projet correspondant à ce lien sécurisé. Vérifiez l'e-mail reçu lors du dépôt de votre projet.
         </p>
         <NuxtLink
           to="/"
@@ -195,10 +195,10 @@
               <div>
                 <p class="text-xs font-medium text-muted-foreground tracking-widest uppercase mb-8">Artisans</p>
                 <h2 class="text-3xl font-black tracking-tight text-foreground mb-4" style="text-wrap: balance">
-                  Votre projet est en cours de validation.
+                  Votre projet est en ligne.
                 </h2>
                 <p class="text-sm text-muted-foreground leading-relaxed">
-                  Dès validation, les artisans partenaires de votre zone reçoivent une alerte SMS. Vous serez prévenu dès qu'un professionnel vous écrit ici.
+                  Les artisans partenaires de votre zone sont prévenus par e-mail. Leurs messages apparaîtront ici.
                 </p>
               </div>
 
@@ -210,8 +210,8 @@
                     </svg>
                   </div>
                   <div>
-                    <p class="text-sm font-semibold text-foreground">Décennale vérifiée</p>
-                    <p class="text-xs text-muted-foreground mt-0.5">Attestation contrôlée à la main avant tout accès au lead.</p>
+                    <p class="text-sm font-semibold text-foreground">Décennale exigée</p>
+                    <p class="text-xs text-muted-foreground mt-0.5">Attestation à jour exigée avant tout accès au lead, accès suspendu à son expiration.</p>
                   </div>
                 </div>
                 <div class="bento-card flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-sm shadow-sm">

@@ -90,7 +90,7 @@ export default defineEventHandler(async (event) => {
       ${planning ? `<p style="color: #64748B; font-size: 13px;">Planning prévisionnel : <strong>${planning}</strong></p>` : ''}
       <p style="color: #334155; font-size: 14px; line-height: 1.6; margin-top: 16px;">
         Notre équipe reste à votre disposition pour organiser les premiers échanges.
-        Réponse garantie sous 4 heures ouvrées.
+        Nous vous répondons au plus vite.
       </p>
       <p style="color: #64748B; font-size: 13px; margin-top: 24px;">
         BÂTI-AXE — Le bras armé technique des professionnels du bâtiment.<br>

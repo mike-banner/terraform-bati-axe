@@ -398,7 +398,7 @@ async function copyToClipboard(text: string) {
           </div>
         </template>
 
-        <!-- Locked: page « lead non accessible » — Premium ou attente 48h -->
+        <!-- Locked: page « lead non accessible » — Premium -->
         <template v-else-if="isLocked">
           <div class="border border-amber-300 bg-amber-50/60 rounded-sm overflow-hidden">
             <div class="flex flex-col items-center text-center px-8 py-10">
@@ -424,12 +424,10 @@ async function copyToClipboard(text: string) {
 
               <template v-else>
                 <p class="text-sm text-slate-600 mt-2 max-w-sm">
-                  Passez <strong>Premium</strong> pour accéder aux coordonnées immédiatement,
-                  ou attendez <strong>48 h</strong> : le lead se débloquera automatiquement.
+                  Passez <strong>Premium</strong> pour accéder aux coordonnées de ce projet.
                 </p>
                 <div class="mt-4">
                   <LeadCountdown v-if="lead.unlocked_at" :unlocked-at="lead.unlocked_at" />
-                  <p v-else class="text-xs text-amber-700">Déblocage automatique sous 48 h.</p>
                 </div>
                 <div class="flex flex-col sm:flex-row items-center gap-3 mt-6">
                   <NuxtLink

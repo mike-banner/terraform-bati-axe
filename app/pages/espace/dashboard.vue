@@ -544,7 +544,7 @@ const showRge = computed(() =>
             </div>
           </div>
           <p v-if="uploads.rge.status === 'error'" class="text-xs text-red-600 mt-1">{{ uploads.rge.error }}</p>
-          <p v-if="uploads.rge.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ Attestation RGE envoyée — validation par notre équipe sous 48 h ouvrées</p>
+          <p v-if="uploads.rge.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ Attestation RGE envoyée — validation par notre équipe dans les meilleurs délais</p>
         </div>
         <div v-else class="mt-4 pt-4 border-t border-border/50" data-testid="rge-hint">
           <p class="text-xs text-muted-foreground">
@@ -622,7 +622,7 @@ const showRge = computed(() =>
               <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform" :class="leadAlerts.enabled ? 'translate-x-6' : 'translate-x-1'" />
             </button>
           </div>
-          <p class="text-[11px] text-muted-foreground mt-3">L'alerte vous prévient qu'un lead est disponible — elle ne débloque pas les coordonnées. L'accès suit la règle habituelle : Premium, 3 leads gratuits (documents déposés) ou 48 h.</p>
+          <p class="text-[11px] text-muted-foreground mt-3">L'alerte vous prévient qu'un lead est disponible — elle ne débloque pas les coordonnées. L'accès suit la règle habituelle : Premium ou 3 leads gratuits (documents déposés).</p>
           <button
             @click="saveLeadAlerts"
             :disabled="leadAlerts.saving"

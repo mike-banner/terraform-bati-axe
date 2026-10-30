@@ -263,7 +263,7 @@ async function submitRequest() {
             </div>
             <div>
               <p class="text-sm font-semibold text-foreground">J'ai un projet / chantier immédiat à faire chiffrer</p>
-              <p class="text-xs text-muted-foreground mt-0.5">Déposez votre dossier technique, nous vous recontactons sous 4h.</p>
+              <p class="text-xs text-muted-foreground mt-0.5">Déposez votre dossier technique, nous vous recontactons au plus vite.</p>
             </div>
           </button>
 
@@ -426,7 +426,7 @@ async function submitRequest() {
       <!-- ─── Étape 4: Coordonnées ─── -->
       <div v-if="step === 4">
         <h2 class="text-xl font-bold text-foreground mb-2">Vos coordonnées</h2>
-        <p class="text-sm text-muted-foreground mb-6">Un chargé d'affaires vous recontacte sous 4 heures ouvrées.</p>
+        <p class="text-sm text-muted-foreground mb-6">Un chargé d'affaires vous recontacte au plus vite.</p>
 
         <div class="space-y-4">
           <div>
@@ -482,7 +482,7 @@ async function submitRequest() {
           class="h-11 px-6 text-sm font-semibold bg-copper text-white rounded-full hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm shadow-copper/20 flex items-center gap-2"
         >
           <svg v-if="isSubmitting" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-          Envoyer le dossier — Rappel garanti sous 4h
+          Envoyer le dossier
         </button>
       </div>
     </div>
@@ -494,7 +494,7 @@ async function submitRequest() {
       </div>
       <h2 class="text-2xl font-bold text-foreground mb-3">Dossier transmis à notre pôle Pro.</h2>
       <p class="text-sm text-muted-foreground leading-relaxed">
-        Un chargé d'affaires dédié analyse vos pièces. Vous serez recontacté <strong class="text-foreground">sous 4 heures ouvrées</strong>.
+        Un chargé d'affaires dédié analyse vos pièces. Vous serez recontacté <strong class="text-foreground">au plus vite</strong>.
       </p>
       <p v-if="submittedId" class="text-xs text-muted-foreground mt-4">
         Référence : <span class="font-mono text-foreground">{{ submittedId }}</span>

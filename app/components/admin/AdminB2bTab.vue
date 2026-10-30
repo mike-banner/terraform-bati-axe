@@ -322,7 +322,7 @@ function pipelineLabel(status: string): string {
     <!-- Header + filtre -->
     <div class="flex items-center justify-between gap-3 flex-wrap">
       <p class="text-xs text-muted-foreground">
-        {{ requests.length }} dossier{{ requests.length > 1 ? 's' : '' }} — rappel engagé sous 4h ouvrées
+        {{ requests.length }} dossier{{ requests.length > 1 ? 's' : '' }} — à rappeler au plus vite
       </p>
       <div class="flex items-center gap-1.5 flex-wrap">
         <button

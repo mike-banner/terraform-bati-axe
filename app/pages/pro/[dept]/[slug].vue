@@ -300,7 +300,7 @@ useHead(() => ({
       </span>
       <h1 class="text-2xl font-black tracking-tight text-slate-900 mb-3">Profil en cours de vérification</h1>
       <p class="text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-        {{ pro.company_name }} a déposé son dossier. Notre équipe vérifie les documents (Kbis, décennale) sous 24 heures ouvrées. Le profil sera visible dès validation.
+        {{ pro.company_name }} a déposé son dossier. Le profil sera visible dès la validation de ses documents (Kbis, décennale).
       </p>
     </div>
     </div>

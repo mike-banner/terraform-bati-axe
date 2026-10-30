@@ -358,8 +358,8 @@ export default defineEventHandler(async (event) => {
             <div style="font-family: Arial, sans-serif; max-width: 560px; margin: 0 auto; color: #0F172A;">
               <h2 style="margin-bottom: 8px;">Bienvenue sur BÂTI-AXE, ${data.full_name.split(' ')[0]} 👋</h2>
               <p style="line-height: 1.6; color: #475569;">
-                Votre profil <strong>${data.company_name}</strong> est bien créé. Notre équipe vérifie
-                maintenant vos documents (Kbis, décennale) sous 24 heures ouvrées.
+                Votre profil <strong>${data.company_name}</strong> est bien créé. Il sera activé dès
+                que votre Kbis et votre décennale seront validés.
               </p>
               <p style="line-height: 1.6; color: #475569;">
                 Une fois validé, votre profil public sera visible des particuliers porteurs de projets
