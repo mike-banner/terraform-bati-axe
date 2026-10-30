@@ -1,6 +1,7 @@
 import { serverSupabaseServiceRole } from '#supabase/server'
 import { sendEmail } from '../../../utils/email'
 import { b2bRequestSchema, buildTenderLots } from '../../../utils/b2bTender'
+import { findSignedFramework, issuePartnerToken, renderPartnerLinkEmail } from '../../../utils/signature'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -148,6 +149,25 @@ export default defineEventHandler(async (event) => {
     subject: '[BÂTI-AXE] Votre dossier a bien été reçu',
     html: confirmationHtml,
   }).catch(() => {})
+
+  // Phase 05.21 — lien personnel de signature de la convention partenaire (non bloquant).
+  // Le jeton n'est JAMAIS renvoyé dans la réponse HTTP.
+  try {
+    const alreadySigned = await findSignedFramework(supabase, { type: 'framework_partner', email: data.contact_email })
+    if (!alreadySigned) {
+      const token = await issuePartnerToken(supabase, request.id, { revokePrevious: false })
+      const siteUrl = (config.public?.siteUrl as string) || 'https://bati-axe.com'
+      const { subject, html } = renderPartnerLinkEmail({
+        contactName: data.contact_name,
+        requestRef: request.id.slice(0, 8).toUpperCase(),
+        link: `${siteUrl}/b2b/engagement/${token}`,
+        reason: 'framework',
+      })
+      await sendEmail({ to: data.contact_email, sender: 'no-reply', subject, html })
+    }
+  } catch (err) {
+    console.error('[05.21] envoi lien convention partenaire', request.id, err)
+  }
 
   return { status: 'SUCCESS', id: request.id }
 })
