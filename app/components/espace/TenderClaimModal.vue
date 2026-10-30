@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { COMMISSION_RATE_LOW_PCT, COMMISSION_RATE_HIGH_PCT, COMMISSION_THRESHOLD_LABEL } from '~/utils/commissionTiers'
+
 // Modale de confirmation avant claim d'un AO — rappelle l'exclusivité (D-04/D-06).
 // Aucun appel réseau : elle émet, la page orchestre.
 defineProps<{
@@ -38,11 +40,11 @@ function onKeydown(e: KeyboardEvent) {
       </div>
       <div v-else class="border border-border bg-muted/40 p-3 rounded-sm text-sm text-muted-foreground">
         Ce chantier est <strong>en attente de décision</strong> : jusqu'à 3 artisans peuvent se
-        positionner. Le partenaire reçoit vos coordonnées immédiatement.
+        positionner. Le partenaire recevra vos coordonnées après signature de l'avenant.
       </div>
 
       <p class="text-xs text-muted-foreground">
-        Vos coordonnées professionnelles seront transmises au partenaire, et les siennes vous seront révélées.
+        Étape suivante : vous recevez par email un code pour signer l'avenant de mise en relation (commission de succès {{ COMMISSION_RATE_LOW_PCT }} % HT jusqu'à {{ COMMISSION_THRESHOLD_LABEL }} de devis, {{ COMMISSION_RATE_HIGH_PCT }} % HT au-delà ; non-contournement 24 mois). Les coordonnées du partenaire sont révélées après signature.
       </p>
       <p class="text-xs text-muted-foreground">
         Ce positionnement ne peut pas être annulé depuis votre espace.
@@ -62,7 +64,7 @@ function onKeydown(e: KeyboardEvent) {
           :disabled="submitting"
           @click="$emit('confirm')"
         >
-          {{ submitting ? 'Envoi…' : 'Confirmer mon intérêt' }}
+          {{ submitting ? 'Envoi…' : 'Continuer vers l\'avenant' }}
         </button>
       </div>
     </div>

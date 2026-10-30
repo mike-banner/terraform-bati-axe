@@ -38,9 +38,10 @@ const { data: profile } = await useAsyncData('pro-profile-leads', () =>
 // ─── Appels d'offres partenaires (D-01 à D-10) ─────────────────────────────────
 const { data: tendersData, pending: tendersPending, error: tendersError, refresh: refreshTenders } =
   await useAsyncData('pro-tenders', () =>
-    requestFetch<{ tenders: any[]; zones: any[]; canClaim: boolean }>('/api/v1/tenders'))
+    requestFetch<{ tenders: any[]; zones: any[]; canClaim: boolean; frameworkSigned: boolean }>('/api/v1/tenders'))
 const tenders = computed(() => tendersData.value?.tenders || [])
 const canClaimTenders = computed(() => tendersData.value?.canClaim ?? false)
+const frameworkSigned = computed(() => tendersData.value?.frameworkSigned ?? false)
 
 const claimTarget = ref<any | null>(null)
 const reportTarget = ref<any | null>(null)
@@ -48,20 +49,67 @@ const claimSubmitting = ref(false)
 const reportSubmitting = ref(false)
 const tenderMessage = ref<string | null>(null)
 
+// ─── Signature convention cadre / avenant (05.21) ───────────────────────────────
+const signFlow = ref<null | { kind: 'framework' | 'amendment'; lotId?: string; title: string; html: string; emailHint: string }>(null)
+const signSubmitting = ref(false)
+const signError = ref<string | null>(null)
+
+async function startFramework() {
+  try {
+    const res: any = await $fetch('/api/v1/engagements/pro/framework', { method: 'POST', body: {} })
+    if (res.status === 'ALREADY_SIGNED') return await refreshTenders()
+    signError.value = null
+    signFlow.value = { kind: 'framework', title: 'Convention cadre BÂTI-AXE', html: res.contract.html, emailHint: res.email_hint }
+  } catch (err: any) {
+    tenderMessage.value = err?.data?.statusMessage || 'Impossible de démarrer la signature.'
+  }
+}
+
 async function confirmClaim() {
   if (!claimTarget.value) return
   claimSubmitting.value = true
   try {
-    await $fetch(`/api/v1/tenders/${claimTarget.value.lot_id}/claim`, { method: 'POST' })
+    const res: any = await $fetch(`/api/v1/tenders/${claimTarget.value.lot_id}/claim`, { method: 'POST', body: {} })
+    if (res.status === 'AMENDMENT_REQUIRED') {
+      signError.value = null
+      signFlow.value = { kind: 'amendment', lotId: claimTarget.value.lot_id, title: 'Avenant de mise en relation', html: res.contract.html, emailHint: res.email_hint }
+      claimTarget.value = null
+      return
+    }
     claimTarget.value = null
     await refreshTenders()
     tenderMessage.value = 'Vous êtes positionné. Les coordonnées du partenaire sont maintenant visibles.'
   } catch (err: any) {
-    tenderMessage.value = err?.data?.statusMessage || "Impossible de vous positionner sur cet appel d'offres."
+    claimTarget.value = null
+    tenderMessage.value = err?.data?.data?.code === 'FRAMEWORK_REQUIRED'
+      ? 'Signez d\'abord la convention cadre BÂTI-AXE.'
+      : err?.data?.statusMessage || "Impossible de vous positionner sur cet appel d'offres."
   } finally {
     claimSubmitting.value = false
   }
 }
+
+async function signWithCode(code?: string) {
+  const flow = signFlow.value
+  if (!flow) return
+  signSubmitting.value = true
+  signError.value = null
+  const url = flow.kind === 'framework' ? '/api/v1/engagements/pro/framework' : `/api/v1/tenders/${flow.lotId}/claim`
+  try {
+    await $fetch(url, { method: 'POST', body: code ? { code } : {} })
+    if (!code) return // renvoi de code
+    signFlow.value = null
+    await refreshTenders()
+    tenderMessage.value = flow.kind === 'framework'
+      ? 'Convention signée. Vous pouvez vous positionner sur les appels d\'offres.'
+      : 'Avenant signé. Les coordonnées du partenaire sont maintenant visibles.'
+  } catch (err: any) {
+    signError.value = err?.data?.statusMessage || 'Signature impossible.'
+  } finally {
+    signSubmitting.value = false
+  }
+}
+const resendCode = () => signWithCode()
 
 async function submitReport(payload: { reason: string; details: string }) {
   if (!reportTarget.value) return
@@ -634,6 +682,15 @@ async function copyToClipboard(text: string) {
         <button type="button" class="text-xs text-muted-foreground hover:text-foreground transition-colors" @click="tenderMessage = null">✕</button>
       </div>
 
+      <div v-if="!frameworkSigned" data-testid="framework-banner" class="flex flex-wrap items-center gap-3 p-4 border border-copper/40 bg-copper/10 rounded-lg mb-4">
+        <p class="text-sm text-foreground flex-1">
+          Pour vous positionner sur les appels d'offres partenaires, signez une fois la convention cadre BÂTI-AXE (commission de succès, non-contournement 24 mois).
+        </p>
+        <button type="button" class="h-10 px-4 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-80" @click="startFramework">
+          Lire et signer la convention
+        </button>
+      </div>
+
       <!-- Skeleton loading -->
       <div v-if="tendersPending" class="space-y-3">
         <div v-for="i in 3" :key="i" class="border border-border rounded-lg h-[160px] bg-muted animate-pulse" />
@@ -660,7 +717,8 @@ async function copyToClipboard(text: string) {
           v-for="t in tenders"
           :key="t.lot_id"
           :tender="t"
-          :can-claim="canClaimTenders"
+          :can-claim="canClaimTenders && frameworkSigned"
+          :framework-signed="frameworkSigned"
           :claiming="claimSubmitting"
           @claim="claimTarget = tenders.find(x => x.lot_id === $event)"
           @report="reportTarget = tenders.find(x => x.lot_id === $event)"
@@ -675,6 +733,17 @@ async function copyToClipboard(text: string) {
       :submitting="claimSubmitting"
       @confirm="confirmClaim"
       @cancel="claimTarget = null"
+    />
+    <EspaceEngagementSignModal
+      v-if="signFlow"
+      :title="signFlow.title"
+      :contract-html="signFlow.html"
+      :email-hint="signFlow.emailHint"
+      :submitting="signSubmitting"
+      :error="signError"
+      @sign="signWithCode"
+      @resend="resendCode"
+      @cancel="signFlow = null"
     />
     <EspaceTenderReportModal
       v-if="reportTarget"
