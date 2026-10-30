@@ -16,6 +16,7 @@ const espaceLink = computed(() => isAdmin.value ? '/admin' : '/espace/dashboard'
 
 const route = useRoute()
 const isPartenairesPage = computed(() => ['/partenaires', '/b2b/partenaires'].includes(route.path))
+const onArtisansPage = computed(() => route.path === '/pro/artisans')
 const onPartenairesLanding = computed(() => route.path === '/partenaires')
 const onSimulateur = computed(() => route.path === '/simulateur')
 </script>
@@ -38,11 +39,12 @@ const onSimulateur = computed(() => route.path === '/simulateur')
             </button>
           </template>
           <template v-else>
-            <NuxtLink v-if="!isPartenairesPage" to="/partenaires" class="inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 min-h-11">Partenaires</NuxtLink>
+            <NuxtLink v-if="!onArtisansPage" to="/pro/artisans" class="inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 min-h-11">Artisans</NuxtLink>
+            <NuxtLink v-if="!isPartenairesPage" to="/partenaires" class="hidden sm:inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 min-h-11">Partenaires</NuxtLink>
             <NuxtLink v-if="isPartenairesPage" to="/" class="inline-flex items-center whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 min-h-11">Particuliers</NuxtLink>
             <NuxtLink to="/pro/claim" class="inline-flex items-center h-11 px-3 sm:px-4 whitespace-nowrap text-sm font-medium rounded-full border border-border text-foreground hover:bg-muted transition-colors">Se connecter</NuxtLink>
             <NuxtLink
-              v-if="!onSimulateur && !isPartenairesPage"
+              v-if="!onSimulateur && !isPartenairesPage && !onArtisansPage"
               to="/simulateur"
               class="hidden md:inline-flex items-center h-11 px-3 sm:px-4 whitespace-nowrap text-sm font-semibold bg-foreground text-background hover:opacity-80 transition-opacity rounded-full"
             >Déposer un projet</NuxtLink>
@@ -68,6 +70,7 @@ const onSimulateur = computed(() => route.path === '/simulateur')
         </div>
         <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
           <NuxtLink to="/" class="inline-flex items-center text-slate-400 hover:text-white transition-colors py-2 -my-2">Particuliers</NuxtLink>
+          <NuxtLink to="/pro/artisans" class="inline-flex items-center text-slate-400 hover:text-white transition-colors py-2 -my-2">Artisans</NuxtLink>
           <NuxtLink to="/partenaires" class="inline-flex items-center text-slate-400 hover:text-white transition-colors py-2 -my-2">Partenaires</NuxtLink>
           <NuxtLink to="/legal/mentions-legales" class="inline-flex items-center text-slate-400 hover:text-white transition-colors py-2 -my-2">Mentions légales</NuxtLink>
           <NuxtLink to="/legal/confidentialite" class="inline-flex items-center text-slate-400 hover:text-white transition-colors py-2 -my-2">Confidentialité</NuxtLink>

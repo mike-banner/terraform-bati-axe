@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PROFESSIONAL_CATEGORIES, CATEGORY_LIMITS, categoriesError } from '~/utils/workTypeMatrix'
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, onUnmounted } from 'vue'
 
 useHead({
   title: 'Espace Artisan — Rejoindre BÂTI-AXE',
@@ -28,7 +28,8 @@ const RE_PASSWORD = /^.{8,72}$/
 const RE_NAME     = /^.{2,100}$/
 
 // ─── State ────────────────────────────────────────────────────────────────────
-const authMode  = ref<'register' | 'login'>('login')
+// ?mode=inscription (CTA de /pro/artisans) ouvre directement la création de compte
+const authMode  = ref<'register' | 'login'>(route.query.mode === 'inscription' ? 'register' : 'login')
 const activeStep = ref(1)
 const isLoading  = ref(false)
 const globalError = ref<string | null>(null)
@@ -36,6 +37,44 @@ const showPassword = ref(false)
 const claimSlug = ref('')
 
 const authForm = reactive({ email: '', password: '', full_name: '' })
+
+// ─── Mot de passe oublié (06.4) ───────────────────────────────────────────────
+const showForgot = ref(false)
+const forgotEmail = ref('')
+const forgotSent = ref(false)
+const forgotError = ref<string | null>(null)
+const forgotCooldown = ref(0)   // secondes restantes
+let forgotTimer: ReturnType<typeof setInterval> | null = null
+
+function openForgot() {
+  forgotEmail.value = authForm.email
+  forgotError.value = null
+  showForgot.value = true
+}
+
+async function submitForgot() {
+  if (!RE_EMAIL.test(forgotEmail.value.trim())) {
+    forgotError.value = 'Adresse e-mail invalide.'
+    return
+  }
+  if (forgotCooldown.value > 0) return
+  forgotError.value = null
+  isLoading.value = true
+  // Réponse volontairement neutre : ne jamais adapter le message au résultat,
+  // sinon l'UI révèle quelles adresses ont un compte (énumération).
+  await supabase.auth.resetPasswordForEmail(forgotEmail.value.trim(), {
+    redirectTo: `${window.location.origin}/pro/reinitialiser-mot-de-passe`,
+  })
+  isLoading.value = false
+  forgotSent.value = true
+  forgotCooldown.value = 60
+  forgotTimer = setInterval(() => {
+    forgotCooldown.value--
+    if (forgotCooldown.value <= 0 && forgotTimer) { clearInterval(forgotTimer); forgotTimer = null }
+  }, 1000)
+}
+
+onUnmounted(() => { if (forgotTimer) clearInterval(forgotTimer) })
 const CATEGORIES = Object.entries(PROFESSIONAL_CATEGORIES).map(([id, label]) => ({ id, label }))
 
 const proForm  = reactive({
@@ -534,7 +573,7 @@ const backToStep2 = () => {
           <div>
             <div class="flex items-center justify-between mb-1.5">
               <label for="auth-password" class="text-sm font-medium text-foreground">Mot de passe</label>
-              <button v-if="authMode === 'login'" type="button" class="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <button v-if="authMode === 'login'" type="button" class="text-xs text-muted-foreground hover:text-foreground transition-colors" @click="openForgot()">
                 Mot de passe oublié ?
               </button>
             </div>
@@ -569,6 +608,40 @@ const backToStep2 = () => {
             </div>
             <p v-if="authErrors.password" id="err-password" class="mt-2 text-xs text-red-600 font-500">{{ authErrors.password }}</p>
             <p v-if="authMode === 'register' && !authErrors.password" class="mt-1.5 text-xs text-muted-foreground">8 caractères minimum.</p>
+          </div>
+
+          <!-- Mot de passe oublié : panneau inline, boutons type="button" (ne soumet pas le formulaire de connexion) -->
+          <div v-if="showForgot && authMode === 'login'" class="p-4 border border-border rounded-sm bg-muted/40 space-y-3">
+            <p class="text-sm font-semibold text-foreground">Mot de passe oublié</p>
+            <p class="text-xs text-muted-foreground leading-relaxed">
+              Saisissez votre adresse e-mail : si un compte existe, vous recevrez un lien de réinitialisation valable une heure.
+            </p>
+            <label for="forgot-email" class="sr-only">Adresse e-mail</label>
+            <input
+              id="forgot-email"
+              type="email"
+              v-model="forgotEmail"
+              maxlength="254"
+              autocomplete="email"
+              placeholder="vous@entreprise.fr"
+              @keydown.enter.prevent="submitForgot()"
+              class="w-full h-11 px-3 border border-border rounded-sm text-sm bg-white text-text placeholder:text-gray-500 transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            />
+            <p v-if="forgotError" role="alert" class="text-xs text-red-600">{{ forgotError }}</p>
+            <p v-if="forgotSent" role="status" class="text-xs text-foreground">
+              Si un compte existe pour cette adresse, un e-mail vient d'être envoyé. Pensez à vérifier vos spams.
+            </p>
+            <div class="flex items-center gap-3">
+              <button
+                type="button"
+                :disabled="isLoading || forgotCooldown > 0"
+                @click="submitForgot()"
+                class="h-10 px-5 bg-foreground text-background text-xs font-semibold rounded-full hover:opacity-80 transition-opacity disabled:opacity-50"
+              >
+                {{ forgotCooldown > 0 ? `Réessayer dans ${forgotCooldown} s` : 'Envoyer le lien' }}
+              </button>
+              <button type="button" class="text-xs text-muted-foreground underline underline-offset-2" @click="showForgot = false">Annuler</button>
+            </div>
           </div>
 
           <!-- Global error -->
@@ -801,7 +874,7 @@ const backToStep2 = () => {
 
       <!-- ─── STEP 3: Documents ─────────────────────────────────────────────── -->
       <div v-if="activeStep === 3" class="space-y-6">
-        <p class="text-sm text-muted-foreground">Téléversez vos justificatifs pour activer votre profil et accéder aux leads. Chaque document est contrôlé manuellement par notre équipe.</p>
+        <p class="text-sm text-muted-foreground">Téléversez vos justificatifs pour activer votre profil et accéder aux leads. Votre SIRET est vérifié auprès des registres officiels, et l'accès aux leads est suspendu automatiquement à l'expiration de votre décennale.</p>
 
         <!-- KBIS -->
         <div class="bento-card border border-slate-200 rounded-sm p-8" :class="uploads.kbis.status === 'success' ? 'border-foreground/30' : ''">
@@ -965,7 +1038,7 @@ const backToStep2 = () => {
 
         <h2 class="text-2xl font-black tracking-tight text-foreground mb-3">Demande envoyée.</h2>
         <p class="text-sm text-muted-foreground leading-relaxed mb-8">
-          Vos documents sont en cours d'examen. Notre équipe valide chaque dossier sous 24 heures ouvrées. Vous recevrez un e-mail de confirmation à l'issue de la vérification.
+          Vos documents sont enregistrés. Votre profil est activé dès que votre Kbis et votre décennale sont validés : suivez ce statut depuis votre espace.
         </p>
 
         <div v-if="claimSlug" class="p-4 border border-border rounded-lg mb-8">

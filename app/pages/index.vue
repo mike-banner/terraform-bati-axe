@@ -4,7 +4,7 @@ import { PhShieldCheck, PhFileText, PhMapPinLine } from '@phosphor-icons/vue'
 useHead({
   title: 'BÂTI-AXE — Artisans certifiés, projets sécurisés',
   meta: [
-    { name: 'description', content: 'Mise en relation entre particuliers et artisans vérifiés (décennale + Kbis). Zone pilote Carrières-sous-Poissy (78).' }
+    { name: 'description', content: 'Mise en relation entre particuliers et artisans vérifiés (décennale + Kbis). Zone pilote : Yvelines (78).' }
   ]
 })
 
@@ -32,7 +32,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
           <div>
             <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-sm text-slate-600">
               <span class="inline-block h-1.5 w-1.5 rounded-full bg-safety" aria-hidden="true" />
-              Zone pilote · Carrières-sous-Poissy (78)
+              Zone pilote · Yvelines (78)
             </div>
 
             <h1
@@ -57,7 +57,7 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
               <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" /></svg>
             </NuxtLink>
             <NuxtLink
-              to="/pro/claim"
+              to="/pro/artisans"
               class="inline-flex h-14 items-center justify-center rounded-full border border-slate-200 bg-white px-8 text-lg font-semibold text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary cursor-pointer"
             >
               Je suis artisan
@@ -70,17 +70,17 @@ const showcasedProjects = computed(() => showcased.value?.projects ?? [])
         <div class="reveal-item bento-card safety-stripes relative md:col-span-4 flex flex-col justify-center gap-5 overflow-hidden rounded-sm bg-slate-800 dark:bg-slate-900 p-8 text-white shadow-lg">
           <PhShieldCheck :size="40" weight="duotone" class="text-safety" />
           <div>
-            <p class="text-sm font-semibold text-slate-300 dark:text-slate-200">Contrôlés avant activation</p>
-            <p class="mt-2 text-sm leading-relaxed text-slate-400 dark:text-slate-300">Chaque artisan passe ces vérifications avant de pouvoir vous contacter.</p>
+            <p class="text-sm font-semibold text-slate-300 dark:text-slate-200">Exigé avant tout contact</p>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400 dark:text-slate-300">Chaque artisan doit remplir ces conditions avant de pouvoir vous contacter.</p>
           </div>
           <div class="flex flex-col gap-2">
             <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm">
               <PhShieldCheck :size="16" weight="bold" class="shrink-0 text-safety" />
-              Décennale valide
+              Décennale à jour
             </span>
             <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm">
               <PhFileText :size="16" weight="bold" class="shrink-0 text-safety" />
-              Kbis &lt; 3 mois
+              Kbis déposé
             </span>
             <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm">
               <PhMapPinLine :size="16" weight="bold" class="shrink-0 text-safety" />
