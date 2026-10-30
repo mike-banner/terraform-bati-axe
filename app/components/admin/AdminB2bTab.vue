@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { B2bEngagementRow } from '~/types/b2b'
+
 interface B2bFile {
   file_key: string
   filename: string
@@ -37,6 +39,9 @@ interface B2bRequest {
   reported_count?: number
   reported_at?: string | null
   report_reasons?: string[] | null
+  // 05.21 — verrou juridique
+  partner_framework?: { engagement_id: string; signed_at: string } | null
+  engagements?: B2bEngagementRow[]
 }
 
 interface B2bPro {
@@ -117,7 +122,7 @@ function canDiffuse(r: B2bRequest): boolean {
 // diffuse() enregistre automatiquement avant d'appeler l'API si besoin.
 function canDiffuseDraft(r: B2bRequest): boolean {
   const d = ensureDraft(r.id)
-  return Boolean(d.decision_status) && /^\d{5}$/.test(d.project_postal_code || '')
+  return Boolean(d.decision_status) && /^\d{5}$/.test(d.project_postal_code || '') && !!r.partner_framework
 }
 
 async function diffuse(r: B2bRequest) {
@@ -270,11 +275,53 @@ function togglePro(r: B2bRequest, proId: string) {
   else if (d.recommended.length < 3) d.recommended.push(proId)
 }
 
-async function sendRestitution(r: B2bRequest) {
+// 05.21 — engagements contractuels
+const eur = (cents: number | null) => cents == null ? '—' : new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(cents / 100)
+const fmtDate = (d: string | null) => d ? new Date(d).toLocaleDateString('fr-FR') : ''
+const ENG_LABELS: Record<string, string> = {
+  signed: 'Avenant signé — devis à déclarer',
+  not_awarded: 'Chantier non obtenu (déclaré par l\'artisan)',
+  quote_declared: 'Devis déclaré — attente partenaire',
+  quote_confirmed: 'Devis confirmé par le partenaire',
+  deposit_paid: 'Acompte versé',
+  invoiced: 'Facturé',
+}
+const linkResult = reactive<Record<string, string>>({})
+const reasonOpenId = ref<string | null>(null) // engagement dont le motif de dérogation est en saisie
+const engReason = reactive<Record<string, string>>({})
+const restitutionOverrideId = ref<string | null>(null)
+const restitutionReason = reactive<Record<string, string>>({})
+
+async function resendPartnerLink(r: B2bRequest) {
+  delete linkResult[r.id]
+  try {
+    await $fetch(`/api/v1/admin/b2b-requests/${r.id}/partner-link`, { method: 'POST' })
+    linkResult[r.id] = 'Lien de signature envoyé au partenaire.'
+  } catch (err: any) {
+    linkResult[r.id] = err.data?.statusMessage || 'Envoi impossible.'
+  }
+}
+
+async function advanceEngagement(e: B2bEngagementRow, status: 'deposit_paid' | 'invoiced', reason?: string) {
+  errorMessage.value = null
+  try {
+    await $fetch(`/api/v1/admin/engagements/${e.id}`, { method: 'PATCH', body: reason ? { status, reason } : { status } })
+    reasonOpenId.value = null
+    await fetchRequests()
+  } catch (err: any) {
+    errorMessage.value = err.data?.statusMessage || err.message || 'Mise à jour impossible.'
+  }
+}
+
+async function sendRestitution(r: B2bRequest, overrideReason?: string) {
   restitutionId.value = r.id
   errorMessage.value = null
   try {
-    await $fetch(`/api/v1/admin/b2b-requests/${r.id}/restitution`, { method: 'POST' })
+    await $fetch(`/api/v1/admin/b2b-requests/${r.id}/restitution`, {
+      method: 'POST',
+      body: overrideReason ? { override_unsigned_framework: true, override_reason: overrideReason } : undefined,
+    })
+    restitutionOverrideId.value = null
     await fetchRequests()
   } catch (err: any) {
     errorMessage.value = err.data?.statusMessage || err.message || 'Erreur d\'envoi des propositions.'
@@ -584,6 +631,64 @@ function pipelineLabel(status: string): string {
               </div>
             </div>
 
+            <!-- 05.21 — Engagements contractuels -->
+            <div data-testid="admin-engagements" class="border-t border-border pt-4 space-y-3">
+              <p class="text-[10px] uppercase tracking-wide text-muted-foreground">Engagements contractuels</p>
+              <div class="flex items-center gap-2 flex-wrap text-sm">
+                <template v-if="r.partner_framework">
+                  <span class="text-[11px] px-2 py-1 rounded-sm border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">Convention signée le {{ fmtDate(r.partner_framework.signed_at) }}</span>
+                  <a :href="`/api/v1/engagements/${r.partner_framework.engagement_id}/document`" target="_blank" rel="noopener" class="text-xs text-safety hover:underline">Voir</a>
+                </template>
+                <template v-else>
+                  <span class="text-[11px] px-2 py-1 rounded-sm border border-amber-500/30 bg-amber-500/10 text-amber-500">Convention partenaire non signée</span>
+                  <button type="button" class="h-7 px-2.5 text-xs rounded-sm border border-border hover:bg-muted" @click="resendPartnerLink(r)">Renvoyer le lien de signature</button>
+                </template>
+                <span v-if="linkResult[r.id]" class="text-[11px] text-emerald-500">{{ linkResult[r.id] }}</span>
+              </div>
+
+              <p v-if="!r.engagements?.length" class="text-xs text-muted-foreground">Aucun avenant signé pour ce dossier.</p>
+              <div v-else class="overflow-x-auto">
+                <table class="w-full text-xs">
+                  <thead>
+                    <tr class="text-left text-[10px] uppercase tracking-wide text-muted-foreground">
+                      <th class="py-1 pr-3">Artisan</th><th class="pr-3">Lot</th><th class="pr-3">Statut</th><th class="pr-3">Déclaré HT</th><th class="pr-3">Confirmé HT</th><th class="pr-3">Commission HT</th><th class="pr-3">Relances</th><th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="e in r.engagements" :key="e.id" class="border-t border-border align-top">
+                      <td class="py-2 pr-3">{{ e.pro_company || '—' }}</td>
+                      <td class="pr-3">{{ e.lot_category || '—' }}</td>
+                      <td class="pr-3">
+                        <span :class="e.status === 'not_awarded' ? 'px-1.5 py-0.5 rounded-sm border border-amber-500/30 bg-amber-500/10 text-amber-500' : ''">{{ ENG_LABELS[e.status] ?? e.status }}</span>
+                      </td>
+                      <td class="pr-3">{{ eur(e.declared_amount_cents) }}</td>
+                      <td class="pr-3">
+                        {{ eur(e.confirmed_amount_cents) }}
+                        <span v-if="e.confirmed_amount_cents != null && e.declared_amount_cents != null && e.confirmed_amount_cents !== e.declared_amount_cents" class="ml-1 px-1.5 py-0.5 rounded-sm border border-destructive/40 bg-destructive/10 text-destructive font-semibold">Écart</span>
+                      </td>
+                      <td class="pr-3">{{ eur(e.commission_cents) }}</td>
+                      <td class="pr-3">
+                        <div v-if="e.reminder_30_sent_at">J+30 {{ fmtDate(e.reminder_30_sent_at) }}</div>
+                        <div v-if="e.reminder_60_sent_at">J+60 {{ fmtDate(e.reminder_60_sent_at) }}</div>
+                      </td>
+                      <td class="space-y-1.5">
+                        <button v-if="e.status === 'quote_confirmed'" type="button" class="block h-7 px-2.5 rounded-sm border border-border hover:bg-muted" @click="advanceEngagement(e, 'deposit_paid')">Acompte versé</button>
+                        <template v-if="e.status === 'quote_declared'">
+                          <button type="button" class="block h-7 px-2.5 rounded-sm border border-amber-500/40 text-amber-500 hover:bg-amber-500/10" @click="reasonOpenId = reasonOpenId === e.id ? null : e.id">Forcer l'acompte (dérogation)</button>
+                          <div v-if="reasonOpenId === e.id" class="space-y-1">
+                            <textarea v-model="engReason[e.id]" rows="2" minlength="10" maxlength="500" required placeholder="Motif de la dérogation" aria-label="Motif de la dérogation" class="w-full px-2 py-1 rounded-sm border border-border bg-background" />
+                            <button type="button" :disabled="(engReason[e.id] || '').trim().length < 10" class="h-7 px-2.5 rounded-sm bg-safety text-white disabled:opacity-40" @click="advanceEngagement(e, 'deposit_paid', (engReason[e.id] || '').trim())">Confirmer la dérogation</button>
+                          </div>
+                        </template>
+                        <button v-if="e.status === 'deposit_paid'" type="button" class="block h-7 px-2.5 rounded-sm border border-border hover:bg-muted" @click="advanceEngagement(e, 'invoiced')">Facturé</button>
+                        <a :href="`/api/v1/engagements/${e.id}/document`" target="_blank" rel="noopener" class="block text-safety hover:underline">Avenant</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
             <!-- Phase 8 (D-01) — Diffusion automatique aux artisans matchés -->
             <div class="mt-4 border-t border-border pt-4">
               <div class="flex items-center justify-end">
@@ -601,7 +706,10 @@ function pipelineLabel(status: string): string {
                 :class="canDiffuseDraft(r) ? 'border-sky-500/30 bg-sky-500/10 text-sky-400' : 'border-amber-500/30 bg-amber-500/10 text-amber-500'"
               >
                 <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
-                <span v-if="canDiffuseDraft(r)">
+                <span v-if="!r.partner_framework">
+                  Le partenaire doit signer la convention de partenariat avant toute diffusion.
+                </span>
+                <span v-else-if="canDiffuseDraft(r)">
                   Diffuse tous les lots ouverts de ce dossier aux artisans vérifiés ayant une zone active
                   correspondante et la catégorie du lot.
                 </span>
@@ -622,13 +730,18 @@ function pipelineLabel(status: string): string {
                 <span v-if="r.recommended_pros && r.recommended_pros.length"> — {{ r.recommended_pros.length }} pro(s) recommandé(s)</span>
               </p>
               <button
-                @click="sendRestitution(r)"
+                @click="r.partner_framework ? sendRestitution(r) : (restitutionOverrideId = r.id)"
                 :disabled="restitutionId === r.id || ensureDraft(r.id).recommended.length === 0"
                 class="inline-flex items-center h-9 px-4 text-sm font-medium rounded-sm border border-safety text-safety hover:bg-safety/10 transition-colors disabled:opacity-40"
               >
                 <svg v-if="restitutionId === r.id" class="w-4 h-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
                 Envoyer les propositions au donneur d'ordres
               </button>
+            </div>
+            <div v-if="restitutionOverrideId === r.id && !r.partner_framework" class="mt-2 p-3 border border-amber-500/30 bg-amber-500/10 rounded-sm space-y-2">
+              <p class="text-sm text-amber-500">Le partenaire n'a pas signé la convention. Restituer quand même ?</p>
+              <textarea v-model="restitutionReason[r.id]" rows="2" minlength="10" maxlength="500" required placeholder="Motif de la dérogation" aria-label="Motif de la dérogation" class="w-full px-2.5 py-2 text-sm rounded-sm border border-border bg-background" />
+              <button type="button" :disabled="(restitutionReason[r.id] || '').trim().length < 10 || restitutionId === r.id" class="h-9 px-4 text-sm font-medium rounded-sm bg-safety text-white disabled:opacity-40" @click="sendRestitution(r, (restitutionReason[r.id] || '').trim())">Restituer avec dérogation</button>
             </div>
           </div>
 
