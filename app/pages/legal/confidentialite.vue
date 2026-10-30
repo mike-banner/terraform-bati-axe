@@ -25,7 +25,7 @@
       <div>
         <h2 class="text-2xl font-bold text-slate-900 mt-10 mb-3">3. Vos droits</h2>
         <p>
-          Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de portabilité, de limitation et d'effacement de vos données personnelles. Vous pouvez exercer ces droits en nous écrivant à <span class="font-medium text-slate-900">rgpd@bati-axe.fr</span>.
+          Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de portabilité, de limitation et d'effacement de vos données personnelles. Vous pouvez exercer ces droits en nous écrivant à <span class="font-medium text-slate-900">rgpd@bati-axe.com</span>.
         </p>
       </div>
     </section>

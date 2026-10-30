@@ -131,7 +131,7 @@ export default defineEventHandler(async (event) => {
     if (siretLookup.status === 'closed') {
       throw createError({
         statusCode: 422,
-        statusMessage: "Votre entreprise apparaît comme fermée dans l'annuaire officiel. Contactez-nous si c'est une erreur : contact@bati-axe.fr"
+        statusMessage: "Votre entreprise apparaît comme fermée dans l'annuaire officiel. Contactez-nous si c'est une erreur : contact@bati-axe.com"
       })
     }
 

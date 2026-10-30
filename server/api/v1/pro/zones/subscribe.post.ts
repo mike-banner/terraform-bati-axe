@@ -133,8 +133,8 @@ export default defineEventHandler(async (event) => {
           trial_period_days: 14,
           metadata: { zone_id, billing, pro_id: user.id },
         },
-        success_url: `${process.env.NUXT_PUBLIC_SITE_URL || 'https://dev.bati-axe.fr'}/espace/premium?upgrade=success`,
-        cancel_url: `${process.env.NUXT_PUBLIC_SITE_URL || 'https://dev.bati-axe.fr'}/espace/premium?upgrade=cancelled`,
+        success_url: `${process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/espace/premium?upgrade=success`,
+        cancel_url: `${process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/espace/premium?upgrade=cancelled`,
         metadata: { zone_id, billing, pro_id: user.id },
       })
       checkoutUrl = session.url

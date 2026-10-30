@@ -81,7 +81,7 @@ export default defineNuxtConfig({
     resendApiKey: process.env.NUXT_RESEND_API_KEY || process.env.RESEND_API_KEY,
     // Expéditeur Resend. Tant que le domaine n'est pas vérifié, garder le sender
     // partagé 'onboarding@resend.dev' (ne livre qu'à l'adresse du compte Resend).
-    // Override prod via NUXT_EMAIL_FROM une fois bati-axe.fr vérifié.
+    // Override prod via NUXT_EMAIL_FROM une fois bati-axe.com vérifié.
     emailFrom: process.env.NUXT_EMAIL_FROM || process.env.EMAIL_FROM || 'BÂTI-AXE <contact@bati-axe.com>',
     // 06.3 — expéditeurs dédiés par nature de message (bati-axe.com)
     emailFromNoReply: process.env.NUXT_EMAIL_FROM_NO_REPLY || process.env.EMAIL_FROM_NO_REPLY || 'BÂTI-AXE <no-reply@bati-axe.com>',

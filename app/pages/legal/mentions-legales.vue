@@ -6,7 +6,7 @@
       <div>
         <h2 class="text-2xl font-bold text-slate-900 mt-10 mb-3">1. Édition du site</h2>
         <p>
-          Le présent site, accessible à l'URL <span class="font-medium text-slate-900">https://bati-axe.fr</span> (le « Site »), est édité par :
+          Le présent site, accessible à l'URL <span class="font-medium text-slate-900">https://bati-axe.com</span> (le « Site »), est édité par :
         </p>
         <p class="mt-2 font-medium text-slate-900">
           BÂTI-AXE SAS<br>
@@ -33,7 +33,7 @@
       <div>
         <h2 class="text-2xl font-bold text-slate-900 mt-10 mb-3">4. Contact</h2>
         <p>
-          Pour toute question, vous pouvez contacter BÂTI-AXE par e-mail à l'adresse suivante : <span class="font-medium text-slate-900">contact@bati-axe.fr</span>.
+          Pour toute question, vous pouvez contacter BÂTI-AXE par e-mail à l'adresse suivante : <span class="font-medium text-slate-900">contact@bati-axe.com</span>.
         </p>
       </div>
     </section>
