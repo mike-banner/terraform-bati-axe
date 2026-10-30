@@ -498,11 +498,11 @@ Plans:
 
 **Goal:** Aucune coordonnée de partenaire n'est révélée à un artisan sans convention cadre ET avenant par lot signés (OTP email, preuve SHA-256 / horodatage / IP) ; aucun dossier n'est diffusé sans convention partenaire signée ; chaque avenant est suivi (devis déclaré par le pro, confirmé par le partenaire, relances J+30/J+60) jusqu'à la facturation manuelle. Commission par tranche : 8 % HT ≤ 200 k€, 6 % HT au-delà.
 **Contexte:** `.planning/phases/05.21-verrou-juridique-b2b/05.21-CONTEXT.md` (D-01 à D-05). Stripe Connect → 05.22.
-**Plans:** 8 plans en 4 vagues
+**Plans:** 2/8 plans executed
 
 Plans:
-- [ ] 05.21-01-PLAN.md — Migration `b2b_engagements` + `b2b_signature_challenges` + jeton partenaire (RLS sans policy, immutabilité), application locale
-- [ ] 05.21-02-PLAN.md — Utilitaires : `computeCommission` par tranche, gabarits de contrat versionnés, OTP + jeton partenaire
+- [x] 05.21-01-PLAN.md — Migration `b2b_engagements` + `b2b_signature_challenges` + jeton partenaire (RLS sans policy, immutabilité), application locale
+- [x] 05.21-02-PLAN.md — Utilitaires : `computeCommission` par tranche, gabarits de contrat versionnés, OTP + jeton partenaire
 - [ ] 05.21-03-PLAN.md — Verrou pro : convention cadre, avenant OTP au positionnement, démasquage serveur (claim + liste)
 - [ ] 05.21-04-PLAN.md — Verrou partenaire : lien de signature à la soumission, signature par jeton, diffusion/restitution bloquées
 - [ ] 05.21-05-PLAN.md — Suivi : déclaration/confirmation du devis, document imprimable, actions admin, relances J+30/J+60
@@ -648,7 +648,7 @@ Plans:
 | 06.3 Notifications Email Transactionnelles | 4/4 | Complete | 2026-09-04 |
 | 05.18 Annuaire & Vitrines Partenaires | 0/TBD | Reportée (milestone suivant) | - |
 | 05.20 Navigation Header & Landing Prescripteurs | 0/TBD | Not started (spec reçue 2026-10-09) | - |
-| 05.21 Verrou Juridique B2B (Anti-Contournement) | 0/8 | Planifiée (8 plans, 4 vagues) — 2026-10-30 | - |
+| 05.21 Verrou Juridique B2B (Anti-Contournement) | 2/8 | In Progress|  |
 | 05.22 Stripe Connect Split Payment | 0/TBD | Not started (après 05.21) | - |
 | 06.4 Mot de passe oublié & Templates Auth | 1/3 (flux livré ; templates brandés + checklist prod restants) | In progress | - |
 | 7. Formulaire AO & Modèle Multi-Lots | 3/3 | Complete | 2026-09-04 |
