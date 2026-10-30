@@ -4,9 +4,9 @@ milestone: v2.0
 milestone_name: « Partenaires en scène »
 status: executing
 stopped_at: RLS `lead_notifications` corrigée, documents de suivi resynchronisés avec le code
-last_updated: "2026-10-30T13:58:05.354Z"
+last_updated: "2026-10-30T14:16:39.638Z"
 progress:
-  total_phases: 34
+  total_phases: 35
   completed_phases: 19
   total_plans: 114
   completed_plans: 99
@@ -30,9 +30,10 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 
 ## Current Position
 
-Phase: 05.19 (refonte-arborescence-b2c) — ✅ TERMINÉE le 2026-10-10 (17/17 plans, vérifiée, fusionnée dans `dev`, déployée sur Pages dev)
+Phase: 05.21 (verrou-juridique-b2b) — EXECUTING
+Plan: 1 of 8
 Prochaine phase : voir « À faire dans l'immédiat » ci-dessous (05.21 marquée URGENTE au ROADMAP, puis 05.20, 06.4)
-Status: Ready to execute
+Status: Executing Phase 05.21
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
 
