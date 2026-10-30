@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { renderContract, CONTRACT_VERSIONS } from '../../../../utils/contracts'
-import { sha256Hex, getClientMeta, issueOtpChallenge, verifyOtpChallenge, findSignedFramework, insertEngagement } from '../../../../utils/signature'
+import { sha256Hex, getClientMeta, issueOtpChallenge, verifyOtpChallenge, findSignedFramework, insertEngagement, sendSignedCopy } from '../../../../utils/signature'
 
 const bodySchema = z.object({ code: z.string().regex(/^\d{6}$/, 'Code à 6 chiffres attendu.').optional() })
 
@@ -50,6 +50,8 @@ export default defineEventHandler(async (event) => {
     signed_ip: meta.ip,
     signed_user_agent: meta.userAgent,
   })
+
+  await sendSignedCopy({ type: 'framework_pro', template_version: version, content_html: html, content_sha256: sha, signed_at: e.signed_at, signer_email: String(pro.email).toLowerCase(), created: e.created })
 
   try {
     await supabase.from('audit_logs').insert({

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { serverSupabaseServiceRole } from '#supabase/server'
 import { renderContract, CONTRACT_VERSIONS } from '../../../../../utils/contracts'
-import { sha256Hex, getClientMeta, issueOtpChallenge, verifyOtpChallenge, findRequestByToken, findSignedFramework, insertEngagement } from '../../../../../utils/signature'
+import { sha256Hex, getClientMeta, issueOtpChallenge, verifyOtpChallenge, findRequestByToken, findSignedFramework, insertEngagement, sendSignedCopy } from '../../../../../utils/signature'
 import { isRateLimited } from '../../../../../utils/rateLimit'
 import { notifyAdmin } from '../../../../../utils/notifyAdmin'
 
@@ -52,6 +52,8 @@ export default defineEventHandler(async (event) => {
     signed_ip: meta.ip,
     signed_user_agent: meta.userAgent,
   })
+
+  await sendSignedCopy({ type: 'framework_partner', template_version: version, content_html: html, content_sha256: sha, signed_at: e.signed_at, signer_email: String(req.contact_email).toLowerCase(), created: e.created })
 
   try {
     await supabase.from('audit_logs').insert({

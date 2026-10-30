@@ -230,3 +230,39 @@ export function renderPartnerLinkEmail(o: {
     }),
   }
 }
+
+const TYPE_LABELS: Record<EngagementType, string> = {
+  framework_pro: 'Convention cadre BÂTI-AXE',
+  framework_partner: 'Convention de partenariat BÂTI-AXE',
+  lot_amendment: 'Avenant de mise en relation',
+}
+
+export interface SignedCopy {
+  type: EngagementType; template_version: string; content_html: string
+  content_sha256: string; signed_at: string; signer_email: string
+}
+
+// Exemplaire signé : content_html est déjà échappé à la génération (contracts.ts) ; les champs de preuve le sont ici.
+export function renderSignedCopyEmail(e: SignedCopy): string {
+  const date = new Date(e.signed_at).toLocaleString('fr-FR', { timeZone: 'Europe/Paris', dateStyle: 'long', timeStyle: 'short' })
+  const proof = `<div style="border:1px solid #e2e8f0;border-radius:6px;padding:12px;margin:0 0 16px;font-size:13px;color:#334155">`
+    + `<p style="margin:0 0 4px"><strong>Version :</strong> ${escapeHtml(e.template_version)}</p>`
+    + `<p style="margin:0 0 4px"><strong>Signé le :</strong> ${escapeHtml(date)}</p>`
+    + `<p style="margin:0 0 4px"><strong>Signataire :</strong> ${escapeHtml(e.signer_email)}</p>`
+    + `<p style="margin:0;word-break:break-all"><strong>Empreinte SHA-256 :</strong> ${escapeHtml(e.content_sha256)}</p></div>`
+  return renderEmail({
+    title: `Votre exemplaire signé — ${TYPE_LABELS[e.type]}`,
+    intro: 'Conservez ce message : il constitue votre exemplaire du contrat signé.',
+    bodyHtml: proof + e.content_html,
+  })
+}
+
+// À appeler après insertEngagement ; n'envoie qu'à la première signature. Un échec ne casse jamais la signature.
+export async function sendSignedCopy(e: SignedCopy & { created: boolean }): Promise<void> {
+  if (!e.created) return
+  try {
+    await sendEmail({ to: e.signer_email, sender: 'no-reply', subject: 'Votre exemplaire signé BÂTI-AXE', html: renderSignedCopyEmail(e) })
+  } catch (err) {
+    console.error('[Phase05.21] Échec envoi exemplaire signé:', err)
+  }
+}

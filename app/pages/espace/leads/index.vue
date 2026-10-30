@@ -39,6 +39,9 @@ const { data: profile } = await useAsyncData('pro-profile-leads', () =>
 const { data: tendersData, pending: tendersPending, error: tendersError, refresh: refreshTenders } =
   await useAsyncData('pro-tenders', () =>
     requestFetch<{ tenders: any[]; zones: any[]; canClaim: boolean; frameworkSigned: boolean }>('/api/v1/tenders'))
+const { data: contractsData, refresh: refreshContracts } = await useAsyncData('pro-contracts', () =>
+  requestFetch<{ engagements: any[] }>('/api/v1/engagements/pro').catch(() => ({ engagements: [] })))
+const contracts = computed(() => contractsData.value?.engagements || [])
 const tenders = computed(() => tendersData.value?.tenders || [])
 const canClaimTenders = computed(() => tendersData.value?.canClaim ?? false)
 const frameworkSigned = computed(() => tendersData.value?.frameworkSigned ?? false)
@@ -99,7 +102,7 @@ async function signWithCode(code?: string) {
     await $fetch(url, { method: 'POST', body: code ? { code } : {} })
     if (!code) return // renvoi de code
     signFlow.value = null
-    await refreshTenders()
+    await Promise.all([refreshTenders(), refreshContracts()])
     tenderMessage.value = flow.kind === 'framework'
       ? 'Convention signée. Vous pouvez vous positionner sur les appels d\'offres.'
       : 'Avenant signé. Les coordonnées du partenaire sont maintenant visibles.'
@@ -695,6 +698,8 @@ async function copyToClipboard(text: string) {
         <p class="text-sm text-foreground flex-1">{{ tenderMessage }}</p>
         <button type="button" class="text-xs text-muted-foreground hover:text-foreground transition-colors" @click="tenderMessage = null">✕</button>
       </div>
+
+      <EspaceMyContracts :contracts="contracts" />
 
       <div v-if="!frameworkSigned" data-testid="framework-banner" class="flex flex-wrap items-center gap-3 p-4 border border-copper/40 bg-copper/10 rounded-lg mb-4">
         <p class="text-sm text-foreground flex-1">

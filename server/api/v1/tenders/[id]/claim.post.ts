@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { maskTender } from '../../../../utils/maskTender'
 import { renderContract, CONTRACT_VERSIONS } from '../../../../utils/contracts'
-import { sha256Hex, getClientMeta, issueOtpChallenge, verifyOtpChallenge, findSignedFramework, insertEngagement } from '../../../../utils/signature'
+import { sha256Hex, getClientMeta, issueOtpChallenge, verifyOtpChallenge, findSignedFramework, insertEngagement, sendSignedCopy } from '../../../../utils/signature'
 import { tenderCap, shouldCloseLot, renderTenderClaimEmail } from '../../../../utils/tenderClaim'
 import { sendEmail } from '../../../../utils/email'
 
@@ -146,6 +146,8 @@ export default defineEventHandler(async (event) => {
       signed_user_agent: meta.userAgent,
       status: 'signed',
     })
+
+    await sendSignedCopy({ type: 'lot_amendment', template_version: version, content_html: html, content_sha256: sha, signed_at: amendment.signed_at, signer_email: String(pro.email).toLowerCase(), created: amendment.created })
 
     try {
       await supabase.from('audit_logs').insert({
