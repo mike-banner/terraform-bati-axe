@@ -1,4 +1,4 @@
-# 🧭 Plan de Vol BÂTI-AXE — Synthèse de Pilotage (mise à jour 2026-10-10)
+# 🧭 Plan de Vol BÂTI-AXE — Synthèse de Pilotage (mise à jour 2026-10-30)
 
 > Source : specs client consolidées (`.planning/clients/`) + ROADMAP + backlog P1→P22.
 > Objectif : répondre à « ce qui est fait, ce qui reste dans l'ordre, ce qui constitue V1/V2/V3, et les milestones ».
@@ -42,15 +42,15 @@
 | 6 | **Mobile QA** (landing + simulateur + états vides) | ✅ livré le 2026-08-23 | P9 |
 | 7 | **Page pro publique « digne »** | ✅ CTA fait (avis = Phase 7) | P12 |
 | 8 | **Espace Partenaires MVP** (landing + tunnel + back-office + workflow DirCo) | ✅ livré le 2026-08-22 | 05.10 |
-| 9 | **Packs zonés & exclusivité métier** (tarifs + charte) | ⬜ à faire | P7 |
+| 9 | **Packs zonés & exclusivité métier** (tarifs + charte) | 🔶 zones + dégressif livrés (05.16) ; exclusivité + charte à faire, tarifs à confirmer | P7 |
 | 10 | **Feedback loop refus → remise marché** | ✅ testé le 2026-08-23 | P5 |
 
 ### 💰 V2 — Pivot B2B apporteurs d'affaires (objectif : la marge / commissions)
 | # | Item | Réf |
 | :--- | :--- | :--- |
 | 1 | **Espace Partenaires complet** (tunnel par type de lot, DirCo human-in-the-loop, sinistres) | 05.10 + P21 |
-| 2 | **Coffre-fort juridique** (`documents_artisan` + auto-suspension décennale + vigilance 6 mois) | 05.11 |
-| 3 | **Diagnostiqueurs apporteurs** (compte + bouton dépôt rapport + 15-20 €/lead) | P19 |
+| 2 | ✅ **Coffre-fort juridique** (`documents_artisan` + auto-suspension décennale + vigilance 6 mois) — livré 2026-08-23 | 05.11 |
+| 3 | 🔶 **Diagnostiqueurs apporteurs** — profil + tunnel livrés (05.17) ; commission 15-20 €/lead reste (P10) | P19 |
 | 4 | **Compte prescripteur** (« Mes dossiers », pipeline, jauge 40 leads) | P8 |
 | 5 | **Ticket à l'acte (79 €) + Pack Elite (450 €)** | P20 |
 | 6 | **Commission + Stripe Connect + signature eIDAS + contrat anti-contournement** (⚠️ d'abord **manuel sur 10 chantiers**) | P10 + P11 |

@@ -4,7 +4,7 @@ milestone: v2.0
 milestone_name: « Partenaires en scène »
 status: executing
 stopped_at: "Phase 05.19 terminée (17/17), fusionnée dans dev et déployée — 2026-10-10"
-last_updated: "2026-10-09T13:56:36.989Z"
+last_updated: "2026-10-30T12:00:00.000Z"
 progress:
   total_phases: 33
   completed_phases: 18
@@ -68,9 +68,16 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 1. **Validation visuelle par Mike** de l'interface : simulateur (titres « Rénovation ciblée » / « Rénovation énergétique », case et liste), inscription spécialiste/EGB + carte RGE à l'étape « Documents », profil et dashboard (module RGE qui apparaît/disparaît avec le métier), console admin (onglet « Entreprises générales », validation RGE avec date), bandeau « Nouveau métier ».
 2. **Tests en ligne non encore faits** (dev) : dépôt de la décennale, dossier B2B (bucket `b2b`), réalisations du portfolio (bucket `public`).
 3. **Phase 05.21 (URGENTE au ROADMAP)** : verrou juridique B2B anti-contournement + Stripe Connect split payment (ajoutée hors session) → à cadrer (`/gsd-discuss-phase 05.21`). Puis **05.20** (navigation header + landing prescripteurs) et **06.4** (mot de passe oublié pro + templates Auth).
-4. **Dette courte — traitée le 2026-10-10** (commits locaux, à pousser) : typecheck 46 → 0 erreur (≈ 28 erreurs distinctes) ; expiration automatique de la décennale (`expire_decennale_status()` + job `expire-decennale-status`, migration `20260920`) ; `consents` en lecture seule et `is_showcased` réservé à l'admin (même migration) ; date d'expiration de la décennale obligatoire et future (422 sinon) ; e2e ajoutés (`tests/e2e/pro-egb-rge.spec.ts` : onglet admin EGB, module RGE, bandeau « Nouveau métier », limite de métiers ; suite complète 42/42). **Migration `20260920` appliquée au cloud le 2026-10-10** (dry-run puis push, vérifiée : politiques, trigger, job) et code déployé sur Pages dev (apply Terraform OK). **Reste** : faire valider par le client la correspondance `egbMatches` ; une approbation admin sans date d'expiration reste « valide » indéfiniment (voulu).
+4. **Dette courte — traitée le 2026-10-10** (poussé sur `origin/dev`) : typecheck 46 → 0 erreur (≈ 28 erreurs distinctes) ; expiration automatique de la décennale (`expire_decennale_status()` + job `expire-decennale-status`, migration `20260920`) ; `consents` en lecture seule et `is_showcased` réservé à l'admin (même migration) ; date d'expiration de la décennale obligatoire et future (422 sinon) ; e2e ajoutés (`tests/e2e/pro-egb-rge.spec.ts` : onglet admin EGB, module RGE, bandeau « Nouveau métier », limite de métiers ; suite complète 42/42). **Migration `20260920` appliquée au cloud le 2026-10-10** (dry-run puis push, vérifiée : politiques, trigger, job) et code déployé sur Pages dev (apply Terraform OK). **Reste** : faire valider par le client la correspondance `egbMatches` ; une approbation admin sans date d'expiration reste « valide » indéfiniment (voulu).
 5. **Ménage dépôt — fait** : `imports.tf` supprimé ; `.planning/graphs/` ignoré et sorti du suivi Git (fichiers conservés sur disque).
 6. **E-mail d'invitation RGE — livré** (`server/utils/rgeInvite.ts`) : envoyé quand un pro ajoute « Rénovation énergétique » sans RGE valide ; non testé avec un envoi réel (en dev l'e-mail est seulement journalisé sauf `EMAIL_LIVE=true`).
+
+## Fait le 28 au 30 octobre 2026
+
+- **RLS manquante sur `lead_notifications`** : la migration P4 (`20260823000002`) créait la table sans RLS → lecture/écriture possibles avec la clé anon. Corrigé par `20261028000000_rls_lead_notifications.sql` (RLS sans policy, seul le service role y accède), appliqué au cloud après dry-run et vérifié. Toutes les tables `public` ont maintenant la RLS, sauf `spatial_ref_sys` (PostGIS).
+- **Règle ajoutée** dans `docs/rules/DATABASE_RULES.md` : `ENABLE ROW LEVEL SECURITY` dans la même migration que le `CREATE TABLE`, plus une requête de contrôle post-migration.
+- **Resynchronisation des documents de suivi avec le code** : ROADMAP (05.14 et 06.2 cochées, phases 7/8/9 et 05.14→06.4 dans le tableau de progression, statuts P4/P7/P18/P19), `STATUS_SPECS_CLIENT.md` réécrit, blocages périmés retirés ci-dessous. Tests unitaires : 238/238.
+- **À noter** : le connecteur Supabase MCP de Claude pointe sur une autre organisation (`vtc-demo-production`) ; les vérifications cloud passent par le CLI lié (`supabase db query --linked`).
 
 ## Infrastructure vérifiée le 2026-08-25
 
@@ -140,7 +147,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 | **P4** Notif leads email | ✅ livré (PR #48 mergé) — Web Push reporté à la Phase 8 |
 | **P5** Feedback loop refus→marché testé | ✅ testé (2026-08-23, 05.13-03 — reste vérif sur données réelles au go-live) |
 | **P6** Étude financement courtier | ❌ absent |
-| **P7** Packs zonés & exclusivité | ❌ absent — bloqué tarifs définitifs (Basic 150-200 / Premium 300) |
+| **P7** Packs zonés & exclusivité | 🔶 zones + pricing dégressif livrés (05.16) ; reste exclusivité métier + charte, tarifs à confirmer par le client |
 | **P8** Compte Prescripteur | ❌ absent |
 | **P9** Mobile QA + états vides | ✅ fait (2026-08-23, 05.13-02 — projet e2e mobile 48/48) |
 | **P10** Commission B2B + Stripe Connect | 📝 doc only — reporté au prochain milestone (2026-08-30, recentrage B2C) |
@@ -152,7 +159,7 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 | **P16** Ouverture TP | ❌ Phase 2 (après 78) |
 | **P17** Modèle 2 piliers | ❌ à trancher (avec P7/P10) |
 | **P18** Devoir de vigilance 6 mois | ✅ couvert par 05.11-03 |
-| **P19** Diagnostiqueurs apporteurs | ❌ à faire |
+| **P19** Diagnostiqueurs apporteurs | ✅ livré (05.17) — commission par lead dépend de P10 |
 | **P20** Passerelle B2B payante | ❌ reporté au prochain milestone (2026-08-30, recentrage B2C) |
 | **P21** Tunnel Sinistres/Assurances | ❌ à faire |
 | **P22** Majors / Grands Comptes | ❌ Phase 3 |
@@ -173,12 +180,10 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - **Cron `auto-unlock-leads-48h` inopérant par construction** (découvert 2026-08-30, audit P3) : sa condition `unlocked_at IS NULL AND status != 'claimed' AND created_at + 48h <= NOW()` ne peut jamais matcher. Les 2 seuls chemins qui insèrent dans `leads` (`claim.patch.ts` et le free-grant dans `leads/[id].get.ts`) posent systématiquement `unlocked_at: now()` à la création — probablement du code devenu mort après l'ajout du système de free-grant (D-01..D-04), sans que le cron ait été retiré. Conséquence produit : un pro BASIC qui a épuisé ses 3 leads gratuits (ou n'a pas ses documents) ne voit jamais de ligne créée pour un nouveau projet — bloqué indéfiniment, pas de déblocage auto. **Décision (2026-08-30) : ne pas corriger pour l'instant.** Le rythme réel de clôture des leads n'est pas connu ; après les 3 leads gratuits on considère la découverte terminée pour ce pro tant que le client n'a pas tranché. À revoir avec le client : le délai 48h n'est probablement pas pertinent de toute façon pour les pros déjà abonnés (Premium) — question de fond à trancher, pas juste un paramètre à ajuster.
 - **P3 — Stripe non re-testé en prod** : nécessite toujours l'accès aux clés Stripe prod pour la vérification finale en conditions réelles. **Entièrement re-testé en local le 2026-08-29/30 (mode test Stripe CLI)** : signature webhook ✅, checkout initial premier abonnement (parcours réel via Playwright + carte test 4242, `/pro/claim` → `/espace/premium` → Stripe Checkout hébergé → `checkout.session.completed` → `pro_zones` créée + `subscription_status: active`) ✅, transition Subscription Schedule de retrait de zone (Test Clock) ✅ — cf. `05.16-02-SUMMARY.md`. Cron 48h confirmé inopérant par construction (cf. entrée dédiée ci-dessus), décision : ne pas corriger pour l'instant. Seul reste à faire : re-valider une fois avec les vraies clés Stripe prod (formalité, la logique applicative est vérifiée).
 - **GoTrue local rejette l'API admin (`/admin/users`) avec la clé service_role legacy HS256** (découvert le 2026-08-29, GoTrue v2.189.0, instance `supabase_auth_bati-axe`) — erreur `signing method HS256 is invalid`. Les requêtes REST classiques (PostgREST) avec cette même clé fonctionnent normalement ; seule l'API d'administration des utilisateurs est impactée. Impact potentiel sur tout script/endpoint utilisant `supabase.auth.admin.*` en local (ex. `scripts/reset-admin.mjs`) — à vérifier avant d'en dépendre.
-- **Tarifs P7 non tranchés** : Basic 150-200 € / Premium 300 € à confirmer par le client avant d'implémenter les packs zonés.
+- **Tarifs P7 à confirmer** : le pricing dégressif 05.16 (190→350 € mensuel, 150→300 € annuel) est codé ; reste à le faire valider par le client, ainsi que l'exclusivité métier.
 - **Playwright** : la suite est câblée sur Chrome système et les scénarios desktop/mobile ont été validés dans la phase 05.13. Les tests unitaires et le build passent localement avec Node 22.
-- **Test badge préexistant cassé** : `tests/badges.test.ts` attend `bg-[#F8FAFC]` alors que le composant utilise `bg-green-100` (dérive de palette antérieure) — hors périmètre des chantiers récents, à corriger dans une passe dédiée.
 - Migrations Supabase locales pas systématiquement appliquées en parallèle du push distant (constaté sur 09-01 : b2b_tender_claims absent en local) — vérifier avant tout npm run dev sur une nouvelle machine
 
-- **Décennale jamais « expirée » automatiquement** (découvert 2026-10-09) : `decennal_status` n'est mis à jour par aucun job ; le cron `expire-rge-status` ne concerne que le RGE. À traiter (voir « À faire dans l'immédiat »).
 - **Base Supabase cloud partagée dev/prod** : toute migration ou suppression y touche la prod → GO explicite obligatoire (voir runbook prod).
 
 ## Accumulated Context
@@ -192,6 +197,6 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 ## Session Continuity
 
-Last session: 2026-10-10
-Stopped at: Phase 05.19 terminée, fusionnée dans dev, déployée
-Resume: voir « À faire dans l'immédiat » (validation visuelle par Mike, puis `/gsd-discuss-phase 05.21`)
+Last session: 2026-10-30
+Stopped at: RLS `lead_notifications` corrigée, documents de suivi resynchronisés avec le code
+Resume: validation visuelle par Mike + tests en ligne (décennale, B2B, portfolio), puis `/gsd-execute-phase 06.4` (plans prêts). Arbitrer 05.21 (urgente au ROADMAP mais contraire au recentrage B2C du 2026-08-30) avant d'y toucher.
