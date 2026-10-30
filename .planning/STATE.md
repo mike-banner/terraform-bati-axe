@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
 status: executing
-stopped_at: "Phase 05.19 terminée (17/17), fusionnée dans dev et déployée — 2026-10-10"
-last_updated: "2026-10-30T12:00:00.000Z"
+stopped_at: RLS `lead_notifications` corrigée, documents de suivi resynchronisés avec le code
+last_updated: "2026-10-30T13:58:05.354Z"
 progress:
-  total_phases: 33
-  completed_phases: 18
-  total_plans: 106
-  completed_plans: 98
-  percent: 92
+  total_phases: 34
+  completed_phases: 19
+  total_plans: 114
+  completed_plans: 99
+  percent: 87
 ---
 
 # Project State
@@ -32,7 +32,7 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 
 Phase: 05.19 (refonte-arborescence-b2c) — ✅ TERMINÉE le 2026-10-10 (17/17 plans, vérifiée, fusionnée dans `dev`, déployée sur Pages dev)
 Prochaine phase : voir « À faire dans l'immédiat » ci-dessous (05.21 marquée URGENTE au ROADMAP, puis 05.20, 06.4)
-Status: aucune phase en cours d'exécution
+Status: Ready to execute
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
 

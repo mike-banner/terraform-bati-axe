@@ -38,7 +38,8 @@ Roadmap alignée sur la stratégie prototype-first mono-ville (Carrières-sous-P
 - [ ] **Phase 05.18: Annuaire, Vitrines Publiques & Dashboard Partenaires** — **Reportée au prochain milestone (2026-08-30)**, v1 recentrée sur le B2C. Section Partenaires sur l'accueil `/`, annuaire public par catégorie (`/partenaires/annuaire`), vitrine publique (`/partenaire/[dept]/[slug]`) et dashboard privé de gestion du profil (`/espace/partenaire`).
 - [x] **Phase 05.19: Refonte Arborescence & Tunnels B2C (Nomenclature Client)** — Phase correctrice : remplacement de la sélection par cartes visuelles 3 pôles (Rénovation Globale, Énergétique, Prestations Ciblées), schéma JSON normalisé avec slugs d'items uniques, tagging Supabase (`selected_category`, `selected_sub_category`, `selected_items`) pour le matching des artisans. (completed 2026-10-10 — 17/17 plans, fusionnée dans `dev` et déployée)
 - [ ] **Phase 05.20: Restructuration Navigation Header & Landing Vitrine Prescripteurs** — Chantier à faire en détail. Menu déroulant Espace Pro (`/pro/artisans` vs `/pro/prescripteurs-partenaires`), landing vitrine d'acquisition 4 piliers (Agents Immo, Syndics, Archis, Courtiers), routage CTA vers `/b2b/partenaires`. Spec client : `.planning/clients/20261009-VITRINE_PRESCRIPTEURS_PARTENAIRES-SPEC_CLIENT.md`
-- [ ] 🚨 **Phase 05.21: Verrou Juridique B2B (Anti-Contournement) & Stripe Connect Split Payment** — **[URGENT - Oubli V1/V2]** Signature numérique du contrat d'apport d'affaires avant assignation d'un lead B2B à un artisan (Verrou Juridique), et intégration du séquestre financier (Stripe Connect) pour sécuriser automatiquement la commission de la plateforme sans recouvrement manuel.
+- [ ] 🚨 **Phase 05.21: Verrou Juridique B2B (Anti-Contournement)** — **[URGENT - Oubli V1/V2]** Convention cadre signée (pro + partenaire) puis avenant par projet signé par le pro **avant** révélation des coordonnées du partenaire (démasquage serveur). Preuve (`b2b_engagements` : empreinte PDF, horodatage, IP), déclaration du montant du devis confirmée par le partenaire, relances J+30/J+60. Commission : 8 % jusqu'à 200 k€, 6 % au-delà. Facturation manuelle (pas de Stripe). Découpage décidé le 2026-10-30.
+- [ ] **Phase 05.22: Stripe Connect Split Payment (Séquestre Commission)** — Automatisation de l'encaissement de la commission via Stripe Connect (séquestre acompte, ventilation artisan / plateforme / prescripteur). Dépend de 05.21 ; à lancer après les premiers chantiers facturés à la main.
 - [x] **Phase 6: Messagerie & Espace Client (acquisition + SMS reportés)** - Messagerie in-app pro↔particulier, dashboard particulier magic-link, feedback loop lead, email onboarding (désactivé par défaut). Acquisition cold outreach et SMS différencié sortis de cette phase → reportés post-lancement. (complétée 2026-08-19 : 06-01 + 06-03 livrés, 06-02/06-04 différés)
 - [x] **Phase 06.1: Console Admin Opérationnelle** — Composants modulaires (8 fichiers), sidebar fixe, dark mode, onglets (Vue d'ensemble, En attente, Tous les pros, Projets, Réalisations, Dossiers B2B, KPIs, Documents légaux, Journal), search + pagination, projets cliquables. Onglet B2B fusionné (05.10-06) + Documents légaux (05.11-04). (livré 2026-08-22)
 - [x] **Phase 06.2: KPIs de Pilotage & Dashboard de Scalabilité** — Tables `marketing_spend_logs` + `kpi_snapshots` + vue `view_kpi_matching_48h`, endpoint calcul 6 KPIs, dashboard UI (cartes + matrice lignes rouges + filtre période). *(récupéré d'une branche jamais mergée → merge PR #45)*. Reste : brancher Matomo côté client (P1). (livré 2026-08-22)
@@ -493,6 +494,24 @@ Plans:
 
 **UI hint**: no
 
+### Phase 05.21: Verrou Juridique B2B (Anti-Contournement)
+
+**Goal:** Aucune coordonnée de partenaire n'est révélée à un artisan sans convention cadre ET avenant par lot signés (OTP email, preuve SHA-256 / horodatage / IP) ; aucun dossier n'est diffusé sans convention partenaire signée ; chaque avenant est suivi (devis déclaré par le pro, confirmé par le partenaire, relances J+30/J+60) jusqu'à la facturation manuelle. Commission par tranche : 8 % HT ≤ 200 k€, 6 % HT au-delà.
+**Contexte:** `.planning/phases/05.21-verrou-juridique-b2b/05.21-CONTEXT.md` (D-01 à D-05). Stripe Connect → 05.22.
+**Plans:** 8 plans en 4 vagues
+
+Plans:
+- [ ] 05.21-01-PLAN.md — Migration `b2b_engagements` + `b2b_signature_challenges` + jeton partenaire (RLS sans policy, immutabilité), application locale
+- [ ] 05.21-02-PLAN.md — Utilitaires : `computeCommission` par tranche, gabarits de contrat versionnés, OTP + jeton partenaire
+- [ ] 05.21-03-PLAN.md — Verrou pro : convention cadre, avenant OTP au positionnement, démasquage serveur (claim + liste)
+- [ ] 05.21-04-PLAN.md — Verrou partenaire : lien de signature à la soumission, signature par jeton, diffusion/restitution bloquées
+- [ ] 05.21-05-PLAN.md — Suivi : déclaration/confirmation du devis, document imprimable, actions admin, relances J+30/J+60
+- [ ] 05.21-06-PLAN.md — UI pro (onglet Appels d'offres) + E2E
+- [ ] 05.21-07-PLAN.md — Page partenaire `/b2b/engagement/[token]` + console admin « Dossiers B2B » + E2E
+- [ ] 05.21-08-PLAN.md — Contrôle final, validation par Mike, migration cloud (dry-run + GO explicite), types
+
+**UI hint**: yes
+
 ### Phase 06.4: Mot de passe oublié (pro) & Templates Auth Supabase (INSERTED 2026-08-30)
 
 **Goal:** Donner aux pros un recours self-service quand ils oublient leur mot de passe, et brander les e-mails Auth natifs Supabase (recovery/invite/confirmation) avec le même habillage copper/navy + footer LCEN que les e-mails métier de 06.3.
@@ -629,7 +648,8 @@ Plans:
 | 06.3 Notifications Email Transactionnelles | 4/4 | Complete | 2026-09-04 |
 | 05.18 Annuaire & Vitrines Partenaires | 0/TBD | Reportée (milestone suivant) | - |
 | 05.20 Navigation Header & Landing Prescripteurs | 0/TBD | Not started (spec reçue 2026-10-09) | - |
-| 05.21 Verrou Juridique B2B & Stripe Connect | 0/TBD | Not started — à arbitrer (contredit le recentrage B2C du 2026-08-30) | - |
+| 05.21 Verrou Juridique B2B (Anti-Contournement) | 0/8 | Planifiée (8 plans, 4 vagues) — 2026-10-30 | - |
+| 05.22 Stripe Connect Split Payment | 0/TBD | Not started (après 05.21) | - |
 | 06.4 Mot de passe oublié & Templates Auth | 1/3 (flux livré ; templates brandés + checklist prod restants) | In progress | - |
 | 7. Formulaire AO & Modèle Multi-Lots | 3/3 | Complete | 2026-09-04 |
 | 8. Diffusion Automatique & Confiance | 3/3 | Complete | 2026-09-05 |
