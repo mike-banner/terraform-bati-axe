@@ -111,6 +111,20 @@ async function signWithCode(code?: string) {
 }
 const resendCode = () => signWithCode()
 
+async function postDeclaration(engagementId: string, body: Record<string, string>, okMessage: string) {
+  try {
+    await $fetch(`/api/v1/engagements/${engagementId}/declare-quote`, { method: 'POST', body })
+    await refreshTenders()
+    tenderMessage.value = okMessage
+  } catch (err: any) {
+    tenderMessage.value = err?.data?.statusMessage || 'Déclaration impossible.'
+  }
+}
+const declareQuote = ({ engagementId, amount }: { engagementId: string; amount: string }) =>
+  postDeclaration(engagementId, { outcome: 'quote', amount }, 'Montant déclaré. Le partenaire va le confirmer.')
+const declareNotAwarded = (engagementId: string) =>
+  postDeclaration(engagementId, { outcome: 'not_awarded' }, 'Déclaration enregistrée.')
+
 async function submitReport(payload: { reason: string; details: string }) {
   if (!reportTarget.value) return
   reportSubmitting.value = true
@@ -722,6 +736,8 @@ async function copyToClipboard(text: string) {
           :claiming="claimSubmitting"
           @claim="claimTarget = tenders.find(x => x.lot_id === $event)"
           @report="reportTarget = tenders.find(x => x.lot_id === $event)"
+          @declare="declareQuote"
+          @not-awarded="declareNotAwarded"
         />
       </div>
 

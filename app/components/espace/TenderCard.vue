@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { AMOUNT_INPUT_MAXLENGTH, AMOUNT_INPUT_PATTERN } from '~/utils/commissionTiers'
+
 // Carte AO (appel d'offres partenaire) — variante masquée/révélée du même pattern
 // visuel que les cartes leads (index.vue). Purement présentationnel : elle émet,
 // la page orchestre les appels réseau (claim/report).
@@ -6,12 +8,26 @@ defineProps<{
   tender: any
   canClaim: boolean
   claiming: boolean
+  frameworkSigned: boolean
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   claim: [lotId: string]
   report: [lotId: string]
+  declare: [payload: { engagementId: string; amount: string }]
+  notAwarded: [engagementId: string]
 }>()
+
+const STATUS_LABELS: Record<string, string> = {
+  signed: 'Avenant signé — devis à déclarer',
+  not_awarded: 'Chantier non obtenu (déclaré)',
+  quote_declared: 'Devis déclaré — en attente de confirmation du partenaire',
+  quote_confirmed: 'Devis confirmé par le partenaire',
+  deposit_paid: 'Acompte versé',
+  invoiced: 'Commission facturée',
+}
+const formatEur = (cents: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(cents / 100)
+const amount = ref('')
 
 const CATEGORY_LABELS: Record<string, string> = {
   maconnerie:   'Maçonnerie & Gros Œuvre',
@@ -103,7 +119,10 @@ async function copyToClipboard(text: string) {
           >
             {{ claiming ? 'Envoi…' : 'Je suis intéressé' }}
           </button>
-          <p v-if="!canClaim" class="text-xs text-muted-foreground text-center">
+          <p v-if="!frameworkSigned" class="text-xs text-muted-foreground text-center">
+            Signez la convention cadre (bandeau ci-dessus) pour vous positionner.
+          </p>
+          <p v-else-if="!canClaim" class="text-xs text-muted-foreground text-center">
             Profil vérifié + attestation décennale valide requis pour vous positionner.
           </p>
         </template>
@@ -167,6 +186,50 @@ async function copyToClipboard(text: string) {
         </div>
       </div>
     </template>
+
+    <!-- Suivi de l'avenant et déclaration du devis -->
+    <div v-if="tender.status !== 'locked' && tender.engagement" data-testid="engagement-block" class="px-5 pb-3 space-y-2">
+      <p class="text-sm font-semibold text-foreground">{{ STATUS_LABELS[tender.engagement.status] ?? tender.engagement.status }}</p>
+      <p v-if="tender.engagement.declared_amount_cents != null" class="text-xs text-muted-foreground">
+        Montant déclaré : {{ formatEur(tender.engagement.declared_amount_cents) }} HT
+      </p>
+      <p v-if="tender.engagement.confirmed_amount_cents != null" class="text-xs text-muted-foreground">
+        Montant confirmé : {{ formatEur(tender.engagement.confirmed_amount_cents) }} HT
+      </p>
+      <p v-if="tender.engagement.commission_cents != null" class="text-xs text-muted-foreground">
+        Commission HT (calculée par BÂTI-AXE) : {{ formatEur(tender.engagement.commission_cents) }}
+      </p>
+      <form
+        v-if="['signed', 'quote_declared', 'not_awarded'].includes(tender.engagement.status)"
+        class="flex flex-wrap items-center gap-2"
+        @submit.prevent="emit('declare', { engagementId: tender.engagement.id, amount })"
+      >
+        <input
+          v-model="amount"
+          type="text"
+          inputmode="decimal"
+          :maxlength="AMOUNT_INPUT_MAXLENGTH"
+          :pattern="AMOUNT_INPUT_PATTERN"
+          required
+          aria-label="Montant HT du devis signé"
+          placeholder="ex. 250 000"
+          class="h-10 w-36 px-3 border border-border rounded-sm text-sm"
+        >
+        <button type="submit" class="h-10 px-4 rounded-full bg-foreground text-background text-xs font-semibold hover:opacity-80">
+          Déclarer le montant HT
+        </button>
+        <button
+          type="button"
+          class="h-10 px-4 rounded-full border border-border text-xs font-semibold hover:bg-muted"
+          @click="emit('notAwarded', tender.engagement.id)"
+        >
+          Chantier non obtenu
+        </button>
+      </form>
+      <a :href="`/api/v1/engagements/${tender.engagement.id}/document`" target="_blank" rel="noopener" class="text-xs underline underline-offset-2 text-muted-foreground hover:text-foreground">
+        Voir l'avenant signé
+      </a>
+    </div>
 
     <!-- Pied de carte -->
     <div class="px-5 pb-4">
