@@ -1,6 +1,7 @@
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
-import { ACTIVE_TENDER_STATUSES, assertDiffusable, assertTenderQuota } from '../../../../../utils/b2bDiffusion'
+import { ACTIVE_TENDER_STATUSES, assertDiffusable, assertPartnerFrameworkSigned, assertTenderQuota } from '../../../../../utils/b2bDiffusion'
 import { notifyMatchedB2bPros } from '../../../../../utils/notifyB2bPros'
+import { findSignedFramework } from '../../../../../utils/signature'
 import { matchZone } from '../../../../../utils/zoneMatcher'
 
 // Phase 8 (08-02) — endpoint admin « Diffuser » : déclenche la diffusion d'un
@@ -33,6 +34,8 @@ export default defineEventHandler(async (event) => {
 
   // 2. Gating TEND-10 / D-02
   assertDiffusable(req)
+  // Phase 05.21 : pas de diffusion sans convention partenaire signée, aucune dérogation.
+  assertPartnerFrameworkSigned(Boolean(await findSignedFramework(supabase, { type: 'framework_partner', email: req.contact_email })))
 
   // 3. Plafond D-09 / TEND-11 — partenaire identifié par contact_email (aucune
   // table partenaires n'existe en base).

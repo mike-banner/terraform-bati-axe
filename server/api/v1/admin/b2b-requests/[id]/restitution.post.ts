@@ -1,10 +1,18 @@
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
+import { z } from 'zod'
 import { sendEmail } from '../../../../../utils/email'
+import { assertPartnerFrameworkSigned } from '../../../../../utils/b2bDiffusion'
+import { findSignedFramework } from '../../../../../utils/signature'
 
 // 05.10-08 (B2B-06) : workflow DirCo — restitution au donneur d'ordres.
 // Le chargé d'affaires a qualifié le dossier (recommended_pros rempli) → on
 // présente les 2-3 sous-traitants sélectionnés par email, on passe le statut
 // en 'qualifie' et on trace (note + audit log).
+
+const bodySchema = z.object({
+  override_unsigned_framework: z.boolean().optional(),
+  override_reason: z.string().trim().min(10).max(500).optional(),
+})
 
 const BUDGET_LABELS: Record<string, string> = {
   '<30k': '< 30 000 €',
@@ -23,6 +31,10 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
   if (!id) throw createError({ statusCode: 400, statusMessage: 'id requis.' })
 
+  const parsedBody = bodySchema.safeParse((await readBody(event).catch(() => ({}))) ?? {})
+  if (!parsedBody.success) throw createError({ statusCode: 400, statusMessage: parsedBody.error.issues[0]?.message ?? 'Requête invalide.' })
+  const { override_unsigned_framework, override_reason } = parsedBody.data
+
   const supabase = await serverSupabaseServiceRole(event) as any
 
   // 1. Charger le dossier
@@ -33,6 +45,22 @@ export default defineEventHandler(async (event) => {
     .single()
 
   if (eReq || !req) throw createError({ statusCode: 404, statusMessage: 'Dossier introuvable.' })
+
+  // Phase 05.21 (D-07) : restitution sans convention signée uniquement par dérogation admin motivée et tracée.
+  const signed = Boolean(await findSignedFramework(supabase, { type: 'framework_partner', email: req.contact_email }))
+  const override = !signed && override_unsigned_framework === true && Boolean(override_reason)
+  if (!signed && !override) assertPartnerFrameworkSigned(false)
+  if (override) {
+    // Audit bloquant : pas de dérogation non tracée, aucun email n'est envoyé si l'audit échoue.
+    const { error: eAudit } = await supabase.from('audit_logs').insert({
+      actor_id: (user as any).id,
+      action: 'b2b_restitution_sent',
+      target_table: 'b2b_requests',
+      target_id: id,
+      metadata: { framework_override: true, override_reason },
+    })
+    if (eAudit) throw createError({ statusCode: 500, statusMessage: 'Impossible de tracer la dérogation.' })
+  }
 
   const proIds: string[] = req.recommended_pros || []
   if (proIds.length === 0) {
@@ -125,7 +153,7 @@ export default defineEventHandler(async (event) => {
       action: 'b2b_restitution_sent',
       target_table: 'b2b_requests',
       target_id: id,
-      metadata: { pro_count: pros.length, pro_ids: proIds },
+      metadata: { pro_count: pros.length, pro_ids: proIds, ...(override ? { framework_override: true, override_reason } : {}) },
     })
   } catch { /* non-blocking */ }
 

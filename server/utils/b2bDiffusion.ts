@@ -41,3 +41,13 @@ export function assertTenderQuota(activeCount: number, max: number) {
     })
   }
 }
+
+// Phase 05.21 — aucun dossier n'est diffusé (ni restitué) sans convention de partenariat signée (D-03 : pas de rattrapage).
+export function assertPartnerFrameworkSigned(signed: boolean) {
+  if (!signed) {
+    throw createError({
+      statusCode: 409,
+      statusMessage: 'Le partenaire n\'a pas encore signé la convention de partenariat : diffusion impossible. Renvoyez-lui le lien de signature depuis la fiche du dossier.',
+    })
+  }
+}

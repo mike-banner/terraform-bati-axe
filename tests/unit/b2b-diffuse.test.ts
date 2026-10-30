@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from 'vitest'
 // non résolu hors runtime Nitro — stub global comme dans decennale-alerts.test.ts.
 vi.stubGlobal('createError', (opts: any) => Object.assign(new Error(opts.statusMessage), opts))
 
-import { ACTIVE_TENDER_STATUSES, assertDiffusable, assertTenderQuota } from '../../server/utils/b2bDiffusion'
+import { ACTIVE_TENDER_STATUSES, assertDiffusable, assertPartnerFrameworkSigned, assertTenderQuota } from '../../server/utils/b2bDiffusion'
 
 describe('ACTIVE_TENDER_STATUSES', () => {
   it('vaut exactement les 4 statuts actifs', () => {
@@ -68,5 +68,21 @@ describe('assertTenderQuota', () => {
 
   it('bien en-dessous du plafond → ne lève rien', () => {
     expect(() => assertTenderQuota(0, 3)).not.toThrow()
+  })
+})
+
+describe('assertPartnerFrameworkSigned', () => {
+  it('convention non signée → lève 409 mentionnant la convention', () => {
+    try {
+      assertPartnerFrameworkSigned(false)
+      expect.unreachable()
+    } catch (e: any) {
+      expect(e.statusCode).toBe(409)
+      expect(e.message).toContain('convention')
+    }
+  })
+
+  it('convention signée → ne lève rien', () => {
+    expect(() => assertPartnerFrameworkSigned(true)).not.toThrow()
   })
 })
