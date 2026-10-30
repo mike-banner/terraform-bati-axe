@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
+import { AMOUNT_INPUT_PATTERN } from '../../app/utils/commissionTiers'
 
 // ─── Auth mock helpers ─────────────────────────────────────────────────────────
 
@@ -454,5 +455,101 @@ test.describe('Leads — état vide (aucun lead)', () => {
     await gotoLeads(page)
 
     await expect(page.getByText(/Aucun lead pour l'instant/)).toBeVisible({ timeout: 10_000 })
+  })
+})
+
+// ─── Appels d'offres — verrou juridique (Phase 05.21) ─────────────────────────
+
+const json = (body: unknown) => ({ status: 200, contentType: 'application/json', body: JSON.stringify(body) })
+
+const LOCKED_LOT = {
+  lot_id: 'lot-1', status: 'locked', lot_status: 'open', category: 'maconnerie', zone_name: 'Versailles',
+  request_ref: 'ABCD1234', decision_status: 'en_attente', created_at: new Date().toISOString(), description: 'x',
+  contact_name: '*** *** ***', contact_company: '*** *** ***', contact_phone: '*** *** ***', contact_email: 'contact@***.fr',
+}
+const CLAIMED_LOT = {
+  ...LOCKED_LOT, status: 'claimed', contact_name: 'Marc Petit', contact_company: 'Petit SARL',
+  contact_phone: '0600000000', contact_email: 'marc@petit.fr', claimed_at: new Date().toISOString(),
+  engagement: { id: 'eng-1', status: 'signed', declared_amount_cents: null, confirmed_amount_cents: null, commission_cents: null, signed_at: new Date().toISOString() },
+}
+const CONTRACT = {
+  html: '<article><p>Gabarit — à faire relire par un avocat avant mise en prod.</p></article>',
+  sha256: 'a'.repeat(64), version: 'AV-LOT-2026-10-v1',
+}
+
+async function setupAo(page: Page, state: { tenders: any[]; frameworkSigned: boolean }) {
+  await setupAuth(page)
+  await page.route('**/api/v1/leads', r => r.fulfill(json({ leads: [], isPremium: false })))
+  await page.route('**/api/v1/pro/profile/me', r => r.fulfill(json({ profile: { free_leads_used: 0 } })))
+  await page.route('**/api/v1/market-local', r => r.fulfill(json({ data: null })))
+  await page.route('**/api/v1/tenders', r => r.fulfill(json({ tenders: state.tenders, zones: [], canClaim: true, frameworkSigned: state.frameworkSigned })))
+  await page.route('**/api/v1/engagements/pro', r => r.fulfill(json({ engagements: [
+    { id: 'eng-0', type: 'framework_pro', template_version: 'CC-PRO-2026-10-v1', signed_at: new Date().toISOString(), status: 'signed', lot_id: null, lot_label: null },
+  ] })))
+}
+
+async function openAoTab(page: Page) {
+  await gotoLeads(page)
+  await page.getByRole('button', { name: /Appels d'offres/ }).click()
+}
+
+test.describe('Appels d\'offres — verrou juridique (05.21)', () => {
+  test('bandeau convention cadre et positionnement désactivé sans convention', async ({ page }) => {
+    await setupAo(page, { tenders: [LOCKED_LOT], frameworkSigned: false })
+    await openAoTab(page)
+    await expect(page.locator('[data-testid="framework-banner"]')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByRole('button', { name: 'Je suis intéressé' })).toBeDisabled()
+  })
+
+  test('« Mes contrats » liste la convention avec le lien vers le document', async ({ page }) => {
+    await setupAo(page, { tenders: [LOCKED_LOT], frameworkSigned: true })
+    await openAoTab(page)
+    const box = page.locator('[data-testid="my-contracts"]')
+    await expect(box).toContainText('Convention cadre BÂTI-AXE', { timeout: 10_000 })
+    await expect(box.getByRole('link', { name: /Voir/ })).toHaveAttribute('href', '/api/v1/engagements/eng-0/document')
+  })
+
+  test('signature de l\'avenant puis coordonnées visibles', async ({ page }) => {
+    const state = { tenders: [LOCKED_LOT] as any[], frameworkSigned: true }
+    await setupAo(page, state)
+    await page.route('**/api/v1/tenders/lot-1/claim', (route) => {
+      if (!route.request().postDataJSON()?.code) {
+        return route.fulfill(json({ status: 'AMENDMENT_REQUIRED', contract: CONTRACT, email_hint: 'p***@e***.fr' }))
+      }
+      state.tenders = [CLAIMED_LOT]
+      return route.fulfill(json({ status: 'SUCCESS', lotClosed: false, tender: {} }))
+    })
+    await openAoTab(page)
+    await page.getByRole('button', { name: 'Je suis intéressé' }).click()
+    await page.getByRole('button', { name: "Continuer vers l'avenant" }).click()
+    await expect(page.getByText('Gabarit')).toBeVisible()
+    await page.locator('#engagement-accept').check()
+    await page.locator('#engagement-otp').fill('123456')
+    await page.getByRole('button', { name: 'Signer', exact: true }).click()
+    await expect(page.getByText('Marc Petit')).toBeVisible({ timeout: 10_000 })
+  })
+
+  test('déclaration du montant HT du devis', async ({ page }) => {
+    await setupAo(page, { tenders: [CLAIMED_LOT], frameworkSigned: true })
+    let captured: unknown = null
+    await page.route('**/api/v1/engagements/eng-1/declare-quote', (route) => {
+      captured = route.request().postDataJSON()
+      return route.fulfill(json({ status: 'quote_declared', declared_amount_cents: 25000000, commission_cents: 1600000 }))
+    })
+    await openAoTab(page)
+    await expect(page.locator('[data-testid="engagement-block"]')).toBeVisible({ timeout: 10_000 })
+    const input = page.getByLabel('Montant HT du devis signé')
+    await expect(input).toHaveAttribute('maxlength', '16')
+    await expect(input).toHaveAttribute('pattern', AMOUNT_INPUT_PATTERN)
+    await input.fill('250000')
+    await page.getByRole('button', { name: 'Déclarer le montant HT' }).click()
+    await expect.poll(() => captured).toEqual({ outcome: 'quote', amount: '250000' })
+  })
+
+  test('la modale de positionnement affiche les paliers de commission', async ({ page }) => {
+    await setupAo(page, { tenders: [LOCKED_LOT], frameworkSigned: true })
+    await openAoTab(page)
+    await page.getByRole('button', { name: 'Je suis intéressé' }).click()
+    await expect(page.getByText(/8 % HT/)).toBeVisible()
   })
 })
