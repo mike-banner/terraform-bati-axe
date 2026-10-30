@@ -65,10 +65,10 @@ jobs:
 
       # Turnstile désactivé en Dev
       TF_VAR_turnstile_secret_key: ""
-      TF_VAR_site_url: https://dev.bati-axe.fr
+      TF_VAR_site_url: https://bati-axe-dev-dev.pages.dev
 
-      # Domaine Dev uniquement
-      TF_VAR_environment_domains: '{"dev":"dev.bati-axe.fr"}'
+      # Pas de domaine personnalisé en dev : bati-axe-dev-dev.pages.dev (bati-axe.fr n'existe pas)
+      TF_VAR_environment_domains: '{"dev":""}'
 
     steps:
       - name: Checkout repo
