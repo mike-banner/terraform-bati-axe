@@ -10,7 +10,17 @@ import { test, expect, type Page } from '@playwright/test'
 
 const DESC = 'Refaire entièrement la toiture de la maison, tuiles à remplacer.'
 
+// Couverture des codes postaux : la table `zones` est mockée (78 = pilote), pour ne pas dépendre de la base.
+async function mockZones(page: Page) {
+  await page.route('**/api/v1/zones/check**', route => {
+    const cp = new URL(route.request().url()).searchParams.get('postal_code') ?? ''
+    const covered = cp.startsWith('78')
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ covered, zone_name: covered ? 'Versailles' : null }) })
+  })
+}
+
 async function gotoSimulateur(page: Page) {
+  await mockZones(page)
   // networkidle garantit que Vue est hydraté et les event handlers attachés
   await page.goto('/simulateur', { waitUntil: 'networkidle' })
 }
@@ -62,12 +72,19 @@ test.describe('Simulateur — étape 5 localisation', () => {
     await expect(continuerBtn).toBeEnabled()
   })
 
+  test('zone 78 hors Carrières (Versailles 78000) — acceptée', async ({ page }) => {
+    await page.getByPlaceholder('78955').fill('78000')
+
+    await expect(page.getByText(/Zone éligible/)).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Continuer' })).toBeEnabled()
+  })
+
   test('zone invalide 75001 — affiche "zone non couverte" et désactive Continuer', async ({ page }) => {
     const input = page.getByPlaceholder('78955')
     await input.fill('75001')
 
     await expect(page.getByText(/n'est pas encore couverte/)).toBeVisible()
-    await expect(page.getByText(/nous vous recontactons dès l'ouverture/)).toBeVisible()
+    await expect(page.getByText(/Votre secteur n'est pas encore ouvert/)).toBeVisible()
 
     const continuerBtn = page.getByRole('button', { name: 'Continuer' })
     await expect(continuerBtn).toBeDisabled()

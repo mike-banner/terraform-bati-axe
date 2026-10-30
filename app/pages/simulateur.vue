@@ -6,7 +6,7 @@ import { hasEnergyItems } from '~/utils/workTypeMatrix'
 useHead({
   title: 'Simulateur de Travaux — BÂTI-AXE',
   meta: [
-    { name: 'description', content: 'Estimez vos travaux et trouvez le professionnel idéal à Carrières-sous-Poissy.' }
+    { name: 'description', content: 'Estimez vos travaux et trouvez le professionnel idéal dans les Yvelines (78).' }
   ]
 })
 
@@ -25,6 +25,11 @@ const submitError  = ref<string | null>(null)
 const createdProjectId = ref<string | null>(null)
 const createdAccessToken = ref<string | null>(null)
 const revealed = ref(false)
+
+// ─── Couverture du code postal (table `zones`, via /api/v1/zones/check) ─────
+const zoneCheck = ref<{ postal_code: string; covered: boolean; zone_name: string | null } | null>(null)
+const zoneChecking = ref(false)
+const zoneCovered = computed(() => zoneCheck.value?.postal_code === form.postal_code && zoneCheck.value.covered)
 
 // ─── Fork aides (Phase 05.9) — embranchement optionnel avant le lead wall ───
 const atAidesFork     = ref(false)          // affiche le choix Oui/Non
@@ -62,7 +67,7 @@ const isStepValid = computed(() => {
     case 2: return form.selected_items.length > 0
     case 3: return form.surface_m2 > 0
     case 4: return !!form.gamme
-    case 5: return form.postal_code === '78955'
+    case 5: return zoneCovered.value
     case 6: return (
       form.customer_name.trim().length >= 2 &&
       RE_EMAIL.test(form.customer_email) &&
@@ -171,6 +176,19 @@ const normalizePostalCode = (e: Event) => {
   form.postal_code = (e.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 5)
 }
 
+watch(() => form.postal_code, async (cp) => {
+  if (cp.length !== 5 || zoneCheck.value?.postal_code === cp) return
+  zoneChecking.value = true
+  try {
+    const res = await $fetch<{ covered: boolean; zone_name: string | null }>('/api/v1/zones/check', { query: { postal_code: cp } })
+    if (form.postal_code === cp) zoneCheck.value = { postal_code: cp, ...res }
+  } catch {
+    zoneCheck.value = null
+  } finally {
+    zoneChecking.value = false
+  }
+})
+
 // P2 — token Cloudflare Turnstile (anti-spam), rempli par <TurnstileWidget>
 const turnstileToken = ref('')
 
@@ -247,7 +265,7 @@ const handleSubmit = async () => {
           <p class="text-xs text-slate-500 mt-3">Estimation indicative basée sur les barèmes d'État en vigueur. Un artisan certifié vous confirmera les montants exacts.</p>
         </div>
         <p class="text-sm text-muted-foreground leading-relaxed mb-8 max-w-sm" style="text-wrap: pretty">
-          Cette fourchette est indicative. Votre demande a été transmise aux artisans partenaires de Carrières-sous-Poissy. Vous recevrez un premier contact sous 2 minutes si un artisan abonné est disponible.
+          Cette fourchette est indicative. Votre demande a été transmise aux artisans partenaires de votre secteur, qui vous contacteront dès que possible.
         </p>
         <div v-if="createdProjectId" class="p-4 border border-border rounded-lg mb-8">
           <p class="text-xs text-muted-foreground mb-1">Référence de votre projet</p>
@@ -413,7 +431,7 @@ const handleSubmit = async () => {
             Où se situe le chantier ?
           </h1>
           <p class="text-sm text-muted-foreground">
-            Zone pilote actuelle : <strong class="text-foreground">Carrières-sous-Poissy (78955)</strong>.
+            Zone pilote actuelle : <strong class="text-foreground">les Yvelines (78)</strong>.
           </p>
           <div class="pt-2 space-y-3">
             <input
@@ -429,26 +447,26 @@ const handleSubmit = async () => {
               class="w-full h-14 px-4 border border-border rounded-sm text-xl font-semibold tracking-widest bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-colors"
             />
             <div
-              v-if="form.postal_code.length === 5"
+              v-if="form.postal_code.length === 5 && !zoneChecking && zoneCheck?.postal_code === form.postal_code"
               class="flex items-start gap-3 p-4 border rounded-sm"
-              :class="form.postal_code === '78955'
+              :class="zoneCovered
                 ? 'border-foreground/30 bg-muted'
                 : 'border-red-200 bg-red-50'"
             >
-              <svg v-if="form.postal_code === '78955'" class="w-4 h-4 shrink-0 mt-0.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <svg v-if="zoneCovered" class="w-4 h-4 shrink-0 mt-0.5 text-foreground" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
               </svg>
               <svg v-else class="w-4 h-4 shrink-0 mt-0.5 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
               </svg>
               <div>
-                <p class="text-sm font-semibold" :class="form.postal_code === '78955' ? 'text-foreground' : 'text-red-700'">
-                  {{ form.postal_code === '78955' ? 'Zone éligible' : 'Cette zone n\'est pas encore couverte' }}
+                <p class="text-sm font-semibold" :class="zoneCovered ? 'text-foreground' : 'text-red-700'">
+                  {{ zoneCovered ? `Zone éligible · ${zoneCheck?.zone_name}` : 'Cette zone n\'est pas encore couverte' }}
                 </p>
-                <p class="text-xs mt-0.5" :class="form.postal_code === '78955' ? 'text-muted-foreground' : 'text-red-600'">
-                  {{ form.postal_code === '78955'
-                    ? 'Le service est disponible à Carrières-sous-Poissy. Les artisans partenaires recevront votre demande.'
-                    : 'BÂTI-AXE est en phase pilote sur Carrières-sous-Poissy (78955). Laissez vos coordonnées, nous vous recontactons dès l\'ouverture de votre secteur.' }}
+                <p class="text-xs mt-0.5" :class="zoneCovered ? 'text-muted-foreground' : 'text-red-600'">
+                  {{ zoneCovered
+                    ? 'Le service est disponible dans votre secteur. Les artisans partenaires recevront votre demande.'
+                    : 'BÂTI-AXE est en phase pilote dans les Yvelines (78). Votre secteur n\'est pas encore ouvert.' }}
                 </p>
               </div>
             </div>

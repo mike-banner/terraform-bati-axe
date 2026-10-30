@@ -3,7 +3,17 @@ import { test, expect, type Page } from '@playwright/test'
 // Tunnel 05.19 : Étape 1 catégorie → Étape 2 postes → ... → POST /api/v1/projects
 // avec selected_category / selected_items.
 
+// Couverture des codes postaux : la table `zones` est mockée (78 = pilote), pour ne pas dépendre de la base.
+async function mockZones(page: Page) {
+  await page.route('**/api/v1/zones/check**', route => {
+    const cp = new URL(route.request().url()).searchParams.get('postal_code') ?? ''
+    const covered = cp.startsWith('78')
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ covered, zone_name: covered ? 'Versailles' : null }) })
+  })
+}
+
 async function gotoSimulateur(page: Page) {
+  await mockZones(page)
   await page.goto('/simulateur', { waitUntil: 'networkidle' })
 }
 
