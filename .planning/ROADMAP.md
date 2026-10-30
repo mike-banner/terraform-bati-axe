@@ -498,14 +498,14 @@ Plans:
 
 **Goal:** Aucune coordonnée de partenaire n'est révélée à un artisan sans convention cadre ET avenant par lot signés (OTP email, preuve SHA-256 / horodatage / IP) ; aucun dossier n'est diffusé sans convention partenaire signée ; chaque avenant est suivi (devis déclaré par le pro, confirmé par le partenaire, relances J+30/J+60) jusqu'à la facturation manuelle. Commission par tranche : 8 % HT ≤ 200 k€, 6 % HT au-delà.
 **Contexte:** `.planning/phases/05.21-verrou-juridique-b2b/05.21-CONTEXT.md` (D-01 à D-05). Stripe Connect → 05.22.
-**Plans:** 2/8 plans executed
+**Plans:** 5/8 plans executed
 
 Plans:
 - [x] 05.21-01-PLAN.md — Migration `b2b_engagements` + `b2b_signature_challenges` + jeton partenaire (RLS sans policy, immutabilité), application locale
 - [x] 05.21-02-PLAN.md — Utilitaires : `computeCommission` par tranche, gabarits de contrat versionnés, OTP + jeton partenaire
-- [ ] 05.21-03-PLAN.md — Verrou pro : convention cadre, avenant OTP au positionnement, démasquage serveur (claim + liste)
-- [ ] 05.21-04-PLAN.md — Verrou partenaire : lien de signature à la soumission, signature par jeton, diffusion/restitution bloquées
-- [ ] 05.21-05-PLAN.md — Suivi : déclaration/confirmation du devis, document imprimable, actions admin, relances J+30/J+60
+- [x] 05.21-03-PLAN.md — Verrou pro : convention cadre, avenant OTP au positionnement, démasquage serveur (claim + liste)
+- [x] 05.21-04-PLAN.md — Verrou partenaire : lien de signature à la soumission, signature par jeton, diffusion/restitution bloquées
+- [x] 05.21-05-PLAN.md — Suivi : déclaration/confirmation du devis, document imprimable, actions admin, relances J+30/J+60
 - [ ] 05.21-06-PLAN.md — UI pro (onglet Appels d'offres) + E2E
 - [ ] 05.21-07-PLAN.md — Page partenaire `/b2b/engagement/[token]` + console admin « Dossiers B2B » + E2E
 - [ ] 05.21-08-PLAN.md — Contrôle final, validation par Mike, migration cloud (dry-run + GO explicite), types
@@ -648,7 +648,7 @@ Plans:
 | 06.3 Notifications Email Transactionnelles | 4/4 | Complete | 2026-09-04 |
 | 05.18 Annuaire & Vitrines Partenaires | 0/TBD | Reportée (milestone suivant) | - |
 | 05.20 Navigation Header & Landing Prescripteurs | 0/TBD | Not started (spec reçue 2026-10-09) | - |
-| 05.21 Verrou Juridique B2B (Anti-Contournement) | 2/8 | In Progress|  |
+| 05.21 Verrou Juridique B2B (Anti-Contournement) | 5/8 | In Progress|  |
 | 05.22 Stripe Connect Split Payment | 0/TBD | Not started (après 05.21) | - |
 | 06.4 Mot de passe oublié & Templates Auth | 1/3 (flux livré ; templates brandés + checklist prod restants) | In progress | - |
 | 7. Formulaire AO & Modèle Multi-Lots | 3/3 | Complete | 2026-09-04 |
