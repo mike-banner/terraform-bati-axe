@@ -765,3 +765,12 @@ similaires) en sous-composants plus petits pour améliorer le rafraîchissement/
 
 Plans:
 - [ ] TBD (promote with /gsd-review-backlog when ready)
+
+### Phase 999.2: Module Sécurité — Rate limiting réseau & anti-abus (BACKLOG)
+
+**Goal:** [Captured for future planning] Remplacer le rate limit applicatif en mémoire (`server/utils/rateLimit.ts`, inefficace entre isolates Workers, seul usage `admin/promote`) par des règles Cloudflare Rate Limiting déclarées dans Terraform sur `/api/v1/*`, `/api/v1/admin/*` et les routes d'auth ; activer les clés Turnstile en prod (P2 standby). Vérifier le plan Cloudflare (gratuit = 1 règle, fenêtres courtes ; Pro pour des règles fines). Prod finale sur le Cloudflare du client → appliquer à la bascule et l'ajouter à `docs/PROD-BASCULE-CLIENT-RUNBOOK.md`. Réf : `.planning/SECURITY-CHECKLIST.md` §2. Hors périmètre : limites OTP / jetons / déclarations de la phase 05.21 (déjà en base).
+**Requirements:** TBD
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (promote with /gsd-review-backlog when ready)
