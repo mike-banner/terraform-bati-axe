@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
 status: executing
-stopped_at: Phase 05.21 — vérifications locales vertes, migration cloud b2b_engagements en attente
-last_updated: "2026-11-05T09:00:00.000Z"
+stopped_at: Phase 05.21 — migration cloud 20261030000000 appliquée, types régénérés, push dev fait ; reste la recette locale de Mike pour clore le plan 08
+last_updated: "2026-11-05T10:00:00.000Z"
 progress:
   total_phases: 35
   completed_phases: 19
@@ -31,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 ## Current Position
 
 Phase: 05.21 (verrou-juridique-b2b) — EXECUTING
-Plan: 8 of 8 (plans 01-07 terminés ; 08 partiel — recette locale faite, migration cloud `20261030000000` à appliquer puis push `dev`)
+Plan: 8 of 8 (plans 01-07 terminés ; 08 : vérifications locales vertes, migration cloud appliquée le 2026-11-05, push `dev` fait — reste la recette locale de Mike pour clore)
 Prochaine phase : voir « À faire dans l'immédiat » ci-dessous (05.21 marquée URGENTE au ROADMAP, puis 05.20, 06.4)
 Status: Executing Phase 05.21
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
@@ -68,10 +68,23 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 
 1. **Validation visuelle par Mike** de l'interface : simulateur (titres « Rénovation ciblée » / « Rénovation énergétique », case et liste), inscription spécialiste/EGB + carte RGE à l'étape « Documents », profil et dashboard (module RGE qui apparaît/disparaît avec le métier), console admin (onglet « Entreprises générales », validation RGE avec date), bandeau « Nouveau métier ».
 2. **Tests en ligne non encore faits** (dev) : dépôt de la décennale, dossier B2B (bucket `b2b`), réalisations du portfolio (bucket `public`).
-3. **Phase 05.21 (URGENTE au ROADMAP)** : verrou juridique B2B anti-contournement + Stripe Connect split payment (ajoutée hors session) → à cadrer (`/gsd-discuss-phase 05.21`). Puis **05.20** (navigation header + landing prescripteurs) et **06.4** (mot de passe oublié pro + templates Auth).
+3. **Phase 05.21 (URGENTE au ROADMAP)** : code livré (plans 01-07) et migration appliquée au cloud ; il reste la recette locale de Mike (parcours complet : signature pro, page partenaire, devis, relances) pour clore le plan 08. Le split payment Stripe Connect n'est pas dans cette phase. Puis **05.20** (navigation header + landing prescripteurs) et **06.4** (mot de passe oublié pro + templates Auth).
 4. **Dette courte — traitée le 2026-10-10** (poussé sur `origin/dev`) : typecheck 46 → 0 erreur (≈ 28 erreurs distinctes) ; expiration automatique de la décennale (`expire_decennale_status()` + job `expire-decennale-status`, migration `20260920`) ; `consents` en lecture seule et `is_showcased` réservé à l'admin (même migration) ; date d'expiration de la décennale obligatoire et future (422 sinon) ; e2e ajoutés (`tests/e2e/pro-egb-rge.spec.ts` : onglet admin EGB, module RGE, bandeau « Nouveau métier », limite de métiers ; suite complète 42/42). **Migration `20260920` appliquée au cloud le 2026-10-10** (dry-run puis push, vérifiée : politiques, trigger, job) et code déployé sur Pages dev (apply Terraform OK). **Reste** : faire valider par le client la correspondance `egbMatches` ; une approbation admin sans date d'expiration reste « valide » indéfiniment (voulu).
 5. **Ménage dépôt — fait** : `imports.tf` supprimé ; `.planning/graphs/` ignoré et sorti du suivi Git (fichiers conservés sur disque).
 6. **E-mail d'invitation RGE — livré** (`server/utils/rgeInvite.ts`) : envoyé quand un pro ajoute « Rénovation énergétique » sans RGE valide ; non testé avec un envoi réel (en dev l'e-mail est seulement journalisé sauf `EMAIL_LIVE=true`).
+
+## Fait du 2 au 5 novembre 2026
+- **Phase 05.21 — Verrou juridique B2B** : plans 01-07 livrés (signature électronique simple OTP + SHA-256, page partenaire à jeton, suivi admin, convention imprimable). Plan 08 : vérifications locales vertes (327 tests unitaires, typecheck 0 erreur, 36 E2E). **Migration `20261030000000` (`b2b_engagements`, `b2b_signature_challenges`, `b2b_partner_tokens`) appliquée au cloud le 2026-11-05** via `supabase db push --db-url …:6543` (le pooler 5432 et l'hôte direct IPv6 sont inaccessibles depuis WSL). RLS contrôlée (3 tables, sans policy ; seule `spatial_ref_sys` hors RLS), types régénérés, push `origin/dev` fait (`122b79c`). Le workflow `cron-engagement-reminders.yml` est parti avec. **Reste : recette locale de Mike.**
+- **Simulateur étape 2** : l'alerte jaune « nécessitent une coordination » ne s'affiche plus pour pompe à chaleur et géothermie (photovoltaïque, démolition, assainissement la gardent). Le matching reste inchangé (ces postes restent réservés EGB).
+- **Point 05.11 (coffre-fort juridique)** : base technique en place mais pas alimentée — voir « Écarts constatés 05.11 » ci-dessous.
+
+### Écarts constatés 05.11 (vérifiés le 2026-11-05 dans le code et sur le cloud)
+- **Aucun code n'insère dans `documents_artisan`** (seulement lecture admin, PATCH admin et cron d'alertes). La table cloud est vide (0 ligne), comme `verifications` (0 ligne) ; 2 pros, aucun avec la capacité sous-traitance activée.
+- Le dépôt réel des justificatifs passe par `verifications` (ADR-012), pas par `documents_artisan` : les deux modèles coexistent sans pont. Le point de design du CONTEXT (étendre ou remplacer `verifications`) n'a jamais été tranché.
+- La sélection des 2-3 sous-traitants du workflow DirCo (05.10) ne lit pas `documents_artisan`, contrairement à ce que prévoyait le CONTEXT (« pré-requis métier de la sélection »).
+- Aucun test automatisé ne couvre la vue admin, le PATCH ni les fonctions SQL d'expiration. Le cron `pg_cron` existe bien sur le cloud, la RLS a 2 policies.
+- Les SUMMARY 05.11 disent « poussée en prod » : c'était la base cloud partagée dev, la prod chez le client n'est pas déployée.
+- Décision à prendre par Mike : alimenter `documents_artisan` depuis l'upload existant, ou la fusionner dans `verifications` (et retirer la vue admin en double).
 
 ## Fait le 28 au 30 octobre 2026
 
