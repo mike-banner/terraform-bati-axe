@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
 status: executing
-stopped_at: RLS `lead_notifications` corrigée, documents de suivi resynchronisés avec le code
-last_updated: "2026-10-30T14:16:39.638Z"
+stopped_at: Phase 05.21 — vérifications locales vertes, migration cloud b2b_engagements en attente
+last_updated: "2026-11-05T09:00:00.000Z"
 progress:
   total_phases: 35
   completed_phases: 19
@@ -31,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 ## Current Position
 
 Phase: 05.21 (verrou-juridique-b2b) — EXECUTING
-Plan: 1 of 8
+Plan: 8 of 8 (plans 01-07 terminés ; 08 partiel — recette locale faite, migration cloud `20261030000000` à appliquer puis push `dev`)
 Prochaine phase : voir « À faire dans l'immédiat » ci-dessous (05.21 marquée URGENTE au ROADMAP, puis 05.20, 06.4)
 Status: Executing Phase 05.21
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
