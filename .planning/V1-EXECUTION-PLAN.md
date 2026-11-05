@@ -17,6 +17,13 @@
 - [ ] 1.5 Vérifier le déblocage auto à T+48h sur un lead réel.
 **Sortie** : un abonnement test complet, facturé → activé → lead débloqué à 48h, sans intervention manuelle.
 
+**Spécification client – Page d’acompte Stripe Hosted**
+- Badge de réassurance sous le bouton : “Paiement de l’acompte 100 % sécurisé via Stripe. Vos fonds sont protégés et garantis.”
+- Notification explicite : “Le paiement de l’acompte valide et verrouille immédiatement la date de démarrage du chantier.”
+- Redirection 1‑clic vers l’URL Stripe Checkout générée.
+- Webhook Stripe → mise à jour du statut “Acompte Payé” et déclenchement du workflow chantier.
+- Sécurisation PCI‑DSS : aucune donnée de carte n’est stockée ou transitée par Bati‑Axe.
+
 ---
 
 ## 2. P2 — Turnstile anti-spam (Cloudflare) ✅ CODE LIVRÉ
