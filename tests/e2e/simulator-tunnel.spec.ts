@@ -44,17 +44,18 @@ test.describe('Simulateur — tunnel catégorie puis postes', () => {
     await expect(page.getByText('Peinture et finitions')).toHaveCount(0)
   })
 
-  test('étape 2 : alerte de coordination dès qu\'un poste réservé EGB est coché', async ({ page }) => {
+  test('étape 2 : alerte de coordination pour les postes réservés EGB (hors pac et géothermie)', async ({ page }) => {
     await gotoSimulateur(page)
     await page.getByRole('radio', { name: 'Rénovation Énergétique' }).click()
     const alerte = page.getByText(/nécessitent une coordination/)
     const poste = (nom: string) => page.locator('label', { hasText: nom })
+    // pac et géothermie : réservés EGB mais sans alerte jaune
     await poste('Pompe à chaleur').click()
+    await poste('Géothermie').click()
+    await expect(alerte).toHaveCount(0)
+    await poste('Panneaux solaires / photovoltaïque').click()
     await expect(alerte).toBeVisible()
-    // un poste couvert par un spécialiste ne lève plus l'alerte
-    await poste('Rénovation d’une chaudière').click()
-    await expect(alerte).toBeVisible()
-    await poste('Pompe à chaleur').click()
+    await poste('Panneaux solaires / photovoltaïque').click()
     await expect(alerte).toHaveCount(0)
     // démolition (Prestations ciblées) est aussi réservée EGB
     await page.getByRole('button', { name: 'Retour' }).click()

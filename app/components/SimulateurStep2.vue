@@ -46,9 +46,11 @@ function toggle(id: string) {
   emit('update:selectedItems', next)
 }
 
-// Postes réservés aux entreprises générales (pac, géothermie, photovoltaïque, démolition, assainissement)
+// Postes réservés aux entreprises générales signalés par l'alerte jaune (photovoltaïque, démolition, assainissement)
+// pac et géothermie restent réservés EGB côté matching mais ne déclenchent plus l'alerte
+const NO_ALERT = ['pac', 'geothermie']
 const reservedLabels = computed(() =>
-  props.selectedItems.filter(isEgbReserved).map(i => COMPATIBILITY_MATRIX[i]!.label))
+  props.selectedItems.filter(i => isEgbReserved(i) && !NO_ALERT.includes(i)).map(i => COMPATIBILITY_MATRIX[i]!.label))
 </script>
 
 <template>
