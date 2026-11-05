@@ -299,12 +299,13 @@ Plans:
   4. Re-contrôle tous les 6 mois (devoir de vigilance donneur d'ordres) tracé dans `documents_artisan` / `audit_logs`.
   5. V1 = statuts manuels + dates d'expiration (pattern décennale Phase 5) ; API Infolégale/Paperless = V2.
 
-**Plans**: 4/4 complete
+**Plans**: 4/5 complete
 Plans:
 - [x] 05.11-01 ✅ — Migration `documents_artisan` + colonnes sous-traitance + types + RLS (2026-08-23)
 - [x] 05.11-02 ✅ — Switch « Alerte Capacité » + effectif dans `/espace/dashboard` + endpoint PATCH (2026-08-23)
 - [x] 05.11-03 ✅ — Suspension auto à expiration + re-contrôle 6 mois (devoir de vigilance) (2026-08-23)
 - [x] 05.11-04 ✅ — Vue admin documents (statuts, expirations) — fusionnée Phase 06.1 (2026-08-23)
+- [ ] 05.11-05 — Fusion `documents_artisan` → `verifications` + verrou sous-traitance (pièces KBIS < 3 mois, décennale, URSSAF, RGE) — **plan écrit le 2026-11-05, en attente de GO**
 
 **UI hint**: yes
 
