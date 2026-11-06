@@ -577,7 +577,7 @@ function pipelineLabel(status: string): string {
 
             <div class="grid sm:grid-cols-2 gap-3 mt-3">
               <div>
-                <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Statut de la décision</label>
+                <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Statut de la décision <span class="text-destructive" aria-hidden="true">*</span></label>
                 <select
                   v-model="ensureDraft(r.id).decision_status"
                   class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:border-safety"
@@ -589,7 +589,7 @@ function pipelineLabel(status: string): string {
                 </p>
               </div>
               <div>
-                <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Code postal du projet</label>
+                <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Code postal du projet <span class="text-destructive" aria-hidden="true">*</span></label>
                 <input
                   v-model="ensureDraft(r.id).project_postal_code"
                   type="text"
@@ -694,6 +694,7 @@ function pipelineLabel(status: string): string {
 
             <!-- Phase 8 (D-01) — Diffusion automatique aux artisans matchés -->
             <div class="mt-4 border-t border-border pt-4">
+              <p class="text-[11px] text-muted-foreground mb-2"><span class="text-destructive">*</span> Champs obligatoires pour diffuser.</p>
               <div class="flex items-center justify-end">
                 <button
                   @click="diffuse(r)"
