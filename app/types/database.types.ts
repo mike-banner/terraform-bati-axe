@@ -568,62 +568,6 @@ export type Database = {
         };
         Relationships: [];
       };
-      documents_artisan: {
-        Row: {
-          activities_subscribed: string[];
-          alert_j30_sent_at: string | null;
-          alert_j7_sent_at: string | null;
-          created_at: string | null;
-          doc_type: Database["public"]["Enums"]["artisan_doc_type"];
-          expires_at: string | null;
-          file_key: string | null;
-          id: string;
-          last_reviewed_at: string | null;
-          professional_id: string;
-          status: Database["public"]["Enums"]["artisan_doc_status"];
-          updated_at: string | null;
-          validated_by_api: boolean;
-        };
-        Insert: {
-          activities_subscribed?: string[];
-          alert_j30_sent_at?: string | null;
-          alert_j7_sent_at?: string | null;
-          created_at?: string | null;
-          doc_type: Database["public"]["Enums"]["artisan_doc_type"];
-          expires_at?: string | null;
-          file_key?: string | null;
-          id?: string;
-          last_reviewed_at?: string | null;
-          professional_id: string;
-          status?: Database["public"]["Enums"]["artisan_doc_status"];
-          updated_at?: string | null;
-          validated_by_api?: boolean;
-        };
-        Update: {
-          activities_subscribed?: string[];
-          alert_j30_sent_at?: string | null;
-          alert_j7_sent_at?: string | null;
-          created_at?: string | null;
-          doc_type?: Database["public"]["Enums"]["artisan_doc_type"];
-          expires_at?: string | null;
-          file_key?: string | null;
-          id?: string;
-          last_reviewed_at?: string | null;
-          professional_id?: string;
-          status?: Database["public"]["Enums"]["artisan_doc_status"];
-          updated_at?: string | null;
-          validated_by_api?: boolean;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "documents_artisan_professional_id_fkey";
-            columns: ["professional_id"];
-            isOneToOne: false;
-            referencedRelation: "professionals";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       free_lead_grants: {
         Row: {
           granted_at: string;
@@ -1388,14 +1332,14 @@ export type Database = {
       };
       verifications: {
         Row: {
-          alert_j30_sent_at: string | null
-          alert_j7_sent_at: string | null
-          issued_on: string | null
+          alert_j30_sent_at: string | null;
+          alert_j7_sent_at: string | null;
           created_at: string | null;
           document_type: string;
           expiry_date: string | null;
           file_key: string;
           id: string;
+          issued_on: string | null;
           policy_number: string | null;
           pro_id: string;
           reviewed_at: string | null;
@@ -1403,14 +1347,14 @@ export type Database = {
           status: Database["public"]["Enums"]["verification_status"] | null;
         };
         Insert: {
-          alert_j30_sent_at?: string | null
-          alert_j7_sent_at?: string | null
-          issued_on?: string | null
+          alert_j30_sent_at?: string | null;
+          alert_j7_sent_at?: string | null;
           created_at?: string | null;
           document_type: string;
           expiry_date?: string | null;
           file_key: string;
           id?: string;
+          issued_on?: string | null;
           policy_number?: string | null;
           pro_id: string;
           reviewed_at?: string | null;
@@ -1418,14 +1362,14 @@ export type Database = {
           status?: Database["public"]["Enums"]["verification_status"] | null;
         };
         Update: {
-          alert_j30_sent_at?: string | null
-          alert_j7_sent_at?: string | null
-          issued_on?: string | null
+          alert_j30_sent_at?: string | null;
+          alert_j7_sent_at?: string | null;
           created_at?: string | null;
           document_type?: string;
           expiry_date?: string | null;
           file_key?: string;
           id?: string;
+          issued_on?: string | null;
           policy_number?: string | null;
           pro_id?: string;
           reviewed_at?: string | null;
@@ -1656,7 +1600,6 @@ export type Database = {
         | { Args: { table_name: string }; Returns: string };
       enablelongtransactions: { Args: Record<PropertyKey, never>; Returns: string };
       equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
-      expire_artisan_documents: { Args: Record<PropertyKey, never>; Returns: undefined };
       expire_decennale_status: { Args: Record<PropertyKey, never>; Returns: undefined };
       expire_rge_status: { Args: Record<PropertyKey, never>; Returns: undefined };
       geometry: { Args: { "": string }; Returns: unknown };
@@ -2110,8 +2053,6 @@ export type Database = {
       };
     };
     Enums: {
-      artisan_doc_status: "pending" | "valid" | "expired" | "suspended";
-      artisan_doc_type: "kbis" | "urssaf" | "decennale";
       audit_action:
         | "lead_unlocked"
         | "doc_validated"
@@ -2270,8 +2211,6 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      artisan_doc_status: ["pending", "valid", "expired", "suspended"],
-      artisan_doc_type: ["kbis", "urssaf", "decennale"],
       audit_action: [
         "lead_unlocked",
         "doc_validated",
