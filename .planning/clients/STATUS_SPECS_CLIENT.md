@@ -158,6 +158,7 @@
 | Question « projets complémentaires » avant le Lead Wall (TUNNEL-02) | ❌ | Phase 14 |
 | Validation téléphone SMS OTP (TUNNEL-03) | ❌ (dépense fournisseur SMS → feu vert requis) | Phase 14 |
 | Data immo / lead vendeur DPE, DVF (IMMO-01/02/03, IMMO-DVF-01) | ❌ | Phase 13 |
+| Tunnel multi-acheteurs (artisan / vendeur / diagnostiqueur / courtier) — extension de la Phase 13, note du 2026-11-06 | 📝 note rangée, non planifiée, séquencée en 4 étapes | [`notes/20261106-LEAD_TUNNEL_VENTE_DIAG_COURTIER-SPEC_CLIENT.md`](../notes/20261106-LEAD_TUNNEL_VENTE_DIAG_COURTIER-SPEC_CLIENT.md) → Phase 13 + P6 |
 
 ---
 
