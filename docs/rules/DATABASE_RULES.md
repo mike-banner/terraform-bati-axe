@@ -113,3 +113,5 @@ CREATE INDEX idx_leads_created_at ON leads(created_at DESC);
 - Un `UPDATE` bloqué par la RLS ne renvoie **aucune erreur** (0 ligne) : toute écriture serveur doit vérifier qu'au moins une ligne a été modifiée (`.select('id')` puis 404 sinon) et être couverte par un test de non-régression.
 - Les champs de revue (`status`, `reviewed_*`, `egb_status`, `professional_type`, `rge_status`) sont protégés par triggers de garde ; les valeurs dérivées (`rge_status`) sont calculées par trigger, jamais par le code applicatif.
 - Toute migration appliquée au cloud suit : dry-run (`supabase db push --linked --dry-run`) → liste exacte → accord explicite → push → `migration list --linked` → régénération des types. La base cloud est partagée dev/prod.
+
+- **Justificatifs des pros** : `verifications` est le seul modèle (Kbis, décennale, RGE, URSSAF) — `documents_artisan` n'existe plus (ADR-013). Verrou sous-traitance : `app/utils/subcontractingGate.ts` + job `sync-subcontracting`, à garder alignés.

@@ -32,3 +32,16 @@ export function validateRgeUpload(
   const r = validateFutureExpiry(expirationDate, today)
   return r.ok ? { ok: true, status: 'pending', expiry_date: r.expiry_date } : r
 }
+
+/** Date d'édition du Kbis (05.11-05) : date YYYY-MM-DD réelle, obligatoire, pas dans le futur. */
+export function validateIssuedOn(
+  issuedOn: string | undefined,
+  today = new Date().toISOString().slice(0, 10),
+): { ok: false; error: string } | { ok: true; issued_on: string } {
+  if (!issuedOn) return { ok: false, error: "Date d'édition du Kbis requise." }
+  if (!ISO_DATE.test(issuedOn) || isNaN(Date.parse(issuedOn)) || new Date(issuedOn).toISOString().slice(0, 10) !== issuedOn) {
+    return { ok: false, error: 'Date invalide.' }
+  }
+  if (issuedOn > today) return { ok: false, error: "La date d'édition ne peut pas être future." }
+  return { ok: true, issued_on: issuedOn }
+}

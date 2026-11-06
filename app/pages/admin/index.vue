@@ -13,7 +13,7 @@ const user = useSupabaseUser()
 const isLoading = ref(true)
 const actionLoading = ref<string | null>(null)
 const errorMessage = ref<string | null>(null)
-const activeTab = ref<'overview' | 'pending' | 'all' | 'egb' | 'projects' | 'realisations' | 'b2b' | 'kpi' | 'documents' | 'audit'>('overview')
+const activeTab = ref<'overview' | 'pending' | 'all' | 'egb' | 'projects' | 'realisations' | 'b2b' | 'kpi' | 'audit'>('overview')
 
 const professionals = ref<Professional[]>([])
 const projects = ref<Project[]>([])
@@ -106,8 +106,8 @@ async function uploadAdminDoc(proId: string, docType: DocType) {
   const state = uploadState[key]
   if (!state?.file) return
   // CHECK base : un justificatif RGE porte toujours une date d'expiration
-  if (docType === 'rge' && !expiryDates.value[key]) {
-    state.error = "Date d'expiration requise pour l'attestation RGE."
+  if ((docType === 'rge' || docType === 'urssaf') && !expiryDates.value[key]) {
+    state.error = "Date d'expiration requise pour cette attestation."
     return
   }
   state.status = 'uploading'
@@ -122,7 +122,7 @@ async function uploadAdminDoc(proId: string, docType: DocType) {
     if (!res.ok) throw new Error('Échec du transfert vers Cloudflare R2.')
     await (supabase as any).from('verifications').insert({
       pro_id: proId, document_type: docType, file_key: presign.fileKey, status: 'approved',
-      ...(docType === 'rge' ? { expiry_date: expiryDates.value[key] } : {}),
+      ...(docType === 'rge' || docType === 'urssaf' ? { expiry_date: expiryDates.value[key] } : {}),
     })
     state.status = 'idle'
     state.file = null
@@ -244,7 +244,6 @@ async function toggleShowcase(projectId: string, isShowcased: boolean) {
     <AdminKpiDashboard v-else-if="activeTab === 'kpi'" />
 
     <!-- Tab: Documents légaux -->
-    <AdminDocumentsTab v-else-if="activeTab === 'documents'" />
 
     <!-- Tab: Audit log -->
     <AdminAuditLog v-else-if="activeTab === 'audit'" />

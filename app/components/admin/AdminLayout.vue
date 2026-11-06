@@ -68,12 +68,6 @@ const navItems = computed(() => [
     badge: null,
   },
   {
-    key: 'documents',
-    label: 'Documents légaux',
-    icon: 'shield',
-    badge: null,
-  },
-  {
     key: 'audit',
     label: 'Journal',
     icon: 'history',

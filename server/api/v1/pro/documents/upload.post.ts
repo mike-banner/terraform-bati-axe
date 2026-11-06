@@ -1,13 +1,14 @@
 import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
-import { ISO_DATE, validateFutureExpiry, validateRgeUpload } from '../../../../utils/rgeUpload'
+import { ISO_DATE, validateFutureExpiry, validateRgeUpload, validateIssuedOn } from '../../../../utils/rgeUpload'
 
 const schema = z.object({
-  document_type: z.enum(['kbis', 'decennale', 'rge']),
+  document_type: z.enum(['kbis', 'decennale', 'rge', 'urssaf']),
   file_key: z.string().min(1),
   // Champs obligatoires pour la décennale (auto-approbation sous responsabilité du pro)
   policy_number: z.string().max(50, 'Le numéro de police ne peut pas dépasser 50 caractères.').optional(),
   expiration_date: z.string().regex(ISO_DATE, 'Date invalide.').optional(), // format YYYY-MM-DD (<input type="date">)
+  issued_on: z.string().regex(ISO_DATE, 'Date invalide.').optional(), // date d'édition du Kbis (05.11-05)
 })
 
 export default defineEventHandler(async (event) => {
@@ -21,7 +22,7 @@ export default defineEventHandler(async (event) => {
   const parsed = schema.safeParse(body)
   if (!parsed.success) throw createError({ statusCode: 400, statusMessage: 'Données invalides.' })
 
-  const { document_type, file_key, policy_number, expiration_date } = parsed.data
+  const { document_type, file_key, policy_number, expiration_date, issued_on } = parsed.data
 
   // Pour la décennale, le numéro de police et la date d'expiration sont obligatoires
   if (document_type === 'decennale') {
@@ -33,6 +34,22 @@ export default defineEventHandler(async (event) => {
   // RGE : date future obligatoire, toujours en attente de revue admin (jamais auto-approuvé)
   const rge = validateRgeUpload(document_type, expiration_date)
   if (rge && !rge.ok) throw createError({ statusCode: 422, statusMessage: rge.error })
+
+  // Kbis : date d'édition obligatoire (verrou sous-traitance « moins de 3 mois »)
+  let kbisIssuedOn: string | null = null
+  if (document_type === 'kbis') {
+    const k = validateIssuedOn(issued_on)
+    if (!k.ok) throw createError({ statusCode: 422, statusMessage: k.error })
+    kbisIssuedOn = k.issued_on
+  }
+
+  // URSSAF : date de fin de validité future obligatoire, toujours en attente de revue admin
+  let urssafExpiry: string | null = null
+  if (document_type === 'urssaf') {
+    const u = validateFutureExpiry(expiration_date)
+    if (!u.ok) throw createError({ statusCode: 422, statusMessage: u.error })
+    urssafExpiry = u.expiry_date
+  }
 
   const supabase = serverSupabaseServiceRole(event) as any
 
@@ -47,7 +64,7 @@ export default defineEventHandler(async (event) => {
     .maybeSingle()
   const isKbisAutoApproved = document_type === 'kbis' && proRow?.siret_status === 'active'
 
-  const status = rge ? rge.status : (isDecennale || isKbisAutoApproved ? 'approved' : 'pending')
+  const status = rge ? rge.status : document_type === 'urssaf' ? 'pending' : (isDecennale || isKbisAutoApproved ? 'approved' : 'pending')
 
   const { error: insertErr } = await supabase.from('verifications').insert({
     pro_id: uid,
@@ -60,6 +77,8 @@ export default defineEventHandler(async (event) => {
       reviewed_at: new Date().toISOString(),
     } : {}),
     ...(rge ? { expiry_date: rge.expiry_date } : {}),
+    ...(urssafExpiry ? { expiry_date: urssafExpiry } : {}),
+    ...(kbisIssuedOn ? { issued_on: kbisIssuedOn } : {}),
     ...(isKbisAutoApproved ? {
       reviewed_at: new Date().toISOString(),
     } : {}),

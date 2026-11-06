@@ -145,7 +145,7 @@ describe('auto-approve : upload décennale', () => {
 
   it('Test 5 : kbis → verifications insérée avec status pending (pas d\'auto-approbation)', async () => {
     mockServerSupabaseUser.mockResolvedValue(PRO_USER)
-    readBodyMock.mockResolvedValue({ document_type: 'kbis', file_key: 'abc/kbis/kbis_2024.pdf' })
+    readBodyMock.mockResolvedValue({ document_type: 'kbis', file_key: 'abc/kbis/kbis_2024.pdf', issued_on: new Date().toISOString().slice(0, 10) })
 
     const sb = makeSupabaseMock()
     mockServerSupabaseServiceRole.mockReturnValue({ from: sb.from })
@@ -154,7 +154,29 @@ describe('auto-approve : upload décennale', () => {
 
     expect(result.approved).toBe(false)
     expect(sb.insertCalls[0]?.payload.status).toBe('pending')
+    expect(sb.insertCalls[0]?.payload.issued_on).toBe(new Date().toISOString().slice(0, 10))
     // Pas de mise à jour professionals pour le KBIS
     expect(sb.updatePayloads).toHaveLength(0)
+  })
+
+  it('Test 6 : kbis sans date d\'édition → 422 (verrou sous-traitance « moins de 3 mois »)', async () => {
+    mockServerSupabaseUser.mockResolvedValue(PRO_USER)
+    readBodyMock.mockResolvedValue({ document_type: 'kbis', file_key: 'abc/kbis/kbis_2024.pdf' })
+    const sb = makeSupabaseMock()
+    mockServerSupabaseServiceRole.mockReturnValue({ from: sb.from })
+    await expect((handler as Function)({})).rejects.toMatchObject({ statusCode: 422 })
+    expect(sb.insertCalls).toHaveLength(0)
+  })
+
+  it('Test 7 : urssaf → en attente, échéance obligatoire et stockée', async () => {
+    mockServerSupabaseUser.mockResolvedValue(PRO_USER)
+    const sb = makeSupabaseMock()
+    mockServerSupabaseServiceRole.mockReturnValue({ from: sb.from })
+    readBodyMock.mockResolvedValue({ document_type: 'urssaf', file_key: 'abc/urssaf/u.pdf' })
+    await expect((handler as Function)({})).rejects.toMatchObject({ statusCode: 422 })
+    readBodyMock.mockResolvedValue({ document_type: 'urssaf', file_key: 'abc/urssaf/u.pdf', expiration_date: '2099-01-01' })
+    const result = await (handler as Function)({})
+    expect(result.approved).toBe(false)
+    expect(sb.insertCalls[0]?.payload).toMatchObject({ status: 'pending', expiry_date: '2099-01-01' })
   })
 })

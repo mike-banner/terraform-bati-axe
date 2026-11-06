@@ -78,13 +78,13 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 - **Simulateur étape 2** : l'alerte jaune « nécessitent une coordination » ne s'affiche plus pour pompe à chaleur et géothermie (photovoltaïque, démolition, assainissement la gardent). Le matching reste inchangé (ces postes restent réservés EGB).
 - **Point 05.11 (coffre-fort juridique)** : base technique en place mais pas alimentée — voir « Écarts constatés 05.11 » ci-dessous.
 
-### Écarts constatés 05.11 (vérifiés le 2026-11-05 dans le code et sur le cloud)
+### Écarts constatés 05.11 (vérifiés le 2026-11-05) — **traités par le plan 05.11-05 (code livré en local le 2026-11-06, migration `20261106000000` NON appliquée au cloud : dry-run + accord requis)**
 - **Aucun code n'insère dans `documents_artisan`** (seulement lecture admin, PATCH admin et cron d'alertes). La table cloud est vide (0 ligne), comme `verifications` (0 ligne) ; 2 pros, aucun avec la capacité sous-traitance activée.
 - Le dépôt réel des justificatifs passe par `verifications` (ADR-012), pas par `documents_artisan` : les deux modèles coexistent sans pont. Le point de design du CONTEXT (étendre ou remplacer `verifications`) n'a jamais été tranché.
 - La sélection des 2-3 sous-traitants du workflow DirCo (05.10) ne lit pas `documents_artisan`, contrairement à ce que prévoyait le CONTEXT (« pré-requis métier de la sélection »).
 - Aucun test automatisé ne couvre la vue admin, le PATCH ni les fonctions SQL d'expiration. Le cron `pg_cron` existe bien sur le cloud, la RLS a 2 policies.
 - Les SUMMARY 05.11 disent « poussée en prod » : c'était la base cloud partagée dev, la prod chez le client n'est pas déployée.
-- Décision à prendre par Mike : alimenter `documents_artisan` depuis l'upload existant, ou la fusionner dans `verifications` (et retirer la vue admin en double).
+- Décision de Mike (2026-11-05) : fusion dans `verifications` (ADR-013). Livré : URSSAF + `issued_on`, verrou sous-traitance serveur + dashboard, alertes décennale corrigées, `documents_artisan` et sa vue admin supprimées. Reste : push cloud, types régénérés, push `dev`.
 
 ## Fait le 28 au 30 octobre 2026
 

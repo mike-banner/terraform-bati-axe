@@ -6,7 +6,7 @@ import { ISO_DATE } from '../../../utils/rgeUpload'
 
 const verifySchema = z.object({
   pro_id: z.string().uuid(),
-  document_type: z.enum(['kbis', 'decennale', 'rge']),
+  document_type: z.enum(['kbis', 'decennale', 'rge', 'urssaf']),
   status: z.enum(['approved', 'rejected']),
   expiry_date: z.string().regex(ISO_DATE, 'Date invalide.').optional(), // format YYYY-MM-DD
   rejection_reason: z.string().min(5, 'Le motif doit faire au moins 5 caractères.').max(500, 'Le motif ne peut dépasser 500 caractères.').optional(),
@@ -64,9 +64,10 @@ export default defineEventHandler(async (event) => {
 
     // RGE : une échéance est obligatoire (CHECK base) ; on ne l'écrase jamais par null.
     // Le statut RGE du profil est dérivé par trigger SQL, jamais écrit ici.
-    const isRge = document_type === 'rge'
+    // URSSAF (05.11-05) : même règle, échéance obligatoire en base et sans effet sur is_verified.
+    const isRge = document_type === 'rge' || document_type === 'urssaf'
     if (isRge && !expiry_date && !latestVerification?.expiry_date) {
-      throw createError({ statusCode: 400, statusMessage: "Date d'expiration requise pour l'attestation RGE." })
+      throw createError({ statusCode: 400, statusMessage: "Date d'expiration requise pour cette attestation." })
     }
 
     if (latestVerification) {
@@ -75,7 +76,8 @@ export default defineEventHandler(async (event) => {
         .from('verifications')
         .update({
           status: verificationStatus,
-          ...(isRge ? (expiry_date ? { expiry_date } : {}) : { expiry_date: expiry_date || null }),
+          // Un re-contrôle (approbation sans date) ne doit jamais effacer l'échéance existante
+          ...(expiry_date ? { expiry_date } : {}),
           reviewed_by: userId,
           reviewed_at: new Date().toISOString()
         })
@@ -122,7 +124,7 @@ export default defineEventHandler(async (event) => {
           .eq('id', pro_id)
       }
     } else if (!isRge) {
-      // If rejected, remove verified state (un refus RGE ne dé-vérifie pas le pro)
+      // If rejected, remove verified state (un refus RGE/URSSAF ne dé-vérifie pas le pro)
       await supabase
         .from('professionals')
         .update({ is_verified: false })
@@ -153,7 +155,7 @@ export default defineEventHandler(async (event) => {
 
       if (pro?.email) {
         const siteUrl = useRuntimeConfig().public.siteUrl || 'https://bati-axe.com'
-        const docLabel = document_type === 'decennale' ? 'attestation décennale' : document_type === 'rge' ? 'attestation RGE' : 'extrait Kbis'
+        const docLabel = document_type === 'decennale' ? 'attestation décennale' : document_type === 'rge' ? 'attestation RGE' : document_type === 'urssaf' ? 'attestation de vigilance URSSAF' : 'extrait Kbis'
         const approved = status === 'approved'
         await sendEmail({
           to: pro.email,

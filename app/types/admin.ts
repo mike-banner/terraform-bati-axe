@@ -1,7 +1,7 @@
 // ─── Admin shared types ───────────────────────────────────────────────────────
 
-export type DocType = 'kbis' | 'decennale' | 'rge'
-export const DOC_LABELS: Record<DocType, string> = { kbis: 'KBIS', decennale: 'Décennale', rge: 'RGE' }
+export type DocType = 'kbis' | 'decennale' | 'rge' | 'urssaf'
+export const DOC_LABELS: Record<DocType, string> = { kbis: 'KBIS', decennale: 'Décennale', rge: 'RGE', urssaf: 'URSSAF' }
 
 export interface Verification {
   id: string

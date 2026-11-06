@@ -3,6 +3,7 @@ import { serverSupabaseUser, serverSupabaseClient, serverSupabaseServiceRole } f
 import { sendEmail } from '../../../../utils/email'
 import { shouldInviteToRge, buildRgeInviteEmail } from '../../../../utils/rgeInvite'
 import { PROFESSIONAL_CATEGORIES, categoriesError } from '../../../../../app/utils/workTypeMatrix'
+import { missingDocuments, REQUIRED_DOC_LABELS } from '../../../../../app/utils/subcontractingGate'
 
 // CNV-05 D-14/D-15: editable fields; canonical_slug is immutable (T-04.5-15)
 const VALID_CATEGORIES = Object.keys(PROFESSIONAL_CATEGORIES) as [string, ...string[]]
@@ -58,6 +59,26 @@ export default defineEventHandler(async (event) => {
     ;({ data: row } = await db.from('professionals').select('professional_type, categories, rge_status, email, full_name').eq('id', user.id).single())
     const err = categoriesError(row?.professional_type, parsed.data.categories)
     if (err) throw createError({ statusCode: 400, statusMessage: err })
+  }
+
+  // 05.11-05 : la capacité sous-traitance ne s'active que si les pièces obligatoires sont validées
+  // (désactiver reste toujours permis). Les justificatifs sont lus côté serveur, jamais fournis par le client.
+  if (parsed.data.is_available_subcontracting === true) {
+    const [{ data: verifs }, { data: cur }] = await Promise.all([
+      db.from('verifications').select('document_type, status, expiry_date, issued_on, created_at').eq('pro_id', user.id),
+      db.from('professionals').select('categories, rge_status').eq('id', user.id).single(),
+    ])
+    const missing = missingDocuments(verifs, {
+      categories: parsed.data.categories ?? cur?.categories,
+      rge_status: cur?.rge_status,
+    })
+    if (missing.length) {
+      throw createError({
+        statusCode: 422,
+        statusMessage: `Pièces à valider avant d'activer la sous-traitance : ${missing.map(m => REQUIRED_DOC_LABELS[m]).join(', ')}.`,
+        data: { missing },
+      })
+    }
   }
 
   const { categories_reviewed, ...fields } = parsed.data

@@ -19,10 +19,11 @@ interface Pro {
 }
 interface Verif {
   document_type: string; status: string; expiry_date: string | null; created_at: string
-  file_key?: string; reviewed_at?: string | null
+  file_key?: string; reviewed_at?: string | null; issued_on?: string | null
 }
 
 import { PROFESSIONAL_CATEGORIES, CATEGORY_LIMITS, newCategoriesSince } from '~/utils/workTypeMatrix'
+import { missingDocuments, REQUIRED_DOC_LABELS, minKbisIssueDate, type RequiredDoc } from '~/utils/subcontractingGate'
 
 const supabase = useSupabaseClient()
 const { user } = useRequireAuth()
@@ -52,7 +53,7 @@ async function loadProData() {
         .select('id, company_name, full_name, phone, postal_code, canonical_slug, short_id, is_verified, is_claimed, decennal_status, siret_status, siret_company_name, siret_legal_form, siret_naf_code, created_at, categories, bio, logo_url, is_available_subcontracting, workforce_size, lead_alerts_email, professional_type, categories_reviewed_at, rge_status')
         .eq('id', uid).maybeSingle(),
       supabase.from('verifications')
-        .select('document_type, status, expiry_date, created_at, file_key, reviewed_at')
+        .select('document_type, status, expiry_date, created_at, file_key, reviewed_at, issued_on')
         .eq('pro_id', uid).order('created_at', { ascending: false }),
       supabase.from('pro_zones')
         .select('id', { count: 'exact', head: true })
@@ -81,6 +82,7 @@ watch(user, () => loadProData(), { immediate: true })
 const kbis      = computed(() => verifs.value?.find(v => v.document_type === 'kbis'))
 const decennale = computed(() => verifs.value?.find(v => v.document_type === 'decennale'))
 const rge       = computed(() => verifs.value?.find(v => v.document_type === 'rge'))
+const urssaf    = computed(() => verifs.value?.find(v => v.document_type === 'urssaf'))
 
 // Nom de fichier lisible (dernier segment de la clé R2) + dates
 const docFileName = (key?: string) => key ? key.split('/').pop() : ''
@@ -116,10 +118,11 @@ const docStatus = (doc: any) => {
 
 // ─── Upload inline ─────────────────────────────────────────────────────────────
 const uploads = reactive({
-  kbis:      { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '' },
+  kbis:      { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '', issuedOn: '', replacing: false },
   decennale: { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '',
     policyNumber: '', expirationDate: '' },
   rge:       { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '', expirationDate: '' },
+  urssaf:    { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '', expirationDate: '' },
 })
 
 // Attribut min du champ date RGE : demain (le serveur exige une date strictement future)
@@ -216,12 +219,12 @@ async function saveCapacity() {
   }
 }
 
-function onFileSelect(e: Event, type: 'kbis' | 'decennale' | 'rge') {
+function onFileSelect(e: Event, type: 'kbis' | 'decennale' | 'rge' | 'urssaf') {
   const f = (e.target as HTMLInputElement).files?.[0]
   if (f) { uploads[type].file = f; uploads[type].status = 'idle'; uploads[type].error = '' }
 }
 
-async function uploadDoc(type: 'kbis' | 'decennale' | 'rge') {
+async function uploadDoc(type: 'kbis' | 'decennale' | 'rge' | 'urssaf') {
   const file = uploads[type].file
   if (!file) return
   uploads[type].status = 'uploading'
@@ -247,9 +250,12 @@ async function uploadDoc(type: 'kbis' | 'decennale' | 'rge') {
       uploadBody.expiration_date = uploads.decennale.expirationDate
     }
     if (type === 'rge') uploadBody.expiration_date = uploads.rge.expirationDate
+    if (type === 'urssaf') uploadBody.expiration_date = uploads.urssaf.expirationDate
+    if (type === 'kbis') uploadBody.issued_on = uploads.kbis.issuedOn
     const { error: insertErr } = await $fetch<{ error: string | null }>('/api/v1/pro/documents/upload', { method: 'POST', body: uploadBody })
     if (insertErr) throw new Error(insertErr)
     uploads[type].status = 'success'
+    if (type === 'kbis') uploads.kbis.replacing = false
     await loadProData() // refresh badges
   } catch (err: any) {
     uploads[type].status = 'error'
@@ -281,6 +287,16 @@ const currentStepIndex = computed(() => {
   const idx = steps.value.findIndex(s => !s.done)
   return idx === -1 ? steps.value.length - 1 : idx
 })
+
+// 05.11-05 — pièces requises pour activer la capacité sous-traitance (même règle que le serveur)
+const missingDocs = computed(() => missingDocuments(verifs.value, { categories: pro.value?.categories, rge_status: pro.value?.rge_status }))
+const requiredDocs = computed(() => {
+  const required: RequiredDoc[] = ['kbis', 'decennale', 'urssaf', ...(pro.value?.categories?.includes('renovation_energetique') ? ['rge' as const] : [])]
+  return required.map(t => ({ type: t, label: REQUIRED_DOC_LABELS[t], ok: !missingDocs.value.includes(t) }))
+})
+const subcontractingEligible = computed(() => missingDocs.value.length === 0)
+const maxKbisDate = new Date().toISOString().slice(0, 10)
+const minKbisDate = minKbisIssueDate()
 
 const docsComplete = computed(() => !!kbis.value && !!decennale.value)
 // Le dépôt RGE n'est proposé qu'aux pros qui ont déclaré la rénovation énergétique (ou qui ont déjà un RGE en cours/validé)
@@ -391,8 +407,20 @@ const showRge = computed(() =>
         </div>
 
         <!-- KBIS -->
-        <div v-if="!kbis" class="mb-3">
+        <div v-if="!kbis || uploads.kbis.replacing" class="mb-3">
           <p class="text-xs font-semibold text-foreground mb-2">Extrait KBIS <span class="text-muted-foreground font-normal">(moins de 3 mois · PDF, JPG, PNG)</span></p>
+          <div v-if="uploads.kbis.status !== 'success'" class="mb-2">
+            <label class="block text-xs text-muted-foreground mb-1">Date d'édition de l'extrait <span class="text-red-500">*</span></label>
+            <input
+              v-model="uploads.kbis.issuedOn"
+              type="date"
+              required
+              :min="minKbisDate"
+              :max="maxKbisDate"
+              class="h-9 w-full sm:w-60 px-3 border border-border rounded-sm text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
+            />
+            <p class="text-[10px] text-muted-foreground mt-1">Un extrait de plus de 3 mois ne permet pas d'activer la sous-traitance.</p>
+          </div>
           <div v-if="uploads.kbis.status !== 'success'" class="flex items-center gap-3 flex-wrap">
             <label class="cursor-pointer">
               <input type="file" @change="onFileSelect($event, 'kbis')" accept=".pdf,image/*" class="sr-only" />
@@ -405,7 +433,7 @@ const showRge = computed(() =>
             <button
               v-if="uploads.kbis.file"
               @click="uploadDoc('kbis')"
-              :disabled="uploads.kbis.status === 'uploading'"
+              :disabled="uploads.kbis.status === 'uploading' || !uploads.kbis.issuedOn"
               class="h-9 px-5 bg-safety text-white text-xs font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform flex items-center gap-2 disabled:opacity-50"
             >
               <svg v-if="uploads.kbis.status === 'uploading'" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
@@ -422,12 +450,9 @@ const showRge = computed(() =>
             <span class="text-muted-foreground">—</span>
             <span :class="docStatus(kbis).cls" class="px-2 py-0.5 border rounded-full font-semibold">{{ docStatus(kbis).label }}</span>
             <span v-if="docFileName(kbis.file_key)" class="text-muted-foreground font-mono">· {{ docFileName(kbis.file_key) }}</span>
-            <label class="cursor-pointer ml-auto">
-              <input type="file" @change="onFileSelect($event, 'kbis'); uploadDoc('kbis')" accept=".pdf,image/*" class="sr-only" />
-              <span class="text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2">
-                {{ uploads.kbis.status === 'uploading' ? 'Envoi...' : 'Modifier' }}
-              </span>
-            </label>
+            <button type="button" class="ml-auto text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2" @click="uploads.kbis.replacing = true; uploads.kbis.status = 'idle'">
+              Modifier
+            </button>
           </div>
           <p v-if="docPeriod(kbis)" class="mt-1 ml-6 text-sm text-foreground leading-snug">
             {{ docPeriod(kbis)!.prefix }}<span class="text-base font-bold">{{ docPeriod(kbis)!.date1 }}</span>{{ docPeriod(kbis)!.middle }}<span v-if="docPeriod(kbis)!.date2" class="text-base font-bold">{{ docPeriod(kbis)!.date2 }}</span>
@@ -554,6 +579,45 @@ const showRge = computed(() =>
           </p>
         </div>
 
+        <!-- Attestation de vigilance URSSAF (05.11-05) : requise pour la sous-traitance -->
+        <div class="mt-4 pt-4 border-t border-border/50" data-testid="urssaf-block">
+          <p class="text-xs font-semibold text-foreground mb-1">Attestation de vigilance URSSAF <span class="text-muted-foreground font-normal">(sous-traitance · PDF, JPG, PNG)</span></p>
+          <p class="text-xs mb-2 flex items-center gap-2 flex-wrap">
+            <span class="text-muted-foreground">Statut :</span>
+            <span :class="docStatus(urssaf).cls" class="px-2 py-0.5 border rounded-full font-semibold" data-testid="urssaf-status">{{ docStatus(urssaf).label }}</span>
+          </p>
+          <div v-if="urssaf?.status !== 'pending' && uploads.urssaf.status !== 'success'" class="space-y-3">
+            <div>
+              <label class="block text-xs text-muted-foreground mb-1">Date de fin de validité <span class="text-red-500">*</span></label>
+              <input
+                v-model="uploads.urssaf.expirationDate"
+                type="date"
+                required
+                :min="minRgeDate"
+                class="h-9 w-full sm:w-60 px-3 border border-border rounded-sm text-xs bg-white focus:outline-none focus:ring-1 focus:ring-foreground"
+              />
+            </div>
+            <div class="flex items-center gap-3 flex-wrap">
+              <label class="cursor-pointer">
+                <input type="file" @change="onFileSelect($event, 'urssaf')" accept=".pdf,image/jpeg,image/png,image/webp" class="sr-only" />
+                <span class="h-9 px-4 border border-border rounded-sm text-xs font-medium bg-white hover:bg-muted transition-colors flex items-center gap-2">Choisir</span>
+              </label>
+              <span class="text-xs text-muted-foreground truncate max-w-[180px]">{{ uploads.urssaf.file ? uploads.urssaf.file.name : 'Aucun fichier' }}</span>
+              <button
+                v-if="uploads.urssaf.file"
+                type="button"
+                @click="uploadDoc('urssaf')"
+                :disabled="uploads.urssaf.status === 'uploading' || !uploads.urssaf.expirationDate || uploads.urssaf.expirationDate < minRgeDate"
+                class="h-9 px-5 bg-safety text-white text-xs font-semibold rounded-full hover:scale-105 shadow-safety/20 transition-transform disabled:opacity-50"
+              >
+                {{ uploads.urssaf.status === 'uploading' ? 'Envoi…' : "Envoyer l'attestation URSSAF" }}
+              </button>
+            </div>
+          </div>
+          <p v-if="uploads.urssaf.status === 'error'" class="text-xs text-red-600 mt-1">{{ uploads.urssaf.error }}</p>
+          <p v-if="uploads.urssaf.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ Attestation URSSAF envoyée — validation par notre équipe dans les meilleurs délais</p>
+        </div>
+
         <!-- Responsabilité -->
         <div class="mt-3 pt-3 border-t border-border/50 bg-yellow-100">
           <p class="text-xs text-muted-foreground leading-relaxed">
@@ -572,7 +636,9 @@ const showRge = computed(() =>
             <button
               type="button"
               @click="capacity.available = !capacity.available"
-              class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-safety/50"
+              :disabled="!subcontractingEligible && !capacity.available"
+              data-testid="capacity-switch"
+              class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-safety/50 disabled:opacity-40 disabled:cursor-not-allowed"
               :class="capacity.available ? 'bg-safety' : 'bg-slate-300'"
               role="switch"
               :aria-checked="capacity.available"
@@ -580,6 +646,13 @@ const showRge = computed(() =>
               <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform" :class="capacity.available ? 'translate-x-6' : 'translate-x-1'" />
             </button>
           </div>
+          <ul class="mt-3 space-y-1" data-testid="required-docs">
+            <li v-for="d in requiredDocs" :key="d.type" class="text-xs flex items-center gap-2" :class="d.ok ? 'text-emerald-800' : 'text-muted-foreground'">
+              <span aria-hidden="true">{{ d.ok ? '✓' : '○' }}</span>{{ d.label }}
+            </li>
+          </ul>
+          <p v-if="subcontractingEligible" class="mt-2 inline-block text-[11px] font-semibold text-emerald-800 border border-emerald-300 bg-emerald-50 rounded-full px-2 py-0.5" data-testid="eligible-badge">Éligible sous-traitance</p>
+          <p v-else class="mt-2 text-[11px] text-muted-foreground">Déposez et faites valider ces pièces pour activer la capacité sous-traitance.</p>
           <label class="block text-xs font-medium text-foreground mt-4 mb-1.5">Effectif mobilisable <span class="text-muted-foreground font-normal">(1 à 999)</span></label>
           <div class="flex items-center gap-3">
             <input

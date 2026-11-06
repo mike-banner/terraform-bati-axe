@@ -23,3 +23,13 @@ describe('PATCH /api/v1/pro/profile/me — écriture via service role', () => {
     expect(src).toContain('statusCode: 404')
   })
 })
+
+// 05.11-05 : verrou sous-traitance — les justificatifs sont lus en base, jamais fournis par le client
+describe('PATCH /api/v1/pro/profile/me — verrou sous-traitance', () => {
+  it('contrôle les pièces avant d\'activer la capacité (422), désactivation libre', () => {
+    expect(src).toMatch(/is_available_subcontracting === true/)
+    expect(src).toMatch(/db\.from\('verifications'\)\.select\([^)]*\)\.eq\('pro_id', user\.id\)/)
+    expect(src).toMatch(/missingDocuments\(/)
+    expect(src).toMatch(/statusCode: 422/)
+  })
+})

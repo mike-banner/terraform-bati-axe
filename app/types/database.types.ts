@@ -1388,6 +1388,9 @@ export type Database = {
       };
       verifications: {
         Row: {
+          alert_j30_sent_at: string | null
+          alert_j7_sent_at: string | null
+          issued_on: string | null
           created_at: string | null;
           document_type: string;
           expiry_date: string | null;
@@ -1400,6 +1403,9 @@ export type Database = {
           status: Database["public"]["Enums"]["verification_status"] | null;
         };
         Insert: {
+          alert_j30_sent_at?: string | null
+          alert_j7_sent_at?: string | null
+          issued_on?: string | null
           created_at?: string | null;
           document_type: string;
           expiry_date?: string | null;
@@ -1412,6 +1418,9 @@ export type Database = {
           status?: Database["public"]["Enums"]["verification_status"] | null;
         };
         Update: {
+          alert_j30_sent_at?: string | null
+          alert_j7_sent_at?: string | null
+          issued_on?: string | null
           created_at?: string | null;
           document_type?: string;
           expiry_date?: string | null;

@@ -24,6 +24,14 @@ const canApprove = computed(() => {
   return !!kbis && !!decennale
 })
 
+// 05.11-05 — devoir de vigilance : justificatif approuvé dont la dernière revue date de plus de 6 mois
+function needsReview(doc?: { status?: string; reviewed_at?: string | null; created_at?: string } | null) {
+  if (doc?.status !== 'approved') return false
+  const d = new Date(doc.reviewed_at || doc.created_at || 0)
+  const limit = new Date(); limit.setMonth(limit.getMonth() - 6)
+  return d < limit
+}
+
 function getDocStatus(docType: DocType) {
   return props.pro.verifications?.find(v => v.document_type === docType)
 }
@@ -120,7 +128,7 @@ function uploadKey(proId: string, docType: string) {
     <!-- Documents -->
     <div class="divide-y divide-border">
       <div
-        v-for="docType in (['kbis', 'decennale', 'rge'] as const)"
+        v-for="docType in (['kbis', 'decennale', 'rge', 'urssaf'] as const)"
         :key="docType"
         class="px-5 py-4"
       >
@@ -138,6 +146,9 @@ function uploadKey(proId: string, docType: string) {
                 {{ docStatusLabel(getDocStatus(docType)?.status) }}
               </span>
             </div>
+            <p v-if="needsReview(getDocStatus(docType))" class="text-[11px] font-semibold text-amber-700">
+              À re-contrôler (dernier contrôle il y a plus de 6 mois)
+            </p>
             <p v-if="getDocStatus(docType)?.expiry_date" class="text-xs text-muted-foreground">
               Expire le {{ new Date(getDocStatus(docType)!.expiry_date!).toLocaleDateString('fr-FR') }}
             </p>
@@ -154,11 +165,21 @@ function uploadKey(proId: string, docType: string) {
               <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
             </button>
 
+            <!-- Devoir de vigilance : re-contrôle semestriel d'un justificatif déjà approuvé -->
+            <button
+              v-if="needsReview(getDocStatus(docType))"
+              @click="emit('moderate', pro.id, docType, 'approved')"
+              :disabled="actionLoading === uploadKey(pro.id, docType)"
+              class="h-8 px-3 bg-muted/40 border border-border text-foreground text-xs font-medium rounded-sm hover:bg-muted transition-colors disabled:opacity-40"
+            >
+              Re-contrôle effectué
+            </button>
+
             <!-- Approve / reject (pending only) -->
             <template v-if="getDocStatus(docType)?.status === 'pending'">
               <button
                 @click="emit('moderate', pro.id, docType, 'approved')"
-                :disabled="actionLoading === uploadKey(pro.id, docType) || (docType === 'rge' && !expiryDates[uploadKey(pro.id, 'rge')] && !getDocStatus('rge')?.expiry_date)"
+                :disabled="actionLoading === uploadKey(pro.id, docType) || ((docType === 'rge' || docType === 'urssaf') && !expiryDates[uploadKey(pro.id, docType)] && !getDocStatus(docType)?.expiry_date)"
                 class="h-8 px-3 bg-safety text-white text-xs font-semibold rounded-sm hover:brightness-110 transition-all disabled:opacity-40 flex items-center gap-1.5 shadow-sm shadow-safety/20"
               >
                 <svg v-if="actionLoading === uploadKey(pro.id, docType)" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
@@ -202,13 +223,13 @@ function uploadKey(proId: string, docType: string) {
         </div>
 
         <!-- Date d'expiration RGE : approbation d'une pièce pending ou upload admin direct -->
-        <div v-if="docType === 'rge' && (!getDocStatus('rge') || getDocStatus('rge')?.status === 'pending')" class="mt-3">
-          <label class="block text-xs text-muted-foreground mb-1">Date d'expiration de l'attestation RGE</label>
+        <div v-if="(docType === 'rge' || docType === 'urssaf') && (!getDocStatus(docType) || getDocStatus(docType)?.status === 'pending')" class="mt-3">
+          <label class="block text-xs text-muted-foreground mb-1">Date d'expiration de l'attestation {{ docType === 'rge' ? 'RGE' : 'URSSAF' }}</label>
           <input
             type="date"
             required
-            :value="expiryDates[uploadKey(pro.id, 'rge')] || ''"
-            @input="emit('update-expiry', uploadKey(pro.id, 'rge'), ($event.target as HTMLInputElement).value)"
+            :value="expiryDates[uploadKey(pro.id, docType)] || ''"
+            @input="emit('update-expiry', uploadKey(pro.id, docType), ($event.target as HTMLInputElement).value)"
             class="h-9 px-3 border border-border rounded-sm text-sm bg-muted/30 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>

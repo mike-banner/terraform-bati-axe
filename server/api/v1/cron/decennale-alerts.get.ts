@@ -38,20 +38,30 @@ export default defineEventHandler(async (event) => {
 
   const supabase = await serverSupabaseServiceRole(event) as any
   const now = new Date()
-  const horizon = new Date(now.getTime() + 30 * 86_400_000).toISOString()
+  const today = now.toISOString().slice(0, 10)
 
-  const { data: docs, error } = await supabase
-    .from('documents_artisan')
-    .select('id, professional_id, expires_at, alert_j30_sent_at, alert_j7_sent_at, professionals(email, company_name, full_name)')
-    .eq('doc_type', 'decennale')
-    .eq('status', 'valid')
-    .not('expires_at', 'is', null)
-    .gte('expires_at', now.toISOString())
-    .lte('expires_at', horizon)
+  // 05.11-05 : la décennale vit dans `verifications` (documents_artisan supprimée). Seul le dernier
+  // justificatif approuvé de chaque pro compte : un renouvellement valide évite l'alerte sur l'ancien.
+  const { data: rows, error } = await supabase
+    .from('verifications')
+    .select('id, pro_id, expiry_date, alert_j30_sent_at, alert_j7_sent_at, professionals(email, company_name, full_name)')
+    .eq('document_type', 'decennale')
+    .eq('status', 'approved')
+    .not('expiry_date', 'is', null)
+    .gte('expiry_date', today)
+    .order('created_at', { ascending: false })
 
   if (error) throw createError({ statusCode: 500, statusMessage: 'Erreur lecture documents.' })
 
-  const { j30, j7 } = selectAlerts(docs || [], now)
+  const seen = new Set<string>()
+  const docs: DecennaleDoc[] = []
+  for (const r of rows || []) {
+    if (seen.has(r.pro_id)) continue
+    seen.add(r.pro_id)
+    docs.push({ ...r, professional_id: r.pro_id, expires_at: r.expiry_date })
+  }
+
+  const { j30, j7 } = selectAlerts(docs, now)
   const siteUrl = useRuntimeConfig().public.siteUrl || 'https://bati-axe.com'
   let sent = 0
 
@@ -78,7 +88,7 @@ export default defineEventHandler(async (event) => {
         })
         if (res.success) {
           await supabase
-            .from('documents_artisan')
+            .from('verifications')
             .update(urgent ? { alert_j7_sent_at: now.toISOString() } : { alert_j30_sent_at: now.toISOString() })
             .eq('id', doc.id)
           sent++
@@ -89,5 +99,5 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  return { status: 'SUCCESS', checked: docs?.length ?? 0, j30: j30.length, j7: j7.length, sent }
+  return { status: 'SUCCESS', checked: docs.length, j30: j30.length, j7: j7.length, sent }
 })

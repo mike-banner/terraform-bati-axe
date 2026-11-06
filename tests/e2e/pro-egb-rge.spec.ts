@@ -194,6 +194,43 @@ test.describe('Dashboard pro — RGE et nouveaux métiers', () => {
   })
 })
 
+test.describe('Dashboard pro — verrou sous-traitance (05.11-05)', () => {
+  test('sans pièces : liste des pièces requises, switch verrouillé', async ({ page }) => {
+    await mockDashboard(page, { categories: ['maconnerie'] })
+    await gotoSpa(page, '/espace/dashboard')
+    const liste = page.getByTestId('required-docs')
+    await expect(liste).toBeVisible({ timeout: 10_000 })
+    await expect(liste).toContainText('Kbis de moins de 3 mois')
+    await expect(liste).toContainText('décennale')
+    await expect(liste).toContainText('URSSAF')
+    await expect(liste).not.toContainText('RGE')
+    await expect(page.getByTestId('capacity-switch')).toBeDisabled()
+    await expect(page.getByTestId('eligible-badge')).toHaveCount(0)
+  })
+
+  test('avec Kbis récent, décennale et URSSAF validés : badge éligible, switch actif', async ({ page }) => {
+    await mockDashboard(page, { categories: ['maconnerie'] })
+    const day = (offset: number) => new Date(Date.now() + offset * 86_400_000).toISOString().slice(0, 10)
+    const v = (document_type: string, extra: Record<string, unknown>) => ({
+      document_type, status: 'approved', file_key: 'x/y.pdf', created_at: '2026-10-01T00:00:00Z', reviewed_at: '2026-10-02T00:00:00Z', expiry_date: null, ...extra,
+    })
+    await page.route('**/rest/v1/verifications*', route => route.fulfill(json([
+      v('kbis', { issued_on: day(-10) }),
+      v('decennale', { expiry_date: day(200) }),
+      v('urssaf', { expiry_date: day(100) }),
+    ])))
+    await gotoSpa(page, '/espace/dashboard')
+    await expect(page.getByTestId('eligible-badge')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByTestId('capacity-switch')).toBeEnabled()
+  })
+
+  test('énergie : la RGE s\'ajoute aux pièces requises', async ({ page }) => {
+    await mockDashboard(page, { categories: ['renovation_energetique'] })
+    await gotoSpa(page, '/espace/dashboard')
+    await expect(page.getByTestId('required-docs')).toContainText('RGE', { timeout: 10_000 })
+  })
+})
+
 test.describe('Profil — limite de métiers', () => {
   async function mockProfile(page: Page, profile: Record<string, unknown>) {
     await setupAuth(page)

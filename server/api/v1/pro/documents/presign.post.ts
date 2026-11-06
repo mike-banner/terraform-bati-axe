@@ -9,7 +9,7 @@ import { AwsClient } from 'aws4fetch'
 const VALID_MIME = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'] as const
 
 const presignSchema = z.object({
-  document_type: z.enum(['kbis', 'decennale', 'rge']),
+  document_type: z.enum(['kbis', 'decennale', 'rge', 'urssaf']),
   content_type: z.enum(VALID_MIME, { message: 'Le document doit être un PDF ou une image (JPEG/PNG).' }),
   filename: z.string().min(1).max(255),
   pro_id: z.string().uuid().optional()
