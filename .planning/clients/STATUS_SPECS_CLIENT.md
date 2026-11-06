@@ -159,6 +159,7 @@
 | Validation téléphone SMS OTP (TUNNEL-03) | ❌ (dépense fournisseur SMS → feu vert requis) | Phase 14 |
 | Data immo / lead vendeur DPE, DVF (IMMO-01/02/03, IMMO-DVF-01) | ❌ | Phase 13 |
 | Tunnel multi-acheteurs (artisan / vendeur / diagnostiqueur / courtier) — extension de la Phase 13, note du 2026-11-06 | 📝 note rangée, non planifiée, séquencée en 4 étapes | [`notes/20261106-LEAD_TUNNEL_VENTE_DIAG_COURTIER-SPEC_CLIENT.md`](../notes/20261106-LEAD_TUNNEL_VENTE_DIAG_COURTIER-SPEC_CLIENT.md) → Phase 13 + P6 |
+| Modèle économique hybride (149/249/449 €, leads à l'unité, commission 8 % fixe, courtage 5 %) — **contredit 05.21 D-01 (8 %/6 % par tranche), 05.16 (dégressif par zone), Phase 4.6** | 📝 note rangée, 6 points à arbitrer par le client | [`notes/20261106-MODELE_HYBRIDE_REVENUS-SPEC_CLIENT.md`](../notes/20261106-MODELE_HYBRIDE_REVENUS-SPEC_CLIENT.md) → P7 / P20 / P6 / 05.22 |
 
 ---
 
