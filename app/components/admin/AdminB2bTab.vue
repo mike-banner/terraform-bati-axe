@@ -112,6 +112,7 @@ const restitutionId = ref<string | null>(null)
 // Phase 8 (D-01) — diffusion automatique aux artisans matchés zone × catégorie.
 const diffusingId = ref<string | null>(null)
 const diffuseResult = reactive<Record<string, string>>({})
+const diffuseError = reactive<Record<string, string>>({})
 
 // État persisté (ce que l'API vérifie réellement côté serveur).
 function canDiffuse(r: B2bRequest): boolean {
@@ -122,13 +123,14 @@ function canDiffuse(r: B2bRequest): boolean {
 // diffuse() enregistre automatiquement avant d'appeler l'API si besoin.
 function canDiffuseDraft(r: B2bRequest): boolean {
   const d = ensureDraft(r.id)
-  return Boolean(d.decision_status) && /^\d{5}$/.test(d.project_postal_code || '') && !!r.partner_framework
+  return Boolean(d.decision_status) && /^\d{5}$/.test(d.project_postal_code || '')
 }
 
 async function diffuse(r: B2bRequest) {
   diffusingId.value = r.id
   errorMessage.value = null
   delete diffuseResult[r.id]
+  delete diffuseError[r.id]
   try {
     // Le statut de décision / code postal peuvent avoir été saisis sans clic
     // séparé sur "Enregistrer" — on les persiste ici pour éviter le 422
@@ -136,7 +138,7 @@ async function diffuse(r: B2bRequest) {
     const d = ensureDraft(r.id)
     if (d.decision_status !== r.decision_status || d.project_postal_code !== (r.project_postal_code || '')) {
       await saveChanges(r)
-      if (!canDiffuse(r)) return
+      if (!canDiffuse(r)) { diffuseError[r.id] = errorMessage.value || 'Enregistrement impossible avant diffusion.'; return }
     }
     const res = await $fetch<{
       status: string; zone: string; lots_diffused: number
@@ -147,7 +149,8 @@ async function diffuse(r: B2bRequest) {
       + (res.notifications_failed ? `, ${res.notifications_failed} échec(s) d'envoi` : '')
     await fetchRequests()
   } catch (err: any) {
-    errorMessage.value = err.data?.statusMessage || err.message || 'Erreur de diffusion aux artisans.'
+    // Affiché sous le bouton : errorMessage en haut de l'onglet est hors de vue.
+    diffuseError[r.id] = err.data?.statusMessage || err.message || 'Erreur de diffusion aux artisans.'
   } finally {
     diffusingId.value = null
   }
@@ -718,6 +721,7 @@ function pipelineLabel(status: string): string {
                   pour activer la diffusion.
                 </span>
               </div>
+              <p v-if="diffuseError[r.id]" class="mt-1.5 text-sm text-red-500" role="alert">{{ diffuseError[r.id] }}</p>
               <p v-if="diffuseResult[r.id]" class="mt-1.5 text-[11px] text-emerald-500">
                 {{ diffuseResult[r.id] }}
               </p>
