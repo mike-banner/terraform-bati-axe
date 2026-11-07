@@ -694,14 +694,7 @@ async function copyToClipboard(text: string) {
     <!-- ── Onglet Appels d'offres ── -->
     <template v-else>
 
-      <div v-if="tenderMessage" class="flex items-start gap-3 p-4 border border-foreground/30 rounded-lg mb-4">
-        <p class="text-sm text-foreground flex-1">{{ tenderMessage }}</p>
-        <button type="button" class="text-xs text-muted-foreground hover:text-foreground transition-colors" @click="tenderMessage = null">✕</button>
-      </div>
-
-      <EspaceMyContracts :contracts="contracts" />
-
-      <div v-if="!frameworkSigned" data-testid="framework-banner" class="flex flex-wrap items-center gap-3 p-4 border border-copper/40 bg-copper/10 rounded-lg mb-4">
+      <div v-if="!frameworkSigned" data-testid="framework-banner" class="flex flex-wrap items-center gap-3 p-4 border border-red-500/50 bg-red-500/10 rounded-lg mb-4">
         <p class="text-sm text-foreground flex-1">
           Pour vous positionner sur les appels d'offres partenaires, signez une fois la convention cadre BÂTI-AXE (commission de succès, non-contournement 24 mois).
         </p>
@@ -709,6 +702,19 @@ async function copyToClipboard(text: string) {
           Lire et signer la convention
         </button>
       </div>
+
+      <div v-else data-testid="framework-signed-banner" class="flex items-center gap-3 p-4 border border-emerald-500/50 bg-emerald-500/10 rounded-lg mb-4">
+        <p class="text-sm text-foreground flex-1">
+          <strong>Convention cadre BÂTI-AXE signée.</strong> Vous pouvez vous positionner sur les appels d'offres partenaires.
+        </p>
+      </div>
+
+      <div v-if="tenderMessage" class="flex items-start gap-3 p-4 border border-foreground/30 rounded-lg mb-4">
+        <p class="text-sm text-foreground flex-1">{{ tenderMessage }}</p>
+        <button type="button" class="text-xs text-muted-foreground hover:text-foreground transition-colors" @click="tenderMessage = null">✕</button>
+      </div>
+
+      <EspaceMyContracts :contracts="contracts" />
 
       <!-- Skeleton loading -->
       <div v-if="tendersPending" class="space-y-3">
