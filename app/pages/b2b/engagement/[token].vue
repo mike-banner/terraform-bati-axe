@@ -131,7 +131,7 @@ async function confirm(a: Amendment) {
             </button>
 
             <form v-else class="space-y-3" @submit.prevent="sign">
-              <p class="text-sm text-muted-foreground">Code envoyé à {{ emailHint }}</p>
+              <p class="text-sm text-muted-foreground">Code envoyé à {{ emailHint }}, valable 10 minutes.</p>
               <label class="flex items-start gap-2 text-sm">
                 <input v-model="accepted" type="checkbox" class="mt-1">
                 <span>J'ai lu la convention et j'accepte de la signer électroniquement</span>

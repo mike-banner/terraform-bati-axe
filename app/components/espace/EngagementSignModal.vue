@@ -46,7 +46,7 @@ function onKeydown(e: KeyboardEvent) {
         J'ai lu le document et j'accepte de le signer électroniquement
       </label>
 
-      <p class="text-sm text-slate-600">Un code à 6 chiffres a été envoyé à {{ emailHint }}.</p>
+      <p class="text-sm text-slate-600">Un code à 6 chiffres a été envoyé à {{ emailHint }}. Il est valable 10 minutes.</p>
       <div class="flex items-center gap-3">
         <input
           id="engagement-otp"
