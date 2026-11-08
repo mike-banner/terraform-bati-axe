@@ -219,6 +219,9 @@ export type Database = {
           status: Database["public"]["Enums"]["b2b_request_status"];
           travaux_suggeres: string[] | null;
           updated_at: string | null;
+          nb_logements: number | null
+          surface_m2: number | null
+          calendrier_souhaite: string | null
         };
         Insert: {
           apporteur_type: Database["public"]["Enums"]["b2b_apporteur_type"];
@@ -252,6 +255,9 @@ export type Database = {
           status?: Database["public"]["Enums"]["b2b_request_status"];
           travaux_suggeres?: string[] | null;
           updated_at?: string | null;
+          nb_logements?: number | null
+          surface_m2?: number | null
+          calendrier_souhaite?: string | null
         };
         Update: {
           apporteur_type?: Database["public"]["Enums"]["b2b_apporteur_type"];
@@ -285,6 +291,9 @@ export type Database = {
           status?: Database["public"]["Enums"]["b2b_request_status"];
           travaux_suggeres?: string[] | null;
           updated_at?: string | null;
+          nb_logements?: number | null
+          surface_m2?: number | null
+          calendrier_souhaite?: string | null
         };
         Relationships: [];
       };
@@ -401,6 +410,7 @@ export type Database = {
           request_id: string;
           status: string;
           zone_id: string | null;
+          description: string | null
         };
         Insert: {
           category: string;
@@ -411,6 +421,7 @@ export type Database = {
           request_id: string;
           status?: string;
           zone_id?: string | null;
+          description?: string | null
         };
         Update: {
           category?: string;
@@ -421,6 +432,7 @@ export type Database = {
           request_id?: string;
           status?: string;
           zone_id?: string | null;
+          description?: string | null
         };
         Relationships: [
           {
