@@ -78,3 +78,44 @@ describe('détail des lots (05.21)', () => {
     expect(b2bRequestSchema.safeParse({ ...syndic, nb_logements: 12, surface_m2: 800, calendrier_souhaite: 'urgent' }).success).toBe(true)
   })
 })
+
+describe('coordonnées du contact (durcissement 05.21)', () => {
+  const ok = { ...base, need_type: 'partenariat_regulier' as const }
+
+  it.each(['06 12 34 56 78', '0612345678', '+33 6 12 34 56 78', '+33612345678', '0033 6 12 34 56 78', '06.12.34.56.78', '06-12-34-56-78'])('téléphone valide : %s', (p) => {
+    expect(b2bRequestSchema.safeParse({ ...ok, contact_phone: p }).success).toBe(true)
+  })
+
+  it.each(['abcdefghij', '06 12 34 56 7a', '0612345', '+1 202 555 0100', '12345678', '06 12 34 56 78 90', '06<script>', ''])('téléphone refusé : %s', (p) => {
+    expect(b2bRequestSchema.safeParse({ ...ok, contact_phone: p }).success).toBe(false)
+  })
+
+  it.each(['Marie Martin', 'Jean-Pierre O\'Neil', 'Élodie Lefèvre', 'Zoë Müller-Çelik'])('nom valide : %s', (n) => {
+    expect(b2bRequestSchema.safeParse({ ...ok, contact_name: n }).success).toBe(true)
+  })
+
+  it.each(['J', '<b>Jean</b>', 'Jean123', 'Jean\nDupont', 'Jean@Dupont', '1234'])('nom refusé : %s', (n) => {
+    expect(b2bRequestSchema.safeParse({ ...ok, contact_name: n }).success).toBe(false)
+  })
+
+  it('structure : accepte « Cabinet Dupont & Fils (SARL) », refuse les chevrons', () => {
+    expect(b2bRequestSchema.safeParse({ ...ok, contact_company: 'Cabinet Dupont & Fils (SARL)' }).success).toBe(true)
+    expect(b2bRequestSchema.safeParse({ ...ok, contact_company: '<img src=x>' }).success).toBe(false)
+  })
+
+  it('le formulaire envoie des null pour les champs vides : acceptés', () => {
+    const r = b2bRequestSchema.safeParse({ ...ok, contact_company: null, project_location: null, description: null, budget_range: null, certification_number: null, lots_categories: null })
+    expect(r.success).toBe(true)
+  })
+
+  it('e-mail : normalisé en minuscules, trop long refusé', () => {
+    const r = b2bRequestSchema.safeParse({ ...ok, contact_email: ' Jean@Example.COM ' })
+    expect(r.success && r.data.contact_email).toBe('jean@example.com')
+    expect(b2bRequestSchema.safeParse({ ...ok, contact_email: 'a'.repeat(250) + '@x.fr' }).success).toBe(false)
+  })
+
+  it('certification : motif restreint', () => {
+    expect(b2bRequestSchema.safeParse({ ...ok, certification_number: 'CERT-2024/AB_12' }).success).toBe(true)
+    expect(b2bRequestSchema.safeParse({ ...ok, certification_number: "x'; drop table" }).success).toBe(false)
+  })
+})

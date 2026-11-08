@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { PHONE_FR_REGEX, PERSON_NAME_REGEX, COMPANY_NAME_REGEX, CERTIFICATION_REGEX } from '../../app/utils/contactFields'
 
 // Phase 7 — TEND-01 / TEND-05.
 // Schéma extrait de server/api/v1/b2b/requests.post.ts pour être testable sans
@@ -11,29 +12,29 @@ export type B2bLotCategory = typeof B2B_LOT_CATEGORIES[number]
 export const b2bRequestSchema = z.object({
   apporteur_type: z.enum(['architecte', 'bet', 'agence_immo', 'syndic', 'diagnostiqueur', 'autre']),
   need_type: z.enum(['projet_immediat', 'partenariat_regulier']),
-  project_location: z.string().max(200).optional(),
+  project_location: z.string().trim().max(200).nullish(),
   // TEND-01 — même contrainte que le formulaire particulier (projects.post.ts).
-  description: z.string().max(5000).optional(),
-  budget_range: z.enum(['<30k', '30-100k', '100-300k', '>300k']).optional(),
-  certification_number: z.string().max(50).optional().nullable(),
+  description: z.string().max(5000).nullish(),
+  budget_range: z.enum(['<30k', '30-100k', '100-300k', '>300k']).nullish(),
+  certification_number: z.string().trim().regex(CERTIFICATION_REGEX, 'Numéro de certification invalide.').nullish(),
   travaux_suggeres: z.array(z.enum(['isolation', 'chauffage', 'electricite', 'toiture'])).max(4).optional().nullable(),
   // TEND-05 — corps de métier demandés, 1 lot chacun.
   lots_categories: z.array(z.enum(B2B_LOT_CATEGORIES)).max(6).optional().nullable(),
   // 05.21 — travaux attendus par lot (clé = corps de métier) et infos structurées du chantier.
-  lots_details: z.record(z.string(), z.string().max(1000)).optional().nullable(),
+  lots_details: z.record(z.string().max(30), z.string().max(1000)).optional().nullable(),
   nb_logements: z.number().int().min(1).max(9999).optional().nullable(),
   surface_m2: z.number().int().min(1).max(1000000).optional().nullable(),
   calendrier_souhaite: z.enum(B2B_CALENDRIERS).optional().nullable(),
   files: z.array(z.object({
-    file_key: z.string(),
+    file_key: z.string().max(500),
     filename: z.string().max(255),
-    content_type: z.string(),
+    content_type: z.string().max(100),
     size: z.number().max(52428800), // 50 Mo
   })).max(10).optional().default([]),
-  contact_name: z.string().min(2).max(100),
-  contact_company: z.string().max(200).optional(),
-  contact_phone: z.string().min(8).max(20),
-  contact_email: z.string().email(),
+  contact_name: z.string().trim().regex(PERSON_NAME_REGEX, 'Nom invalide (lettres, espaces, apostrophes et tirets uniquement, 2 à 100 caractères).'),
+  contact_company: z.string().trim().regex(COMPANY_NAME_REGEX, 'Nom de structure invalide.').nullish(),
+  contact_phone: z.string().trim().regex(PHONE_FR_REGEX, 'Téléphone invalide : chiffres uniquement, ex. 06 12 34 56 78 ou +33 6 12 34 56 78.'),
+  contact_email: z.string().trim().toLowerCase().email().max(254),
   consent_accepted: z.boolean().refine(v => v === true, { message: 'Le consentement est obligatoire.' }),
 }).superRefine((data, ctx) => {
   // L'étape 3 du tunnel (description + lots) est sautée pour un partenariat

@@ -1,6 +1,7 @@
 import { serverSupabaseServiceRole } from '#supabase/server'
 import { sendEmail } from '../../../utils/email'
 import { b2bRequestSchema, buildTenderLots } from '../../../utils/b2bTender'
+import { escapeHtml as esc } from '../../../utils/contracts'
 import { findSignedFramework, issuePartnerToken, renderPartnerLinkEmail } from '../../../utils/signature'
 
 export default defineEventHandler(async (event) => {
@@ -100,15 +101,15 @@ export default defineEventHandler(async (event) => {
         <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
           <tr><td style="padding: 8px 0; color: #64748B; width: 140px;">Type</td><td style="padding: 8px 0; color: #0F172A; font-weight: 600;">${typeLabel}</td></tr>
           <tr><td style="padding: 8px 0; color: #64748B;">Besoin</td><td style="padding: 8px 0; color: #0F172A;">${data.need_type === 'projet_immediat' ? 'Projet immédiat' : 'Partenariat régulier'}</td></tr>
-          ${data.project_location ? `<tr><td style="padding: 8px 0; color: #64748B;">Localisation</td><td style="padding: 8px 0; color: #0F172A;">${data.project_location}</td></tr>` : ''}
+          ${data.project_location ? `<tr><td style="padding: 8px 0; color: #64748B;">Localisation</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.project_location ?? '')}</td></tr>` : ''}
           ${data.budget_range ? `<tr><td style="padding: 8px 0; color: #64748B;">Budget</td><td style="padding: 8px 0; color: #0F172A;">${budgetLabel}</td></tr>` : ''}
-          ${data.certification_number ? `<tr><td style="padding: 8px 0; color: #64748B;">N° certification</td><td style="padding: 8px 0; color: #0F172A;">${data.certification_number}</td></tr>` : ''}
-          ${data.travaux_suggeres?.length ? `<tr><td style="padding: 8px 0; color: #64748B;">Travaux suggérés</td><td style="padding: 8px 0; color: #0F172A;">${data.travaux_suggeres.join(', ')}</td></tr>` : ''}
-          ${data.description ? `<tr><td style="padding: 8px 0; color: #64748B;">Description</td><td style="padding: 8px 0; color: #0F172A;">${data.description}</td></tr>` : ''}
+          ${data.certification_number ? `<tr><td style="padding: 8px 0; color: #64748B;">N° certification</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.certification_number ?? '')}</td></tr>` : ''}
+          ${data.travaux_suggeres?.length ? `<tr><td style="padding: 8px 0; color: #64748B;">Travaux suggérés</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.travaux_suggeres.join(', '))}</td></tr>` : ''}
+          ${data.description ? `<tr><td style="padding: 8px 0; color: #64748B;">Description</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.description ?? '')}</td></tr>` : ''}
           ${lots.length ? `<tr><td style="padding: 8px 0; color: #64748B;">Lots (corps de métier)</td><td style="padding: 8px 0; color: #0F172A;">${lots.map(l => l.category).join(', ')}</td></tr>` : ''}
-          <tr><td style="padding: 8px 0; color: #64748B;">Contact</td><td style="padding: 8px 0; color: #0F172A;">${data.contact_name}${data.contact_company ? ` (${data.contact_company})` : ''}</td></tr>
-          <tr><td style="padding: 8px 0; color: #64748B;">Téléphone</td><td style="padding: 8px 0; color: #0F172A;">${data.contact_phone}</td></tr>
-          <tr><td style="padding: 8px 0; color: #64748B;">Email</td><td style="padding: 8px 0; color: #0F172A;">${data.contact_email}</td></tr>
+          <tr><td style="padding: 8px 0; color: #64748B;">Contact</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.contact_name ?? '')}${data.contact_company ? ` (${esc(data.contact_company ?? '')})` : ''}</td></tr>
+          <tr><td style="padding: 8px 0; color: #64748B;">Téléphone</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.contact_phone ?? '')}</td></tr>
+          <tr><td style="padding: 8px 0; color: #64748B;">Email</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.contact_email ?? '')}</td></tr>
           ${data.files.length > 0 ? `<tr><td style="padding: 8px 0; color: #64748B;">Fichiers</td><td style="padding: 8px 0; color: #0F172A;">${data.files.length} pièce(s) jointe(s)</td></tr>` : ''}
         </table>
         <p style="margin-top: 16px; font-size: 13px; color: #64748B;">
@@ -125,7 +126,7 @@ export default defineEventHandler(async (event) => {
     for (const email of notifyEmails) {
       await sendEmail({
         to: email.trim(),
-        subject: `[B2B] Nouveau dossier — ${typeLabel} — ${data.contact_name}`,
+        subject: `[B2B] Nouveau dossier — ${typeLabel} — ${esc(data.contact_name ?? '')}`,
         html,
       }).catch(() => {})
     }
@@ -136,7 +137,7 @@ export default defineEventHandler(async (event) => {
     <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #0F172A; font-size: 18px;">✅ Votre dossier a bien été reçu</h2>
       <p style="color: #334155; font-size: 14px; line-height: 1.6;">
-        Bonjour ${data.contact_name},<br><br>
+        Bonjour ${esc(data.contact_name ?? '')},<br><br>
         Nous avons bien reçu votre dossier. Un chargé d'affaires dédié analyse vos pièces
         et vous recontactera <strong>au plus vite</strong>.
       </p>

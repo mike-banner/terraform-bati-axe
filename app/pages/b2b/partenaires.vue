@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { PHONE_FR_REGEX, PHONE_FR_PATTERN, PERSON_NAME_REGEX, PERSON_NAME_PATTERN, COMPANY_NAME_REGEX, COMPANY_NAME_PATTERN, CERTIFICATION_REGEX, CERTIFICATION_PATTERN, CONTACT_LABELS, sanitizePhoneInput } from '~/utils/contactFields'
 import { APPORTEUR_LABELS, BUDGET_OPTIONS, TRAVAUX_OPTIONS, LOT_CATEGORY_OPTIONS, CALENDRIER_OPTIONS } from '~/types/b2b'
 import type { B2bApporteurType, B2bNeedType, B2bBudgetRange, B2bRequestFile, B2bTravauxSuggere, B2bLotCategory, B2bCalendrier } from '~/types/b2b'
 
@@ -50,6 +51,14 @@ const contactPhone = ref('')
 const contactEmail = ref('')
 const consentAccepted = ref(false)
 
+const contactLabels = computed(() => CONTACT_LABELS[(apporteurType.value || 'autre') as keyof typeof CONTACT_LABELS])
+const contactNameOk = computed(() => PERSON_NAME_REGEX.test(contactName.value.trim()))
+const contactCompanyOk = computed(() => !contactCompany.value.trim() || COMPANY_NAME_REGEX.test(contactCompany.value.trim()))
+const contactPhoneOk = computed(() => PHONE_FR_REGEX.test(contactPhone.value.trim()))
+const contactEmailOk = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(contactEmail.value.trim()) && contactEmail.value.length <= 254)
+const certificationOk = computed(() => !certificationNumber.value.trim() || CERTIFICATION_REGEX.test(certificationNumber.value.trim()))
+watch(contactPhone, v => { const c = sanitizePhoneInput(v); if (c !== v) contactPhone.value = c })
+
 // ─── Computed ─────────────────────────────────────────────────────────────────
 const totalSteps = computed(() => needType.value === 'partenariat_regulier' ? 3 : 4)
 
@@ -57,8 +66,8 @@ const canNextStep = computed(() => {
   switch (step.value) {
     case 1: return !!apporteurType.value
     case 2: return !!needType.value
-    case 3: return description.value.trim().length >= 20 && lotsDetailsOk.value
-    case 4: return contactName.value.length >= 2 && contactPhone.value.length >= 8 && contactEmail.value.includes('@') && consentAccepted.value
+    case 3: return description.value.trim().length >= 20 && lotsDetailsOk.value && certificationOk.value
+    case 4: return contactNameOk.value && contactCompanyOk.value && contactPhoneOk.value && contactEmailOk.value && consentAccepted.value
     default: return false
   }
 })
@@ -186,10 +195,10 @@ async function submitRequest() {
         certification_number: isDiagnostiqueur.value ? (certificationNumber.value || null) : null,
         travaux_suggeres: isDiagnostiqueur.value && travauxSuggeres.value.length > 0 ? travauxSuggeres.value : null,
         files: uploadedFiles.value,
-        contact_name: contactName.value,
-        contact_company: contactCompany.value || null,
-        contact_phone: contactPhone.value,
-        contact_email: contactEmail.value,
+        contact_name: contactName.value.trim(),
+        contact_company: contactCompany.value.trim() || null,
+        contact_phone: contactPhone.value.trim(),
+        contact_email: contactEmail.value.trim(),
         consent_accepted: true,
       },
     })
@@ -308,6 +317,8 @@ async function submitRequest() {
           <input
             v-model="projectLocation"
             type="text"
+            maxlength="200"
+            autocomplete="street-address"
             placeholder="Ex : 78 — Yvelines / 75 — Paris"
             class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           />
@@ -400,9 +411,11 @@ async function submitRequest() {
               v-model="certificationNumber"
               type="text"
               maxlength="50"
+              :pattern="CERTIFICATION_PATTERN"
               placeholder="Ex : CERT-2024-XXXX"
               class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
+            <p v-if="certificationNumber && !certificationOk" class="mt-1 text-xs text-destructive">Lettres, chiffres, espaces, « / », « _ » et « - » uniquement.</p>
           </div>
           <div class="mb-6">
             <label class="block text-sm font-medium text-foreground mb-1.5">Travaux suggérés par votre rapport DPE</label>
@@ -481,20 +494,24 @@ async function submitRequest() {
 
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5">Nom & Prénom *</label>
-            <input v-model="contactName" type="text" required class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" placeholder="Jean Dupont" />
+            <label for="contact-name" class="block text-sm font-medium text-foreground mb-1.5">{{ contactLabels.name }} *</label>
+            <input id="contact-name" v-model="contactName" type="text" required minlength="2" maxlength="100" :pattern="PERSON_NAME_PATTERN" autocomplete="name" :placeholder="contactLabels.placeholder" class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
+            <p v-if="contactName && !contactNameOk" class="mt-1 text-xs text-destructive">Lettres, espaces, apostrophes et tirets uniquement (2 caractères minimum).</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5">Nom du cabinet / de la structure</label>
-            <input v-model="contactCompany" type="text" class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" placeholder="Cabinet Dupont Architecture" />
+            <label for="contact-company" class="block text-sm font-medium text-foreground mb-1.5">{{ contactLabels.company }}</label>
+            <input id="contact-company" v-model="contactCompany" type="text" maxlength="200" :pattern="COMPANY_NAME_PATTERN" autocomplete="organization" :placeholder="contactLabels.companyPlaceholder" class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
+            <p v-if="contactCompany && !contactCompanyOk" class="mt-1 text-xs text-destructive">Caractères non autorisés dans le nom de la structure.</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5">Téléphone direct *</label>
-            <input v-model="contactPhone" type="tel" required class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" placeholder="06 12 34 56 78" />
+            <label for="contact-phone" class="block text-sm font-medium text-foreground mb-1.5">Téléphone direct *</label>
+            <input id="contact-phone" v-model="contactPhone" type="tel" inputmode="tel" required maxlength="20" :pattern="PHONE_FR_PATTERN" autocomplete="tel" placeholder="06 12 34 56 78 ou +33 6 12 34 56 78" class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
+            <p v-if="contactPhone && !contactPhoneOk" class="mt-1 text-xs text-destructive">Numéro invalide : chiffres uniquement, 10 chiffres (06 12 34 56 78) ou avec indicatif (+33 6 12 34 56 78).</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5">Adresse e-mail professionnelle *</label>
-            <input v-model="contactEmail" type="email" required class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" placeholder="jean@cabinet-dupont.fr" />
+            <label for="contact-email" class="block text-sm font-medium text-foreground mb-1.5">Adresse e-mail professionnelle *</label>
+            <input id="contact-email" v-model="contactEmail" type="email" inputmode="email" required maxlength="254" autocomplete="email" placeholder="marie@cabinet-syndic.fr" class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
+            <p v-if="contactEmail && !contactEmailOk" class="mt-1 text-xs text-destructive">Adresse e-mail invalide.</p>
           </div>
 
           <!-- GDPR consent -->
