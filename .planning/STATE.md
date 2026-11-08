@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
 status: executing
-stopped_at: Phase 05.21 — migration cloud 20261030000000 appliquée, types régénérés, push dev fait ; reste la recette locale de Mike pour clore le plan 08
-last_updated: "2026-11-05T10:00:00.000Z"
+stopped_at: Phase 05.21 close (recette dev en live validée par Mike le 2026-11-08) ; refonte du mécanisme après l'avenant à valider avec le client (note 20261108-REFONTE_CHOIX_PARTENAIRE_DEVIS-SPEC)
+last_updated: "2026-11-08T19:00:00.000Z"
 progress:
   total_phases: 35
   completed_phases: 19
@@ -30,10 +30,10 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 
 ## Current Position
 
-Phase: 05.21 (verrou-juridique-b2b) — EXECUTING
-Plan: 8 of 8 (plans 01-07 terminés ; 08 : vérifications locales vertes, migration cloud appliquée le 2026-11-05, push `dev` fait — reste la recette locale de Mike pour clore)
+Phase: 05.21 (verrou-juridique-b2b) — COMPLETE (2026-11-08)
+Plan: 8 of 8 terminés. Recette dev en live validée par Mike le 2026-11-08 : partenaire (convention, dossier), admin, pro (convention, avenant, OTP), coordonnées révélées après signature. Reste en suspens : refonte du flux « devis » (le partenaire choisit l'artisan, dépose le devis signé, l'artisan confirme ; espace admin Commissions en cours) — spec `.planning/notes/20261108-REFONTE_CHOIX_PARTENAIRE_DEVIS-SPEC.md`, à valider par le client ; points juridiques dans `docs/legal/POINTS_A_VALIDER_AVEC_JURISTE.md`.
 Prochaine phase : voir « À faire dans l'immédiat » ci-dessous (05.21 marquée URGENTE au ROADMAP, puis 05.20, 06.4)
-Status: Executing Phase 05.21
+Status: Phase 05.21 complète ; prochaine étape à décider (refonte devis/commissions, puis 05.20, 06.4)
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
 
@@ -72,6 +72,10 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 4. **Dette courte — traitée le 2026-10-10** (poussé sur `origin/dev`) : typecheck 46 → 0 erreur (≈ 28 erreurs distinctes) ; expiration automatique de la décennale (`expire_decennale_status()` + job `expire-decennale-status`, migration `20260920`) ; `consents` en lecture seule et `is_showcased` réservé à l'admin (même migration) ; date d'expiration de la décennale obligatoire et future (422 sinon) ; e2e ajoutés (`tests/e2e/pro-egb-rge.spec.ts` : onglet admin EGB, module RGE, bandeau « Nouveau métier », limite de métiers ; suite complète 42/42). **Migration `20260920` appliquée au cloud le 2026-10-10** (dry-run puis push, vérifiée : politiques, trigger, job) et code déployé sur Pages dev (apply Terraform OK). **Reste** : faire valider par le client la correspondance `egbMatches` ; une approbation admin sans date d'expiration reste « valide » indéfiniment (voulu).
 5. **Ménage dépôt — fait** : `imports.tf` supprimé ; `.planning/graphs/` ignoré et sorti du suivi Git (fichiers conservés sur disque).
 6. **E-mail d'invitation RGE — livré** (`server/utils/rgeInvite.ts`) : envoyé quand un pro ajoute « Rénovation énergétique » sans RGE valide ; non testé avec un envoi réel (en dev l'e-mail est seulement journalisé sauf `EMAIL_LIVE=true`).
+
+## Fait le 8 novembre 2026
+- **Clôture de 05.21** après la recette en live sur le dev (cloud). Corrections livrées pendant la recette : bouton « Diffuser » fiabilisé et champs obligatoires marqués, bandeaux de convention rouge/vert, code de signature valable 10 minutes et envoyé seulement à la demande, détail des lots saisi par le partenaire et visible avant engagement (migration `20261108000000` appliquée au cloud), coordonnées du formulaire partenaire sécurisées, envoi d'e-mails réels sur le dev (workflow Terraform dev aligné sur les secrets de prod).
+- **Décision de modèle (Mike)** : après l'avenant, le partenaire choisit l'artisan, le devis se fait hors plateforme, le partenaire dépose le devis signé et le montant HT, l'artisan confirme ; commission annulable manuellement ; échelonnement reporté. Voir la note de spec et le document juriste.
 
 ## Fait du 2 au 5 novembre 2026
 - **Phase 05.21 — Verrou juridique B2B** : plans 01-07 livrés (signature électronique simple OTP + SHA-256, page partenaire à jeton, suivi admin, convention imprimable). Plan 08 : vérifications locales vertes (327 tests unitaires, typecheck 0 erreur, 36 E2E). **Migration `20261030000000` (`b2b_engagements`, `b2b_signature_challenges`, `b2b_partner_tokens`) appliquée au cloud le 2026-11-05** via `supabase db push --db-url …:6543` (le pooler 5432 et l'hôte direct IPv6 sont inaccessibles depuis WSL). RLS contrôlée (3 tables, sans policy ; seule `spatial_ref_sys` hors RLS), types régénérés, push `origin/dev` fait (`122b79c`). Le workflow `cron-engagement-reminders.yml` est parti avec. **Reste : recette locale de Mike.**
