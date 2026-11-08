@@ -59,8 +59,10 @@ jobs:
       TF_VAR_r2_bucket_b2b: batiaxe-b2b-dev
 
       # E-mails
-      TF_VAR_resend_api_key: ${{ secrets.RESEND_API_KEY }}
-      TF_VAR_email_from: BÂTI-AXE <onboarding@resend.dev>
+      # Même clé et même expéditeur que la prod (domaine bati-axe.com vérifié chez Resend, indépendant de l'URL du site) :
+      # le secret RESEND_API_KEY n'a jamais existé, aucun mail ne partait depuis le dev.
+      TF_VAR_resend_api_key: ${{ secrets.PROD_RESEND_API_KEY || secrets.RESEND_API_KEY }}
+      TF_VAR_email_from: ${{ secrets.PROD_EMAIL_FROM || 'BÂTI-AXE <contact@bati-axe.com>' }}
       TF_VAR_onboarding_emails: "false"
 
       # Turnstile désactivé en Dev
