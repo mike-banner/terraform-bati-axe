@@ -5,6 +5,7 @@ const props = defineProps<{
   title: string
   contractHtml: string
   emailHint: string
+  codeSent: boolean
   submitting: boolean
   error: string | null
 }>()
@@ -46,24 +47,33 @@ function onKeydown(e: KeyboardEvent) {
         J'ai lu le document et j'accepte de le signer électroniquement
       </label>
 
-      <p class="text-sm text-slate-600">Un code à 6 chiffres a été envoyé à {{ emailHint }}. Il est valable 10 minutes.</p>
-      <div class="flex items-center gap-3">
-        <input
-          id="engagement-otp"
-          v-model="code"
-          type="text"
-          inputmode="numeric"
-          autocomplete="one-time-code"
-          maxlength="6"
-          pattern="\d{6}"
-          required
-          aria-label="Code de signature"
-          class="h-11 w-40 px-3 border border-border rounded-sm text-center font-mono tracking-widest"
-        >
-        <button type="button" class="text-xs underline underline-offset-2 text-muted-foreground hover:text-foreground" @click="$emit('resend')">
-          Renvoyer un code
+      <!-- 05.21 — le code n'est envoyé que lorsque le pro l'a demandé, après lecture du document -->
+      <div v-if="!codeSent" class="space-y-2">
+        <p class="text-sm text-slate-600">Lisez le document ci-dessus, puis demandez votre code de signature. Il sera envoyé à {{ emailHint }} et sera valable 10 minutes.</p>
+        <button type="button" data-testid="request-code" class="h-11 px-5 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-80 disabled:opacity-40" :disabled="submitting" @click="$emit('resend')">
+          Recevoir mon code de signature
         </button>
       </div>
+      <template v-else>
+        <p class="text-sm text-slate-600">Un code à 6 chiffres a été envoyé à {{ emailHint }}. Il est valable 10 minutes. Un nouveau code annule le précédent.</p>
+        <div class="flex items-center gap-3">
+          <input
+            id="engagement-otp"
+            v-model="code"
+            type="text"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            maxlength="6"
+            pattern="\d{6}"
+            required
+            aria-label="Code de signature"
+            class="h-11 w-40 px-3 border border-border rounded-sm text-center font-mono tracking-widest"
+          >
+          <button type="button" class="text-xs underline underline-offset-2 text-muted-foreground hover:text-foreground" @click="$emit('resend')">
+            Renvoyer un code
+          </button>
+        </div>
+      </template>
 
       <p v-if="error" class="text-sm text-destructive" role="alert">{{ error }}</p>
 
@@ -78,7 +88,7 @@ function onKeydown(e: KeyboardEvent) {
         <button
           type="submit"
           class="flex-1 h-11 px-4 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-80 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
-          :disabled="!canSign"
+          :disabled="!canSign || !codeSent"
         >
           {{ submitting ? 'Signature…' : 'Signer' }}
         </button>

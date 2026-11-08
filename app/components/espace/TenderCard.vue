@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { AMOUNT_INPUT_MAXLENGTH, AMOUNT_INPUT_PATTERN } from '~/utils/commissionTiers'
 
+const CALENDRIER_LABELS: Record<string, string> = {
+  urgent: 'Urgent',
+  sous_3_mois: 'Sous 3 mois',
+  '3_6_mois': 'Dans 3 à 6 mois',
+  plus_6_mois: 'Dans plus de 6 mois',
+}
+
 // Carte AO (appel d'offres partenaire) — variante masquée/révélée du même pattern
 // visuel que les cartes leads (index.vue). Purement présentationnel : elle émet,
 // la page orchestre les appels réseau (claim/report).
@@ -85,10 +92,21 @@ async function copyToClipboard(text: string) {
       </span>
     </div>
 
+    <!-- 05.21 — Ce que le pro doit savoir AVANT de s'engager : travaux du lot + infos chantier -->
+    <div class="px-5 pb-3 space-y-2" data-testid="tender-lot-details">
+      <p class="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Travaux attendus pour ce lot</p>
+      <p class="text-sm text-slate-800 whitespace-pre-line">{{ tender.lot_description || tender.description || 'Le partenaire n\'a pas détaillé ce lot.' }}</p>
+      <div v-if="tender.nb_logements || tender.surface_m2 || tender.calendrier_souhaite" class="flex flex-wrap gap-2 text-xs">
+        <span v-if="tender.nb_logements" class="px-2 py-1 rounded-sm bg-slate-100 text-slate-700">{{ tender.nb_logements }} logement{{ tender.nb_logements > 1 ? 's' : '' }}</span>
+        <span v-if="tender.surface_m2" class="px-2 py-1 rounded-sm bg-slate-100 text-slate-700">{{ tender.surface_m2 }} m²</span>
+        <span v-if="tender.calendrier_souhaite" class="px-2 py-1 rounded-sm bg-slate-100 text-slate-700">{{ CALENDRIER_LABELS[tender.calendrier_souhaite] ?? tender.calendrier_souhaite }}</span>
+      </div>
+    </div>
+
     <!-- ── Variant A: Locked ── -->
     <template v-if="tender.status === 'locked'">
       <div class="px-5 py-3 space-y-2">
-        <p class="text-sm text-slate-600">{{ tender.description }}</p>
+        <p v-if="tender.description" class="text-xs text-muted-foreground"><span class="font-semibold">Contexte du dossier :</span> {{ tender.description }}</p>
         <div class="flex items-center gap-2 text-sm">
           <span class="text-muted-foreground">Contact</span>
           <span class="text-muted-foreground font-mono blur-[3px] select-none" aria-hidden="true">{{ tender.contact_name }}</span>
@@ -138,7 +156,7 @@ async function copyToClipboard(text: string) {
         <span v-if="tender.claimed_at" class="ml-2 text-xs text-muted-foreground">{{ formatDate(tender.claimed_at) }}</span>
       </div>
       <div class="px-5 py-3 space-y-2">
-        <p class="text-sm text-slate-600">{{ tender.description }}</p>
+        <p v-if="tender.description" class="text-xs text-muted-foreground"><span class="font-semibold">Contexte du dossier :</span> {{ tender.description }}</p>
         <p v-if="tender.postal_code" class="text-xs text-muted-foreground">Code postal : {{ tender.postal_code }}</p>
         <div class="flex items-center gap-2 text-sm">
           <span class="text-muted-foreground">Contact</span>

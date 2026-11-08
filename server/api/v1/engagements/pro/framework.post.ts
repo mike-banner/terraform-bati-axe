@@ -1,9 +1,11 @@
 import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { renderContract, CONTRACT_VERSIONS } from '../../../../utils/contracts'
-import { sha256Hex, getClientMeta, issueOtpChallenge, verifyOtpChallenge, findSignedFramework, insertEngagement, sendSignedCopy } from '../../../../utils/signature'
+import { sha256Hex, getClientMeta, issueOtpChallenge, verifyOtpChallenge, maskEmail, findSignedFramework, insertEngagement, sendSignedCopy } from '../../../../utils/signature'
 
-const bodySchema = z.object({ code: z.string().regex(/^\d{6}$/, 'Code à 6 chiffres attendu.').optional() })
+const bodySchema = z.object({ code: z.string().regex(/^\d{6}$/, 'Code à 6 chiffres attendu.').optional(),
+  preview: z.boolean().optional(), // 05.21 : texte seul, sans envoi de code
+})
 
 // Phase 05.21 — signature en 2 temps (texte + OTP, puis code) de la convention cadre pro.
 export default defineEventHandler(async (event) => {
@@ -13,7 +15,7 @@ export default defineEventHandler(async (event) => {
 
   const parsed = bodySchema.safeParse((await readBody(event).catch(() => ({}))) ?? {})
   if (!parsed.success) throw createError({ statusCode: 400, statusMessage: parsed.error.issues[0]?.message ?? 'Requête invalide.' })
-  const { code } = parsed.data
+  const { code, preview } = parsed.data
 
   const supabase = serverSupabaseServiceRole(event) as any
 
@@ -32,9 +34,11 @@ export default defineEventHandler(async (event) => {
   const sha = await sha256Hex(html)
   const subject = { type: 'framework_pro' as const, proId: user.id, email: pro.email }
 
+  if (preview) return { status: 'OTP_PREVIEW', contract: { html, sha256: sha, version }, email_hint: maskEmail(pro.email), code_sent: false }
+
   if (!code) {
     const { emailHint } = await issueOtpChallenge(supabase, subject, sha, 'la convention cadre BÂTI-AXE')
-    return { status: 'OTP_SENT', contract: { html, sha256: sha, version }, email_hint: emailHint }
+    return { status: 'OTP_SENT', contract: { html, sha256: sha, version }, email_hint: emailHint, code_sent: true }
   }
 
   const { challengeId } = await verifyOtpChallenge(supabase, subject, code, sha)

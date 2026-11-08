@@ -53,16 +53,16 @@ const reportSubmitting = ref(false)
 const tenderMessage = ref<string | null>(null)
 
 // ─── Signature convention cadre / avenant (05.21) ───────────────────────────────
-const signFlow = ref<null | { kind: 'framework' | 'amendment'; lotId?: string; title: string; html: string; emailHint: string }>(null)
+const signFlow = ref<null | { kind: 'framework' | 'amendment'; lotId?: string; title: string; html: string; emailHint: string; codeSent: boolean }>(null)
 const signSubmitting = ref(false)
 const signError = ref<string | null>(null)
 
 async function startFramework() {
   try {
-    const res: any = await $fetch('/api/v1/engagements/pro/framework', { method: 'POST', body: {} })
+    const res: any = await $fetch('/api/v1/engagements/pro/framework', { method: 'POST', body: { preview: true } })
     if (res.status === 'ALREADY_SIGNED') return await refreshTenders()
     signError.value = null
-    signFlow.value = { kind: 'framework', title: 'Convention cadre BÂTI-AXE', html: res.contract.html, emailHint: res.email_hint }
+    signFlow.value = { kind: 'framework', title: 'Convention cadre BÂTI-AXE', html: res.contract.html, emailHint: res.email_hint, codeSent: false }
   } catch (err: any) {
     tenderMessage.value = err?.data?.statusMessage || 'Impossible de démarrer la signature.'
   }
@@ -72,10 +72,10 @@ async function confirmClaim() {
   if (!claimTarget.value) return
   claimSubmitting.value = true
   try {
-    const res: any = await $fetch(`/api/v1/tenders/${claimTarget.value.lot_id}/claim`, { method: 'POST', body: {} })
+    const res: any = await $fetch(`/api/v1/tenders/${claimTarget.value.lot_id}/claim`, { method: 'POST', body: { preview: true } })
     if (res.status === 'AMENDMENT_REQUIRED') {
       signError.value = null
-      signFlow.value = { kind: 'amendment', lotId: claimTarget.value.lot_id, title: 'Avenant de mise en relation', html: res.contract.html, emailHint: res.email_hint }
+      signFlow.value = { kind: 'amendment', lotId: claimTarget.value.lot_id, title: 'Avenant de mise en relation', html: res.contract.html, emailHint: res.email_hint, codeSent: false }
       claimTarget.value = null
       return
     }
@@ -100,7 +100,7 @@ async function signWithCode(code?: string) {
   const url = flow.kind === 'framework' ? '/api/v1/engagements/pro/framework' : `/api/v1/tenders/${flow.lotId}/claim`
   try {
     await $fetch(url, { method: 'POST', body: code ? { code } : {} })
-    if (!code) return // renvoi de code
+    if (!code) { flow.codeSent = true; return } // envoi / renvoi de code à la demande du pro
     signFlow.value = null
     await Promise.all([refreshTenders(), refreshContracts()])
     tenderMessage.value = flow.kind === 'framework'
@@ -766,6 +766,7 @@ async function copyToClipboard(text: string) {
       :title="signFlow.title"
       :contract-html="signFlow.html"
       :email-hint="signFlow.emailHint"
+      :code-sent="signFlow.codeSent"
       :submitting="signSubmitting"
       :error="signError"
       @sign="signWithCode"

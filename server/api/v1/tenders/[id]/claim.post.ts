@@ -2,12 +2,15 @@ import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { maskTender } from '../../../../utils/maskTender'
 import { renderContract, CONTRACT_VERSIONS } from '../../../../utils/contracts'
-import { sha256Hex, getClientMeta, issueOtpChallenge, verifyOtpChallenge, findSignedFramework, insertEngagement, sendSignedCopy } from '../../../../utils/signature'
+import { sha256Hex, getClientMeta, issueOtpChallenge, verifyOtpChallenge, maskEmail, findSignedFramework, insertEngagement, sendSignedCopy } from '../../../../utils/signature'
 import { tenderCap, shouldCloseLot, renderTenderClaimEmail } from '../../../../utils/tenderClaim'
 import { sendEmail } from '../../../../utils/email'
 
 const idSchema = z.string().uuid('Identifiant de lot invalide.')
-const bodySchema = z.object({ code: z.string().regex(/^\d{6}$/, 'Code à 6 chiffres attendu.').optional() })
+const bodySchema = z.object({ code: z.string().regex(/^\d{6}$/, 'Code à 6 chiffres attendu.').optional(),
+  // 05.21 — aperçu : renvoie le texte de l'avenant SANS envoyer de code (le pro le demande ensuite lui-même).
+  preview: z.boolean().optional(),
+})
 
 export default defineEventHandler(async (event) => {
   const supabaseAuth = await serverSupabaseClient(event) as any
@@ -20,7 +23,7 @@ export default defineEventHandler(async (event) => {
 
   const parsedBody = bodySchema.safeParse((await readBody(event).catch(() => null)) ?? {})
   if (!parsedBody.success) throw createError({ statusCode: 400, statusMessage: parsedBody.error.issues[0]?.message ?? 'Requête invalide.' })
-  const { code } = parsedBody.data
+  const { code, preview } = parsedBody.data
 
   const supabase = serverSupabaseServiceRole(event) as any
 
@@ -44,7 +47,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: lot, error: lotError } = await supabase
     .from('b2b_tender_lots')
-    .select('id, category, status, zone_id, request_id, b2b_requests(id, decision_status, description, project_location, project_postal_code, budget_range, contact_name, contact_company, contact_phone, contact_email)')
+    .select('id, category, status, zone_id, request_id, description, b2b_requests(id, nb_logements, surface_m2, calendrier_souhaite, decision_status, description, project_location, project_postal_code, budget_range, contact_name, contact_company, contact_phone, contact_email)')
     .eq('id', id)
     .single()
 
@@ -111,9 +114,13 @@ export default defineEventHandler(async (event) => {
     const version = CONTRACT_VERSIONS.lot_amendment
     const subject = { type: 'lot_amendment' as const, proId: user.id, lotId: id, requestId: lot.request_id, email: pro.email }
 
+    if (preview) {
+      return { status: 'AMENDMENT_REQUIRED', contract: { html, sha256: sha, version }, email_hint: maskEmail(pro.email), code_sent: false }
+    }
+
     if (!code) {
       const { emailHint } = await issueOtpChallenge(supabase, subject, sha, 'l\'avenant de mise en relation réf. ' + requestRef)
-      return { status: 'AMENDMENT_REQUIRED', contract: { html, sha256: sha, version }, email_hint: emailHint }
+      return { status: 'AMENDMENT_REQUIRED', contract: { html, sha256: sha, version }, email_hint: emailHint, code_sent: true }
     }
 
     const { challengeId } = await verifyOtpChallenge(supabase, subject, code, sha)

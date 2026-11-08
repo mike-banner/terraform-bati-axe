@@ -501,6 +501,19 @@ test.describe('Appels d\'offres — verrou juridique (05.21)', () => {
     await expect(page.getByRole('button', { name: 'Je suis intéressé' })).toBeDisabled()
   })
 
+  test('la carte montre les travaux du lot et les infos chantier avant tout engagement', async ({ page }) => {
+    await setupAo(page, {
+      tenders: [{ ...LOCKED_LOT, lot_description: 'Remplacement du tableau électrique des parties communes.', nb_logements: 12, surface_m2: 800, calendrier_souhaite: 'sous_3_mois' }],
+      frameworkSigned: true,
+    })
+    await openAoTab(page)
+    const box = page.getByTestId('tender-lot-details')
+    await expect(box).toContainText('Remplacement du tableau électrique', { timeout: 10_000 })
+    await expect(box).toContainText('12 logements')
+    await expect(box).toContainText('800 m²')
+    await expect(box).toContainText('Sous 3 mois')
+  })
+
   test('« Mes contrats » liste la convention avec le lien vers le document', async ({ page }) => {
     await setupAo(page, { tenders: [LOCKED_LOT], frameworkSigned: true })
     await openAoTab(page)
@@ -512,9 +525,15 @@ test.describe('Appels d\'offres — verrou juridique (05.21)', () => {
   test('signature de l\'avenant puis coordonnées visibles', async ({ page }) => {
     const state = { tenders: [LOCKED_LOT] as any[], frameworkSigned: true }
     await setupAo(page, state)
+    let codeRequests = 0
     await page.route('**/api/v1/tenders/lot-1/claim', (route) => {
-      if (!route.request().postDataJSON()?.code) {
-        return route.fulfill(json({ status: 'AMENDMENT_REQUIRED', contract: CONTRACT, email_hint: 'p***@e***.fr' }))
+      const body = route.request().postDataJSON()
+      if (body?.preview) {
+        return route.fulfill(json({ status: 'AMENDMENT_REQUIRED', contract: CONTRACT, email_hint: 'p***@e***.fr', code_sent: false }))
+      }
+      if (!body?.code) {
+        codeRequests++
+        return route.fulfill(json({ status: 'AMENDMENT_REQUIRED', contract: CONTRACT, email_hint: 'p***@e***.fr', code_sent: true }))
       }
       state.tenders = [CLAIMED_LOT]
       return route.fulfill(json({ status: 'SUCCESS', lotClosed: false, tender: {} }))
@@ -523,6 +542,12 @@ test.describe('Appels d\'offres — verrou juridique (05.21)', () => {
     await page.getByRole('button', { name: 'Je suis intéressé' }).click()
     await page.getByRole('button', { name: "Continuer vers l'avenant" }).click()
     await expect(page.getByText('Gabarit')).toBeVisible()
+    // 05.21 : aucun code n'est envoyé tant que le pro n'a pas lu l'avenant et cliqué lui-même.
+    await expect(page.locator('#engagement-otp')).toHaveCount(0)
+    expect(codeRequests).toBe(0)
+    await page.getByTestId('request-code').click()
+    await expect(page.locator('#engagement-otp')).toBeVisible()
+    expect(codeRequests).toBe(1)
     await page.locator('#engagement-accept').check()
     await page.locator('#engagement-otp').fill('123456')
     await page.getByRole('button', { name: 'Signer', exact: true }).click()

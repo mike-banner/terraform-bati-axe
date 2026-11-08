@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { APPORTEUR_LABELS, BUDGET_OPTIONS, TRAVAUX_OPTIONS, LOT_CATEGORY_OPTIONS } from '~/types/b2b'
-import type { B2bApporteurType, B2bNeedType, B2bBudgetRange, B2bRequestFile, B2bTravauxSuggere, B2bLotCategory } from '~/types/b2b'
+import { APPORTEUR_LABELS, BUDGET_OPTIONS, TRAVAUX_OPTIONS, LOT_CATEGORY_OPTIONS, CALENDRIER_OPTIONS } from '~/types/b2b'
+import type { B2bApporteurType, B2bNeedType, B2bBudgetRange, B2bRequestFile, B2bTravauxSuggere, B2bLotCategory, B2bCalendrier } from '~/types/b2b'
 
 useHead({ title: 'Espace Partenaires — BÂTI-AXE' })
 
@@ -32,8 +32,14 @@ const isSyndic = computed(() => apporteurType.value === 'syndic')
 function toggleLot(c: B2bLotCategory) {
   const idx = lotsCategories.value.indexOf(c)
   if (idx === -1) lotsCategories.value.push(c)
-  else lotsCategories.value.splice(idx, 1)
+  else { lotsCategories.value.splice(idx, 1); delete lotsDetails[c] }
 }
+// 05.21 — travaux attendus par lot + infos chantier (le pro les lit AVANT de s'engager).
+const lotsDetails = reactive<Record<string, string>>({})
+const nbLogements = ref<number | null>(null)
+const surfaceM2 = ref<number | null>(null)
+const calendrier = ref<B2bCalendrier | ''>('')
+const lotsDetailsOk = computed(() => !isSyndic.value || lotsCategories.value.every(c => (lotsDetails[c] ?? '').trim().length >= 10))
 const uploadedFiles = ref<B2bRequestFile[]>([])
 const uploading = ref(false)
 const uploadError = ref<string | null>(null)
@@ -51,7 +57,7 @@ const canNextStep = computed(() => {
   switch (step.value) {
     case 1: return !!apporteurType.value
     case 2: return !!needType.value
-    case 3: return description.value.trim().length >= 20
+    case 3: return description.value.trim().length >= 20 && lotsDetailsOk.value
     case 4: return contactName.value.length >= 2 && contactPhone.value.length >= 8 && contactEmail.value.includes('@') && consentAccepted.value
     default: return false
   }
@@ -170,6 +176,12 @@ async function submitRequest() {
         project_location: projectLocation.value || null,
         description: description.value.trim() || null,
         lots_categories: lotsCategories.value.length ? lotsCategories.value : null,
+        lots_details: isSyndic.value && lotsCategories.value.length
+          ? Object.fromEntries(lotsCategories.value.map(c => [c, (lotsDetails[c] ?? '').trim()]))
+          : null,
+        nb_logements: isSyndic.value ? (nbLogements.value || null) : null,
+        surface_m2: isSyndic.value ? (surfaceM2.value || null) : null,
+        calendrier_souhaite: isSyndic.value ? (calendrier.value || null) : null,
         budget_range: budgetRange.value || null,
         certification_number: isDiagnostiqueur.value ? (certificationNumber.value || null) : null,
         travaux_suggeres: isDiagnostiqueur.value && travauxSuggeres.value.length > 0 ? travauxSuggeres.value : null,
@@ -339,6 +351,45 @@ async function submitRequest() {
           <p class="mt-1.5 text-xs text-muted-foreground">
             Sélectionnez tous les corps de métier nécessaires — chacun sera traité comme un lot indépendant.
           </p>
+        </div>
+
+        <!-- 05.21 — Travaux attendus par lot : lus par l'artisan avant de s'engager -->
+        <div v-if="isSyndic && lotsCategories.length" class="mb-4 space-y-3" data-testid="lots-details">
+          <div v-for="c in lotsCategories" :key="c">
+            <label :for="`lot-detail-${c}`" class="block text-sm font-medium text-foreground mb-1.5">
+              Travaux attendus — {{ LOT_CATEGORY_OPTIONS.find(o => o.value === c)?.label }} *
+            </label>
+            <textarea
+              :id="`lot-detail-${c}`"
+              v-model="lotsDetails[c]"
+              rows="3"
+              maxlength="1000"
+              placeholder="Ex : remplacement du tableau électrique des parties communes, mise aux normes de l'éclairage des 4 cages d'escalier."
+              class="w-full px-3 py-2 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-y"
+            />
+            <p v-if="(lotsDetails[c] ?? '').trim().length < 10" class="mt-1 text-xs text-muted-foreground">10 caractères minimum.</p>
+          </div>
+        </div>
+
+        <!-- 05.21 — Infos chantier (facultatives) -->
+        <div v-if="isSyndic" class="mb-4 grid sm:grid-cols-3 gap-3">
+          <div>
+            <label for="nb-logements" class="block text-sm font-medium text-foreground mb-1.5">Nombre de logements</label>
+            <input id="nb-logements" v-model.number="nbLogements" type="number" min="1" max="9999" step="1" inputmode="numeric"
+              class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground">
+          </div>
+          <div>
+            <label for="surface-m2" class="block text-sm font-medium text-foreground mb-1.5">Surface concernée (m²)</label>
+            <input id="surface-m2" v-model.number="surfaceM2" type="number" min="1" max="1000000" step="1" inputmode="numeric"
+              class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground">
+          </div>
+          <div>
+            <label for="calendrier" class="block text-sm font-medium text-foreground mb-1.5">Calendrier souhaité</label>
+            <select id="calendrier" v-model="calendrier" class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground">
+              <option value="">Non précisé</option>
+              <option v-for="o in CALENDRIER_OPTIONS" :key="o.value" :value="o.value">{{ o.label }}</option>
+            </select>
+          </div>
         </div>
 
         <!-- Diagnostiqueur : n° certification + types de travaux suggérés -->

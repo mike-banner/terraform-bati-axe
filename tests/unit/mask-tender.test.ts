@@ -88,3 +88,16 @@ describe('isTenderRevealed (05.21)', () => {
   it('avenant sans claim → false', () => expect(isTenderRevealed(null, amendment)).toBe(false))
   it('claim et avenant → true', () => expect(isTenderRevealed(claim, amendment)).toBe(true))
 })
+
+describe('maskTender — détail du lot (05.21)', () => {
+  const lot = {
+    id: 'l1', category: 'electricite', status: 'open', created_at: null, description: 'Remplacement du tableau électrique.',
+    b2b_requests: { id: 'r1', description: 'Parties communes', nb_logements: 12, surface_m2: 800, calendrier_souhaite: 'urgent', contact_name: 'Jean', contact_phone: '0600000000' },
+  }
+  it('expose travaux du lot et infos chantier avant claim, sans aucune coordonnée', () => {
+    const m = maskTender(lot as any, false)
+    expect(m).toMatchObject({ lot_description: 'Remplacement du tableau électrique.', nb_logements: 12, surface_m2: 800, calendrier_souhaite: 'urgent' })
+    expect(JSON.stringify(m)).not.toContain('0600000000')
+    expect(m.contact_name).toBe('*** *** ***')
+  })
+})

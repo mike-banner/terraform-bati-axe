@@ -6,6 +6,7 @@ export type B2bApporteurType = 'architecte' | 'bet' | 'agence_immo' | 'syndic' |
 export type B2bTravauxSuggere = 'isolation' | 'chauffage' | 'electricite' | 'toiture'
 export type B2bNeedType = 'projet_immediat' | 'partenariat_regulier'
 export type B2bBudgetRange = '<30k' | '30-100k' | '100-300k' | '>300k'
+export type B2bCalendrier = 'urgent' | 'sous_3_mois' | '3_6_mois' | 'plus_6_mois'
 export type B2bRequestStatus = 'nouveau' | 'en_cours' | 'rappele' | 'qualifie' | 'converti' | 'perdu'
 export type B2bDecisionStatus = 'confirme' | 'en_attente'
 export type B2bLotCategory = 'maconnerie' | 'toiture' | 'electricite' | 'plomberie' | 'peinture' | 'isolation'
@@ -40,6 +41,9 @@ export interface B2bRequest {
   certification_number: string | null
   travaux_suggeres: B2bTravauxSuggere[] | null
   description: string | null
+  nb_logements?: number | null
+  surface_m2?: number | null
+  calendrier_souhaite?: B2bCalendrier | null
   decision_status: B2bDecisionStatus
   project_postal_code: string | null
   partner_framework?: { engagement_id: string; signed_at: string } | null
@@ -104,6 +108,13 @@ export const TRAVAUX_OPTIONS: { value: B2bTravauxSuggere; label: string }[] = [
   { value: 'chauffage', label: 'Chauffage' },
   { value: 'electricite', label: 'Électricité' },
   { value: 'toiture', label: 'Toiture' },
+]
+
+export const CALENDRIER_OPTIONS: { value: B2bCalendrier; label: string }[] = [
+  { value: 'urgent', label: 'Urgent' },
+  { value: 'sous_3_mois', label: 'Sous 3 mois' },
+  { value: '3_6_mois', label: 'Dans 3 à 6 mois' },
+  { value: 'plus_6_mois', label: 'Dans plus de 6 mois' },
 ]
 
 export const BUDGET_OPTIONS: { value: B2bBudgetRange; label: string }[] = [

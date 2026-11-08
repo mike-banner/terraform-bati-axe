@@ -44,7 +44,7 @@ function onKeydown(e: KeyboardEvent) {
       </div>
 
       <p class="text-xs text-muted-foreground">
-        Étape suivante : vous recevez par email un code pour signer l'avenant de mise en relation (commission de succès {{ COMMISSION_RATE_LOW_PCT }} % HT jusqu'à {{ COMMISSION_THRESHOLD_LABEL }} de devis, {{ COMMISSION_RATE_HIGH_PCT }} % HT au-delà ; non-contournement 24 mois). Les coordonnées du partenaire sont révélées après signature.
+        Étape suivante : vous lisez l'avenant de mise en relation, puis vous demandez vous-même un code de signature par e-mail (commission de succès {{ COMMISSION_RATE_LOW_PCT }} % HT jusqu'à {{ COMMISSION_THRESHOLD_LABEL }} de devis, {{ COMMISSION_RATE_HIGH_PCT }} % HT au-delà ; non-contournement 24 mois). Les coordonnées du partenaire sont révélées après signature.
       </p>
       <p class="text-xs text-muted-foreground">
         Ce positionnement ne peut pas être annulé depuis votre espace.

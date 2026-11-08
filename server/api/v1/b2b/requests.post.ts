@@ -30,6 +30,9 @@ export default defineEventHandler(async (event) => {
       budget_range: data.budget_range || null,
       certification_number: data.certification_number || null,
       travaux_suggeres: data.travaux_suggeres || null,
+      nb_logements: data.nb_logements ?? null,
+      surface_m2: data.surface_m2 ?? null,
+      calendrier_souhaite: data.calendrier_souhaite ?? null,
       files: data.files,
       contact_name: data.contact_name,
       contact_company: data.contact_company || null,
@@ -52,7 +55,7 @@ export default defineEventHandler(async (event) => {
   // déjà enregistrée, une erreur ici ne doit pas faire perdre le dossier au
   // partenaire. ponytail: log console suffisant au pilote, à remonter dans
   // audit_logs si le volume B2B le justifie.
-  const lots = buildTenderLots(request.id, data.apporteur_type, data.lots_categories)
+  const lots = buildTenderLots(request.id, data.apporteur_type, data.lots_categories, data.lots_details)
   if (lots.length > 0) {
     const { error: lotsError } = await supabase.from('b2b_tender_lots').insert(lots)
     if (lotsError) console.error('[b2b] échec insertion des lots', request.id, lotsError.message)

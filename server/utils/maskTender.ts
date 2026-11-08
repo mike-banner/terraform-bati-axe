@@ -5,10 +5,14 @@ export interface TenderLotRow {
   created_at: string | null
   zone_name?: string | null
   claimed_at?: string | null
+  description?: string | null // 05.21 — travaux attendus pour CE lot (saisis par le partenaire)
   b2b_requests?: {
     id: string
     description?: string | null
     project_location?: string | null
+    nb_logements?: number | null
+    surface_m2?: number | null
+    calendrier_souhaite?: string | null
     project_postal_code?: string | null
     budget_range?: string | null
     decision_status?: string | null
@@ -42,6 +46,11 @@ export function maskTender(lot: TenderLotRow, claimed: boolean): Record<string, 
     decision_status: req.decision_status ?? 'en_attente',
     created_at: lot.created_at,
     project_location: req.project_location ?? null,
+    // 05.21 — infos de chantier non identifiantes : visibles avant l'engagement pour décider en connaissance de cause.
+    nb_logements: req.nb_logements ?? null,
+    surface_m2: req.surface_m2 ?? null,
+    calendrier_souhaite: req.calendrier_souhaite ?? null,
+    lot_description: lot.description ?? null,
   }
 
   if (!claimed) {

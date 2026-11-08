@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: lots, error: lotsError } = await supabase
     .from('b2b_tender_lots')
-    .select('id, category, status, created_at, zone_id, request_id, b2b_requests(id, description, project_location, project_postal_code, budget_range, decision_status, contact_name, contact_company, contact_phone, contact_email)')
+    .select('id, category, status, created_at, zone_id, request_id, description, b2b_requests(id, nb_logements, surface_m2, calendrier_souhaite, description, project_location, project_postal_code, budget_range, decision_status, contact_name, contact_company, contact_phone, contact_email)')
     .in('zone_id', zoneIds)
     .in('category', pro.categories)
     .order('created_at', { ascending: false })

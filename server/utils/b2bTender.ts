@@ -5,6 +5,7 @@ import { z } from 'zod'
 // charger le handler Nitro (#supabase/server n'est pas résolvable sous vitest).
 
 export const B2B_LOT_CATEGORIES = ['maconnerie', 'toiture', 'electricite', 'plomberie', 'peinture', 'isolation'] as const
+export const B2B_CALENDRIERS = ['urgent', 'sous_3_mois', '3_6_mois', 'plus_6_mois'] as const
 export type B2bLotCategory = typeof B2B_LOT_CATEGORIES[number]
 
 export const b2bRequestSchema = z.object({
@@ -18,6 +19,11 @@ export const b2bRequestSchema = z.object({
   travaux_suggeres: z.array(z.enum(['isolation', 'chauffage', 'electricite', 'toiture'])).max(4).optional().nullable(),
   // TEND-05 — corps de métier demandés, 1 lot chacun.
   lots_categories: z.array(z.enum(B2B_LOT_CATEGORIES)).max(6).optional().nullable(),
+  // 05.21 — travaux attendus par lot (clé = corps de métier) et infos structurées du chantier.
+  lots_details: z.record(z.string(), z.string().max(1000)).optional().nullable(),
+  nb_logements: z.number().int().min(1).max(9999).optional().nullable(),
+  surface_m2: z.number().int().min(1).max(1000000).optional().nullable(),
+  calendrier_souhaite: z.enum(B2B_CALENDRIERS).optional().nullable(),
   files: z.array(z.object({
     file_key: z.string(),
     filename: z.string().max(255),
@@ -33,6 +39,14 @@ export const b2bRequestSchema = z.object({
   // L'étape 3 du tunnel (description + lots) est sautée pour un partenariat
   // régulier — la description n'est exigée que sur un projet immédiat.
   if (data.need_type !== 'projet_immediat') return
+  // 05.21 — chaque lot demandé par un syndic doit dire quels travaux sont attendus.
+  if (data.apporteur_type === 'syndic') {
+    for (const c of data.lots_categories ?? []) {
+      if ((data.lots_details?.[c] ?? '').trim().length < 10) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['lots_details', c], message: 'Décrivez les travaux de ce lot (10 caractères minimum).' })
+      }
+    }
+  }
   if (!data.description || data.description.trim().length < 20) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
@@ -54,14 +68,15 @@ export function buildTenderLots(
   requestId: string,
   apporteurType: string,
   categories: string[] | null | undefined,
-): { request_id: string; category: B2bLotCategory }[] {
+  details?: Record<string, string> | null,
+): { request_id: string; category: B2bLotCategory; description: string | null }[] {
   if (apporteurType !== 'syndic' || !categories?.length) return []
   const seen = new Set<string>()
-  const lots: { request_id: string; category: B2bLotCategory }[] = []
+  const lots: { request_id: string; category: B2bLotCategory; description: string | null }[] = []
   for (const c of categories) {
     if (!B2B_LOT_CATEGORIES.includes(c as B2bLotCategory) || seen.has(c)) continue
     seen.add(c)
-    lots.push({ request_id: requestId, category: c as B2bLotCategory })
+    lots.push({ request_id: requestId, category: c as B2bLotCategory, description: details?.[c]?.trim() || null })
   }
   return lots
 }
