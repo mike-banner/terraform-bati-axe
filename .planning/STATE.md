@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
 status: executing
-stopped_at: Phase 05.21 close (recette dev en live validée par Mike le 2026-11-08) ; refonte du mécanisme après l'avenant à valider avec le client (note 20261108-REFONTE_CHOIX_PARTENAIRE_DEVIS-SPEC)
-last_updated: "2026-11-08T19:00:00.000Z"
+stopped_at: RLS `lead_notifications` corrigée, documents de suivi resynchronisés avec le code
+last_updated: "2026-11-10T10:28:55.689Z"
 progress:
-  total_phases: 35
-  completed_phases: 19
-  total_plans: 114
-  completed_plans: 99
-  percent: 87
+  total_phases: 36
+  completed_phases: 20
+  total_plans: 126
+  completed_plans: 108
+  percent: 86
 ---
 
 # Project State
@@ -33,7 +33,7 @@ See: .planning/PROJECT.md (updated 2026-09-04)
 Phase: 05.21 (verrou-juridique-b2b) — COMPLETE (2026-11-08)
 Plan: 8 of 8 terminés. Recette dev en live validée par Mike le 2026-11-08 : partenaire (convention, dossier), admin, pro (convention, avenant, OTP), coordonnées révélées après signature. Reste en suspens : refonte du flux « devis » (le partenaire choisit l'artisan, dépose le devis signé, l'artisan confirme ; espace admin Commissions en cours) — spec `.planning/notes/20261108-REFONTE_CHOIX_PARTENAIRE_DEVIS-SPEC.md`, à valider par le client ; points juridiques dans `docs/legal/POINTS_A_VALIDER_AVEC_JURISTE.md`.
 Prochaine phase : voir « À faire dans l'immédiat » ci-dessous (05.21 marquée URGENTE au ROADMAP, puis 05.20, 06.4)
-Status: Phase 05.21 complète ; prochaine étape à décider (refonte devis/commissions, puis 05.20, 06.4)
+Status: Ready to execute
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
 Phases complètes récentes (v1.0) :
 
@@ -74,15 +74,18 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 6. **E-mail d'invitation RGE — livré** (`server/utils/rgeInvite.ts`) : envoyé quand un pro ajoute « Rénovation énergétique » sans RGE valide ; non testé avec un envoi réel (en dev l'e-mail est seulement journalisé sauf `EMAIL_LIVE=true`).
 
 ## Fait le 8 novembre 2026
+
 - **Clôture de 05.21** après la recette en live sur le dev (cloud). Corrections livrées pendant la recette : bouton « Diffuser » fiabilisé et champs obligatoires marqués, bandeaux de convention rouge/vert, code de signature valable 10 minutes et envoyé seulement à la demande, détail des lots saisi par le partenaire et visible avant engagement (migration `20261108000000` appliquée au cloud), coordonnées du formulaire partenaire sécurisées, envoi d'e-mails réels sur le dev (workflow Terraform dev aligné sur les secrets de prod).
 - **Décision de modèle (Mike)** : après l'avenant, le partenaire choisit l'artisan, le devis se fait hors plateforme, le partenaire dépose le devis signé et le montant HT, l'artisan confirme ; commission annulable manuellement ; échelonnement reporté. Voir la note de spec et le document juriste.
 
 ## Fait du 2 au 5 novembre 2026
+
 - **Phase 05.21 — Verrou juridique B2B** : plans 01-07 livrés (signature électronique simple OTP + SHA-256, page partenaire à jeton, suivi admin, convention imprimable). Plan 08 : vérifications locales vertes (327 tests unitaires, typecheck 0 erreur, 36 E2E). **Migration `20261030000000` (`b2b_engagements`, `b2b_signature_challenges`, `b2b_partner_tokens`) appliquée au cloud le 2026-11-05** via `supabase db push --db-url …:6543` (le pooler 5432 et l'hôte direct IPv6 sont inaccessibles depuis WSL). RLS contrôlée (3 tables, sans policy ; seule `spatial_ref_sys` hors RLS), types régénérés, push `origin/dev` fait (`122b79c`). Le workflow `cron-engagement-reminders.yml` est parti avec. **Reste : recette locale de Mike.**
 - **Simulateur étape 2** : l'alerte jaune « nécessitent une coordination » ne s'affiche plus pour pompe à chaleur et géothermie (photovoltaïque, démolition, assainissement la gardent). Le matching reste inchangé (ces postes restent réservés EGB).
 - **Point 05.11 (coffre-fort juridique)** : base technique en place mais pas alimentée — voir « Écarts constatés 05.11 » ci-dessous.
 
 ### Écarts constatés 05.11 (vérifiés le 2026-11-05) — **traités par le plan 05.11-05 (code livré en local le 2026-11-06, migration `20261106000000` appliquée au cloud le 2026-11-06, types régénérés ; reste le push `dev`)**
+
 - **Aucun code n'insère dans `documents_artisan`** (seulement lecture admin, PATCH admin et cron d'alertes). La table cloud est vide (0 ligne), comme `verifications` (0 ligne) ; 2 pros, aucun avec la capacité sous-traitance activée.
 - Le dépôt réel des justificatifs passe par `verifications` (ADR-012), pas par `documents_artisan` : les deux modèles coexistent sans pont. Le point de design du CONTEXT (étendre ou remplacer `verifications`) n'a jamais été tranché.
 - La sélection des 2-3 sous-traitants du workflow DirCo (05.10) ne lit pas `documents_artisan`, contrairement à ce que prévoyait le CONTEXT (« pré-requis métier de la sélection »).

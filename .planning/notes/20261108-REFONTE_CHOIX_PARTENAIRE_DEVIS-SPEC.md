@@ -101,11 +101,18 @@ Vue de synthèse en tête : total à encaisser, total encaissé, total de rétro
 
 Les étapes 2 à 4 peuvent être planifiées en une phase (proposition : 05.23) sans attendre le juriste ; l'étape 5 est bloquée par lui, l'étape 6 par le client et le juriste.
 
-## 9. Questions ouvertes
-- Part du partenaire dans la commission : fixe (3 % ?) ou fraction (3/8) ? Différent au-delà de 200 000 € HT.
+## 9. Décisions de Mike (2026-11-09) et questions ouvertes
+
+**Décidé :**
+- **Part du partenaire : 3 % fixe du montant HT du devis**, prélevée sur les 8 % perçus par BÂTI-AXE (reste net 5 %). **3 % partout**, y compris au-delà de 200 000 € HT (confirmé 2026-11-10).
+- **Acompte : 4 % du total du devis** (et non de l'acompte), demandé quand l'artisan perçoit l'acompte de 30 % ; le solde (4 % du total) complète les 8 % à la fin (confirmé 2026-11-10, pour éviter un calcul compliqué).
+- **Contact de l'artisan** : son téléphone est révélé au partenaire après signature de l'avenant (confirmé 2026-11-10).
+- **Ce que voit le partenaire avant de choisir** : la fiche/page publique de chaque artisan intéressé. La proposition chiffrée et les échanges se font hors plateforme (téléphone) et déterminent le choix.
+
+**Piste sur l'acompte (non tranchée) :** prélever environ 4 % du **total du devis** quand l'artisan perçoit l'acompte de 30 %, car cela dépend de la pression de trésorerie du pro. *À clarifier : 4 % du total ou 4 % de l'acompte ? Risque : une règle variable au cas par cas est difficile à défendre et laisse le pro maître du déclencheur. Alternative proposée : choix unique à l'avenant entre « 4 % à l'acompte + solde » et « 8 % à la fin », déclencheur fixé par le devis déposé par le partenaire.*
+
+**Encore ouvert :**
 - 8 % fixe ou 8 % / 6 % par tranche (réponse du client attendue).
-- Acompte : est-il encore pertinent pour nous dans ce modèle, ou la commission suit-elle le devis ?
 - Silence de l'artisan : acceptation tacite ou blocage ?
-- Que voit le partenaire de chaque artisan avant son choix ?
 - Liste définitive des cas d'annulation autorisés (§4).
 - Les autres questions du client restées sans réponse : grille d'abonnement, définition du PPL, conditions Stripe Connect, périmètre du tunnel de leads et consentements.
