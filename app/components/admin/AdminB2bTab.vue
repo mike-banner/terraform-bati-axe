@@ -74,10 +74,12 @@ const BUDGET_LABELS: Record<string, string> = {
   '>300k': '> 300 k€',
 }
 
-const STATUS_ORDER = ['nouveau', 'en_cours', 'rappele', 'qualifie', 'converti', 'perdu'] as const
+// Pipeline réduit à 3 statuts (Mike, 2026-11-10). Les anciennes valeurs (en_cours, rappele, converti)
+// restent affichables pour les dossiers existants mais ne sont plus proposées.
+const STATUS_ORDER = ['nouveau', 'qualifie', 'perdu'] as const
 
 const STATUS_LABELS: Record<string, string> = {
-  nouveau: 'Nouveau',
+  nouveau: 'Nouveau — aucune action',
   en_cours: 'En cours',
   rappele: 'Rappelé',
   qualifie: 'Qualifié',
@@ -114,16 +116,16 @@ const diffusingId = ref<string | null>(null)
 const diffuseResult = reactive<Record<string, string>>({})
 const diffuseError = reactive<Record<string, string>>({})
 
-// État persisté (ce que l'API vérifie réellement côté serveur).
+// Enregistrer d'abord, diffuser ensuite : la diffusion exige un dossier qualifié, un chargé d'affaires,
+// un statut de décision et un code postal valides, déjà ENREGISTRÉS (l'API vérifie l'état en base).
 function canDiffuse(r: B2bRequest): boolean {
-  return Boolean(r.decision_status) && /^\d{5}$/.test(r.project_postal_code || '')
+  return r.status === 'qualifie' && Boolean(r.assigned_to)
+    && Boolean(r.decision_status) && /^\d{5}$/.test(r.project_postal_code || '')
 }
 
-// État du brouillon en cours de saisie — active le bouton dès une saisie valide ;
-// diffuse() enregistre automatiquement avant d'appeler l'API si besoin.
+// Bouton actif seulement si l'état enregistré est diffusable ET qu'aucune modification n'attend d'être enregistrée.
 function canDiffuseDraft(r: B2bRequest): boolean {
-  const d = ensureDraft(r.id)
-  return Boolean(d.decision_status) && /^\d{5}$/.test(d.project_postal_code || '')
+  return canDiffuse(r) && !isDirty(r)
 }
 
 async function diffuse(r: B2bRequest) {
@@ -132,14 +134,6 @@ async function diffuse(r: B2bRequest) {
   delete diffuseResult[r.id]
   delete diffuseError[r.id]
   try {
-    // Le statut de décision / code postal peuvent avoir été saisis sans clic
-    // séparé sur "Enregistrer" — on les persiste ici pour éviter le 422
-    // (l'API vérifie l'état en base, pas le brouillon local).
-    const d = ensureDraft(r.id)
-    if (d.decision_status !== r.decision_status || d.project_postal_code !== (r.project_postal_code || '')) {
-      await saveChanges(r)
-      if (!canDiffuse(r)) { diffuseError[r.id] = errorMessage.value || 'Enregistrement impossible avant diffusion.'; return }
-    }
     const res = await $fetch<{
       status: string; zone: string; lots_diffused: number
       notifications_sent: number; notifications_skipped: number; notifications_failed: number
@@ -235,10 +229,8 @@ function toggleExpand(id: string) {
   expandedId.value = expandedId.value === id ? null : id
 }
 
-async function saveChanges(r: B2bRequest) {
+function buildPayload(r: B2bRequest): Record<string, any> {
   const d = ensureDraft(r.id)
-  savingId.value = r.id
-  errorMessage.value = null
   const payload: Record<string, any> = {}
   if (d.status !== r.status) payload.status = d.status
   if ((d.assigned_to || null) !== (r.assigned_to || null)) payload.assigned_to = d.assigned_to || null
@@ -252,6 +244,40 @@ async function saveChanges(r: B2bRequest) {
   if (JSON.stringify(d.recommended) !== JSON.stringify(r.recommended_pros || [])) payload.recommended_pros = d.recommended
   if (d.decision_status !== r.decision_status) payload.decision_status = d.decision_status
   if (d.project_postal_code !== (r.project_postal_code || '')) payload.project_postal_code = d.project_postal_code || null
+  return payload
+}
+
+function isDirty(r: B2bRequest): boolean {
+  return Object.keys(buildPayload(r)).length > 0
+}
+
+// Enregistrement : chargé d'affaires ET statut choisi (autre que « Nouveau ») obligatoires.
+function canSave(r: B2bRequest): boolean {
+  const d = ensureDraft(r.id)
+  return Boolean(d.assigned_to) && d.status !== 'nouveau'
+}
+
+// Confirmation avant de passer un dossier en « Perdu » (le dossier n'est plus proposé aux artisans).
+const lostConfirmId = ref<string | null>(null)
+
+function requestSave(r: B2bRequest) {
+  const d = ensureDraft(r.id)
+  if (d.status === 'perdu' && r.status !== 'perdu') {
+    lostConfirmId.value = r.id
+    return
+  }
+  void saveChanges(r)
+}
+
+async function confirmLost(r: B2bRequest) {
+  lostConfirmId.value = null
+  await saveChanges(r)
+}
+
+async function saveChanges(r: B2bRequest) {
+  savingId.value = r.id
+  errorMessage.value = null
+  const payload = buildPayload(r)
 
   if (Object.keys(payload).length === 0) {
     savingId.value = null
@@ -509,21 +535,27 @@ function pipelineLabel(status: string): string {
           <!-- Gestion pipeline -->
           <div class="grid sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Statut pipeline</label>
+              <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Statut pipeline <span class="text-destructive" aria-hidden="true">*</span></label>
               <select
                 v-model="ensureDraft(r.id).status"
+                required
+                aria-required="true"
                 class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:border-safety"
               >
                 <option v-for="s in STATUS_ORDER" :key="s" :value="s">{{ STATUS_LABELS[s] }}</option>
+                <!-- Ancien statut d'un dossier existant : affiché, plus proposé -->
+                <option v-if="!(STATUS_ORDER as readonly string[]).includes(r.status)" :value="r.status" disabled>{{ STATUS_LABELS[r.status] }} (ancien statut)</option>
               </select>
             </div>
             <div>
-              <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Chargé d'affaires</label>
+              <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Chargé d'affaires <span class="text-destructive" aria-hidden="true">*</span></label>
               <select
                 v-model="ensureDraft(r.id).assigned_to"
+                required
+                aria-required="true"
                 class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:border-safety"
               >
-                <option value="">Non assigné</option>
+                <option value="" disabled>Choisir un chargé d'affaires…</option>
                 <option v-for="a in admins" :key="a.id" :value="a.id">{{ a.email }}</option>
               </select>
             </div>
@@ -692,9 +724,34 @@ function pipelineLabel(status: string): string {
               </div>
             </div>
 
-            <!-- Phase 8 (D-01) — Diffusion automatique aux artisans matchés -->
+            <!-- 1. Enregistrer (chargé d'affaires + statut obligatoires), avant toute autre action -->
             <div class="mt-4 border-t border-border pt-4">
-              <p class="text-[11px] text-muted-foreground mb-2"><span class="text-destructive">*</span> Champs obligatoires pour diffuser.</p>
+              <p class="text-[11px] text-muted-foreground mb-2"><span class="text-destructive">*</span> Chargé d'affaires et statut obligatoires pour enregistrer.</p>
+              <div class="flex items-center justify-end gap-2">
+                <span v-if="!canSave(r)" class="text-[11px] text-amber-500">
+                  {{ !ensureDraft(r.id).assigned_to ? 'Choisissez un chargé d\'affaires.' : 'Choisissez un statut : Qualifié ou Perdu.' }}
+                </span>
+                <button
+                  @click="requestSave(r)"
+                  :disabled="savingId === r.id || !canSave(r)"
+                  class="inline-flex items-center h-9 px-4 text-sm font-medium rounded-sm bg-safety text-white hover:opacity-90 transition-opacity disabled:opacity-40"
+                >
+                  <svg v-if="savingId === r.id" class="w-4 h-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                  Enregistrer
+                </button>
+              </div>
+              <div v-if="lostConfirmId === r.id" class="mt-2 p-3 border border-red-500/30 bg-red-500/10 rounded-sm space-y-2" role="alertdialog" aria-label="Confirmer le passage en perdu">
+                <p class="text-sm text-red-400">Êtes-vous sûr de passer ce dossier en « Perdu » ? Il ne sera plus proposé aux artisans.</p>
+                <div class="flex items-center gap-2">
+                  <button type="button" class="h-9 px-4 text-sm font-medium rounded-sm bg-red-600 text-white hover:opacity-90" @click="confirmLost(r)">Oui, passer en Perdu</button>
+                  <button type="button" class="h-9 px-4 text-sm font-medium rounded-sm border border-border hover:bg-muted" @click="lostConfirmId = null">Annuler</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Phase 8 (D-01) — Diffusion automatique aux artisans matchés (dossier qualifié et enregistré) -->
+            <div class="mt-4 border-t border-border pt-4">
+              <p class="text-[11px] text-muted-foreground mb-2"><span class="text-destructive">*</span> Dossier qualifié et enregistré, statut de décision et code postal obligatoires pour diffuser.</p>
               <div class="flex items-center justify-end">
                 <button
                   @click="diffuse(r)"
@@ -717,9 +774,12 @@ function pipelineLabel(status: string): string {
                   Diffuse tous les lots ouverts de ce dossier aux artisans vérifiés ayant une zone active
                   correspondante et la catégorie du lot.
                 </span>
+                <span v-else-if="isDirty(r)">
+                  Des modifications ne sont pas enregistrées : <strong>enregistrez</strong> avant de diffuser.
+                </span>
                 <span v-else>
-                  Renseignez le statut de décision et un code postal à 5 chiffres, puis <strong>enregistrez</strong>,
-                  pour activer la diffusion.
+                  Pour diffuser : statut <strong>Qualifié</strong>, chargé d'affaires, statut de décision et code postal à 5 chiffres,
+                  puis <strong>enregistrez</strong>.
                 </span>
               </div>
               <p v-if="diffuseError[r.id]" class="mt-1.5 text-sm text-red-500" role="alert">{{ diffuseError[r.id] }}</p>
@@ -750,20 +810,6 @@ function pipelineLabel(status: string): string {
             </div>
           </div>
 
-          <!-- Actions -->
-          <div class="flex items-center justify-end gap-2">
-            <span v-if="r.assigned?.email" class="text-[11px] text-muted-foreground">
-              Assigné à {{ r.assigned.email }}
-            </span>
-            <button
-              @click="saveChanges(r)"
-              :disabled="savingId === r.id"
-              class="inline-flex items-center h-9 px-4 text-sm font-medium rounded-sm bg-safety text-white hover:opacity-90 transition-opacity disabled:opacity-40"
-            >
-              <svg v-if="savingId === r.id" class="w-4 h-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-              Enregistrer
-            </button>
-          </div>
         </div>
       </div>
     </div>

@@ -14,7 +14,20 @@ export const ACTIVE_TENDER_STATUSES = ['nouveau', 'en_cours', 'rappele', 'qualif
  * D-02 / TEND-10 : un AO n'est diffusable que si le DirCo a renseigné le statut
  * de décision ET un code postal exploitable par matchZone().
  */
-export function assertDiffusable(req: { decision_status?: string | null; project_postal_code?: string | null }) {
+export function assertDiffusable(req: { status?: string | null; assigned_to?: string | null; decision_status?: string | null; project_postal_code?: string | null }) {
+  // Le dossier doit être qualifié (statut « qualifie ») et avoir un chargé d'affaires.
+  if (req.status !== 'qualifie') {
+    throw createError({
+      statusCode: 422,
+      statusMessage: 'Qualifiez le dossier (statut « Qualifié ») avant de diffuser aux artisans.',
+    })
+  }
+  if (!req.assigned_to) {
+    throw createError({
+      statusCode: 422,
+      statusMessage: 'Assignez un chargé d\'affaires au dossier avant de diffuser aux artisans.',
+    })
+  }
   if (!req.decision_status) {
     throw createError({
       statusCode: 422,

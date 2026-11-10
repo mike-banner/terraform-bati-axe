@@ -20,12 +20,12 @@ describe('ACTIVE_TENDER_STATUSES', () => {
 
 describe('assertDiffusable', () => {
   it('decision_status confirmé + code postal valide → ne lève rien', () => {
-    expect(() => assertDiffusable({ decision_status: 'confirme', project_postal_code: '78000' })).not.toThrow()
+    expect(() => assertDiffusable({ status: 'qualifie', assigned_to: 'admin-1', decision_status: 'confirme', project_postal_code: '78000' })).not.toThrow()
   })
 
   it('decision_status absent → lève 422', () => {
     try {
-      assertDiffusable({ decision_status: null, project_postal_code: '78000' })
+      assertDiffusable({ status: 'qualifie', assigned_to: 'admin-1', decision_status: null, project_postal_code: '78000' })
       expect.unreachable()
     } catch (e: any) {
       expect(e.statusCode).toBe(422)
@@ -34,7 +34,7 @@ describe('assertDiffusable', () => {
 
   it('project_postal_code absent → lève 422', () => {
     try {
-      assertDiffusable({ decision_status: 'confirme', project_postal_code: null })
+      assertDiffusable({ status: 'qualifie', assigned_to: 'admin-1', decision_status: 'confirme', project_postal_code: null })
       expect.unreachable()
     } catch (e: any) {
       expect(e.statusCode).toBe(422)
@@ -43,10 +43,32 @@ describe('assertDiffusable', () => {
 
   it('code postal invalide (pas 5 chiffres) → lève 422', () => {
     try {
-      assertDiffusable({ decision_status: 'confirme', project_postal_code: '780' })
+      assertDiffusable({ status: 'qualifie', assigned_to: 'admin-1', decision_status: 'confirme', project_postal_code: '780' })
       expect.unreachable()
     } catch (e: any) {
       expect(e.statusCode).toBe(422)
+    }
+  })
+
+  it('dossier non qualifié (nouveau ou perdu) → lève 422', () => {
+    for (const status of ['nouveau', 'perdu', 'en_cours']) {
+      try {
+        assertDiffusable({ status, assigned_to: 'admin-1', decision_status: 'confirme', project_postal_code: '78000' })
+        expect.unreachable()
+      } catch (e: any) {
+        expect(e.statusCode).toBe(422)
+        expect(e.statusMessage).toContain('Qualifiez')
+      }
+    }
+  })
+
+  it('qualifié sans chargé d\'affaires → lève 422', () => {
+    try {
+      assertDiffusable({ status: 'qualifie', assigned_to: null, decision_status: 'confirme', project_postal_code: '78000' })
+      expect.unreachable()
+    } catch (e: any) {
+      expect(e.statusCode).toBe(422)
+      expect(e.statusMessage).toContain('chargé d\'affaires')
     }
   })
 })

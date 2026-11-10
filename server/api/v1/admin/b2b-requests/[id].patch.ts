@@ -3,7 +3,9 @@ import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 
 // 05.10-06 (B2B-06) : mise à jour d'une demande B2B — statut pipeline, assignation, notes.
 
-const B2B_STATUS = ['nouveau', 'en_cours', 'rappele', 'qualifie', 'converti', 'perdu'] as const
+// Pipeline réduit à 3 statuts (décision Mike 2026-11-10) : nouveau (aucune action), qualifié, perdu.
+// L'enum SQL garde ses anciennes valeurs (en_cours, rappele, converti) en lecture seule : aucune migration.
+const B2B_STATUS = ['nouveau', 'qualifie', 'perdu'] as const
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 const POSTAL_RE = /^\d{5}$/
@@ -43,6 +45,18 @@ export default defineEventHandler(async (event) => {
   }
 
   const supabase = await serverSupabaseServiceRole(event) as any
+
+  // Enregistrement impossible sans chargé d'affaires ni statut choisi (état final = existant + changements).
+  const { data: current } = await supabase
+    .from('b2b_requests')
+    .select('status, assigned_to')
+    .eq('id', id)
+    .maybeSingle()
+  if (!current) throw createError({ statusCode: 404, statusMessage: 'Dossier introuvable.' })
+  const finalAssigned = 'assigned_to' in changes ? changes.assigned_to : current.assigned_to
+  const finalStatus = changes.status ?? current.status
+  if (!finalAssigned) throw createError({ statusCode: 422, statusMessage: 'Le chargé d\'affaires est obligatoire avant d\'enregistrer.' })
+  if (finalStatus === 'nouveau') throw createError({ statusCode: 422, statusMessage: 'Choisissez un statut (Qualifié ou Perdu) avant d\'enregistrer.' })
 
   const { data, error } = await supabase
     .from('b2b_requests')
