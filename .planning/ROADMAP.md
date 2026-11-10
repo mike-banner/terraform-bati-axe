@@ -517,7 +517,7 @@ Plans:
 
 ### Phase 05.23: Choix du partenaire, devis déposé par le partenaire & espace Commissions
 
-**Goal:** Après l'avenant signé, le partenaire voit les artisans intéressés et en choisit un par lot ; le devis se fait hors plateforme ; le partenaire dépose le PDF du devis signé et le montant HT ; l'artisan confirme en un clic ou conteste ; la commission (8 % dont 3 % rétro-commission partenaire ; 4 % du total demandé à l'acompte) apparaît dans l'espace admin « Commissions en cours », avec journal des mouvements d'argent et annulation manuelle motivée tracée.
+**Goal:** Après l'avenant signé, le partenaire voit les artisans intéressés et en choisit un par lot ; le devis se fait hors plateforme ; le partenaire dépose le PDF du devis signé et le montant HT ; l'artisan confirme en un clic ou conteste ; la commission (8 % dont 3 % rétro-commission partenaire ; échéancier de la commission validé étape par étape par le partenaire, D-06 bis) apparaît dans l'espace admin « Commissions en cours », avec journal des mouvements d'argent et annulation manuelle motivée tracée. Jamais de montant de commission ni de part chez le partenaire (D-22) ; l'artisan voit la commission qu'il doit à BÂTI-AXE.
 **Contexte:** `.planning/phases/05.23-choix-partenaire-devis-commissions/05.23-CONTEXT.md` (issu de la spec `.planning/notes/20261108-REFONTE_CHOIX_PARTENAIRE_DEVIS-SPEC.md`, §9 décisions du 2026-11-09/10).
 **Plans:** 11 plans en 6 vagues
 
