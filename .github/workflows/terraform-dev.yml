@@ -65,6 +65,9 @@ jobs:
       TF_VAR_email_from: ${{ secrets.PROD_EMAIL_FROM || 'BÂTI-AXE <contact@bati-axe.com>' }}
       TF_VAR_onboarding_emails: "false"
 
+      # Opérateurs admin : liste du champ « Qui agit ? » (noms séparés par des virgules ; Herman = super admin)
+      TF_VAR_admin_operators: "Herman"
+
       # Turnstile désactivé en Dev
       TF_VAR_turnstile_secret_key: ""
       TF_VAR_site_url: https://bati-axe-dev-dev.pages.dev

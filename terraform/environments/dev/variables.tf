@@ -183,6 +183,12 @@ variable "onboarding_emails" {
   default     = false
 }
 
+variable "admin_operators" {
+  description = "Opérateurs admin (« Qui agit ? »), séparés par des virgules"
+  type        = string
+  default     = ""
+}
+
 variable "turnstile_secret_key" {
   description = "Clé Turnstile, vide en Dev"
   type        = string

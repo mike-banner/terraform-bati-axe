@@ -79,6 +79,7 @@ module "cloudflare_pages" {
     NUXT_RESEND_API_KEY          = var.resend_api_key
     NUXT_EMAIL_FROM              = var.email_from
     NUXT_ONBOARDING_EMAILS       = var.onboarding_emails ? "true" : "false"
+    NUXT_ADMIN_OPERATORS         = var.admin_operators
     NUXT_TURNSTILE_SECRET_KEY    = var.turnstile_secret_key
     NUXT_PUBLIC_SITE_URL         = var.site_url
   }

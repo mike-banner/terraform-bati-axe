@@ -189,6 +189,12 @@ variable "onboarding_emails" {
   default     = false
 }
 
+variable "admin_operators" {
+  description = "Noms des opérateurs admin (liste séparée par des virgules) pour le champ « Qui agit ? » des opérations sensibles"
+  type        = string
+  default     = ""
+}
+
 variable "turnstile_secret_key" {
   description = "Clé secrète Cloudflare Turnstile"
   type        = string
