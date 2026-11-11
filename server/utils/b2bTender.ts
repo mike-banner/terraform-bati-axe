@@ -13,6 +13,9 @@ export const b2bRequestSchema = z.object({
   apporteur_type: z.enum(['architecte', 'bet', 'agence_immo', 'syndic', 'diagnostiqueur', 'autre']),
   need_type: z.enum(['projet_immediat', 'partenariat_regulier']),
   project_location: z.string().trim().max(200).nullish(),
+  // Code postal du chantier, saisi par le partenaire — alimente project_postal_code
+  // dès la création du dossier (plus besoin que l'admin le ressaisisse pour diffuser).
+  project_postal_code: z.string().trim().nullish(),
   // TEND-01 — même contrainte que le formulaire particulier (projects.post.ts).
   description: z.string().max(5000).nullish(),
   budget_range: z.enum(['<30k', '30-100k', '100-300k', '>300k']).nullish(),
@@ -53,6 +56,13 @@ export const b2bRequestSchema = z.object({
       code: z.ZodIssueCode.custom,
       path: ['description'],
       message: 'La description doit faire au moins 20 caractères.',
+    })
+  }
+  if (!data.project_postal_code || !/^\d{5}$/.test(data.project_postal_code)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['project_postal_code'],
+      message: 'Le code postal du chantier doit comporter 5 chiffres.',
     })
   }
 })

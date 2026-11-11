@@ -27,6 +27,7 @@ export default defineEventHandler(async (event) => {
       apporteur_type: data.apporteur_type,
       need_type: data.need_type,
       project_location: data.project_location || null,
+      project_postal_code: data.project_postal_code || null,
       description: data.description?.trim() || null,
       budget_range: data.budget_range || null,
       certification_number: data.certification_number || null,

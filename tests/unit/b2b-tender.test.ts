@@ -4,6 +4,7 @@ import { b2bRequestSchema, buildTenderLots } from '../../server/utils/b2bTender'
 const base = {
   apporteur_type: 'syndic' as const,
   need_type: 'projet_immediat' as const,
+  project_postal_code: '78000',
   contact_name: 'Jean Dupont',
   contact_phone: '06 12 34 56 78',
   contact_email: 'jean.dupont@example.com',
@@ -23,6 +24,21 @@ describe('b2bRequestSchema', () => {
 
   it('partenariat régulier sans description → accepté (étape 3 sautée)', () => {
     const r = b2bRequestSchema.safeParse({ ...base, need_type: 'partenariat_regulier' })
+    expect(r.success).toBe(true)
+  })
+
+  it('projet immédiat sans code postal → rejeté', () => {
+    const r = b2bRequestSchema.safeParse({ ...base, description: 'Ravalement de façade complet sur bâtiment collectif.', project_postal_code: null })
+    expect(r.success).toBe(false)
+  })
+
+  it('projet immédiat avec code postal invalide (pas 5 chiffres) → rejeté', () => {
+    const r = b2bRequestSchema.safeParse({ ...base, description: 'Ravalement de façade complet sur bâtiment collectif.', project_postal_code: '780' })
+    expect(r.success).toBe(false)
+  })
+
+  it('partenariat régulier sans code postal → accepté (pas de chantier identifié)', () => {
+    const r = b2bRequestSchema.safeParse({ ...base, need_type: 'partenariat_regulier', project_postal_code: null })
     expect(r.success).toBe(true)
   })
 

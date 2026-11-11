@@ -18,6 +18,8 @@ const submittedId = ref('')
 const apporteurType = ref<B2bApporteurType | ''>('')
 const needType = ref<B2bNeedType | ''>('')
 const projectLocation = ref('78 — Yvelines')
+const projectPostalCode = ref('')
+const projectPostalCodeOk = computed(() => /^\d{5}$/.test(projectPostalCode.value.trim()))
 const budgetRange = ref<B2bBudgetRange | ''>('')
 const certificationNumber = ref('')
 const travauxSuggeres = ref<B2bTravauxSuggere[]>([])
@@ -66,7 +68,7 @@ const canNextStep = computed(() => {
   switch (step.value) {
     case 1: return !!apporteurType.value
     case 2: return !!needType.value
-    case 3: return description.value.trim().length >= 20 && lotsDetailsOk.value && certificationOk.value
+    case 3: return description.value.trim().length >= 20 && lotsDetailsOk.value && certificationOk.value && projectPostalCodeOk.value
     case 4: return contactNameOk.value && contactCompanyOk.value && contactPhoneOk.value && contactEmailOk.value && consentAccepted.value
     default: return false
   }
@@ -183,6 +185,7 @@ async function submitRequest() {
         apporteur_type: apporteurType.value,
         need_type: needType.value,
         project_location: projectLocation.value || null,
+        project_postal_code: projectPostalCode.value.trim() || null,
         description: description.value.trim() || null,
         lots_categories: lotsCategories.value.length ? lotsCategories.value : null,
         lots_details: isSyndic.value && lotsCategories.value.length
@@ -312,16 +315,32 @@ async function submitRequest() {
         <p class="text-sm text-muted-foreground mb-6">Déposez vos plans, CCTP ou compromis de vente.</p>
 
         <!-- Location -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-foreground mb-1.5">Adresse ou département du projet</label>
-          <input
-            v-model="projectLocation"
-            type="text"
-            maxlength="200"
-            autocomplete="street-address"
-            placeholder="Ex : 78 — Yvelines / 75 — Paris"
-            class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          />
+        <div class="mb-4 grid sm:grid-cols-[1fr_140px] gap-3">
+          <div>
+            <label class="block text-sm font-medium text-foreground mb-1.5">Adresse ou département du projet</label>
+            <input
+              v-model="projectLocation"
+              type="text"
+              maxlength="200"
+              autocomplete="street-address"
+              placeholder="Ex : 78 — Yvelines / 75 — Paris"
+              class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-foreground mb-1.5">Code postal du chantier *</label>
+            <input
+              v-model="projectPostalCode"
+              type="text"
+              inputmode="numeric"
+              required
+              maxlength="5"
+              pattern="\d{5}"
+              autocomplete="postal-code"
+              placeholder="78000"
+              class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </div>
         </div>
 
         <!-- Description obligatoire (TEND-01) -->

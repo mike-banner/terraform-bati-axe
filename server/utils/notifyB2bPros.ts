@@ -42,7 +42,6 @@ export function renderTenderEmail(opts: {
   lotCategory: string
   lotId: string
   requestRef: string
-  projectLocation?: string | null
   postalCode?: string | null
   budgetRange?: string | null
   siteUrl: string
@@ -51,10 +50,12 @@ export function renderTenderEmail(opts: {
 
   const badgeHtml = `<p style="margin:0 0 16px;"><span style="display:inline-block;background:#ECFDF5;color:#047857;border:1px solid #A7F3D0;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;">✓ AO qualifié BÂTI-AXE</span></p>`
 
+  // Seul le code postal (zone) est montré avant sélection — jamais le texte libre
+  // du partenaire, qui peut contenir une adresse précise (cf. décision du 2026-11-11).
   const detailsHtml = `
     <table style="width:100%;border-collapse:collapse;margin:8px 0 0;">
       <tr><td style="padding:8px 0;font-size:13px;color:#64748B;">Corps de métier</td><td style="padding:8px 0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${label}</td></tr>
-      <tr><td style="padding:8px 0;border-top:1px solid #E2E8F0;font-size:13px;color:#64748B;">Localisation</td><td style="padding:8px 0;border-top:1px solid #E2E8F0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${opts.projectLocation || opts.postalCode || '—'}</td></tr>
+      <tr><td style="padding:8px 0;border-top:1px solid #E2E8F0;font-size:13px;color:#64748B;">Code postal</td><td style="padding:8px 0;border-top:1px solid #E2E8F0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${opts.postalCode || '—'}</td></tr>
       <tr><td style="padding:8px 0;border-top:1px solid #E2E8F0;font-size:13px;color:#64748B;">Budget</td><td style="padding:8px 0;border-top:1px solid #E2E8F0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${opts.budgetRange || '—'}</td></tr>
       <tr><td style="padding:8px 0;border-top:1px solid #E2E8F0;font-size:13px;color:#64748B;">Référence</td><td style="padding:8px 0;border-top:1px solid #E2E8F0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${opts.requestRef}</td></tr>
     </table>`
@@ -83,7 +84,7 @@ export function renderTenderEmail(opts: {
  */
 export async function notifyMatchedB2bPros(
   supabase: any,
-  request: { id: string; project_location?: string | null; project_postal_code?: string | null; budget_range?: string | null },
+  request: { id: string; project_postal_code?: string | null; budget_range?: string | null },
   lot: { id: string; category: string; zone_id: string },
   opts: { siteUrl: string; maxPerDay: number },
 ): Promise<{ sent: number; skipped: number; failed: number }> {
@@ -135,7 +136,6 @@ export async function notifyMatchedB2bPros(
       lotCategory: lot.category,
       lotId: lot.id,
       requestRef: request.id.slice(0, 8).toUpperCase(),
-      projectLocation: request.project_location,
       postalCode: request.project_postal_code,
       budgetRange: request.budget_range,
       siteUrl: opts.siteUrl,

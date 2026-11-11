@@ -69,7 +69,6 @@ describe('renderTenderEmail', () => {
     lotCategory: 'toiture',
     lotId: 'lot-1',
     requestRef: 'ABCD1234',
-    projectLocation: '78 — Yvelines',
     postalCode: '78500',
     budgetRange: '10 000 - 20 000 €',
     siteUrl: 'https://bati-axe.com',
@@ -95,6 +94,13 @@ describe('renderTenderEmail', () => {
     const { html } = renderTenderEmail(opts)
     expect(html).not.toContain('syndic@example.com')
     expect(html).not.toContain('0601020304')
+  })
+
+  it('ne contient que le code postal, jamais une adresse libre (le texte libre peut contenir une adresse précise)', () => {
+    const opts = { ...base, projectLocation: '12 rue de la Paix, 78000 Versailles' } as any
+    const { html } = renderTenderEmail(opts)
+    expect(html).not.toContain('rue de la Paix')
+    expect(html).toContain('78500')
   })
 
   it('le sujet contient BÂTI-AXE et le libellé de catégorie', () => {
