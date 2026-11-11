@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
+import { QUALIFICATION_VALUES } from '../../../../../app/utils/qualifications'
 
 // 05.10-06 (B2B-06) : mise à jour d'une demande B2B — statut pipeline, assignation, notes.
 
@@ -15,8 +16,9 @@ const schema = z.object({
   status: z.enum(B2B_STATUS).optional(),
   assigned_to: z.string().uuid().nullable().optional(),
   notes: z.string().max(5000).nullable().optional(),
-  // 05.10-08 — Qualification DirCo
-  qualifications_requises: z.array(z.string().min(1).max(100)).max(20).optional(),
+  // Qualification du dossier (premier appel avec le partenaire) : qualifications exigées
+  // (catalogue fermé) et planning indicatif, tous deux affichés aux artisans sur l'AO.
+  qualifications_requises: z.array(z.enum(QUALIFICATION_VALUES)).max(QUALIFICATION_VALUES.length).optional(),
   planning_start: z.string().regex(DATE_RE).nullable().optional(),
   planning_end: z.string().regex(DATE_RE).nullable().optional(),
   // Phase 7 — TEND-02 / support TEND-04

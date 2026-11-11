@@ -22,6 +22,21 @@ const baseLot: TenderLotRow = {
   },
 }
 
+describe('maskTender — qualification du dossier', () => {
+  const withQual: TenderLotRow = {
+    ...baseLot,
+    b2b_requests: { ...baseLot.b2b_requests!, qualifications_requises: ['rge', 'qualibat'], planning_start: '2027-03-01', planning_end: '2027-06-30' },
+  }
+
+  it('qualifications et planning visibles avant le claim (non identifiants)', () => {
+    expect(maskTender(withQual, false)).toMatchObject({ qualifications_requises: ['rge', 'qualibat'], planning_start: '2027-03-01', planning_end: '2027-06-30' })
+  })
+
+  it('absents du dossier → tableau vide et dates nulles', () => {
+    expect(maskTender(baseLot, false)).toMatchObject({ qualifications_requises: [], planning_start: null, planning_end: null })
+  })
+})
+
 describe('maskTender', () => {
   it('non claimed → status locked, aucune coordonnée en clair', () => {
     const result = maskTender(baseLot, false)

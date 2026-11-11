@@ -27,6 +27,7 @@ interface B2bRequest {
   description: string | null
   decision_status: 'confirme' | 'en_attente'
   project_postal_code: string | null
+  calendrier_souhaite?: string | null
   // Qualification du dossier (appel avec le partenaire)
   qualifications_requises: string[]
   planning_start: string | null
@@ -55,6 +56,13 @@ const APPORTEUR_LABELS: Record<string, string> = {
 const NEED_LABELS: Record<string, string> = {
   projet_immediat: 'Projet immédiat',
   partenariat_regulier: 'Partenariat régulier',
+}
+
+const CALENDRIER_LABELS: Record<string, string> = {
+  urgent: 'Urgent',
+  sous_3_mois: 'Sous 3 mois',
+  '3_6_mois': 'Dans 3 à 6 mois',
+  plus_6_mois: 'Dans plus de 6 mois',
 }
 
 const BUDGET_LABELS: Record<string, string> = {
@@ -143,7 +151,7 @@ interface B2bDraft {
   status: string
   assigned_to: string
   notes: string
-  qualifications: string
+  qualifications: string[]
   planning_start: string
   planning_end: string
   decision_status: string
@@ -161,7 +169,7 @@ function ensureDraft(id: string): B2bDraft {
       status: r?.status || 'nouveau',
       assigned_to: r?.assigned_to || '',
       notes: r?.notes || '',
-      qualifications: (r?.qualifications_requises || []).join(', '),
+      qualifications: [...(r?.qualifications_requises || [])],
       planning_start: r?.planning_start || '',
       planning_end: r?.planning_end || '',
       decision_status: r?.decision_status || 'en_attente',
@@ -190,7 +198,7 @@ async function fetchRequests() {
         status: r.status,
         assigned_to: r.assigned_to || '',
         notes: r.notes || '',
-        qualifications: (r.qualifications_requises || []).join(', '),
+        qualifications: [...(r.qualifications_requises || [])],
         planning_start: r.planning_start || '',
         planning_end: r.planning_end || '',
         decision_status: r.decision_status || 'en_attente',
@@ -220,9 +228,9 @@ function buildPayload(r: B2bRequest): Record<string, any> {
   if ((d.assigned_to || null) !== (r.assigned_to || null)) payload.assigned_to = d.assigned_to || null
   if (d.notes !== (r.notes || '')) payload.notes = d.notes
 
-  // Qualification DirCo (05.10-08)
-  const quals = d.qualifications.split(',').map(s => s.trim()).filter(Boolean)
-  if (JSON.stringify(quals) !== JSON.stringify(r.qualifications_requises || [])) payload.qualifications_requises = quals
+  // Qualification du dossier : comparaison indépendante de l'ordre de saisie
+  const sameQuals = [...d.qualifications].sort().join('|') === [...(r.qualifications_requises || [])].sort().join('|')
+  if (!sameQuals) payload.qualifications_requises = d.qualifications
   if (d.planning_start !== (r.planning_start || '')) payload.planning_start = d.planning_start || null
   if (d.planning_end !== (r.planning_end || '')) payload.planning_end = d.planning_end || null
   if (d.decision_status !== r.decision_status) payload.decision_status = d.decision_status
@@ -530,36 +538,41 @@ function pipelineLabel(status: string): string {
             />
           </div>
 
-          <!-- Qualification DirCo (05.10-08) -->
+          <!-- Qualification du dossier : à remplir avec le partenaire lors du premier appel -->
           <div class="border-t border-border pt-4">
-            <p class="text-[10px] uppercase tracking-wide text-muted-foreground mb-3">Qualification DirCo</p>
+            <p class="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">Qualification du dossier</p>
+            <p class="text-[11px] text-muted-foreground mb-3">
+              À compléter avec le partenaire lors du premier appel. Ces informations sont affichées aux artisans sur l'appel d'offres.
+            </p>
 
-            <div class="grid sm:grid-cols-2 gap-3">
+            <div class="space-y-3">
               <div>
-                <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Qualifications requises (Qualibat, RGE…)</label>
-                <input
-                  v-model="ensureDraft(r.id).qualifications"
-                  maxlength="500"
-                  placeholder="Isolation RGE, électricité Qualifelec… (séparées par des virgules)"
-                  class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-safety"
-                />
+                <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Qualifications requises</label>
+                <B2bQualificationPicker v-model="ensureDraft(r.id).qualifications" :id-prefix="`admin-qualif-${r.id}`" />
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Début planning</label>
-                  <input
-                    v-model="ensureDraft(r.id).planning_start"
-                    type="date"
-                    class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:border-safety"
-                  />
-                </div>
-                <div>
-                  <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Fin planning</label>
-                  <input
-                    v-model="ensureDraft(r.id).planning_end"
-                    type="date"
-                    class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:border-safety"
-                  />
+              <div>
+                <p class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">
+                  Planning indicatif
+                  <span v-if="r.calendrier_souhaite" class="normal-case tracking-normal"> — souhait du partenaire : {{ CALENDRIER_LABELS[r.calendrier_souhaite] ?? r.calendrier_souhaite }}</span>
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Début approximatif</label>
+                    <input
+                      v-model="ensureDraft(r.id).planning_start"
+                      type="date"
+                      class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:border-safety"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Fin approximative</label>
+                    <input
+                      v-model="ensureDraft(r.id).planning_end"
+                      type="date"
+                      :min="ensureDraft(r.id).planning_start || undefined"
+                      class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:border-safety"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

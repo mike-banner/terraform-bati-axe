@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { PHONE_FR_REGEX, PERSON_NAME_REGEX, COMPANY_NAME_REGEX, CERTIFICATION_REGEX } from '../../app/utils/contactFields'
+import { QUALIFICATION_VALUES } from '../../app/utils/qualifications'
 
 // Phase 7 — TEND-01 / TEND-05.
 // Schéma extrait de server/api/v1/b2b/requests.post.ts pour être testable sans
@@ -28,6 +29,8 @@ export const b2bRequestSchema = z.object({
   nb_logements: z.number().int().min(1).max(9999).optional().nullable(),
   surface_m2: z.number().int().min(1).max(1000000).optional().nullable(),
   calendrier_souhaite: z.enum(B2B_CALENDRIERS).optional().nullable(),
+  // Qualifications exigées (facultatif : le chargé d'affaires peut les compléter à l'appel).
+  qualifications_requises: z.array(z.enum(QUALIFICATION_VALUES)).max(QUALIFICATION_VALUES.length).optional().nullable(),
   files: z.array(z.object({
     file_key: z.string().max(500),
     filename: z.string().max(255),

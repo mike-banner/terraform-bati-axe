@@ -15,6 +15,9 @@ export interface TenderLotRow {
     calendrier_souhaite?: string | null
     project_postal_code?: string | null
     budget_range?: string | null
+    qualifications_requises?: string[] | null
+    planning_start?: string | null
+    planning_end?: string | null
     decision_status?: string | null
     contact_name?: string | null
     contact_company?: string | null
@@ -50,6 +53,10 @@ export function maskTender(lot: TenderLotRow, claimed: boolean): Record<string, 
     surface_m2: req.surface_m2 ?? null,
     calendrier_souhaite: req.calendrier_souhaite ?? null,
     lot_description: lot.description ?? null,
+    // Qualification du dossier (non identifiante) : visible avant l'engagement pour que l'artisan s'auto-sélectionne.
+    qualifications_requises: req.qualifications_requises ?? [],
+    planning_start: req.planning_start ?? null,
+    planning_end: req.planning_end ?? null,
   }
 
   if (!claimed) {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { AMOUNT_INPUT_MAXLENGTH, AMOUNT_INPUT_PATTERN } from '~/utils/commissionTiers'
+import { QUALIFICATION_LABELS } from '~/utils/qualifications'
 
 const CALENDRIER_LABELS: Record<string, string> = {
   urgent: 'Urgent',
@@ -11,7 +12,7 @@ const CALENDRIER_LABELS: Record<string, string> = {
 // Carte AO (appel d'offres partenaire) — variante masquée/révélée du même pattern
 // visuel que les cartes leads (index.vue). Purement présentationnel : elle émet,
 // la page orchestre les appels réseau (claim/report).
-defineProps<{
+const props = defineProps<{
   tender: any
   canClaim: boolean
   claiming: boolean
@@ -48,6 +49,19 @@ const CATEGORY_LABELS: Record<string, string> = {
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
 }
+
+// Dates approximatives saisies par le chargé d'affaires : on n'affiche que mois + année pour ne pas
+// suggérer une précision qui n'existe pas. 'YYYY-MM-DD' lu à midi UTC pour éviter tout décalage de fuseau.
+function formatMonth(ymd: string) {
+  return new Date(`${ymd}T12:00:00Z`).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric', timeZone: 'UTC' })
+}
+const planningLabel = computed(() => {
+  const { planning_start: start, planning_end: end } = props.tender
+  if (start && end) return `de ${formatMonth(start)} à ${formatMonth(end)}`
+  if (start) return `début ${formatMonth(start)}`
+  if (end) return `fin ${formatMonth(end)}`
+  return null
+})
 
 async function copyToClipboard(text: string) {
   try {
@@ -101,6 +115,16 @@ async function copyToClipboard(text: string) {
         <span v-if="tender.surface_m2" class="px-2 py-1 rounded-sm bg-slate-100 text-slate-700">{{ tender.surface_m2 }} m²</span>
         <span v-if="tender.calendrier_souhaite" class="px-2 py-1 rounded-sm bg-slate-100 text-slate-700">{{ CALENDRIER_LABELS[tender.calendrier_souhaite] ?? tender.calendrier_souhaite }}</span>
       </div>
+      <!-- Qualification du dossier (validée par le chargé d'affaires avec le partenaire) -->
+      <div v-if="tender.qualifications_requises?.length" data-testid="tender-qualifications" class="space-y-1">
+        <p class="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Qualifications requises</p>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <span v-for="q in tender.qualifications_requises" :key="q" class="px-2 py-1 rounded-sm border border-copper/30 bg-copper/10 text-copper font-medium">{{ QUALIFICATION_LABELS[q] ?? q }}</span>
+        </div>
+      </div>
+      <p v-if="planningLabel" data-testid="tender-planning" class="text-xs text-slate-700">
+        <span class="font-semibold">Planning indicatif :</span> {{ planningLabel }}
+      </p>
     </div>
 
     <!-- ── Variant A: Locked ── -->

@@ -42,6 +42,7 @@ const lotsDetails = reactive<Record<string, string>>({})
 const nbLogements = ref<number | null>(null)
 const surfaceM2 = ref<number | null>(null)
 const calendrier = ref<B2bCalendrier | ''>('')
+const qualificationsRequises = ref<string[]>([])
 const lotsDetailsOk = computed(() => !isSyndic.value || lotsCategories.value.every(c => (lotsDetails[c] ?? '').trim().length >= 10))
 const uploadedFiles = ref<B2bRequestFile[]>([])
 const uploading = ref(false)
@@ -195,6 +196,7 @@ async function submitRequest() {
         surface_m2: isSyndic.value ? (surfaceM2.value || null) : null,
         calendrier_souhaite: isSyndic.value ? (calendrier.value || null) : null,
         budget_range: budgetRange.value || null,
+        qualifications_requises: qualificationsRequises.value.length ? qualificationsRequises.value : null,
         certification_number: isDiagnostiqueur.value ? (certificationNumber.value || null) : null,
         travaux_suggeres: isDiagnostiqueur.value && travauxSuggeres.value.length > 0 ? travauxSuggeres.value : null,
         files: uploadedFiles.value,
@@ -465,6 +467,15 @@ async function submitRequest() {
             <option value="">Sélectionner un budget</option>
             <option v-for="opt in BUDGET_OPTIONS" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
           </select>
+        </div>
+
+        <!-- Qualifications exigées (facultatif, avec glossaire) -->
+        <div class="mb-6" data-testid="partner-qualifications">
+          <p class="block text-sm font-medium text-foreground mb-1">Qualifications exigées pour les artisans <span class="text-muted-foreground font-normal">(facultatif)</span></p>
+          <p class="text-xs text-muted-foreground mb-2">
+            Vous ne savez pas lesquelles choisir ? Laissez vide : notre chargé d'affaires les définira avec vous lors de l'appel.
+          </p>
+          <B2bQualificationPicker v-model="qualificationsRequises" id-prefix="partner-qualif" />
         </div>
 
         <!-- Drop zone -->

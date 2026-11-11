@@ -2,6 +2,7 @@ import { serverSupabaseServiceRole } from '#supabase/server'
 import { sendEmail } from '../../../utils/email'
 import { b2bRequestSchema, buildTenderLots } from '../../../utils/b2bTender'
 import { escapeHtml as esc } from '../../../utils/contracts'
+import { QUALIFICATION_LABELS } from '../../../../app/utils/qualifications'
 import { findSignedFramework, issuePartnerToken, renderPartnerLinkEmail } from '../../../utils/signature'
 
 export default defineEventHandler(async (event) => {
@@ -35,6 +36,7 @@ export default defineEventHandler(async (event) => {
       nb_logements: data.nb_logements ?? null,
       surface_m2: data.surface_m2 ?? null,
       calendrier_souhaite: data.calendrier_souhaite ?? null,
+      qualifications_requises: [...new Set(data.qualifications_requises ?? [])],
       files: data.files,
       contact_name: data.contact_name,
       contact_company: data.contact_company || null,
@@ -106,6 +108,7 @@ export default defineEventHandler(async (event) => {
           ${data.budget_range ? `<tr><td style="padding: 8px 0; color: #64748B;">Budget</td><td style="padding: 8px 0; color: #0F172A;">${budgetLabel}</td></tr>` : ''}
           ${data.certification_number ? `<tr><td style="padding: 8px 0; color: #64748B;">N° certification</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.certification_number ?? '')}</td></tr>` : ''}
           ${data.travaux_suggeres?.length ? `<tr><td style="padding: 8px 0; color: #64748B;">Travaux suggérés</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.travaux_suggeres.join(', '))}</td></tr>` : ''}
+          ${data.qualifications_requises?.length ? `<tr><td style="padding: 8px 0; color: #64748B;">Qualifications demandées</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.qualifications_requises.map(q => QUALIFICATION_LABELS[q] ?? q).join(', '))}</td></tr>` : ''}
           ${data.description ? `<tr><td style="padding: 8px 0; color: #64748B;">Description</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.description ?? '')}</td></tr>` : ''}
           ${lots.length ? `<tr><td style="padding: 8px 0; color: #64748B;">Lots (corps de métier)</td><td style="padding: 8px 0; color: #0F172A;">${lots.map(l => l.category).join(', ')}</td></tr>` : ''}
           <tr><td style="padding: 8px 0; color: #64748B;">Contact</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.contact_name ?? '')}${data.contact_company ? ` (${esc(data.contact_company ?? '')})` : ''}</td></tr>

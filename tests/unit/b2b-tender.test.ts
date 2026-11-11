@@ -22,6 +22,14 @@ describe('b2bRequestSchema', () => {
     expect(r.success).toBe(true)
   })
 
+  it('qualifications_requises : valeurs du catalogue acceptées, valeur libre rejetée, absence acceptée', () => {
+    const desc = { ...base, description: 'Ravalement de façade complet sur bâtiment collectif.' }
+    expect(b2bRequestSchema.safeParse({ ...desc, qualifications_requises: ['rge', 'qualibat'] }).success).toBe(true)
+    expect(b2bRequestSchema.safeParse({ ...desc, qualifications_requises: ['rge', 'diplome-maison'] }).success).toBe(false)
+    expect(b2bRequestSchema.safeParse(desc).success).toBe(true)
+    expect(b2bRequestSchema.safeParse({ ...desc, qualifications_requises: null }).success).toBe(true)
+  })
+
   it('partenariat régulier sans description → accepté (étape 3 sautée)', () => {
     const r = b2bRequestSchema.safeParse({ ...base, need_type: 'partenariat_regulier' })
     expect(r.success).toBe(true)
