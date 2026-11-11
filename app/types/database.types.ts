@@ -212,7 +212,6 @@ export type Database = {
           project_location: string | null;
           project_postal_code: string | null;
           qualifications_requises: string[];
-          recommended_pros: string[];
           report_reasons: string[];
           reported_at: string | null;
           reported_count: number;
@@ -248,7 +247,6 @@ export type Database = {
           project_location?: string | null;
           project_postal_code?: string | null;
           qualifications_requises?: string[];
-          recommended_pros?: string[];
           report_reasons?: string[];
           reported_at?: string | null;
           reported_count?: number;
@@ -284,7 +282,6 @@ export type Database = {
           project_location?: string | null;
           project_postal_code?: string | null;
           qualifications_requises?: string[];
-          recommended_pros?: string[];
           report_reasons?: string[];
           reported_at?: string | null;
           reported_count?: number;

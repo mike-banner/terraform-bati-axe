@@ -27,11 +27,10 @@ interface B2bRequest {
   description: string | null
   decision_status: 'confirme' | 'en_attente'
   project_postal_code: string | null
-  // 05.10-08 — Qualification DirCo
+  // Qualification du dossier (appel avec le partenaire)
   qualifications_requises: string[]
   planning_start: string | null
   planning_end: string | null
-  recommended_pros: string[]
   created_at: string
   updated_at: string
   assigned?: { email: string } | null
@@ -42,15 +41,6 @@ interface B2bRequest {
   // 05.21 — verrou juridique
   partner_framework?: { engagement_id: string; signed_at: string } | null
   engagements?: B2bEngagementRow[]
-}
-
-interface B2bPro {
-  id: string
-  company_name: string
-  full_name: string
-  category: string | null
-  canonical_slug: string | null
-  postal_code: string | null
 }
 
 const APPORTEUR_LABELS: Record<string, string> = {
@@ -103,13 +93,11 @@ const STATUS_COLORS: Record<string, string> = {
 
 const requests = ref<B2bRequest[]>([])
 const admins = ref<{ id: string; email: string }[]>([])
-const professionals = ref<B2bPro[]>([])
 const isLoading = ref(true)
 const errorMessage = ref<string | null>(null)
 const statusFilter = ref<string>('all')
 const expandedId = ref<string | null>(null)
 const savingId = ref<string | null>(null)
-const restitutionId = ref<string | null>(null)
 
 // Phase 8 (D-01) — diffusion automatique aux artisans matchés zone × catégorie.
 const diffusingId = ref<string | null>(null)
@@ -158,7 +146,6 @@ interface B2bDraft {
   qualifications: string
   planning_start: string
   planning_end: string
-  recommended: string[]
   decision_status: string
   project_postal_code: string
 }
@@ -177,7 +164,6 @@ function ensureDraft(id: string): B2bDraft {
       qualifications: (r?.qualifications_requises || []).join(', '),
       planning_start: r?.planning_start || '',
       planning_end: r?.planning_end || '',
-      recommended: [...(r?.recommended_pros || [])],
       decision_status: r?.decision_status || 'en_attente',
       project_postal_code: r?.project_postal_code || '',
     }
@@ -196,10 +182,9 @@ async function fetchRequests() {
   isLoading.value = true
   errorMessage.value = null
   try {
-    const data = await $fetch<{ requests: B2bRequest[]; admins: { id: string; email: string }[]; professionals: B2bPro[] }>('/api/v1/admin/b2b-requests')
+    const data = await $fetch<{ requests: B2bRequest[]; admins: { id: string; email: string }[] }>('/api/v1/admin/b2b-requests')
     requests.value = data.requests
     admins.value = data.admins
-    professionals.value = data.professionals || []
     for (const r of data.requests) {
       draft[r.id] = {
         status: r.status,
@@ -208,7 +193,6 @@ async function fetchRequests() {
         qualifications: (r.qualifications_requises || []).join(', '),
         planning_start: r.planning_start || '',
         planning_end: r.planning_end || '',
-        recommended: [...(r.recommended_pros || [])],
         decision_status: r.decision_status || 'en_attente',
         project_postal_code: r.project_postal_code || '',
       }
@@ -241,7 +225,6 @@ function buildPayload(r: B2bRequest): Record<string, any> {
   if (JSON.stringify(quals) !== JSON.stringify(r.qualifications_requises || [])) payload.qualifications_requises = quals
   if (d.planning_start !== (r.planning_start || '')) payload.planning_start = d.planning_start || null
   if (d.planning_end !== (r.planning_end || '')) payload.planning_end = d.planning_end || null
-  if (JSON.stringify(d.recommended) !== JSON.stringify(r.recommended_pros || [])) payload.recommended_pros = d.recommended
   if (d.decision_status !== r.decision_status) payload.decision_status = d.decision_status
   if (d.project_postal_code !== (r.project_postal_code || '')) payload.project_postal_code = d.project_postal_code || null
   return payload
@@ -297,13 +280,6 @@ async function saveChanges(r: B2bRequest) {
   }
 }
 
-function togglePro(r: B2bRequest, proId: string) {
-  const d = ensureDraft(r.id)
-  const idx = d.recommended.indexOf(proId)
-  if (idx >= 0) d.recommended.splice(idx, 1)
-  else if (d.recommended.length < 3) d.recommended.push(proId)
-}
-
 // 05.21 — engagements contractuels
 const eur = (cents: number | null) => cents == null ? '—' : new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(cents / 100)
 const fmtDate = (d: string | null) => d ? new Date(d).toLocaleDateString('fr-FR') : ''
@@ -318,8 +294,6 @@ const ENG_LABELS: Record<string, string> = {
 const linkResult = reactive<Record<string, string>>({})
 const reasonOpenId = ref<string | null>(null) // engagement dont le motif de dérogation est en saisie
 const engReason = reactive<Record<string, string>>({})
-const restitutionOverrideId = ref<string | null>(null)
-const restitutionReason = reactive<Record<string, string>>({})
 
 async function resendPartnerLink(r: B2bRequest) {
   delete linkResult[r.id]
@@ -339,23 +313,6 @@ async function advanceEngagement(e: B2bEngagementRow, status: 'deposit_paid' | '
     await fetchRequests()
   } catch (err: any) {
     errorMessage.value = err.data?.statusMessage || err.message || 'Mise à jour impossible.'
-  }
-}
-
-async function sendRestitution(r: B2bRequest, overrideReason?: string) {
-  restitutionId.value = r.id
-  errorMessage.value = null
-  try {
-    await $fetch(`/api/v1/admin/b2b-requests/${r.id}/restitution`, {
-      method: 'POST',
-      body: overrideReason ? { override_unsigned_framework: true, override_reason: overrideReason } : undefined,
-    })
-    restitutionOverrideId.value = null
-    await fetchRequests()
-  } catch (err: any) {
-    errorMessage.value = err.data?.statusMessage || err.message || 'Erreur d\'envoi des propositions.'
-  } finally {
-    restitutionId.value = null
   }
 }
 
@@ -637,35 +594,6 @@ function pipelineLabel(status: string): string {
               </div>
             </div>
 
-            <!-- Picker sous-traitants (max 3) -->
-            <div class="mt-3">
-              <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">
-                Sous-traitants recommandés ({{ ensureDraft(r.id).recommended.length }}/3) — restitution au donneur d'ordres uniquement
-              </label>
-              <div v-if="professionals.length === 0" class="text-xs text-muted-foreground border border-dashed border-border rounded-sm px-3 py-2">
-                Aucun pro vérifié disponible pour la sélection.
-              </div>
-              <div v-else class="max-h-44 overflow-y-auto border border-border rounded-sm divide-y divide-border">
-                <label
-                  v-for="p in professionals"
-                  :key="p.id"
-                  class="flex items-center gap-2.5 px-3 py-2 hover:bg-muted/50 cursor-pointer transition-colors"
-                  :class="{
-                    'opacity-40 pointer-events-none': !ensureDraft(r.id).recommended.includes(p.id) && ensureDraft(r.id).recommended.length >= 3
-                  }"
-                >
-                  <input
-                    type="checkbox"
-                    :checked="ensureDraft(r.id).recommended.includes(p.id)"
-                    @change="togglePro(r, p.id)"
-                    class="accent-[#EA580C] shrink-0"
-                  />
-                  <span class="text-sm text-foreground truncate">{{ p.company_name || p.full_name }}</span>
-                  <span v-if="p.category" class="text-[10px] text-muted-foreground ml-auto shrink-0">{{ p.category }}</span>
-                </label>
-              </div>
-            </div>
-
             <!-- 05.21 — Engagements contractuels -->
             <div data-testid="admin-engagements" class="border-t border-border pt-4 space-y-3">
               <p class="text-[10px] uppercase tracking-wide text-muted-foreground">Engagements contractuels</p>
@@ -788,26 +716,6 @@ function pipelineLabel(status: string): string {
               </p>
             </div>
 
-            <!-- Restitution au donneur d'ordres -->
-            <div class="flex items-center justify-between gap-3 mt-4 flex-wrap">
-              <p class="text-[11px] text-muted-foreground">
-                Statut : {{ STATUS_LABELS[r.status] }}
-                <span v-if="r.recommended_pros && r.recommended_pros.length"> — {{ r.recommended_pros.length }} pro(s) recommandé(s)</span>
-              </p>
-              <button
-                @click="r.partner_framework ? sendRestitution(r) : (restitutionOverrideId = r.id)"
-                :disabled="restitutionId === r.id || ensureDraft(r.id).recommended.length === 0"
-                class="inline-flex items-center h-9 px-4 text-sm font-medium rounded-sm border border-safety text-safety hover:bg-safety/10 transition-colors disabled:opacity-40"
-              >
-                <svg v-if="restitutionId === r.id" class="w-4 h-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-                Envoyer les propositions au donneur d'ordres
-              </button>
-            </div>
-            <div v-if="restitutionOverrideId === r.id && !r.partner_framework" class="mt-2 p-3 border border-amber-500/30 bg-amber-500/10 rounded-sm space-y-2">
-              <p class="text-sm text-amber-500">Le partenaire n'a pas signé la convention. Restituer quand même ?</p>
-              <textarea v-model="restitutionReason[r.id]" rows="2" minlength="10" maxlength="500" required placeholder="Motif de la dérogation" aria-label="Motif de la dérogation" class="w-full px-2.5 py-2 text-sm rounded-sm border border-border bg-background" />
-              <button type="button" :disabled="(restitutionReason[r.id] || '').trim().length < 10 || restitutionId === r.id" class="h-9 px-4 text-sm font-medium rounded-sm bg-safety text-white disabled:opacity-40" @click="sendRestitution(r, (restitutionReason[r.id] || '').trim())">Restituer avec dérogation</button>
-            </div>
           </div>
 
         </div>
