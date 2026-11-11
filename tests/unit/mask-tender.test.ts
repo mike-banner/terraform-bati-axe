@@ -40,7 +40,6 @@ describe('maskTender', () => {
     expect(result.budget_range).toBe('10000-20000')
     expect(result.decision_status).toBe('confirme')
     expect(result.created_at).toBe('2026-09-01T10:00:00.000Z')
-    expect(result.project_location).toBe('Carrières-sous-Poissy')
     expect(result.description.endsWith('…')).toBe(true)
     expect(result.description.length).toBe(201)
   })
@@ -55,6 +54,7 @@ describe('maskTender', () => {
     expect(result.contact_phone).toBe('06 98 76 54 32')
     expect(result.contact_email).toBe('marc.petit@example.com')
     expect(result.description).toBe(baseLot.b2b_requests!.description)
+    expect(result.project_location).toBe('Carrières-sous-Poissy')
   })
 
   it('ne retourne jamais postal_code quand claimed=false (ADR-004, géolocalisant)', () => {
@@ -65,6 +65,11 @@ describe('maskTender', () => {
   it('claimed=true expose postal_code', () => {
     const result = maskTender(baseLot, true)
     expect(result.postal_code).toBe('78955')
+  })
+
+  it('ne retourne jamais project_location quand claimed=false (texte libre pouvant contenir une adresse précise)', () => {
+    const result = maskTender(baseLot, false)
+    expect(result.project_location).toBeUndefined()
   })
 
   it('description courte (<200 caractères) non suffixée par "…"', () => {
