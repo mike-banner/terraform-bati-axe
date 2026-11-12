@@ -473,7 +473,7 @@ function pipelineLabel(status: string): string {
 
           <!-- Pièces jointes -->
           <div v-if="r.files.length > 0">
-            <p class="text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1.5">
               Pièces jointes ({{ r.files.length }})
             </p>
             <div class="flex flex-wrap gap-2">
@@ -493,7 +493,7 @@ function pipelineLabel(status: string): string {
 
           <!-- Besoin décrit par le partenaire -->
           <div v-if="r.description" class="mb-3">
-            <p class="text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Besoin décrit par le partenaire</p>
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1.5">Besoin décrit par le partenaire</p>
             <p class="text-sm text-foreground whitespace-pre-line">{{ r.description }}</p>
           </div>
 
@@ -609,7 +609,7 @@ function pipelineLabel(status: string): string {
 
             <!-- 05.21 — Engagements contractuels -->
             <div data-testid="admin-engagements" class="border-t border-border pt-4 space-y-3">
-              <p class="text-[10px] uppercase tracking-wide text-muted-foreground">Engagements contractuels</p>
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-foreground">Engagements contractuels</p>
               <div class="flex items-center gap-2 flex-wrap text-sm">
                 <template v-if="r.partner_framework">
                   <span class="text-[11px] px-2 py-1 rounded-sm border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">Convention signée le {{ fmtDate(r.partner_framework.signed_at) }}</span>
