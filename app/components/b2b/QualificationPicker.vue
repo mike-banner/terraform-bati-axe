@@ -34,6 +34,7 @@ const prefix = computed(() => props.idPrefix || 'qualif')
           :checked="modelValue.includes(opt.value)"
           @change="toggle(opt.value)"
         >
+        <span v-if="modelValue.includes(opt.value)" aria-hidden="true">✓</span>
         {{ opt.label }}
       </label>
     </div>

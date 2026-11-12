@@ -319,7 +319,7 @@ async function submitRequest() {
         <!-- Location -->
         <div class="mb-4 grid sm:grid-cols-[1fr_140px] gap-3">
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5">Adresse ou département du projet</label>
+            <label class="block text-sm font-semibold text-foreground mb-1.5">Adresse ou département du projet</label>
             <input
               v-model="projectLocation"
               type="text"
@@ -330,7 +330,7 @@ async function submitRequest() {
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5">Code postal du chantier *</label>
+            <label class="block text-sm font-semibold text-foreground mb-1.5">Code postal du chantier *</label>
             <input
               v-model="projectPostalCode"
               type="text"
@@ -347,7 +347,7 @@ async function submitRequest() {
 
         <!-- Description obligatoire (TEND-01) -->
         <div class="mb-4">
-          <label class="block text-sm font-medium text-foreground mb-1.5">Décrivez votre besoin *</label>
+          <label class="block text-sm font-semibold text-foreground mb-1.5">Décrivez votre besoin *</label>
           <textarea
             v-model="description"
             rows="4"
@@ -365,7 +365,7 @@ async function submitRequest() {
 
         <!-- Sélecteur multi-lots (syndic uniquement, TEND-05) -->
         <div v-if="isSyndic" class="mb-4">
-          <label class="block text-sm font-medium text-foreground mb-1.5">Corps de métier concernés (parties communes)</label>
+          <label class="block text-sm font-semibold text-foreground mb-1.5">Corps de métier concernés (parties communes)</label>
           <div class="flex flex-wrap gap-2">
             <button
               v-for="opt in LOT_CATEGORY_OPTIONS"
@@ -388,7 +388,7 @@ async function submitRequest() {
         <!-- 05.21 — Travaux attendus par lot : lus par l'artisan avant de s'engager -->
         <div v-if="isSyndic && lotsCategories.length" class="mb-4 space-y-3" data-testid="lots-details">
           <div v-for="c in lotsCategories" :key="c">
-            <label :for="`lot-detail-${c}`" class="block text-sm font-medium text-foreground mb-1.5">
+            <label :for="`lot-detail-${c}`" class="block text-sm font-semibold text-foreground mb-1.5">
               Travaux attendus — {{ LOT_CATEGORY_OPTIONS.find(o => o.value === c)?.label }} *
             </label>
             <textarea
@@ -406,17 +406,17 @@ async function submitRequest() {
         <!-- 05.21 — Infos chantier (facultatives) -->
         <div v-if="isSyndic" class="mb-4 grid sm:grid-cols-3 gap-3">
           <div>
-            <label for="nb-logements" class="block text-sm font-medium text-foreground mb-1.5">Nombre de logements</label>
+            <label for="nb-logements" class="block text-sm font-semibold text-foreground mb-1.5">Nombre de logements</label>
             <input id="nb-logements" v-model.number="nbLogements" type="number" min="1" max="9999" step="1" inputmode="numeric"
               class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground">
           </div>
           <div>
-            <label for="surface-m2" class="block text-sm font-medium text-foreground mb-1.5">Surface concernée (m²)</label>
+            <label for="surface-m2" class="block text-sm font-semibold text-foreground mb-1.5">Surface concernée (m²)</label>
             <input id="surface-m2" v-model.number="surfaceM2" type="number" min="1" max="1000000" step="1" inputmode="numeric"
               class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground">
           </div>
           <div>
-            <label for="calendrier" class="block text-sm font-medium text-foreground mb-1.5">Calendrier souhaité</label>
+            <label for="calendrier" class="block text-sm font-semibold text-foreground mb-1.5">Calendrier souhaité</label>
             <select id="calendrier" v-model="calendrier" class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground">
               <option value="">Non précisé</option>
               <option v-for="o in CALENDRIER_OPTIONS" :key="o.value" :value="o.value">{{ o.label }}</option>
@@ -427,7 +427,7 @@ async function submitRequest() {
         <!-- Diagnostiqueur : n° certification + types de travaux suggérés -->
         <template v-if="isDiagnostiqueur">
           <div class="mb-4">
-            <label class="block text-sm font-medium text-foreground mb-1.5">Numéro de certification</label>
+            <label class="block text-sm font-semibold text-foreground mb-1.5">Numéro de certification</label>
             <input
               v-model="certificationNumber"
               type="text"
@@ -439,7 +439,7 @@ async function submitRequest() {
             <p v-if="certificationNumber && !certificationOk" class="mt-1 text-xs text-destructive">Lettres, chiffres, espaces, « / », « _ » et « - » uniquement.</p>
           </div>
           <div class="mb-6">
-            <label class="block text-sm font-medium text-foreground mb-1.5">Travaux suggérés par votre rapport DPE</label>
+            <label class="block text-sm font-semibold text-foreground mb-1.5">Travaux suggérés par votre rapport DPE</label>
             <div class="flex flex-wrap gap-2">
               <button
                 v-for="opt in TRAVAUX_OPTIONS"
@@ -459,7 +459,7 @@ async function submitRequest() {
 
         <!-- Budget -->
         <div class="mb-6">
-          <label class="block text-sm font-medium text-foreground mb-1.5">Budget estimé des travaux</label>
+          <label class="block text-sm font-semibold text-foreground mb-1.5">Budget estimé des travaux</label>
           <select
             v-model="budgetRange"
             class="h-10 px-3 pr-8 border border-border rounded-sm text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer"
@@ -471,7 +471,7 @@ async function submitRequest() {
 
         <!-- Qualifications exigées (facultatif, avec glossaire) -->
         <div class="mb-6" data-testid="partner-qualifications">
-          <p class="block text-sm font-medium text-foreground mb-1">Qualifications exigées pour les artisans <span class="text-muted-foreground font-normal">(facultatif)</span></p>
+          <p class="block text-sm font-semibold text-foreground mb-1">Qualifications exigées pour les artisans <span class="text-muted-foreground font-normal">(facultatif)</span></p>
           <p class="text-xs text-muted-foreground mb-2">
             Vous ne savez pas lesquelles choisir ? Laissez vide : notre chargé d'affaires les définira avec vous lors de l'appel.
           </p>
@@ -524,22 +524,22 @@ async function submitRequest() {
 
         <div class="space-y-4">
           <div>
-            <label for="contact-name" class="block text-sm font-medium text-foreground mb-1.5">{{ contactLabels.name }} *</label>
+            <label for="contact-name" class="block text-sm font-semibold text-foreground mb-1.5">{{ contactLabels.name }} *</label>
             <input id="contact-name" v-model="contactName" type="text" required minlength="2" maxlength="100" :pattern="PERSON_NAME_PATTERN" autocomplete="name" :placeholder="contactLabels.placeholder" class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             <p v-if="contactName && !contactNameOk" class="mt-1 text-xs text-destructive">Lettres, espaces, apostrophes et tirets uniquement (2 caractères minimum).</p>
           </div>
           <div>
-            <label for="contact-company" class="block text-sm font-medium text-foreground mb-1.5">{{ contactLabels.company }}</label>
+            <label for="contact-company" class="block text-sm font-semibold text-foreground mb-1.5">{{ contactLabels.company }}</label>
             <input id="contact-company" v-model="contactCompany" type="text" maxlength="200" :pattern="COMPANY_NAME_PATTERN" autocomplete="organization" :placeholder="contactLabels.companyPlaceholder" class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             <p v-if="contactCompany && !contactCompanyOk" class="mt-1 text-xs text-destructive">Caractères non autorisés dans le nom de la structure.</p>
           </div>
           <div>
-            <label for="contact-phone" class="block text-sm font-medium text-foreground mb-1.5">Téléphone direct *</label>
+            <label for="contact-phone" class="block text-sm font-semibold text-foreground mb-1.5">Téléphone direct *</label>
             <input id="contact-phone" v-model="contactPhone" type="tel" inputmode="tel" required maxlength="20" :pattern="PHONE_FR_PATTERN" autocomplete="tel" placeholder="06 12 34 56 78 ou +33 6 12 34 56 78" class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             <p v-if="contactPhone && !contactPhoneOk" class="mt-1 text-xs text-destructive">Numéro invalide : chiffres uniquement, 10 chiffres (06 12 34 56 78) ou avec indicatif (+33 6 12 34 56 78).</p>
           </div>
           <div>
-            <label for="contact-email" class="block text-sm font-medium text-foreground mb-1.5">Adresse e-mail professionnelle *</label>
+            <label for="contact-email" class="block text-sm font-semibold text-foreground mb-1.5">Adresse e-mail professionnelle *</label>
             <input id="contact-email" v-model="contactEmail" type="email" inputmode="email" required maxlength="254" autocomplete="email" placeholder="marie@cabinet-syndic.fr" class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             <p v-if="contactEmail && !contactEmailOk" class="mt-1 text-xs text-destructive">Adresse e-mail invalide.</p>
           </div>

@@ -457,16 +457,16 @@ function pipelineLabel(status: string): string {
           <!-- Coordonnées -->
           <div class="grid sm:grid-cols-3 gap-3 text-sm">
             <div>
-              <p class="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">Contact</p>
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1">Contact</p>
               <p class="text-foreground font-medium">{{ r.contact_name }}</p>
               <p class="text-xs text-muted-foreground mt-0.5">{{ r.contact_company || '—' }}</p>
             </div>
             <div>
-              <p class="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">Téléphone</p>
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1">Téléphone</p>
               <a :href="`tel:${r.contact_phone}`" class="text-safety hover:underline">{{ r.contact_phone }}</a>
             </div>
             <div>
-              <p class="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">Email</p>
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1">Email</p>
               <a :href="`mailto:${r.contact_email}`" class="text-safety hover:underline break-all">{{ r.contact_email }}</a>
             </div>
           </div>
@@ -500,7 +500,7 @@ function pipelineLabel(status: string): string {
           <!-- Gestion pipeline -->
           <div class="grid sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Statut pipeline <span class="text-destructive" aria-hidden="true">*</span></label>
+              <label class="block text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1.5">Statut pipeline <span class="text-destructive" aria-hidden="true">*</span></label>
               <select
                 v-model="ensureDraft(r.id).status"
                 required
@@ -513,7 +513,7 @@ function pipelineLabel(status: string): string {
               </select>
             </div>
             <div>
-              <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Chargé d'affaires <span class="text-destructive" aria-hidden="true">*</span></label>
+              <label class="block text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1.5">Chargé d'affaires <span class="text-destructive" aria-hidden="true">*</span></label>
               <select
                 v-model="ensureDraft(r.id).assigned_to"
                 required
@@ -528,7 +528,7 @@ function pipelineLabel(status: string): string {
 
           <!-- Notes -->
           <div>
-            <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Notes internes</label>
+            <label class="block text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1.5">Notes internes</label>
             <textarea
               v-model="ensureDraft(r.id).notes"
               rows="2"
@@ -540,24 +540,24 @@ function pipelineLabel(status: string): string {
 
           <!-- Qualification du dossier : à remplir avec le partenaire lors du premier appel -->
           <div class="border-t border-border pt-4">
-            <p class="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">Qualification du dossier</p>
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1">Qualification du dossier</p>
             <p class="text-[11px] text-muted-foreground mb-3">
               À compléter avec le partenaire lors du premier appel. Ces informations sont affichées aux artisans sur l'appel d'offres.
             </p>
 
             <div class="space-y-3">
               <div>
-                <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Qualifications requises</label>
+                <label class="block text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1.5">Qualifications requises</label>
                 <B2bQualificationPicker v-model="ensureDraft(r.id).qualifications" :id-prefix="`admin-qualif-${r.id}`" />
               </div>
               <div>
-                <p class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">
+                <p class="block text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1.5">
                   Planning indicatif
                   <span v-if="r.calendrier_souhaite" class="normal-case tracking-normal"> — souhait du partenaire : {{ CALENDRIER_LABELS[r.calendrier_souhaite] ?? r.calendrier_souhaite }}</span>
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Début approximatif</label>
+                    <label class="block text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1.5">Début approximatif</label>
                     <input
                       v-model="ensureDraft(r.id).planning_start"
                       type="date"
@@ -565,7 +565,7 @@ function pipelineLabel(status: string): string {
                     />
                   </div>
                   <div>
-                    <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Fin approximative</label>
+                    <label class="block text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1.5">Fin approximative</label>
                     <input
                       v-model="ensureDraft(r.id).planning_end"
                       type="date"
@@ -579,7 +579,7 @@ function pipelineLabel(status: string): string {
 
             <div class="grid sm:grid-cols-2 gap-3 mt-3">
               <div>
-                <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Statut de la décision <span class="text-destructive" aria-hidden="true">*</span></label>
+                <label class="block text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1.5">Statut de la décision <span class="text-destructive" aria-hidden="true">*</span></label>
                 <select
                   v-model="ensureDraft(r.id).decision_status"
                   class="w-full h-9 px-2.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:border-safety"
@@ -591,7 +591,7 @@ function pipelineLabel(status: string): string {
                 </p>
               </div>
               <div>
-                <label class="block text-[10px] uppercase tracking-wide text-muted-foreground mb-1.5">Code postal du projet <span class="text-destructive" aria-hidden="true">*</span></label>
+                <label class="block text-[11px] font-semibold uppercase tracking-wide text-foreground mb-1.5">Code postal du projet <span class="text-destructive" aria-hidden="true">*</span></label>
                 <input
                   v-model="ensureDraft(r.id).project_postal_code"
                   type="text"
