@@ -106,7 +106,10 @@ const admins = ref<{ id: string; email: string }[]>([])
 const isLoading = ref(true)
 const errorMessage = ref<string | null>(null)
 const statusFilter = ref<string>('all')
+const props = defineProps<{ focusRequestId?: string | null }>()
+const { data: alertsData } = useB2bAlerts()
 const expandedId = ref<string | null>(null)
+watch(() => props.focusRequestId, (id) => { if (id) expandedId.value = id }, { immediate: true })
 const savingId = ref<string | null>(null)
 
 // Phase 8 (D-01) — diffusion automatique aux artisans matchés zone × catégorie.
@@ -397,6 +400,12 @@ function pipelineLabel(status: string): string {
               <span v-if="r.contact_company" class="text-xs text-muted-foreground">{{ r.contact_company }}</span>
               <span class="text-[10px] px-1.5 py-0.5 rounded-sm border border-border text-muted-foreground">{{ APPORTEUR_LABELS[r.apporteur_type] }}</span>
               <span
+                v-if="(alertsData.counts.by_request[r.id] ?? 0) > 0"
+                data-testid="todo-badge"
+                class="text-[10px] px-1.5 py-0.5 rounded-sm border border-amber-500/40 bg-amber-500/10 text-amber-500 font-semibold"
+                :title="`${alertsData.counts.by_request[r.id]} alerte(s) active(s)`"
+              >À traiter</span>
+              <span
                 v-if="(r.reported_count || 0) > 0"
                 class="text-[10px] px-1.5 py-0.5 rounded-sm border border-destructive/40 bg-destructive/10 text-destructive font-semibold"
                 :title="(r.report_reasons || []).join(' · ')"
@@ -422,6 +431,12 @@ function pipelineLabel(status: string): string {
 
         <!-- Card body (détail) -->
         <div v-if="expandedId === r.id" class="border-t border-border px-4 py-4 space-y-4">
+          <!-- Suivi par appel (D-25) -->
+          <div class="space-y-2">
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-foreground">Suivi par appel</p>
+            <AdminFollowupPanel :request-id="r.id" />
+          </div>
+
           <!-- Signalement artisan (D-09/D-10) -->
           <div v-if="(r.reported_count || 0) > 0" class="p-3 border border-destructive/30 bg-destructive/5 rounded-sm">
             <p class="text-[10px] uppercase tracking-wide text-destructive font-semibold mb-1.5">

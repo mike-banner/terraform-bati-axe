@@ -30,6 +30,7 @@ interface Payload {
 }
 
 const { data, refresh, error: loadError } = useFetch<Payload>('/api/v1/admin/commissions', { server: false })
+const { data: alertsData } = useB2bAlerts()
 
 const eur = (c: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(c / 100)
 const fmtDay = (d: string | null) => d ? new Date(d.length === 10 ? d + 'T12:00:00Z' : d).toLocaleDateString('fr-FR', { timeZone: 'UTC' }) : '—'
@@ -83,6 +84,7 @@ async function call(path: string, body: Record<string, unknown>, ok: (res: any) 
     resultMessage.value = ok(res)
     openPanel.value = null
     await refresh()
+    await refreshNuxtData('b2b-alerts')
   } catch (err: any) {
     errorMessage.value = err?.data?.statusMessage || 'Action impossible.'
   } finally {
@@ -164,7 +166,7 @@ const overdue = (i: Installment) => !i.validated_at && Boolean(i.due_on) && (i.d
           <tbody>
             <template v-for="row in data.rows" :key="row.engagement_id">
               <tr class="align-top border-b border-border">
-                <td class="py-2 pr-3"><span class="font-semibold">{{ row.request_ref }}</span><br>{{ row.lot_label }}</td>
+                <td class="py-2 pr-3"><span class="font-semibold">{{ row.request_ref }}</span><br>{{ row.lot_label }}<span v-if="(alertsData.counts.by_engagement[row.engagement_id] ?? 0) > 0" data-testid="todo-badge" class="block mt-1 px-1.5 py-0.5 rounded-sm border border-amber-500/40 bg-amber-500/10 text-amber-500 font-semibold">À traiter</span></td>
                 <td class="pr-3">{{ row.partner_label }}</td>
                 <td class="pr-3">{{ row.pro_company }}</td>
                 <td class="pr-3">{{ eur(row.base_cents) }}</td>

@@ -12,6 +12,7 @@ async function signOut() {
 const props = defineProps<{
   activeTab: string
   pendingCount?: number
+  alertCount?: number
 }>()
 
 const emit = defineEmits<{
@@ -24,6 +25,12 @@ const navItems = computed(() => [
     label: 'Vue d\'ensemble',
     icon: 'grid',
     badge: null,
+  },
+  {
+    key: 'alertes',
+    label: 'Alertes',
+    icon: 'clock',
+    badge: props.alertCount && props.alertCount > 0 ? props.alertCount : null,
   },
   {
     key: 'pending',

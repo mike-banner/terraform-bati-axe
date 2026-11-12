@@ -13,7 +13,14 @@ const user = useSupabaseUser()
 const isLoading = ref(true)
 const actionLoading = ref<string | null>(null)
 const errorMessage = ref<string | null>(null)
-const activeTab = ref<'overview' | 'pending' | 'all' | 'egb' | 'projects' | 'realisations' | 'b2b' | 'commissions' | 'kpi' | 'audit'>('overview')
+const activeTab = ref<'overview' | 'alertes' | 'pending' | 'all' | 'egb' | 'projects' | 'realisations' | 'b2b' | 'commissions' | 'kpi' | 'audit'>('overview')
+
+const { data: alertsData } = useB2bAlerts()
+const focusRequestId = ref<string | null>(null)
+function openRequest(id: string) {
+  focusRequestId.value = id
+  activeTab.value = 'b2b'
+}
 
 const professionals = ref<Professional[]>([])
 const projects = ref<Project[]>([])
@@ -170,6 +177,7 @@ async function toggleShowcase(projectId: string, isShowcased: boolean) {
     v-else
     :active-tab="activeTab"
     :pending-count="pendingCount"
+    :alert-count="alertsData?.counts.total ?? 0"
     @navigate="activeTab = $event as any"
   >
     <!-- Error -->
@@ -185,6 +193,9 @@ async function toggleShowcase(projectId: string, isShowcased: boolean) {
       :projects="projects"
       :is-loading="isLoading"
     />
+
+    <!-- Tab: Alertes (05.23) -->
+    <AdminAlertsTab v-else-if="activeTab === 'alertes'" @open-request="openRequest" />
 
     <!-- Tab: Pending -->
     <AdminPendingTab
@@ -238,7 +249,7 @@ async function toggleShowcase(projectId: string, isShowcased: boolean) {
     />
 
     <!-- Tab: Dossiers B2B -->
-    <AdminB2bTab v-else-if="activeTab === 'b2b'" />
+    <AdminB2bTab v-else-if="activeTab === 'b2b'" :focus-request-id="focusRequestId" />
 
     <!-- Tab: Commissions en cours -->
     <AdminCommissionsTab v-else-if="activeTab === 'commissions'" />
