@@ -27,6 +27,8 @@ export const b2bRequestSchema = z.object({
   // 05.21 — travaux attendus par lot (clé = corps de métier) et infos structurées du chantier.
   lots_details: z.record(z.string().max(30), z.string().max(1000)).optional().nullable(),
   nb_logements: z.number().int().min(1).max(9999).optional().nullable(),
+  // 05.23 D-14 : demande pour soi-même ou pour un tiers. Facultatif tant que le formulaire ne pose pas la question (règle obligatoire au plan 05).
+  on_behalf_of: z.enum(['self', 'third_party']).nullish(),
   surface_m2: z.number().int().min(1).max(1000000).optional().nullable(),
   calendrier_souhaite: z.enum(B2B_CALENDRIERS).optional().nullable(),
   // Qualifications exigées (facultatif : le chargé d'affaires peut les compléter à l'appel).

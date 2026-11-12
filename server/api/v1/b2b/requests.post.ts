@@ -34,6 +34,8 @@ export default defineEventHandler(async (event) => {
       certification_number: data.certification_number || null,
       travaux_suggeres: data.travaux_suggeres || null,
       nb_logements: data.nb_logements ?? null,
+      // D-14 : défaut « soi-même » tant que le formulaire ne pose pas la question (plan 05 la rend obligatoire).
+      on_behalf_of: data.on_behalf_of ?? (data.need_type === 'projet_immediat' ? 'self' : null),
       surface_m2: data.surface_m2 ?? null,
       calendrier_souhaite: data.calendrier_souhaite ?? null,
       qualifications_requises: [...new Set(data.qualifications_requises ?? [])],
