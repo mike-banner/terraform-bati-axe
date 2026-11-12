@@ -1,6 +1,7 @@
 // ─── B2B Request types ────────────────────────────────────────────────────────
 
 import { CATEGORY_LABELS } from '~/types/admin'
+import type { EngagementStatus, MovementType } from '~/utils/b2bCommissionRules'
 
 export type B2bApporteurType = 'architecte' | 'bet' | 'agence_immo' | 'syndic' | 'diagnostiqueur' | 'autre'
 export type B2bTravauxSuggere = 'isolation' | 'chauffage' | 'electricite' | 'toiture'
@@ -12,8 +13,9 @@ export type B2bDecisionStatus = 'confirme' | 'en_attente'
 export type B2bLotCategory = 'maconnerie' | 'toiture' | 'electricite' | 'plomberie' | 'peinture' | 'isolation'
 export type B2bTenderLotStatus = 'open' | 'claimed' | 'closed'
 
-export type B2bEngagementStatus = 'signed' | 'not_awarded' | 'quote_declared' | 'quote_confirmed' | 'deposit_paid' | 'invoiced'
-export interface B2bEngagementRow { id: string; lot_id: string; lot_category: string | null; pro_company: string | null; status: B2bEngagementStatus; declared_amount_cents: number | null; declared_at: string | null; confirmed_amount_cents: number | null; confirmed_at: string | null; commission_cents: number | null; signed_at: string; reminder_30_sent_at: string | null; reminder_60_sent_at: string | null; deposit_paid_at: string | null; invoiced_at: string | null }
+export type B2bEngagementStatus = EngagementStatus
+export interface B2bEngagementRow { id: string; lot_id: string; lot_category: string | null; pro_company: string | null; status: B2bEngagementStatus; selected_at: string | null; not_awarded_reason: string | null; confirmed_amount_cents: number | null; commission_cents: number | null; signed_at: string }
+export interface B2bCommissionMovementRow { occurred_on: string; created_at: string; type: MovementType; amount_cents: number; operator: string; lot_category: string | null; pro_company: string | null }
 
 export interface B2bTenderLot {
   id: string
@@ -48,6 +50,7 @@ export interface B2bRequest {
   project_postal_code: string | null
   partner_framework?: { engagement_id: string; signed_at: string } | null
   engagements?: B2bEngagementRow[]
+  commission_movements?: B2bCommissionMovementRow[]
   contact_name: string
   contact_company: string | null
   contact_phone: string

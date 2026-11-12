@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { B2bEngagementRow } from '~/types/b2b'
+import type { B2bEngagementRow, B2bCommissionMovementRow } from "~/types/b2b"
+import { ENGAGEMENT_STATUS_LABELS_ADMIN, NOT_AWARDED_REASON_LABELS, MOVEMENT_TYPE_LABELS, type EngagementStatus } from '~/utils/b2bCommissionRules'
 
 interface B2bFile {
   file_key: string
@@ -42,6 +43,7 @@ interface B2bRequest {
   // 05.21 — verrou juridique
   partner_framework?: { engagement_id: string; signed_at: string } | null
   engagements?: B2bEngagementRow[]
+  commission_movements?: B2bCommissionMovementRow[]
 }
 
 const APPORTEUR_LABELS: Record<string, string> = {
@@ -291,17 +293,7 @@ async function saveChanges(r: B2bRequest) {
 // 05.21 — engagements contractuels
 const eur = (cents: number | null) => cents == null ? '—' : new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(cents / 100)
 const fmtDate = (d: string | null) => d ? new Date(d).toLocaleDateString('fr-FR') : ''
-const ENG_LABELS: Record<string, string> = {
-  signed: 'Avenant signé — devis à déclarer',
-  not_awarded: 'Chantier non obtenu (déclaré par l\'artisan)',
-  quote_declared: 'Devis déclaré — attente partenaire',
-  quote_confirmed: 'Devis confirmé par le partenaire',
-  deposit_paid: 'Acompte versé',
-  invoiced: 'Facturé',
-}
 const linkResult = reactive<Record<string, string>>({})
-const reasonOpenId = ref<string | null>(null) // engagement dont le motif de dérogation est en saisie
-const engReason = reactive<Record<string, string>>({})
 
 async function resendPartnerLink(r: B2bRequest) {
   delete linkResult[r.id]
@@ -310,17 +302,6 @@ async function resendPartnerLink(r: B2bRequest) {
     linkResult[r.id] = 'Lien de signature envoyé au partenaire.'
   } catch (err: any) {
     linkResult[r.id] = err.data?.statusMessage || 'Envoi impossible.'
-  }
-}
-
-async function advanceEngagement(e: B2bEngagementRow, status: 'deposit_paid' | 'invoiced', reason?: string) {
-  errorMessage.value = null
-  try {
-    await $fetch(`/api/v1/admin/engagements/${e.id}`, { method: 'PATCH', body: reason ? { status, reason } : { status } })
-    reasonOpenId.value = null
-    await fetchRequests()
-  } catch (err: any) {
-    errorMessage.value = err.data?.statusMessage || err.message || 'Mise à jour impossible.'
   }
 }
 
@@ -627,7 +608,7 @@ function pipelineLabel(status: string): string {
                 <table class="w-full text-xs">
                   <thead>
                     <tr class="text-left text-[10px] uppercase tracking-wide text-muted-foreground">
-                      <th class="py-1 pr-3">Artisan</th><th class="pr-3">Lot</th><th class="pr-3">Statut</th><th class="pr-3">Déclaré HT</th><th class="pr-3">Confirmé HT</th><th class="pr-3">Commission HT</th><th class="pr-3">Relances</th><th>Actions</th>
+                      <th class="py-1 pr-3">Artisan</th><th class="pr-3">Lot</th><th class="pr-3">Statut</th><th class="pr-3">Retenu le</th><th class="pr-3">Montant HT confirmé</th><th class="pr-3">Commission HT</th><th>Avenant</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -635,33 +616,41 @@ function pipelineLabel(status: string): string {
                       <td class="py-2 pr-3">{{ e.pro_company || '—' }}</td>
                       <td class="pr-3">{{ e.lot_category || '—' }}</td>
                       <td class="pr-3">
-                        <span :class="e.status === 'not_awarded' ? 'px-1.5 py-0.5 rounded-sm border border-amber-500/30 bg-amber-500/10 text-amber-500' : ''">{{ ENG_LABELS[e.status] ?? e.status }}</span>
+                        <span :class="['not_awarded', 'contested'].includes(e.status) ? 'px-1.5 py-0.5 rounded-sm border border-amber-500/30 bg-amber-500/10 text-amber-500' : ''">{{ ENGAGEMENT_STATUS_LABELS_ADMIN[e.status as EngagementStatus] ?? e.status }}</span>
+                        <span v-if="e.status === 'not_awarded' && e.not_awarded_reason" class="block text-muted-foreground">{{ NOT_AWARDED_REASON_LABELS[e.not_awarded_reason] ?? '' }}</span>
                       </td>
-                      <td class="pr-3">{{ eur(e.declared_amount_cents) }}</td>
-                      <td class="pr-3">
-                        {{ eur(e.confirmed_amount_cents) }}
-                        <span v-if="e.confirmed_amount_cents != null && e.declared_amount_cents != null && e.confirmed_amount_cents !== e.declared_amount_cents" class="ml-1 px-1.5 py-0.5 rounded-sm border border-destructive/40 bg-destructive/10 text-destructive font-semibold">Écart</span>
-                      </td>
+                      <td class="pr-3">{{ fmtDate(e.selected_at) || '—' }}</td>
+                      <td class="pr-3">{{ eur(e.confirmed_amount_cents) }}</td>
                       <td class="pr-3">{{ eur(e.commission_cents) }}</td>
-                      <td class="pr-3">
-                        <div v-if="e.reminder_30_sent_at">J+30 {{ fmtDate(e.reminder_30_sent_at) }}</div>
-                        <div v-if="e.reminder_60_sent_at">J+60 {{ fmtDate(e.reminder_60_sent_at) }}</div>
-                      </td>
-                      <td class="space-y-1.5">
-                        <button v-if="e.status === 'quote_confirmed'" type="button" class="block h-7 px-2.5 rounded-sm border border-border hover:bg-muted" @click="advanceEngagement(e, 'deposit_paid')">Acompte versé</button>
-                        <template v-if="e.status === 'quote_declared'">
-                          <button type="button" class="block h-7 px-2.5 rounded-sm border border-amber-500/40 text-amber-500 hover:bg-amber-500/10" @click="reasonOpenId = reasonOpenId === e.id ? null : e.id">Forcer l'acompte (dérogation)</button>
-                          <div v-if="reasonOpenId === e.id" class="space-y-1">
-                            <textarea v-model="engReason[e.id]" rows="2" minlength="10" maxlength="500" required placeholder="Motif de la dérogation" aria-label="Motif de la dérogation" class="w-full px-2 py-1 rounded-sm border border-border bg-background" />
-                            <button type="button" :disabled="(engReason[e.id] || '').trim().length < 10" class="h-7 px-2.5 rounded-sm bg-safety text-white disabled:opacity-40" @click="advanceEngagement(e, 'deposit_paid', (engReason[e.id] || '').trim())">Confirmer la dérogation</button>
-                          </div>
-                        </template>
-                        <button v-if="e.status === 'deposit_paid'" type="button" class="block h-7 px-2.5 rounded-sm border border-border hover:bg-muted" @click="advanceEngagement(e, 'invoiced')">Facturé</button>
-                        <a :href="`/api/v1/engagements/${e.id}/document`" target="_blank" rel="noopener" class="block text-safety hover:underline">Avenant</a>
-                      </td>
+                      <td><a :href="`/api/v1/engagements/${e.id}/document`" target="_blank" rel="noopener" class="text-safety hover:underline">Avenant</a></td>
                     </tr>
                   </tbody>
                 </table>
+              </div>
+              <p class="text-xs text-muted-foreground">Suivi financier : onglet « Commissions en cours ».</p>
+
+              <!-- D-28 : journal des versements de commission (même source que « Commissions en cours ») -->
+              <div data-testid="b2b-commission-journal" class="space-y-1">
+                <p class="text-[11px] font-semibold uppercase tracking-wide text-foreground">Versements de commission</p>
+                <p v-if="!r.commission_movements?.length" class="text-xs text-muted-foreground">Aucun mouvement de commission.</p>
+                <div v-else class="overflow-x-auto">
+                  <table class="w-full text-xs">
+                    <thead>
+                      <tr class="text-left text-[10px] uppercase tracking-wide text-muted-foreground">
+                        <th class="py-1 pr-3">Date</th><th class="pr-3">Type</th><th class="pr-3">Montant</th><th class="pr-3">Opérateur</th><th>Lot / artisan</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(m, i) in r.commission_movements" :key="i" class="border-t border-border">
+                        <td class="py-1 pr-3">{{ fmtDate(m.occurred_on) }}</td>
+                        <td class="pr-3">{{ MOVEMENT_TYPE_LABELS[m.type] ?? m.type }}</td>
+                        <td class="pr-3">{{ eur(m.amount_cents) }}</td>
+                        <td class="pr-3">{{ m.operator }}</td>
+                        <td>{{ m.lot_category || '—' }} / {{ m.pro_company || '—' }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 

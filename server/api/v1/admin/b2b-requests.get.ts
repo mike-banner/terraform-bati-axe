@@ -45,12 +45,13 @@ export default defineEventHandler(async (event) => {
 
   // Phase 05.21 : avenants par dossier + convention partenaire (jamais les jetons).
   const engagementsByRequest = new Map<string, any[]>()
+  const movementsByRequest = new Map<string, any[]>()
   const frameworkByEmail = new Map<string, { engagement_id: string; signed_at: string }>()
   const ids = (data || []).map((r: any) => r.id)
   if (ids.length > 0) {
     const { data: engs, error: engErr } = await supabase
       .from('b2b_engagements')
-      .select('id, request_id, lot_id, status, declared_amount_cents, declared_at, confirmed_amount_cents, confirmed_at, commission_cents, signed_at, reminder_30_sent_at, reminder_60_sent_at, deposit_paid_at, invoiced_at, b2b_tender_lots(category), professionals(company_name)')
+      .select('id, request_id, lot_id, status, selected_at, not_awarded_reason, confirmed_amount_cents, commission_cents, signed_at, b2b_tender_lots(category), professionals(company_name)')
       .eq('type', 'lot_amendment')
       .in('request_id', ids)
     if (engErr) console.error('[05.21] Lecture avenants:', engErr.message)
@@ -58,6 +59,26 @@ export default defineEventHandler(async (event) => {
       const list = engagementsByRequest.get(e.request_id) ?? []
       list.push({ ...e, lot_category: b2b_tender_lots?.category ?? null, pro_company: pro?.company_name ?? null })
       engagementsByRequest.set(e.request_id, list)
+    }
+    // D-28 : même journal que « Commissions en cours » (b2b_commission_movements), regroupé par dossier.
+    const engInfo = new Map<string, { request_id: string; lot_category: string | null; pro_company: string | null }>()
+    for (const [reqId, list] of engagementsByRequest) {
+      for (const e of list) engInfo.set(e.id, { request_id: reqId, lot_category: e.lot_category, pro_company: e.pro_company })
+    }
+    if (engInfo.size > 0) {
+      const { data: movs, error: movErr } = await supabase
+        .from('b2b_commission_movements')
+        .select('engagement_id, type, amount_cents, occurred_on, operator, created_at')
+        .in('engagement_id', [...engInfo.keys()])
+        .order('created_at', { ascending: false })
+      if (movErr) console.error('[05.23] Lecture journal commissions:', movErr.message)
+      for (const m of movs || []) {
+        const info = engInfo.get(m.engagement_id)
+        if (!info) continue
+        const list = movementsByRequest.get(info.request_id) ?? []
+        list.push({ occurred_on: m.occurred_on, created_at: m.created_at, type: m.type, amount_cents: Number(m.amount_cents), operator: m.operator, lot_category: info.lot_category, pro_company: info.pro_company })
+        movementsByRequest.set(info.request_id, list)
+      }
     }
     const emails = [...new Set((data || []).map((r: any) => String(r.contact_email).toLowerCase()))]
     const { data: fws, error: fwErr } = await supabase
@@ -75,6 +96,7 @@ export default defineEventHandler(async (event) => {
     assigned: r.assigned_to ? { email: emailById.get(r.assigned_to) || null } : null,
     partner_framework: frameworkByEmail.get(String(r.contact_email).toLowerCase()) ?? null,
     engagements: engagementsByRequest.get(r.id) ?? [],
+    commission_movements: movementsByRequest.get(r.id) ?? [],
   }))
 
   return {
