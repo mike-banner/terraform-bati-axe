@@ -529,7 +529,7 @@ Plans:
 - [x] 05.23-04-PLAN.md — Côté artisan : confirmer en un clic ou contester, plus aucune saisie de montant, nouveaux statuts dans la carte AO, lien de choix dans l'e-mail « artisan intéressé », E2E
 - [x] 05.23-05-PLAN.md — Page partenaire : choix de l'artisan, dépôt du devis et validation de l'avancement par étape (sans montant) sur /b2b/engagement/[token], champ « pour le compte de » du tunnel (rendu obligatoire pour un projet immédiat), aucune part partenaire affichée (D-22), E2E
 - [x] 05.23-06-PLAN.md — Commissions en cours (serveur) : liste et synthèse, mouvements, annulation motivée tracée, arbitrage des contestations, export CSV
-- [ ] 05.23-07-PLAN.md — Commissions en cours (console admin) : nouvel onglet, actions et journal, nettoyage de l'onglet Dossiers B2B, E2E
+- [x] 05.23-07-PLAN.md — Commissions en cours (console admin) : nouvel onglet, actions et journal, nettoyage de l'onglet Dossiers B2B, E2E
 - [ ] 05.23-08-PLAN.md — Relances J+7/J+14 et expiration (nouveau cron), retrait de l'ancien flux 05.21 (déclaration pro, acompte/facturé, J+30/J+60), écarts des gabarits v1 signalés au juriste
 - [ ] 05.23-10-PLAN.md — Alertes & suivi admin (serveur) : alertes calculées depuis l'état (choix, devis, confirmation, contestation, écart, rétro-commission, avenant sans suite, relance échue) avec compteurs par dossier, fiche d'appel des parties (demandeur puis artisan), journal de suivi en ajout seul, seuils configurables
 - [ ] 05.23-11-PLAN.md — Alertes & suivi admin (console) : onglet Alertes avec compteur, pastille « À traiter » sur dossiers et commissions, panneau d'appel (liens tel:) et notes de suivi, E2E
@@ -674,7 +674,7 @@ Plans:
 | 05.18 Annuaire & Vitrines Partenaires | 0/TBD | Reportée (milestone suivant) | - |
 | 05.20 Navigation Header & Landing Prescripteurs | 0/TBD | Not started (spec reçue 2026-10-09) | - |
 | 05.21 Verrou Juridique B2B (Anti-Contournement) | 8/8 | Complete | 2026-11-08 |
-| 05.23 Choix partenaire, devis & Commissions | 6/11 | En cours (vagues 1 à 3 codées le 2026-11-12, migration non appliquée) | - |
+| 05.23 Choix partenaire, devis & Commissions | 7/11 | En cours (vagues 1 à 3 codées le 2026-11-12, migration non appliquée) | - |
 | 05.22 Stripe Connect Split Payment | 0/TBD | Not started (après 05.21) | - |
 | 06.4 Mot de passe oublié & Templates Auth | 1/3 (flux livré ; templates brandés + checklist prod restants) | In progress | - |
 | 7. Formulaire AO & Modèle Multi-Lots | 3/3 | Complete | 2026-09-04 |
