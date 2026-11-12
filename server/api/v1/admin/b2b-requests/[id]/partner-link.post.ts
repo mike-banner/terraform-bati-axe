@@ -2,7 +2,6 @@ import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 import { sendEmail } from '../../../../../utils/email'
 import { findSignedFramework, issuePartnerToken, renderPartnerLinkEmail } from '../../../../../utils/signature'
-import { formatEurCents } from '../../../../../utils/commission'
 import { isRateLimited } from '../../../../../utils/rateLimit'
 
 // Phase 05.21 — renvoi explicite du lien partenaire (seule rotation : révoque les jetons précédents).
@@ -24,19 +23,22 @@ export default defineEventHandler(async (event) => {
   }
 
   const signed = Boolean(await findSignedFramework(supabase, { type: 'framework_partner', email: req.contact_email }))
-  let reason: 'framework' | 'confirm_quote' = 'framework'
-  let proCompany: string | undefined
-  let amountLabel: string | undefined
+  let reason: 'framework' | 'choose_pro' | 'submit_quote' = 'framework'
   if (signed) {
-    const { data: pending } = await supabase
+    const { data: engs } = await supabase
       .from('b2b_engagements')
-      .select('declared_amount_cents, professionals(company_name)')
-      .eq('type', 'lot_amendment').eq('request_id', id).eq('status', 'quote_declared')
-      .order('declared_at').limit(1).maybeSingle()
-    if (!pending) throw createError({ statusCode: 409, statusMessage: 'Convention déjà signée et aucun montant à confirmer.' })
-    reason = 'confirm_quote'
-    proCompany = pending.professionals?.company_name ?? undefined
-    amountLabel = formatEurCents(pending.declared_amount_cents)
+      .select('id, lot_id, status, selected_at')
+      .eq('type', 'lot_amendment').eq('request_id', id)
+    const { data: subs } = await supabase
+      .from('b2b_quote_submissions')
+      .select('engagement_id, status')
+      .eq('request_id', id).in('status', ['pending', 'contested', 'confirmed'])
+    const rows: any[] = engs ?? []
+    const submitted = new Set((subs ?? []).map((s: any) => s.engagement_id))
+    const decidedLots = new Set(rows.filter(e => e.selected_at).map(e => e.lot_id))
+    if (rows.some(e => e.status === 'signed' && !decidedLots.has(e.lot_id))) reason = 'choose_pro'
+    else if (rows.some(e => e.status === 'selected' && !submitted.has(e.id))) reason = 'submit_quote'
+    else throw createError({ statusCode: 409, statusMessage: 'Convention signée et aucune action attendue du partenaire.' })
   }
 
   const token = await issuePartnerToken(supabase, id, { revokePrevious: true })
@@ -45,7 +47,7 @@ export default defineEventHandler(async (event) => {
     contactName: req.contact_name,
     requestRef: id.slice(0, 8).toUpperCase(),
     link: `${siteUrl}/b2b/engagement/${token}`,
-    reason, proCompany, amountLabel,
+    reason,
   })
   try {
     await sendEmail({ to: req.contact_email, sender: 'no-reply', subject, html })

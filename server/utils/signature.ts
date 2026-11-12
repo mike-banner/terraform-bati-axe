@@ -209,17 +209,24 @@ export async function insertEngagement(supabase: any, row: Record<string, any>):
   return { ...existing, created: false }
 }
 
+export type PartnerLinkReason = 'framework' | 'confirm_quote' | 'not_awarded' | 'choose_pro' | 'submit_quote'
+
 export function renderPartnerLinkEmail(o: {
   contactName: string; requestRef: string; link: string
-  reason: 'framework' | 'confirm_quote' | 'not_awarded'; proCompany?: string; amountLabel?: string
+  reason: PartnerLinkReason; proCompany?: string; amountLabel?: string
 }): { subject: string; html: string } {
   const ref = escapeHtml(o.requestRef)
   const pro = escapeHtml(o.proCompany ?? 'Une entreprise')
-  const [title, intro] = o.reason === 'framework'
-    ? ['Signez votre convention de partenariat BÂTI-AXE', `Votre dossier réf. ${ref} ne sera transmis aux artisans qu'après signature.`]
-    : o.reason === 'confirm_quote'
-      ? ['Confirmez le montant du devis', `L'entreprise ${pro} déclare un devis signé de ${escapeHtml(o.amountLabel ?? '')} HT pour le dossier réf. ${ref}.`]
-      : ['Un artisan déclare ne pas avoir obtenu le chantier', `${pro} déclare ne pas avoir obtenu le chantier du dossier réf. ${ref}. Si c'est inexact, répondez à contact@bati-axe.com.`]
+  // D-22 : aucun texte destiné au partenaire ne mentionne commission, rétro-commission ni pourcentage.
+  const texts: Record<PartnerLinkReason, [string, string]> = {
+    framework: ['Signez votre convention de partenariat BÂTI-AXE', `Votre dossier réf. ${ref} ne sera transmis aux artisans qu'après signature.`],
+    // Anciens motifs, retirés avec l'ancien flux (plan 08).
+    confirm_quote: ['Confirmez le montant du devis', `L'entreprise ${pro} déclare un devis signé de ${escapeHtml(o.amountLabel ?? '')} HT pour le dossier réf. ${ref}.`],
+    not_awarded: ['Un artisan déclare ne pas avoir obtenu le chantier', `${pro} déclare ne pas avoir obtenu le chantier du dossier réf. ${ref}. Si c'est inexact, répondez à contact@bati-axe.com.`],
+    choose_pro: ['Choisissez l\'artisan de votre dossier', `Des artisans certifiés se sont positionnés sur votre dossier réf. ${ref}. Consultez leurs fiches et retenez-en un par lot.`],
+    submit_quote: ['Déposez le devis signé', `Une fois le devis de l'artisan signé par votre client pour le dossier réf. ${ref}, déposez-le sur votre espace avec son montant HT.`],
+  }
+  const [title, intro] = texts[o.reason]
   return {
     subject: title,
     html: renderEmail({
