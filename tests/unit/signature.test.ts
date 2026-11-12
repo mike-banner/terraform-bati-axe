@@ -6,7 +6,7 @@ vi.stubGlobal('createError', (o: any) => Object.assign(new Error(o.statusMessage
 
 import {
   sha256Hex, generateOtpCode, hashOtp, timingSafeEqualHex, evaluateChallenge, maskEmail, generateToken,
-  issueOtpChallenge, verifyOtpChallenge, issuePartnerToken,
+  issueOtpChallenge, verifyOtpChallenge, issuePartnerToken, renderPartnerLinkEmail,
 } from '../../server/utils/signature'
 
 const subject = { type: 'framework_pro' as const, email: 'a@b.fr', proId: 'p1' }
@@ -132,5 +132,19 @@ describe('issuePartnerToken', () => {
   it('revokePrevious=true : révoque avant insertion', async () => {
     await issuePartnerToken(sb(), 'r1', { revokePrevious: true })
     expect(ops).toEqual(['update:revoked_at', 'insert'])
+  })
+})
+
+describe('renderPartnerLinkEmail (D-22, D-27)', () => {
+  const base = { contactName: 'Alice', requestRef: 'ABCD1234', link: 'https://x.test/b2b/engagement/t' }
+  it.each(['framework', 'choose_pro', 'submit_quote', 'validate_progress'] as const)('%s : aucun terme de facturation ni de commission', (reason) => {
+    const { subject, html } = renderPartnerLinkEmail({ ...base, reason, stepLabel: 'Étape suivante' })
+    expect(subject + html).not.toMatch(/factur/i)
+    expect(subject + html).not.toMatch(/commission/i)
+  })
+  it('validate_progress : cite l\'étape, échappée, sans montant', () => {
+    const { html } = renderPartnerLinkEmail({ ...base, reason: 'validate_progress', stepLabel: '<b>Acompte</b>' })
+    expect(html).toContain('&lt;b&gt;Acompte&lt;/b&gt;')
+    expect(html).not.toMatch(/€|%/)
   })
 })

@@ -124,12 +124,28 @@ Question au juriste : ces mécanismes (a) à (d) suffisent-ils, ou l'information
 
 **Questions.** Les pièces et périodicités correspondent-elles aux obligations de vigilance du donneur d'ordre (art. L. 8222-1 du Code du travail) ? BÂTI-AXE est-elle donneur d'ordre ou simple intermédiaire ? Le badge « éligible sous-traitance » engage-t-il sa responsabilité ?
 
+## 15. Écarts entre les gabarits v1 signés et le flux 05.23 (priorité A avant la bascule prod)
+
+**Constat.** Le flux livré en phase 05.23 diffère des gabarits v1 (`server/utils/contracts.ts`, non modifiés). Les engagements déjà signés gardent leur version v1.
+
+- **Avenant art. 5 et convention pro art. 3 (« Déclaration loyale »)** : l'Entreprise « déclare » le montant du devis. Désormais le Partenaire dépose le devis signé et l'Entreprise le confirme ou le conteste (l'interface dit « En confirmant, vous déclarez le montant HT du devis signé (article 5 de votre avenant) »).
+- **Convention partenaire art. 3** : le Partenaire « confirme loyalement le montant ». Désormais il le dépose avec une attestation d'information de son client, horodatée.
+- **Convention pro art. 2 (exigibilité)** : commission exigible « à la signature du devis … et au versement du premier acompte ». Le flux 05.23 applique un échéancier (D-06 bis) : jusqu'à 200 000 € HT, 50 % à l'acompte puis 50 % à la fin ; au-delà, 30 % / 40 % / 30 %. Chaque versement devient exigible par la validation d'avancement du partenaire. La rétro-commission n'est versée qu'en fin de chantier (D-26). À aligner dans le gabarit v2.
+- **Convention partenaire art. 2** : quote-part « fixée par avenant ou conditions particulières ». Le flux applique 3 % fixe du montant HT (D-05) sans document signé le précisant : rédiger les conditions particulières.
+- **Annulation de commission (D-10)** et **silence de l'artisan** (blocage, relance, arbitrage admin, jamais d'acceptation tacite) : absents des gabarits v1.
+- **D-26, rétro-commission** : exigible seulement en fin de chantier (dernière étape validée par le partenaire ET commission intégralement encaissée), sans avance. L'exigibilité doit figurer dans la convention partenaire v2.
+- **D-06 bis / D-17, avenant de travaux** : un avenant de travaux qui fait passer l'assiette au-dessus de 200 000 € HT change l'échéancier (2 → 3 versements de la commission). Les montants déjà facturés sont conservés et le reste est rééchelonné : à prévoir dans l'avenant v2.
+- **Page partenaire à jeton** : elle affiche la convention partenaire v1 signée, dont la clause « quote-part de la commission perçue par BÂTI-AXE ». La part n'est pas chiffrée dans l'interface (D-22), mais le principe est visible dans le document signé.
+
+**Questions.** Les gabarits v1 restent-ils opposables pour les engagements déjà signés ? Quelle formulation pour la v2 (déclaration vs confirmation, exigibilité par étapes, rétro-commission, conditions particulières) ?
+
 ---
 
 ## Ce qui a été fait côté produit en attendant (à relire, pas à valider)
 - Convention cadre pro, convention cadre partenaire, avenant par lot : gabarits versionnés (`CC-PRO-2026-10-v1`, `CC-PART-2026-10-v1`, `AV-LOT-2026-10-v1`), HTML figé + SHA-256.
 - Clause d'information du client final (art. 27 Code de déontologie architectes, loi Hoguet) : présente dans les trois gabarits.
 - Non-contournement 24 mois, pénalité 5 000 € HT, juridiction du siège de BÂTI-AXE, droit français.
+- Phase 05.23 : choix de l'artisan par le partenaire, dépôt du devis signé (PDF R2 + montant HT + attestation horodatée), confirmation ou contestation par l'artisan, espace admin Commissions en cours (journal en ajout seul, annulation motivée tracée).
 - **Les gabarits devront être republiés en version 2** quand le nouveau mécanisme (choix du partenaire, devis déposé par le partenaire, confirmation de l'artisan) sera livré : les clauses « déclaration loyale » et « exigibilité » décrivent l'ancien flux.
 
 ## Documents à remettre au juriste

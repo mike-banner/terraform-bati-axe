@@ -209,20 +209,18 @@ export async function insertEngagement(supabase: any, row: Record<string, any>):
   return { ...existing, created: false }
 }
 
-export type PartnerLinkReason = 'framework' | 'confirm_quote' | 'not_awarded' | 'choose_pro' | 'submit_quote'
+export type PartnerLinkReason = 'framework' | 'choose_pro' | 'submit_quote' | 'validate_progress'
 
 export function renderPartnerLinkEmail(o: {
   contactName: string; requestRef: string; link: string
-  reason: PartnerLinkReason; proCompany?: string; amountLabel?: string
+  reason: PartnerLinkReason; stepLabel?: string
 }): { subject: string; html: string } {
   const ref = escapeHtml(o.requestRef)
-  const pro = escapeHtml(o.proCompany ?? 'Une entreprise')
-  // D-22 : aucun texte destiné au partenaire ne mentionne commission, rétro-commission ni pourcentage.
+  const step = escapeHtml(o.stepLabel ?? 'prochaine étape')
+  // D-22 : aucun texte destiné au partenaire ne mentionne commission, rétro-commission, pourcentage ni montant.
   const texts: Record<PartnerLinkReason, [string, string]> = {
     framework: ['Signez votre convention de partenariat BÂTI-AXE', `Votre dossier réf. ${ref} ne sera transmis aux artisans qu'après signature.`],
-    // Anciens motifs, retirés avec l'ancien flux (plan 08).
-    confirm_quote: ['Confirmez le montant du devis', `L'entreprise ${pro} déclare un devis signé de ${escapeHtml(o.amountLabel ?? '')} HT pour le dossier réf. ${ref}.`],
-    not_awarded: ['Un artisan déclare ne pas avoir obtenu le chantier', `${pro} déclare ne pas avoir obtenu le chantier du dossier réf. ${ref}. Si c'est inexact, répondez à contact@bati-axe.com.`],
+    validate_progress: ['Validez l\'avancement du chantier', `La date prévue de l'étape « ${step} » du dossier réf. ${ref} est atteinte. Si elle est franchie, validez-la depuis votre espace.`],
     choose_pro: ['Choisissez l\'artisan de votre dossier', `Des artisans certifiés se sont positionnés sur votre dossier réf. ${ref}. Consultez leurs fiches et retenez-en un par lot.`],
     submit_quote: ['Déposez le devis signé', `Une fois le devis de l'artisan signé par votre client pour le dossier réf. ${ref}, déposez-le sur votre espace avec son montant HT.`],
   }

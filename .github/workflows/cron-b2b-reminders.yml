@@ -1,4 +1,4 @@
-name: Relances J+30 / J+60 des avenants B2B sans déclaration
+name: Relances du flux B2B (choix, devis, confirmation)
 
 on:
   schedule:
@@ -7,12 +7,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  engagement-reminders:
+  b2b-reminders:
     runs-on: ubuntu-latest
     steps:
-      - name: Déclencher le cron des relances d'avenants
+      - name: Déclencher le cron des relances B2B
         run: |
           curl --fail --silent --show-error \
-            -X GET "${{ secrets.CRON_BASE_URL }}/api/v1/cron/engagement-reminders" \
+            -X GET "${{ secrets.CRON_BASE_URL }}/api/v1/cron/b2b-reminders" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -w "\nCode HTTP: %{http_code}\n"
