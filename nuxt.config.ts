@@ -104,6 +104,11 @@ export default defineNuxtConfig({
     b2bQuoteStaleDays: Number(process.env.NUXT_B2B_QUOTE_STALE_DAYS || 60),
     b2bConfirmReminderDays: Number(process.env.NUXT_B2B_CONFIRM_REMINDER_DAYS || 7),
     b2bQuoteBaseCapCents: process.env.NUXT_B2B_QUOTE_BASE_CAP_CENTS || '',
+    // 05.23 (D-23) — seuils des alertes admin en jours.
+    b2bAlertChoiceDays: Number(process.env.NUXT_B2B_ALERT_CHOICE_DAYS || 7),
+    b2bAlertQuoteDays: Number(process.env.NUXT_B2B_ALERT_QUOTE_DAYS || 14),
+    b2bAlertConfirmCriticalDays: Number(process.env.NUXT_B2B_ALERT_CONFIRM_CRITICAL_DAYS || 14),
+    b2bAlertOrphanDays: Number(process.env.NUXT_B2B_ALERT_ORPHAN_DAYS || 7),
     // 05.23 (D-29) — opérateurs admin autorisés (« Qui agit ? »), noms séparés par des virgules.
     adminOperators: process.env.NUXT_ADMIN_OPERATORS || '',
     public: {
