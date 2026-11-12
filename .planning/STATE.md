@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: « Partenaires en scène »
 status: executing
-stopped_at: RLS `lead_notifications` corrigée, documents de suivi resynchronisés avec le code
-last_updated: "2026-11-10T10:28:55.689Z"
+stopped_at: Phase 05.23 livrée sur dev (11 plans), migrations cloud appliquées, en attente de la recette live avec le client
+last_updated: "2026-11-12T15:00:00.000Z"
 progress:
   total_phases: 36
   completed_phases: 20
@@ -35,6 +35,7 @@ Plan: 8 of 8 terminés. Recette dev en live validée par Mike le 2026-11-08 : pa
 Prochaine phase : voir « À faire dans l'immédiat » ci-dessous (05.21 marquée URGENTE au ROADMAP, puis 05.20, 06.4)
 Status: Ready to execute
 Milestone: **v2.0 « Partenaires en scène »** (v1.0 archivée le 2026-09-04, voir `.planning/milestones/v1.0-ROADMAP.md`)
+Phase 05.23 (choix-partenaire-devis-commissions) — **code livré sur `dev` le 2026-11-12 (plans 01-11), migrations cloud `20261111000000` et `20261112000000` appliquées, données de test B2B réinitialisées. En attente** : recette live avec le client (plan 09, étapes 0-12). Voir « Fait le 12 novembre 2026 » ci-dessous.
 Phase 05.24 (qualification-dossier-b2b) — code livré sur `dev` le 2026-11-12, plan rédigé après coup : qualifications requises en cases à cocher (catalogue fermé, visibles des artisans sur l'AO), restitution et sous-traitants recommandés supprimés. Migration cloud `20261111000000` appliquée par Mike le 2026-11-12. **En attente** : recette dev Mike (carte AO artisan). Voir `.planning/phases/05.24-qualification-dossier-b2b/`.
 Phases complètes récentes (v1.0) :
 
@@ -73,6 +74,26 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
 4. **Dette courte — traitée le 2026-10-10** (poussé sur `origin/dev`) : typecheck 46 → 0 erreur (≈ 28 erreurs distinctes) ; expiration automatique de la décennale (`expire_decennale_status()` + job `expire-decennale-status`, migration `20260920`) ; `consents` en lecture seule et `is_showcased` réservé à l'admin (même migration) ; date d'expiration de la décennale obligatoire et future (422 sinon) ; e2e ajoutés (`tests/e2e/pro-egb-rge.spec.ts` : onglet admin EGB, module RGE, bandeau « Nouveau métier », limite de métiers ; suite complète 42/42). **Migration `20260920` appliquée au cloud le 2026-10-10** (dry-run puis push, vérifiée : politiques, trigger, job) et code déployé sur Pages dev (apply Terraform OK). **Reste** : faire valider par le client la correspondance `egbMatches` ; une approbation admin sans date d'expiration reste « valide » indéfiniment (voulu).
 5. **Ménage dépôt — fait** : `imports.tf` supprimé ; `.planning/graphs/` ignoré et sorti du suivi Git (fichiers conservés sur disque).
 6. **E-mail d'invitation RGE — livré** (`server/utils/rgeInvite.ts`) : envoyé quand un pro ajoute « Rénovation énergétique » sans RGE valide ; non testé avec un envoi réel (en dev l'e-mail est seulement journalisé sauf `EMAIL_LIVE=true`).
+
+## Fait le 12 novembre 2026
+
+- **Phase 05.23 — Choix du partenaire, devis, commissions** (flux B2B v2, remplace l'ancien flux 05.21 « déclarer le devis ») : le partenaire choisit l'artisan par lot, dépose le devis signé (PDF, montant HT), l'artisan confirme ou conteste ; commission 8 % du devis dont 3 % part partenaire, suivie par l'admin dans « Commissions en cours ». Fichiers invariants inchangés : `commission.ts`, `commissionTiers.ts`, `contracts.ts`.
+  - Plan 08 (`8470741`) : relances par cron `cron-b2b-reminders` (08:00 UTC, réservation avant envoi, pas d'acceptation tacite) ; ancien flux 05.21 supprimé (`declare-quote`, `confirm-quote` partenaire, cron `engagement-reminders`).
+  - Plan 10 (`7b39cfc`) : alertes admin calculées à la volée (4 variables `NUXT_B2B_ALERT_*`), journal de suivi en ajout seul.
+  - Plan 11 (`9019e79`) : onglet « Alertes », pastilles « À traiter », panneau d'appel.
+  - Plan 09 : migrations appliquées au cloud (RLS contrôlée : 5 nouvelles tables, 0 policy ; 5 triggers de garde), types régénérés (`1098514`), script de réinitialisation exécuté (`0c109d2`) : conventions, OTP, jetons, devis, mouvements = 0 ; **tout est à re-signer pendant la recette**.
+  - Sécurité (`ae7c441`) : envoi du devis verrouillé sur `application/pdf` et la taille déclarée (signature `Content-Type` + `Content-Length`), contrôle `HEAD` de l'objet stocké (≤ 20 Mo), lecture forcée en pièce jointe PDF. Vérifié sur le bucket réel `batiaxe-b2b-dev` ; CORS correct. Revue sécurité 05.23 : aucun constat de confiance ≥ 8. Contrôle des 49 champs de saisie : aucun écart.
+  - Tests : 618 unitaires, typecheck 0 erreur, 46 E2E sur les 5 specs de la phase.
+- **À reprendre à la recette** (aussi en mémoire) :
+  - Envoi réel d'un PDF depuis le navigateur sur le dev déployé (la signature a été validée avec Node seulement).
+  - Lancer `cron-b2b-reminders` à la main ; vérifier les secrets GitHub `CRON_BASE_URL` et `CRON_SECRET` (non vérifiés).
+  - « Qui agit ? » doit proposer « Herman » sur le dev déployé (Terraform `TF_VAR_admin_operators`, non vérifié).
+  - Étape 12 du plan 09 (avenant de travaux 200 000 → 250 000 € HT) : aucun écran, à clarifier.
+  - Diff de `database.types.ts` très gros (+2465/−1760), origine non vérifiée.
+  - L'e-mail « artisan intéressé » envoie encore l'e-mail et le téléphone de l'artisan au partenaire (décision de Mike attendue).
+  - `.env` local : le couple `R2_ACCESS_KEY_ID`/`R2_SECRET_ACCESS_KEY` est faux (secret de 32 caractères, 401) ; le bon couple est `DEV_CF_R2_*`.
+  - Écarts gabarits v1 / flux 05.23 : §15 de `docs/legal/POINTS_A_VALIDER_AVEC_JURISTE.md`. **Bascule prod bloquée par la relecture de l'avocat.**
+- Non faits : `05.23-XX-SUMMARY.md` et coches du `ROADMAP.md` pour les plans 08-11.
 
 ## Fait le 8 novembre 2026
 
