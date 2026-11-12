@@ -62,6 +62,12 @@ const navItems = computed(() => [
     badge: null,
   },
   {
+    key: 'commissions',
+    label: 'Commissions en cours',
+    icon: 'folder',
+    badge: null,
+  },
+  {
     key: 'kpi',
     label: 'KPIs',
     icon: 'chart',
