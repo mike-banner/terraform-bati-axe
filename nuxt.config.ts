@@ -99,7 +99,16 @@ export default defineNuxtConfig({
     // Seuils en env vars (pas de table de config : aucun besoin de réglage à chaud au pilote).
     b2bMaxActiveTendersPerPartner: Number(process.env.NUXT_B2B_MAX_ACTIVE_TENDERS_PER_PARTNER || process.env.B2B_MAX_ACTIVE_TENDERS_PER_PARTNER || 3),
     b2bMaxNotificationsPerArtisanPerDay: Number(process.env.NUXT_B2B_MAX_NOTIFICATIONS_PER_ARTISAN_PER_DAY || process.env.B2B_MAX_NOTIFICATIONS_PER_ARTISAN_PER_DAY || 5),
+    // 05.23 (D-16/D-17) — délais du flux choix / devis en jours et plafond d'assiette en centimes (vide = aucun plafond).
+    b2bChoiceExpiryDays: Number(process.env.NUXT_B2B_CHOICE_EXPIRY_DAYS || 30),
+    b2bQuoteStaleDays: Number(process.env.NUXT_B2B_QUOTE_STALE_DAYS || 60),
+    b2bConfirmReminderDays: Number(process.env.NUXT_B2B_CONFIRM_REMINDER_DAYS || 7),
+    b2bQuoteBaseCapCents: process.env.NUXT_B2B_QUOTE_BASE_CAP_CENTS || '',
+    // 05.23 (D-29) — opérateurs admin autorisés (« Qui agit ? »), noms séparés par des virgules.
+    adminOperators: process.env.NUXT_ADMIN_OPERATORS || '',
     public: {
+      // Liste de prénoms affichée dans le sélecteur de la console admin ; aucune donnée sensible.
+      adminOperators: process.env.NUXT_ADMIN_OPERATORS || '',
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
       // P2 — clé publique Turnstile (rendue côté client).
       turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '',
