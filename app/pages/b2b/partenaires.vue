@@ -30,6 +30,8 @@ function toggleTravail(t: B2bTravauxSuggere) {
   else travauxSuggeres.value.splice(idx, 1)
 }
 const description = ref('')
+// D-14 : dossier déposé pour soi-même ou pour le compte d'un tiers (obligatoire pour un projet immédiat).
+const onBehalfOf = ref<'self' | 'third_party' | null>(null)
 const lotsCategories = ref<B2bLotCategory[]>([])
 const isSyndic = computed(() => apporteurType.value === 'syndic')
 function toggleLot(c: B2bLotCategory) {
@@ -69,7 +71,7 @@ const canNextStep = computed(() => {
   switch (step.value) {
     case 1: return !!apporteurType.value
     case 2: return !!needType.value
-    case 3: return description.value.trim().length >= 20 && lotsDetailsOk.value && certificationOk.value && projectPostalCodeOk.value
+    case 3: return !!onBehalfOf.value && description.value.trim().length >= 20 &&lotsDetailsOk.value && certificationOk.value && projectPostalCodeOk.value
     case 4: return contactNameOk.value && contactCompanyOk.value && contactPhoneOk.value && contactEmailOk.value && consentAccepted.value
     default: return false
   }
@@ -185,6 +187,7 @@ async function submitRequest() {
       body: {
         apporteur_type: apporteurType.value,
         need_type: needType.value,
+        on_behalf_of: needType.value === 'projet_immediat' ? onBehalfOf.value : null,
         project_location: projectLocation.value || null,
         project_postal_code: projectPostalCode.value.trim() || null,
         description: description.value.trim() || null,
@@ -315,6 +318,21 @@ async function submitRequest() {
       <div v-if="step === 3">
         <h2 class="text-xl font-bold text-foreground mb-2">Décrivez votre projet</h2>
         <p class="text-sm text-muted-foreground mb-6">Déposez vos plans, CCTP ou compromis de vente.</p>
+
+        <!-- Pour le compte de (D-14) -->
+        <fieldset class="mb-4">
+          <legend class="block text-sm font-semibold text-foreground mb-1.5">Vous déposez ce dossier : *</legend>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <label class="flex items-center gap-2 text-sm">
+              <input v-model="onBehalfOf" type="radio" name="on_behalf_of" value="self" required>
+              Pour moi-même
+            </label>
+            <label class="flex items-center gap-2 text-sm">
+              <input v-model="onBehalfOf" type="radio" name="on_behalf_of" value="third_party" required>
+              Pour le compte d'un tiers (client, copropriété…)
+            </label>
+          </div>
+        </fieldset>
 
         <!-- Location -->
         <div class="mb-4 grid sm:grid-cols-[1fr_140px] gap-3">

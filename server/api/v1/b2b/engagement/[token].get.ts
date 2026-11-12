@@ -3,6 +3,7 @@ import { renderContract, CONTRACT_VERSIONS } from '../../../../utils/contracts'
 import { getClientMeta, findRequestByToken, findSignedFramework } from '../../../../utils/signature'
 import { isRateLimited } from '../../../../utils/rateLimit'
 import { CATEGORY_LABELS } from '../../../../utils/categoryLabels'
+import { installmentLabels } from '../../../../../app/utils/b2bCommissionRules'
 
 // Phase 05.21 / 05.23 — espace de suivi partenaire (sans compte) : seule la possession du jeton authentifie.
 export default defineEventHandler(async (event) => {
@@ -40,7 +41,7 @@ export default defineEventHandler(async (event) => {
   // Colonnes explicites : ni e-mail ni nom du contact artisan ne sortent jamais (T-05.23-08).
   const { data: engRows } = await supabase
     .from('b2b_engagements')
-    .select('id, lot_id, pro_id, status, signed_at, selected_at, not_awarded_reason, professionals(company_name, categories, professional_type, rge_status, decennal_status, is_verified, canonical_slug, postal_code, zone, phone)')
+    .select('id, lot_id, pro_id, status, confirmed_amount_cents, signed_at, selected_at, not_awarded_reason, professionals(company_name, categories, professional_type, rge_status, decennal_status, is_verified, canonical_slug, postal_code, zone, phone)')
     .eq('type', 'lot_amendment')
     .eq('request_id', req.id)
     .order('signed_at')
@@ -48,12 +49,18 @@ export default defineEventHandler(async (event) => {
   // Pas de file_key ni de motif de contestation : réservés à l'admin.
   const { data: subRows } = await supabase
     .from('b2b_quote_submissions')
-    .select('id, engagement_id, amount_ht_cents, deposit_due_on, status, created_at')
+    .select('id, engagement_id, amount_ht_cents, deposit_due_on, planned_due_dates, status, created_at')
     .eq('request_id', req.id)
     .order('created_at')
 
   const engs: any[] = engRows ?? []
   const subs: any[] = subRows ?? []
+
+  const engIds = engs.map(e => e.id)
+  const { data: valRows } = engIds.length > 0
+    ? await supabase.from('b2b_installment_validations').select('engagement_id, seq, validated_at').in('engagement_id', engIds)
+    : { data: [] }
+  const validations: any[] = valRows ?? []
 
   const lots = (lotRows ?? []).map((l: any) => {
     const lotEngs = engs.filter(e => e.lot_id === l.id)
@@ -64,6 +71,23 @@ export default defineEventHandler(async (event) => {
     else if (lotEngs.some(e => e.not_awarded_reason === 'outside_platform')) outcome = 'outside_platform'
     else if (lotEngs.some(e => e.not_awarded_reason === 'expired')) outcome = 'expired'
     const hasOpen = lotSubs.some(s => s.status === 'pending' || s.status === 'contested')
+
+    // D-22 : étapes sans montant, la part du partenaire n'apparaît qu'à la facturation (étape 6, hors phase).
+    let installments: Array<{ seq: number; label: string; due_on: string | null; validated_at: string | null; can_validate: boolean }> | null = null
+    if (selected && selected.status === 'quote_confirmed') {
+      const labels = installmentLabels(Number(selected.confirmed_amount_cents ?? 0))
+      const confirmedSubs = lotSubs.filter(s => s.engagement_id === selected.id && s.status === 'confirmed')
+      const dates: string[] | null = confirmedSubs.length > 0 ? (confirmedSubs[confirmedSubs.length - 1].planned_due_dates ?? null) : null
+      const myVals = validations.filter(v => v.engagement_id === selected.id)
+      let firstOpen = true
+      installments = labels.map((label, i) => {
+        const v = myVals.find(x => x.seq === i + 1)
+        const canValidate = !v && firstOpen
+        if (!v) firstOpen = false
+        return { seq: i + 1, label, due_on: dates?.[i] ?? null, validated_at: v?.validated_at ?? null, can_validate: canValidate }
+      })
+    }
+
     return {
       lot_id: l.id,
       lot_label: CATEGORY_LABELS[l.category] ?? l.category,
@@ -96,10 +120,14 @@ export default defineEventHandler(async (event) => {
         engagement_id: s.engagement_id,
         amount_ht_cents: s.amount_ht_cents,
         deposit_due_on: s.deposit_due_on,
+        planned_due_dates: s.planned_due_dates ?? [],
         status: s.status,
         created_at: s.created_at,
         file_url: `/api/v1/b2b/engagement/${token}/quotes/${s.id}/file`,
       })),
+      installments,
+      confirmed_submissions_count: lotSubs.filter(s => s.status === 'confirmed').length,
+      confirmed_base_cents: Number(selected?.confirmed_amount_cents ?? 0),
       can_submit_quote: Boolean(selected && ['selected', 'quote_confirmed'].includes(selected.status)) && !hasOpen,
     }
   })

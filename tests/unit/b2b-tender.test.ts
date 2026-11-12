@@ -4,6 +4,7 @@ import { b2bRequestSchema, buildTenderLots } from '../../server/utils/b2bTender'
 const base = {
   apporteur_type: 'syndic' as const,
   need_type: 'projet_immediat' as const,
+  on_behalf_of: 'self' as const,
   project_postal_code: '78000',
   contact_name: 'Jean Dupont',
   contact_phone: '06 12 34 56 78',
@@ -146,9 +147,12 @@ describe('coordonnées du contact (durcissement 05.21)', () => {
 
 describe('on_behalf_of (05.23-03)', () => {
   const desc = { ...base, description: 'Ravalement de façade complet sur bâtiment collectif.' }
-  it('absent accepté (projet immédiat et partenariat régulier)', () => {
-    expect(b2bRequestSchema.safeParse(desc).success).toBe(true)
-    expect(b2bRequestSchema.safeParse({ ...base, need_type: 'partenariat_regulier' }).success).toBe(true)
+  it('projet immédiat sans on_behalf_of → issue sur on_behalf_of ; partenariat régulier → accepté', () => {
+    const { on_behalf_of: _omit, ...noField } = desc
+    const r = b2bRequestSchema.safeParse(noField)
+    expect(r.success).toBe(false)
+    expect(!r.success && r.error.issues.some(i => i.path[0] === 'on_behalf_of')).toBe(true)
+    expect(b2bRequestSchema.safeParse({ ...base, on_behalf_of: undefined, need_type: 'partenariat_regulier' }).success).toBe(true)
   })
   it('self et third_party acceptés, autre valeur refusée', () => {
     expect(b2bRequestSchema.safeParse({ ...desc, on_behalf_of: 'self' }).success).toBe(true)

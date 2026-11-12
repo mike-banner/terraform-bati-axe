@@ -27,7 +27,7 @@ export const b2bRequestSchema = z.object({
   // 05.21 — travaux attendus par lot (clé = corps de métier) et infos structurées du chantier.
   lots_details: z.record(z.string().max(30), z.string().max(1000)).optional().nullable(),
   nb_logements: z.number().int().min(1).max(9999).optional().nullable(),
-  // 05.23 D-14 : demande pour soi-même ou pour un tiers. Facultatif tant que le formulaire ne pose pas la question (règle obligatoire au plan 05).
+  // 05.23 D-14 : demande pour soi-même ou pour un tiers. Obligatoire pour un projet immédiat (règle dans le superRefine).
   on_behalf_of: z.enum(['self', 'third_party']).nullish(),
   surface_m2: z.number().int().min(1).max(1000000).optional().nullable(),
   calendrier_souhaite: z.enum(B2B_CALENDRIERS).optional().nullable(),
@@ -48,6 +48,10 @@ export const b2bRequestSchema = z.object({
   // L'étape 3 du tunnel (description + lots) est sautée pour un partenariat
   // régulier — la description n'est exigée que sur un projet immédiat.
   if (data.need_type !== 'projet_immediat') return
+  // 05.23 D-14 : demandé par le formulaire pour tout projet immédiat.
+  if (!data.on_behalf_of) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['on_behalf_of'], message: "Indiquez si vous agissez pour vous-même ou pour le compte d'un tiers." })
+  }
   // 05.21 — chaque lot demandé par un syndic doit dire quels travaux sont attendus.
   if (data.apporteur_type === 'syndic') {
     for (const c of data.lots_categories ?? []) {
