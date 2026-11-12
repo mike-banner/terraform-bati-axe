@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { maskTender } from '../../../../utils/maskTender'
 import { renderContract, CONTRACT_VERSIONS } from '../../../../utils/contracts'
-import { sha256Hex, getClientMeta, issueOtpChallenge, verifyOtpChallenge, maskEmail, findSignedFramework, insertEngagement, sendSignedCopy } from '../../../../utils/signature'
+import { sha256Hex, getClientMeta, issueOtpChallenge, verifyOtpChallenge, maskEmail, findSignedFramework, insertEngagement, sendSignedCopy, issuePartnerToken } from '../../../../utils/signature'
 import { tenderCap, shouldCloseLot, renderTenderClaimEmail } from '../../../../utils/tenderClaim'
 import { sendEmail } from '../../../../utils/email'
 
@@ -211,6 +211,9 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    const siteUrl = useRuntimeConfig().public.siteUrl || 'https://bati-axe.com'
+    // 05.23 : le partenaire choisit l'artisan depuis son espace (jeton, sans rotation des précédents).
+    const token = await issuePartnerToken(supabase, lot.request_id, { revokePrevious: false })
     const { subject, html } = renderTenderClaimEmail({
       requestRef: (lot.request_id || '').slice(0, 8).toUpperCase(),
       lotCategory: lot.category,
@@ -220,7 +223,8 @@ export default defineEventHandler(async (event) => {
       proEmail: pro.email,
       proPhone: pro.phone ?? null,
       remainingSlots: Math.max(0, tenderCap(decisionStatus) - (claimsAfter ?? 1)),
-      siteUrl: useRuntimeConfig().public.siteUrl || 'https://bati-axe.com',
+      siteUrl,
+      chooseLink: `${siteUrl}/b2b/engagement/${token}`,
     })
     if (req.contact_email) {
       await sendEmail({ to: req.contact_email, sender: 'notifications', subject, html })

@@ -114,19 +114,20 @@ async function signWithCode(code?: string) {
 }
 const resendCode = () => signWithCode()
 
-async function postDeclaration(engagementId: string, body: Record<string, string>, okMessage: string) {
+// 05.23 : le pro confirme ou conteste le devis déposé par le partenaire (aucun montant saisi).
+async function postQuoteDecision(engagementId: string, body: Record<string, string>, okMessage: string) {
   try {
-    await $fetch(`/api/v1/engagements/${engagementId}/declare-quote`, { method: 'POST', body })
+    await $fetch(`/api/v1/engagements/${engagementId}/confirm-quote`, { method: 'POST', body })
     await refreshTenders()
     tenderMessage.value = okMessage
   } catch (err: any) {
-    tenderMessage.value = err?.data?.statusMessage || 'Déclaration impossible.'
+    tenderMessage.value = err?.data?.statusMessage || 'Décision impossible.'
   }
 }
-const declareQuote = ({ engagementId, amount }: { engagementId: string; amount: string }) =>
-  postDeclaration(engagementId, { outcome: 'quote', amount }, 'Montant déclaré. Le partenaire va le confirmer.')
-const declareNotAwarded = (engagementId: string) =>
-  postDeclaration(engagementId, { outcome: 'not_awarded' }, 'Déclaration enregistrée.')
+const confirmQuote = ({ engagementId, submissionId }: { engagementId: string; submissionId: string }) =>
+  postQuoteDecision(engagementId, { decision: 'confirm', submission_id: submissionId }, 'Montant confirmé.')
+const contestQuote = ({ engagementId, submissionId, reason }: { engagementId: string; submissionId: string; reason: string }) =>
+  postQuoteDecision(engagementId, { decision: 'contest', submission_id: submissionId, reason }, 'Contestation transmise : BÂTI-AXE arbitre.')
 
 async function submitReport(payload: { reason: string; details: string }) {
   if (!reportTarget.value) return
@@ -747,8 +748,8 @@ async function copyToClipboard(text: string) {
           :claiming="claimSubmitting"
           @claim="claimTarget = tenders.find(x => x.lot_id === $event)"
           @report="reportTarget = tenders.find(x => x.lot_id === $event)"
-          @declare="declareQuote"
-          @not-awarded="declareNotAwarded"
+          @confirm-quote="confirmQuote"
+          @contest-quote="contestQuote"
         />
       </div>
 

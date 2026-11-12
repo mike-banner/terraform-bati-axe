@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { AMOUNT_INPUT_MAXLENGTH, AMOUNT_INPUT_PATTERN } from '~/utils/commissionTiers'
 import { QUALIFICATION_LABELS } from '~/utils/qualifications'
+import { ENGAGEMENT_STATUS_LABELS_PRO, NOT_AWARDED_REASON_LABELS, REASON_MIN, REASON_MAX } from '~/utils/b2bCommissionRules'
 
 const CALENDRIER_LABELS: Record<string, string> = {
   urgent: 'Urgent',
@@ -22,20 +22,21 @@ const props = defineProps<{
 const emit = defineEmits<{
   claim: [lotId: string]
   report: [lotId: string]
-  declare: [payload: { engagementId: string; amount: string }]
-  notAwarded: [engagementId: string]
+  confirmQuote: [payload: { engagementId: string; submissionId: string }]
+  contestQuote: [payload: { engagementId: string; submissionId: string; reason: string }]
 }>()
 
-const STATUS_LABELS: Record<string, string> = {
-  signed: 'Avenant signé — devis à déclarer',
-  not_awarded: 'Chantier non obtenu (déclaré)',
-  quote_declared: 'Devis déclaré — en attente de confirmation du partenaire',
-  quote_confirmed: 'Devis confirmé par le partenaire',
-  deposit_paid: 'Acompte versé',
-  invoiced: 'Commission facturée',
-}
 const formatEur = (cents: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(cents / 100)
-const amount = ref('')
+// D-03 : le pro ne saisit aucun montant ; il confirme ou conteste celui que le partenaire a déposé.
+const contesting = ref(false)
+const contestReason = ref('')
+const statusLabel = computed(() => {
+  const e = props.tender.engagement
+  if (!e) return ''
+  const base = (ENGAGEMENT_STATUS_LABELS_PRO as Record<string, string>)[e.status] ?? e.status
+  const why = e.status === 'not_awarded' && e.not_awarded_reason ? NOT_AWARDED_REASON_LABELS[e.not_awarded_reason] : null
+  return why ? `${base} — ${why}` : base
+})
 
 const CATEGORY_LABELS: Record<string, string> = {
   maconnerie:   'Maçonnerie & Gros Œuvre',
@@ -231,43 +232,82 @@ async function copyToClipboard(text: string) {
 
     <!-- Suivi de l'avenant et déclaration du devis -->
     <div v-if="tender.status !== 'locked' && tender.engagement" data-testid="engagement-block" class="px-5 pb-3 space-y-2">
-      <p class="text-sm font-semibold text-foreground">{{ STATUS_LABELS[tender.engagement.status] ?? tender.engagement.status }}</p>
-      <p v-if="tender.engagement.declared_amount_cents != null" class="text-xs text-muted-foreground">
-        Montant déclaré : {{ formatEur(tender.engagement.declared_amount_cents) }} HT
+      <p class="text-sm font-semibold text-foreground">{{ statusLabel }}</p>
+      <p v-if="tender.engagement.status === 'selected'" class="text-xs text-muted-foreground">
+        Le partenaire vous a retenu. Établissez votre devis directement avec lui ; il le déposera ici une fois signé par son client.
       </p>
+
+      <!-- Devis déposé par le partenaire : confirmer en un clic ou contester -->
+      <div v-if="tender.engagement.open_submission?.status === 'pending'" data-testid="quote-to-confirm" class="space-y-2 border border-border rounded-sm p-3">
+        <p class="text-sm">
+          Devis déposé par le partenaire : <strong>{{ formatEur(tender.engagement.open_submission.amount_ht_cents) }} HT</strong>
+          <template v-if="tender.engagement.open_submission.planned_due_dates?.length">
+            — versements prévus le {{ tender.engagement.open_submission.planned_due_dates.map((d: string) => new Date(d + 'T12:00:00Z').toLocaleDateString('fr-FR', { timeZone: 'UTC' })).join(' / ') }}
+          </template>
+        </p>
+        <a :href="tender.engagement.open_submission.file_url" target="_blank" rel="noopener" class="text-xs underline underline-offset-2">Voir le devis (PDF)</a>
+        <p class="text-xs text-muted-foreground">
+          En confirmant, vous déclarez le montant HT du devis signé (article 5 de votre avenant). La commission est calculée par BÂTI-AXE.
+        </p>
+        <div v-if="!contesting" class="flex flex-wrap gap-2">
+          <button
+            type="button"
+            class="h-10 px-4 rounded-full bg-foreground text-background text-xs font-semibold hover:opacity-80"
+            @click="emit('confirmQuote', { engagementId: tender.engagement.id, submissionId: tender.engagement.open_submission.id })"
+          >
+            Confirmer le montant
+          </button>
+          <button type="button" class="h-10 px-4 rounded-full border border-border text-xs font-semibold hover:bg-muted" @click="contesting = true">
+            Contester
+          </button>
+        </div>
+        <form
+          v-else
+          class="space-y-2"
+          @submit.prevent="emit('contestQuote', { engagementId: tender.engagement.id, submissionId: tender.engagement.open_submission.id, reason: contestReason.trim() }); contesting = false; contestReason = ''"
+        >
+          <textarea
+            :id="`contest-reason-${tender.engagement.id}`"
+            v-model="contestReason"
+            aria-label="Motif de la contestation"
+            :minlength="REASON_MIN"
+            :maxlength="REASON_MAX"
+            required
+            rows="3"
+            class="w-full px-3 py-2 border border-border rounded-sm text-sm"
+          />
+          <div class="flex gap-2">
+            <button
+              type="submit"
+              :disabled="contestReason.trim().length < REASON_MIN"
+              class="h-10 px-4 rounded-full bg-foreground text-background text-xs font-semibold hover:opacity-80 disabled:opacity-40"
+            >
+              Envoyer la contestation
+            </button>
+            <button type="button" class="h-10 px-4 rounded-full border border-border text-xs font-semibold hover:bg-muted" @click="contesting = false">
+              Annuler
+            </button>
+          </div>
+        </form>
+      </div>
+      <p v-else-if="tender.engagement.open_submission?.status === 'contested'" class="text-xs text-muted-foreground">
+        Montant contesté — BÂTI-AXE arbitre.
+      </p>
+
       <p v-if="tender.engagement.confirmed_amount_cents != null" class="text-xs text-muted-foreground">
         Montant confirmé : {{ formatEur(tender.engagement.confirmed_amount_cents) }} HT
       </p>
       <p v-if="tender.engagement.commission_cents != null" class="text-xs text-muted-foreground">
         Commission HT (calculée par BÂTI-AXE) : {{ formatEur(tender.engagement.commission_cents) }}
       </p>
-      <form
-        v-if="['signed', 'quote_declared', 'not_awarded'].includes(tender.engagement.status)"
-        class="flex flex-wrap items-center gap-2"
-        @submit.prevent="emit('declare', { engagementId: tender.engagement.id, amount })"
-      >
-        <input
-          v-model="amount"
-          type="text"
-          inputmode="decimal"
-          :maxlength="AMOUNT_INPUT_MAXLENGTH"
-          :pattern="AMOUNT_INPUT_PATTERN"
-          required
-          aria-label="Montant HT du devis signé"
-          placeholder="ex. 250 000"
-          class="h-10 w-36 px-3 border border-border rounded-sm text-sm"
-        >
-        <button type="submit" class="h-10 px-4 rounded-full bg-foreground text-background text-xs font-semibold hover:opacity-80">
-          Déclarer le montant HT
-        </button>
-        <button
-          type="button"
-          class="h-10 px-4 rounded-full border border-border text-xs font-semibold hover:bg-muted"
-          @click="emit('notAwarded', tender.engagement.id)"
-        >
-          Chantier non obtenu
-        </button>
-      </form>
+      <div v-if="tender.engagement.schedule" data-testid="pro-schedule" class="space-y-0.5">
+        <p class="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Échéancier de la commission</p>
+        <p v-for="i in tender.engagement.schedule" :key="i.seq" class="text-xs text-muted-foreground">
+          {{ i.label }} : {{ formatEur(i.amount_cents) }}
+          <template v-if="i.due_on"> — prévu le {{ new Date(i.due_on + 'T12:00:00Z').toLocaleDateString('fr-FR', { timeZone: 'UTC' }) }}</template>
+          <template v-if="i.validated_at"> — exigible</template>
+        </p>
+      </div>
       <a :href="`/api/v1/engagements/${tender.engagement.id}/document`" target="_blank" rel="noopener" class="text-xs underline underline-offset-2 text-muted-foreground hover:text-foreground">
         Voir l'avenant signé
       </a>

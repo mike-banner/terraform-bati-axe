@@ -44,6 +44,7 @@ vi.mock('../../server/utils/signature', async (orig) => {
   return {
     ...real,
     findSignedFramework: vi.fn(async () => state.cfg.framework ?? null),
+    issuePartnerToken: vi.fn(async () => 'f'.repeat(64)),
     issueOtpChallenge: vi.fn(async () => ({ challengeId: 'c1', emailHint: 'p***@e***.fr' })),
     verifyOtpChallenge: vi.fn(async () => { if (state.verify) throw state.verify; return { challengeId: 'c1' } }),
     insertEngagement: vi.fn(async (_s: any, row: any) => { state.calls.push(['b2b_engagements', row]); return { id: 'eng1', signed_at: 'ts', created: true } }),
@@ -139,5 +140,9 @@ describe('index.get.ts — liste verrouillée', () => {
     expect(res.tenders[0].contact_email).toBe(P.email)
     expect(res.tenders[0].engagement.id).toBe('am')
     expect(res.frameworkSigned).toBe(true)
+    // 05.23 : aucun dépôt → pas de devis à confirmer ; plus de montant déclaré par le pro.
+    expect(res.tenders[0].engagement.open_submission).toBeNull()
+    expect('declared_amount_cents' in res.tenders[0].engagement).toBe(false)
+    expect(JSON.stringify(res)).not.toMatch(/file_key|partner_share|contest_reason/)
   })
 })

@@ -1,6 +1,43 @@
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { maskTender, isTenderRevealed } from '../../../utils/maskTender'
 import { findSignedFramework } from '../../../utils/signature'
+import { computeCommissionPlan } from '../../../utils/b2bCommissionPlan'
+import { installmentLabels } from '../../../../app/utils/b2bCommissionRules'
+
+// Charge utile de suivi côté pro : aucune information interne (clé de stockage, part partenaire, motif de contestation).
+function buildEngagement(a: any, submissions: any[], validations: any[]) {
+  const mine = submissions.filter(s => s.engagement_id === a.id)
+  const confirmed = mine.filter(s => s.status === 'confirmed')
+  const open = [...mine].reverse().find(s => s.status === 'pending' || s.status === 'contested') ?? null
+  const plannedDates: string[] | null = confirmed.length > 0 ? (confirmed[confirmed.length - 1].planned_due_dates ?? null) : null
+  const base = a.confirmed_amount_cents != null ? Number(a.confirmed_amount_cents) : 0
+  const bySeq = new Map<number, string>(validations.filter(v => v.engagement_id === a.id).map(v => [v.seq, v.validated_at]))
+  // D-06 bis / D-27 : échéancier de la commission (calcul serveur), libellés publics.
+  const labels = installmentLabels(base)
+  const schedule = base > 0
+    ? computeCommissionPlan(base).schedule.map(i => ({
+      seq: i.seq, label: labels[i.seq - 1] ?? i.label, amount_cents: i.amount_cents,
+      due_on: plannedDates?.[i.seq - 1] ?? null, validated_at: bySeq.get(i.seq) ?? null,
+    }))
+    : null
+  return {
+    id: a.id,
+    status: a.status,
+    selected_at: a.selected_at ?? null,
+    not_awarded_reason: a.not_awarded_reason ?? null,
+    signed_at: a.signed_at,
+    confirmed_amount_cents: a.confirmed_amount_cents,
+    commission_cents: a.commission_cents,
+    schedule,
+    open_submission: open
+      ? {
+        id: open.id, amount_ht_cents: Number(open.amount_ht_cents), planned_due_dates: open.planned_due_dates ?? [],
+        status: open.status, created_at: open.created_at, file_url: '/api/v1/b2b/quotes/' + open.id + '/file',
+      }
+      : null,
+    confirmed_submissions_count: confirmed.length,
+  }
+}
 
 export default defineEventHandler(async (event) => {
   const supabaseAuth = await serverSupabaseClient(event) as any
@@ -55,11 +92,24 @@ export default defineEventHandler(async (event) => {
 
   const { data: amendments } = await supabase
     .from('b2b_engagements')
-    .select('id, lot_id, status, declared_amount_cents, confirmed_amount_cents, commission_cents, signed_at')
+    .select('id, lot_id, status, selected_at, not_awarded_reason, confirmed_amount_cents, commission_cents, signed_at')
     .eq('type', 'lot_amendment')
     .eq('pro_id', user.id)
 
   const amendmentByLotId = new Map<string, any>((amendments ?? []).map((a: any) => [a.lot_id, a]))
+
+  // 05.23 : dépôts de devis du partenaire et validations d'étape, pour le suivi du pro.
+  const amendmentIds = (amendments ?? []).map((a: any) => a.id)
+  const { data: submissionRows } = amendmentIds.length > 0
+    ? await supabase.from('b2b_quote_submissions')
+      .select('id, engagement_id, amount_ht_cents, planned_due_dates, status, created_at')
+      .in('engagement_id', amendmentIds).order('created_at')
+    : { data: [] }
+  const { data: validationRows } = amendmentIds.length > 0
+    ? await supabase.from('b2b_installment_validations').select('engagement_id, seq, validated_at').in('engagement_id', amendmentIds)
+    : { data: [] }
+  const submissions: any[] = submissionRows ?? []
+  const validations: any[] = validationRows ?? []
 
   const { data: zonesRows } = await supabase
     .from('zones')
@@ -84,16 +134,7 @@ export default defineEventHandler(async (event) => {
       )
       return {
         ...masked,
-        engagement: revealed
-          ? {
-              id: amendment.id,
-              status: amendment.status,
-              declared_amount_cents: amendment.declared_amount_cents,
-              confirmed_amount_cents: amendment.confirmed_amount_cents,
-              commission_cents: amendment.commission_cents,
-              signed_at: amendment.signed_at,
-            }
-          : null,
+        engagement: revealed ? buildEngagement(amendment, submissions, validations) : null,
       }
     })
 

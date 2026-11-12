@@ -1,5 +1,4 @@
 import { test, expect, type Page } from '@playwright/test'
-import { AMOUNT_INPUT_PATTERN } from '../../app/utils/commissionTiers'
 
 // ─── Auth mock helpers ─────────────────────────────────────────────────────────
 
@@ -554,21 +553,75 @@ test.describe('Appels d\'offres — verrou juridique (05.21)', () => {
     await expect(page.getByText('Marc Petit')).toBeVisible({ timeout: 10_000 })
   })
 
-  test('déclaration du montant HT du devis', async ({ page }) => {
-    await setupAo(page, { tenders: [CLAIMED_LOT], frameworkSigned: true })
+  const SUBMITTED_LOT = {
+    ...CLAIMED_LOT,
+    engagement: {
+      id: 'eng-1', status: 'quote_submitted', selected_at: new Date().toISOString(), not_awarded_reason: null,
+      confirmed_amount_cents: null, commission_cents: null, schedule: null, confirmed_submissions_count: 0,
+      signed_at: new Date().toISOString(),
+      open_submission: {
+        id: 'sub-1', amount_ht_cents: 25000000, planned_due_dates: ['2026-12-01', '2027-03-01'], status: 'pending',
+        created_at: new Date().toISOString(), file_url: '/api/v1/b2b/quotes/sub-1/file',
+      },
+    },
+  }
+
+  test('le pro confirme le devis déposé par le partenaire', async ({ page }) => {
+    await setupAo(page, { tenders: [SUBMITTED_LOT], frameworkSigned: true })
     let captured: unknown = null
-    await page.route('**/api/v1/engagements/eng-1/declare-quote', (route) => {
+    await page.route('**/api/v1/engagements/eng-1/confirm-quote', (route) => {
       captured = route.request().postDataJSON()
-      return route.fulfill(json({ status: 'quote_declared', declared_amount_cents: 25000000, commission_cents: 1600000 }))
+      return route.fulfill(json({ status: 'quote_confirmed', confirmed_amount_cents: 25000000, commission_cents: 1900000 }))
     })
     await openAoTab(page)
-    await expect(page.locator('[data-testid="engagement-block"]')).toBeVisible({ timeout: 10_000 })
-    const input = page.getByLabel('Montant HT du devis signé')
-    await expect(input).toHaveAttribute('maxlength', '16')
-    await expect(input).toHaveAttribute('pattern', AMOUNT_INPUT_PATTERN)
-    await input.fill('250000')
-    await page.getByRole('button', { name: 'Déclarer le montant HT' }).click()
-    await expect.poll(() => captured).toEqual({ outcome: 'quote', amount: '250000' })
+    await expect(page.locator('[data-testid="quote-to-confirm"]')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByRole('link', { name: 'Voir le devis (PDF)' })).toHaveAttribute('href', '/api/v1/b2b/quotes/sub-1/file')
+    // D-03 : plus aucune saisie de montant côté artisan.
+    await expect(page.getByLabel('Montant HT du devis signé')).toHaveCount(0)
+    await page.getByRole('button', { name: 'Confirmer le montant' }).click()
+    await expect.poll(() => captured).toEqual({ decision: 'confirm', submission_id: 'sub-1' })
+  })
+
+  test('le pro conteste le montant', async ({ page }) => {
+    await setupAo(page, { tenders: [SUBMITTED_LOT], frameworkSigned: true })
+    let captured: unknown = null
+    await page.route('**/api/v1/engagements/eng-1/confirm-quote', (route) => {
+      captured = route.request().postDataJSON()
+      return route.fulfill(json({ status: 'contested' }))
+    })
+    await openAoTab(page)
+    await page.getByRole('button', { name: 'Contester' }).click()
+    const reason = page.getByLabel('Motif de la contestation')
+    await expect(reason).toHaveAttribute('maxlength', '500')
+    const send = page.getByRole('button', { name: 'Envoyer la contestation' })
+    await reason.fill('court')
+    await expect(send).toBeDisabled()
+    await reason.fill('Le montant ne correspond pas au devis signé')
+    await expect(send).toBeEnabled()
+    await send.click()
+    await expect.poll(() => captured).toEqual({ decision: 'contest', submission_id: 'sub-1', reason: 'Le montant ne correspond pas au devis signé' })
+  })
+
+  test('la carte pro n\'affiche jamais « facture » (D-27)', async ({ page }) => {
+    const confirmed = {
+      ...CLAIMED_LOT,
+      engagement: {
+        id: 'eng-1', status: 'quote_confirmed', selected_at: new Date().toISOString(), not_awarded_reason: null,
+        confirmed_amount_cents: 25000000, commission_cents: 1900000, confirmed_submissions_count: 1, open_submission: null,
+        signed_at: new Date().toISOString(),
+        schedule: [
+          { seq: 1, label: 'Acompte', amount_cents: 570000, due_on: '2026-12-01', validated_at: '2026-12-02T00:00:00Z' },
+          { seq: 2, label: 'Avancement des travaux', amount_cents: 760000, due_on: '2027-02-01', validated_at: null },
+          { seq: 3, label: 'Étape suivante', amount_cents: 570000, due_on: '2027-04-01', validated_at: null },
+        ],
+      },
+    }
+    await setupAo(page, { tenders: [confirmed], frameworkSigned: true })
+    await openAoTab(page)
+    const block = page.locator('[data-testid="engagement-block"]')
+    await expect(block).toBeVisible({ timeout: 10_000 })
+    await expect(block.getByText('Étape suivante')).toBeVisible()
+    await expect(block.getByText(/factur/i)).toHaveCount(0)
   })
 
   test('la modale de positionnement affiche les paliers de commission', async ({ page }) => {
