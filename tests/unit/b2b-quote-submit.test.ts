@@ -49,7 +49,8 @@ vi.stubGlobal('useRuntimeConfig', () => ({ public: { siteUrl: 'http://test' } })
 
 const sendEmail = vi.fn(async () => {})
 const notifyAdmin = vi.fn(async () => {})
-const fetchMock = vi.fn(async () => ({ ok: true, headers: { get: () => '1000' } }))
+const headOk = (type = 'application/pdf', size = '1000') => ({ ok: true, headers: { get: (h: string) => (h.toLowerCase() === 'content-type' ? type : size) } })
+const fetchMock = vi.fn(async () => headOk())
 vi.stubGlobal('fetch', fetchMock)
 
 vi.mock('#supabase/server', () => ({
@@ -87,7 +88,7 @@ beforeEach(() => {
   state.inserts = []; state.updates = []; state.user = USER
   state.cfg = { framework: { id: 'f1', signed_at: 't' }, eng: { id: ENG, status: 'selected', pro_id: 'pro-1' } }
   sendEmail.mockClear(); notifyAdmin.mockClear(); fetchMock.mockClear()
-  fetchMock.mockResolvedValue({ ok: true, headers: { get: () => '1000' } })
+  fetchMock.mockResolvedValue(headOk())
 })
 
 describe('clé R2', () => {
@@ -142,6 +143,16 @@ describe('quote', () => {
   it('fichier absent de R2 → 422', async () => {
     fetchMock.mockResolvedValue({ ok: false, headers: { get: () => null } })
     await expect(runQ(qBody())).rejects.toMatchObject({ statusCode: 422, message: 'Fichier du devis introuvable : recommencez le dépôt.' })
+  })
+  it('objet stocké qui n’est pas un PDF → 422', async () => {
+    fetchMock.mockResolvedValue(headOk('text/html'))
+    await expect(runQ(qBody())).rejects.toMatchObject({ statusCode: 422, message: 'Seuls les PDF sont acceptés.' })
+  })
+  it('taille stockée ≠ taille déclarée ou > 20 Mo → 422', async () => {
+    fetchMock.mockResolvedValue(headOk('application/pdf', '999'))
+    await expect(runQ(qBody())).rejects.toMatchObject({ statusCode: 422 })
+    fetchMock.mockResolvedValue(headOk('application/pdf', String(21 * 1024 * 1024)))
+    await expect(runQ(qBody())).rejects.toMatchObject({ statusCode: 422, message: 'Fichier trop volumineux (20 Mo maximum).' })
   })
   it('nombre de dates ≠ versements attendus → 422', async () => {
     await expect(runQ(qBody({ planned_due_dates: [future(10), future(40), future(80)] }))).rejects.toMatchObject({ statusCode: 422, message: 'Indiquez une date prévue par versement.' })

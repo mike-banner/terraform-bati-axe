@@ -54,6 +54,6 @@ export default defineEventHandler(async (event) => {
   }
 
   const fileKey = buildQuoteKey(body.engagement_id)
-  const signedUrl = await signB2bObjectUrl(event, fileKey, 'PUT', 600)
+  const signedUrl = await signB2bObjectUrl(event, fileKey, 'PUT', 600, { contentType: 'application/pdf', contentLength: body.size })
   return { status: 'SUCCESS', signedUrl, fileKey }
 })

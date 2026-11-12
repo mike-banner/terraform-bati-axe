@@ -85,8 +85,17 @@ export default defineEventHandler(async (event) => {
   // T-05.23-17 : le fichier doit réellement être sur R2 avant l'enregistrement.
   const head = await fetch(await signB2bObjectUrl(event, body.file_key, 'HEAD', 60), { method: 'HEAD' })
   if (!head.ok) throw createError({ statusCode: 422, statusMessage: 'Fichier du devis introuvable : recommencez le dépôt.' })
-  if (Number(head.headers.get('content-length')) > QUOTE_MAX_FILE_BYTES) {
+  // Le type et la taille sont déjà verrouillés dans l'URL d'envoi ; on recontrôle l'objet réellement stocké.
+  const storedType = String(head.headers.get('content-type') ?? '').split(';')[0]!.trim().toLowerCase()
+  const storedSize = Number(head.headers.get('content-length'))
+  if (storedType !== 'application/pdf') {
+    throw createError({ statusCode: 422, statusMessage: 'Seuls les PDF sont acceptés.' })
+  }
+  if (!Number.isFinite(storedSize) || storedSize <= 0 || storedSize > QUOTE_MAX_FILE_BYTES) {
     throw createError({ statusCode: 422, statusMessage: 'Fichier trop volumineux (20 Mo maximum).' })
+  }
+  if (storedSize !== body.file_size) {
+    throw createError({ statusCode: 422, statusMessage: 'Fichier du devis incohérent : recommencez le dépôt.' })
   }
 
   const { data: inserted, error } = await supabase
