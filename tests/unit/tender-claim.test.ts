@@ -32,10 +32,9 @@ describe('renderTenderClaimEmail', () => {
     contactName: 'Marie Curie',
     proCompany: 'Toiture Pro SARL',
     proContactName: 'Jean Artisan',
-    proEmail: 'jean@toiture-pro.fr',
-    proPhone: '06 11 22 33 44',
     remainingSlots: 2,
     siteUrl: 'https://bati-axe.com',
+    chooseLink: 'https://bati-axe.com/b2b/engagement/tok',
   }
 
   it('sujet contient "Un artisan est intéressé" et la référence AO', () => {
@@ -44,10 +43,11 @@ describe('renderTenderClaimEmail', () => {
     expect(subject).toContain('ABCD1234')
   })
 
-  it('html contient le nom d\'entreprise, l\'email et le téléphone de l\'artisan', () => {
-    const { html } = renderTenderClaimEmail(opts)
+  it("html contient le nom d'entreprise mais ni e-mail ni téléphone de l'artisan", () => {
+    const { html } = renderTenderClaimEmail({ ...opts, proEmail: 'jean@toiture-pro.fr', proPhone: '06 11 22 33 44' } as any)
     expect(html).toContain('Toiture Pro SARL')
-    expect(html).toContain('jean@toiture-pro.fr')
-    expect(html).toContain('06 11 22 33 44')
+    expect(html).not.toContain('jean@toiture-pro.fr')
+    expect(html).not.toContain('06 11 22 33 44')
+    expect(html).not.toContain('mailto:')
   })
 })

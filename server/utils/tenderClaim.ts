@@ -14,19 +14,18 @@ export function shouldCloseLot(opts: { decisionStatus?: string | null; claimsAft
 }
 
 // TEND-16 — email structuré au partenaire : sujet identifiable, référence AO,
-// coordonnées de l'artisan intéressé.
+// identité de l'artisan intéressé (SANS e-mail ni téléphone : ils ne sont révélés
+// au partenaire qu'après la signature de l'avenant et le choix, voir 05.23 D-08).
 export function renderTenderClaimEmail(opts: {
   requestRef: string
   lotCategory: string
   contactName?: string | null
   proCompany: string
   proContactName?: string | null
-  proEmail: string
-  proPhone?: string | null
   remainingSlots: number
   siteUrl: string
   // 05.23 : lien de l'espace partenaire pour choisir l'artisan (jeton).
-  chooseLink?: string | null
+  chooseLink: string
 }): { subject: string; html: string } {
   const rawLabel = CATEGORY_LABELS[opts.lotCategory] ?? opts.lotCategory
   // HTML : échappé. Le sujet de l'e-mail est du texte brut et utilise rawLabel.
@@ -37,8 +36,6 @@ export function renderTenderClaimEmail(opts: {
     <table style="width:100%;border-collapse:collapse;margin:8px 0 0;">
       <tr><td style="padding:8px 0;font-size:13px;color:#64748B;">Entreprise</td><td style="padding:8px 0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${escapeHtml(opts.proCompany)}</td></tr>
       <tr><td style="padding:8px 0;border-top:1px solid #E2E8F0;font-size:13px;color:#64748B;">Interlocuteur</td><td style="padding:8px 0;border-top:1px solid #E2E8F0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${escapeHtml(opts.proContactName || '—')}</td></tr>
-      <tr><td style="padding:8px 0;border-top:1px solid #E2E8F0;font-size:13px;color:#64748B;">Téléphone</td><td style="padding:8px 0;border-top:1px solid #E2E8F0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${escapeHtml(opts.proPhone || '—')}</td></tr>
-      <tr><td style="padding:8px 0;border-top:1px solid #E2E8F0;font-size:13px;color:#64748B;">Email</td><td style="padding:8px 0;border-top:1px solid #E2E8F0;text-align:right;font-size:13px;color:#0F172A;font-weight:600;">${escapeHtml(opts.proEmail)}</td></tr>
     </table>`
 
   const footerNote = opts.remainingSlots === 0
@@ -48,11 +45,9 @@ export function renderTenderClaimEmail(opts: {
   const html = renderEmail({
     title: 'Un artisan est intéressé par votre appel d\'offres',
     preheader: `Un artisan certifié BÂTI-AXE s'est positionné sur votre appel d'offres ${label}.`,
-    intro: `Bonjour ${escapeHtml(opts.contactName || '')}, un artisan certifié BÂTI-AXE s'est positionné sur le lot ${label} de votre appel d'offres (réf. ${ref}).${opts.chooseLink ? ' Vous retiendrez un seul artisan par lot depuis votre espace.' : ''}`,
+    intro: `Bonjour ${escapeHtml(opts.contactName || '')}, un artisan certifié BÂTI-AXE s'est positionné sur le lot ${label} de votre appel d'offres (réf. ${ref}). Vous retiendrez un seul artisan par lot depuis votre espace.`,
     bodyHtml: detailsHtml,
-    cta: opts.chooseLink
-      ? { label: 'Voir les artisans intéressés et choisir', href: opts.chooseLink }
-      : { label: 'Contacter l\'artisan', href: `mailto:${opts.proEmail}` },
+    cta: { label: 'Voir les artisans intéressés et choisir', href: opts.chooseLink },
     footerNote,
   })
 

@@ -220,8 +220,6 @@ export default defineEventHandler(async (event) => {
       contactName: req.contact_name,
       proCompany: pro.company_name || pro.full_name || '',
       proContactName: pro.full_name,
-      proEmail: pro.email,
-      proPhone: pro.phone ?? null,
       remainingSlots: Math.max(0, tenderCap(decisionStatus) - (claimsAfter ?? 1)),
       siteUrl,
       chooseLink: `${siteUrl}/b2b/engagement/${token}`,
