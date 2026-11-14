@@ -154,3 +154,4 @@ Question au juriste : ces mécanismes (a) à (d) suffisent-ils, ou l'information
 3. `docs/legal/CONTRAT_APPORT_AFFAIRES_B2B.md`, `docs/legal/CHARTE_EXCLUSIVITE_B2C.md`, `docs/legal/REGISTRE_RGPD.md`.
 4. Les notes client du 2026-11-06 (modèle hybride, contrat tripartite Stripe Connect, tunnel de leads).
 5. `.planning/notes/20261108-REFONTE_CHOIX_PARTENAIRE_DEVIS-SPEC.md` (nouveau mécanisme).
+6. `docs/legal/PAGE_PUBLIQUE_REMUNERATION-BROUILLON.md` (brouillon de la page « Comment BÂTI-AXE est rémunéré » et questions associées).
