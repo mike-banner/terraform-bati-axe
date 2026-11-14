@@ -88,9 +88,9 @@ Ensuite (priorité pilote, voir ROADMAP § « Priorités pilote v1 ») : **P3** 
   - Envoi réel d'un PDF depuis le navigateur sur le dev déployé (la signature a été validée avec Node seulement).
   - Lancer `cron-b2b-reminders` à la main ; vérifier les secrets GitHub `CRON_BASE_URL` et `CRON_SECRET` (non vérifiés).
   - « Qui agit ? » doit proposer « Herman » sur le dev déployé (Terraform `TF_VAR_admin_operators`, non vérifié).
-  - Étape 12 du plan 09 (avenant de travaux 200 000 → 250 000 € HT) : aucun écran, à clarifier.
+  - Étape 12 du plan 09 (avenant de travaux) : le dépôt d'un nouveau devis existe (page partenaire, bouton « Déposer un nouveau devis (avenant de travaux) » une fois un devis confirmé, confirmation par l'artisan, assiette cumulée). Le montant saisi est celui de l'avenant seul : 50 000 € pour passer de 200 000 à 250 000 € HT. À dérouler en recette.
   - Diff de `database.types.ts` très gros (+2465/−1760), origine non vérifiée.
-  - L'e-mail « artisan intéressé » envoie encore l'e-mail et le téléphone de l'artisan au partenaire (décision de Mike attendue).
+  - E-mail « artisan intéressé » : l'e-mail et le téléphone de l'artisan ont été retirés (`d1e423f`) ; le partenaire ne voit que l'entreprise et l'interlocuteur, et un lien vers son espace.
   - `.env` local : le couple `R2_ACCESS_KEY_ID`/`R2_SECRET_ACCESS_KEY` est faux (secret de 32 caractères, 401) ; le bon couple est `DEV_CF_R2_*`.
   - Écarts gabarits v1 / flux 05.23 : §15 de `docs/legal/POINTS_A_VALIDER_AVEC_JURISTE.md`. **Bascule prod bloquée par la relecture de l'avocat.**
 - Non faits : `05.23-XX-SUMMARY.md` et coches du `ROADMAP.md` pour les plans 08-11.
