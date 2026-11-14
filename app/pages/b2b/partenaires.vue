@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { PHONE_FR_REGEX, PHONE_FR_PATTERN, PERSON_NAME_REGEX, PERSON_NAME_PATTERN, COMPANY_NAME_REGEX, COMPANY_NAME_PATTERN, CERTIFICATION_REGEX, CERTIFICATION_PATTERN, CONTACT_LABELS, sanitizePhoneInput } from '~/utils/contactFields'
+import { departmentLabel } from '~/utils/departments'
 import { APPORTEUR_LABELS, BUDGET_OPTIONS, TRAVAUX_OPTIONS, LOT_CATEGORY_OPTIONS, CALENDRIER_OPTIONS } from '~/types/b2b'
 import type { B2bApporteurType, B2bNeedType, B2bBudgetRange, B2bRequestFile, B2bTravauxSuggere, B2bLotCategory, B2bCalendrier } from '~/types/b2b'
 
@@ -17,8 +18,9 @@ const submittedId = ref('')
 // Form data
 const apporteurType = ref<B2bApporteurType | ''>('')
 const needType = ref<B2bNeedType | ''>('')
-const projectLocation = ref('78 — Yvelines')
+const projectLocation = ref('')
 const projectPostalCode = ref('')
+const projectDepartment = computed(() => departmentLabel(projectPostalCode.value))
 const projectPostalCodeOk = computed(() => /^\d{5}$/.test(projectPostalCode.value.trim()))
 const budgetRange = ref<B2bBudgetRange | ''>('')
 const certificationNumber = ref('')
@@ -337,15 +339,18 @@ async function submitRequest() {
         <!-- Location -->
         <div class="mb-4 grid sm:grid-cols-[1fr_140px] gap-3">
           <div>
-            <label class="block text-sm font-semibold text-foreground mb-1.5">Adresse ou département du projet</label>
+            <label class="block text-sm font-semibold text-foreground mb-1.5" for="project-address">Adresse du chantier <span class="font-normal text-muted-foreground">(facultatif)</span></label>
             <input
+              id="project-address"
               v-model="projectLocation"
               type="text"
               maxlength="200"
               autocomplete="street-address"
-              placeholder="Ex : 78 — Yvelines / 75 — Paris"
+              placeholder="N° et rue, ville"
+              aria-describedby="project-address-hint"
               class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
+            <p id="project-address-hint" class="mt-1 text-xs text-muted-foreground">Communiquée à l'artisan seulement après la signature de son avenant.</p>
           </div>
           <div>
             <label class="block text-sm font-semibold text-foreground mb-1.5">Code postal du chantier *</label>
@@ -360,6 +365,9 @@ async function submitRequest() {
               placeholder="78000"
               class="h-10 w-full px-3 border border-border rounded-sm text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
+            <p class="mt-1 text-xs" :class="projectDepartment ? 'text-foreground font-semibold' : 'text-muted-foreground'" data-testid="project-department">
+              {{ projectDepartment ? `Département : ${projectDepartment}` : "Le département s'affiche d'après le code postal." }}
+            </p>
           </div>
         </div>
 

@@ -1,3 +1,4 @@
+import { departmentLabel } from '../../app/utils/departments'
 export interface TenderLotRow {
   id: string
   category: string
@@ -45,6 +46,8 @@ export function maskTender(lot: TenderLotRow, claimed: boolean): Record<string, 
     category: lot.category,
     lot_status: lot.status,
     zone_name: lot.zone_name ?? null,
+    // Département déduit du code postal : visible avant l'engagement (l'adresse et le code postal exact ne le sont pas).
+    department: departmentLabel(req.project_postal_code),
     budget_range: req.budget_range ?? null,
     decision_status: req.decision_status ?? 'en_attente',
     created_at: lot.created_at,

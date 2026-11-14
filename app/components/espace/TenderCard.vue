@@ -84,6 +84,7 @@ async function copyToClipboard(text: string) {
         </div>
         <div class="flex items-center gap-2 flex-wrap text-xs text-muted-foreground">
           <LeadAge v-if="tender.created_at" :created-at="tender.created_at" />
+          <span v-if="tender.department" class="font-semibold text-foreground">{{ tender.department }}</span>
           <span v-if="tender.zone_name">{{ tender.zone_name }}</span>
           <span v-if="tender.budget_range">{{ tender.budget_range }}</span>
           <span v-if="tender.request_ref">réf. {{ tender.request_ref }}</span>
@@ -183,6 +184,7 @@ async function copyToClipboard(text: string) {
       <div class="px-5 py-3 space-y-2">
         <p v-if="tender.description" class="text-xs text-muted-foreground"><span class="font-semibold">Contexte du dossier :</span> {{ tender.description }}</p>
         <p v-if="tender.postal_code" class="text-xs text-muted-foreground">Code postal : {{ tender.postal_code }}</p>
+        <p v-if="tender.project_location" class="text-xs text-muted-foreground"><span class="font-semibold">Adresse du chantier :</span> {{ tender.project_location }}</p>
         <div class="flex items-center gap-2 text-sm">
           <span class="text-muted-foreground">Contact</span>
           <span class="text-foreground font-semibold flex items-center gap-2">

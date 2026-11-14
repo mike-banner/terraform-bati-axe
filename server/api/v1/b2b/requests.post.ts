@@ -106,7 +106,7 @@ export default defineEventHandler(async (event) => {
         <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
           <tr><td style="padding: 8px 0; color: #64748B; width: 140px;">Type</td><td style="padding: 8px 0; color: #0F172A; font-weight: 600;">${typeLabel}</td></tr>
           <tr><td style="padding: 8px 0; color: #64748B;">Besoin</td><td style="padding: 8px 0; color: #0F172A;">${data.need_type === 'projet_immediat' ? 'Projet immédiat' : 'Partenariat régulier'}</td></tr>
-          ${data.project_location ? `<tr><td style="padding: 8px 0; color: #64748B;">Localisation</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.project_location ?? '')}</td></tr>` : ''}
+          ${data.project_location ? `<tr><td style="padding: 8px 0; color: #64748B;">Adresse du chantier</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.project_location ?? '')}</td></tr>` : ''}
           ${data.budget_range ? `<tr><td style="padding: 8px 0; color: #64748B;">Budget</td><td style="padding: 8px 0; color: #0F172A;">${budgetLabel}</td></tr>` : ''}
           ${data.certification_number ? `<tr><td style="padding: 8px 0; color: #64748B;">N° certification</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.certification_number ?? '')}</td></tr>` : ''}
           ${data.travaux_suggeres?.length ? `<tr><td style="padding: 8px 0; color: #64748B;">Travaux suggérés</td><td style="padding: 8px 0; color: #0F172A;">${esc(data.travaux_suggeres.join(', '))}</td></tr>` : ''}

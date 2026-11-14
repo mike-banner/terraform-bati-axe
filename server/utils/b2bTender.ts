@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { PHONE_FR_REGEX, PERSON_NAME_REGEX, COMPANY_NAME_REGEX, CERTIFICATION_REGEX } from '../../app/utils/contactFields'
 import { QUALIFICATION_VALUES } from '../../app/utils/qualifications'
+import { departmentLabel } from '../../app/utils/departments'
 
 // Phase 7 — TEND-01 / TEND-05.
 // Schéma extrait de server/api/v1/b2b/requests.post.ts pour être testable sans
@@ -72,6 +73,12 @@ export const b2bRequestSchema = z.object({
       code: z.ZodIssueCode.custom,
       path: ['project_postal_code'],
       message: 'Le code postal du chantier doit comporter 5 chiffres.',
+    })
+  } else if (!departmentLabel(data.project_postal_code)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['project_postal_code'],
+      message: 'Ce code postal ne correspond à aucun département.',
     })
   }
 })
