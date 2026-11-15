@@ -166,6 +166,8 @@ test.describe('Admin — Alertes et suivi par appel', () => {
     const card3 = page.locator('div.border.rounded-sm', { hasText: 'Sans Alerte' }).first()
     await expect(card3.locator('[data-testid="todo-badge"]')).toHaveCount(0)
 
+    // Sur mobile, le menu se referme après le choix d'un onglet : on le rouvre avant le second clic.
+    if ((page.viewportSize()?.width ?? 1280) < 1024) await page.locator('header button').first().click()
     await page.getByRole('button', { name: /Commissions en cours/ }).first().click()
     const line = page.locator('[data-testid="commissions-table"] tbody tr', { hasText: 'ABCD1234' }).first()
     await expect(line.locator('[data-testid="todo-badge"]')).toBeVisible({ timeout: 10_000 })
