@@ -48,8 +48,8 @@ describe('renvoi du lien partenaire', () => {
     expect(audit.row.actor_id).toBe('adm-sub-1')
   })
   it('sendEmail renvoie success:false (clé/domaine Resend) → 502, plus de faux « envoyé »', async () => {
-    state.emailResult = { success: false, error: 'Resend 403' }
-    await expect(call()).rejects.toMatchObject({ statusCode: 502 })
+    state.emailResult = { success: false, error: 'Resend 403 — The bati-axe.com domain is not verified' }
+    await expect(call()).rejects.toMatchObject({ statusCode: 502, statusMessage: expect.stringContaining('not verified') })
     expect(state.inserts.find((i: any) => i.table === 'audit_logs')).toBeUndefined()
   })
   it('sendEmail lève une exception → 502', async () => {

@@ -61,7 +61,8 @@ export default defineEventHandler(async (event) => {
   }
   if (!sent?.success) {
     console.error('[partner-link] e-mail non envoyé:', id, sent?.error)
-    throw createError({ statusCode: 502, statusMessage: 'Envoi impossible : le service e-mail a refusé le message. Vérifiez la configuration Resend.' })
+    const why = typeof sent?.error === 'string' ? sent.error : 'clé Resend absente ou service injoignable'
+    throw createError({ statusCode: 502, statusMessage: `Envoi impossible : ${why}`.slice(0, 250) })
   }
 
   try {

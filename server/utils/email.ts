@@ -77,7 +77,11 @@ export async function sendEmail(options: {
     if (!res.ok) {
       const detail = await res.text()
       console.error('Error sending email via Resend:', res.status, detail)
-      return { success: false, error: `Resend ${res.status}` }
+      // Le motif (« domain is not verified », « API key is invalid »…) n'est pas un secret : on le
+      // remonte pour que l'admin voie la vraie cause sans fouiller les logs Cloudflare.
+      let reason = detail.slice(0, 200)
+      try { reason = JSON.parse(detail)?.message ?? reason } catch { /* corps non JSON */ }
+      return { success: false, error: `Resend ${res.status} — ${reason}` }
     }
 
     return { success: true, data: await res.json() }
