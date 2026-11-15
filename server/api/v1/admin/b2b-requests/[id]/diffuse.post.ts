@@ -3,6 +3,7 @@ import { ACTIVE_TENDER_STATUSES, assertDiffusable, assertPartnerFrameworkSigned,
 import { notifyMatchedB2bPros } from '../../../../../utils/notifyB2bPros'
 import { findSignedFramework } from '../../../../../utils/signature'
 import { matchZone } from '../../../../../utils/zoneMatcher'
+import { resolveSupabaseUserId } from '../../../../../utils/resolveSupabaseUserId'
 
 // Phase 8 (08-02) — endpoint admin « Diffuser » : déclenche la diffusion d'un
 // AO partenaire aux artisans matchés zone/catégorie. TEND-10 (déclenchement à
@@ -95,7 +96,7 @@ export default defineEventHandler(async (event) => {
   // 7. Audit log (non-bloquant)
   try {
     await supabase.from('audit_logs').insert({
-      actor_id: (user as any).id,
+      actor_id: resolveSupabaseUserId(user),
       action: 'b2b_tender_diffused',
       target_table: 'b2b_requests',
       target_id: id,

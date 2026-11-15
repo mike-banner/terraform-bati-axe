@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 import { QUALIFICATION_VALUES } from '../../../../../app/utils/qualifications'
+import { resolveSupabaseUserId } from '../../../../utils/resolveSupabaseUserId'
 
 // 05.10-06 (B2B-06) : mise à jour d'une demande B2B — statut pipeline, assignation, notes.
 
@@ -80,7 +81,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     await supabase.from('audit_logs').insert({
-      actor_id: (user as any).id,
+      actor_id: resolveSupabaseUserId(user),
       action: 'b2b_request_updated',
       target_table: 'b2b_requests',
       target_id: id,

@@ -3,6 +3,7 @@ import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 import { sendEmail } from '../../../../../utils/email'
 import { findSignedFramework, issuePartnerToken, renderPartnerLinkEmail } from '../../../../../utils/signature'
 import { isRateLimited } from '../../../../../utils/rateLimit'
+import { resolveSupabaseUserId } from '../../../../../utils/resolveSupabaseUserId'
 
 // Phase 05.21 — renvoi explicite du lien partenaire (seule rotation : révoque les jetons précédents).
 export default defineEventHandler(async (event) => {
@@ -49,15 +50,23 @@ export default defineEventHandler(async (event) => {
     link: `${siteUrl}/b2b/engagement/${token}`,
     reason,
   })
+  // sendEmail ne lève jamais : il renvoie { success: false } (clé Resend absente, domaine refusé…).
+  // Sans ce test, l'admin voyait « envoyé » alors que rien n'était parti.
+  let sent: { success?: boolean, error?: unknown } | undefined
   try {
-    await sendEmail({ to: req.contact_email, sender: 'no-reply', subject, html })
-  } catch {
+    sent = await sendEmail({ to: req.contact_email, sender: 'no-reply', subject, html })
+  } catch (err) {
+    console.error('[partner-link] envoi e-mail en exception:', id, err)
     throw createError({ statusCode: 502, statusMessage: 'Envoi impossible.' })
+  }
+  if (!sent?.success) {
+    console.error('[partner-link] e-mail non envoyé:', id, sent?.error)
+    throw createError({ statusCode: 502, statusMessage: 'Envoi impossible : le service e-mail a refusé le message. Vérifiez la configuration Resend.' })
   }
 
   try {
     await supabase.from('audit_logs').insert({
-      actor_id: (user as any).id,
+      actor_id: resolveSupabaseUserId(user),
       action: 'b2b_request_updated',
       target_table: 'b2b_requests',
       target_id: id,

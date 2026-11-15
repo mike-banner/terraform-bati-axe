@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 import { requireAdminOperator } from '../../../../../utils/adminOperator'
+import { resolveSupabaseUserId } from '../../../../../utils/resolveSupabaseUserId'
 
 const bodySchema = z.object({
   party: z.enum(['demandeur', 'partenaire', 'artisan']),
@@ -17,6 +18,9 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event)
   if (!user) throw createError({ statusCode: 401, statusMessage: 'Non autorisé.' })
   if ((user as any).app_metadata?.role !== 'admin') throw createError({ statusCode: 403, statusMessage: 'Accès réservé aux administrateurs.' })
+  // Le JWT n'expose que `sub` : `user.id` seul donnait actor_id NULL (colonne NOT NULL) → 500 muet.
+  const actorId = resolveSupabaseUserId(user)
+  if (!actorId) throw createError({ statusCode: 401, statusMessage: 'Impossible de résoudre l\'identifiant utilisateur.' })
 
   const idParsed = z.string().uuid().safeParse(getRouterParam(event, 'id'))
   if (!idParsed.success) throw createError({ statusCode: 400, statusMessage: 'id invalide.' })
@@ -65,16 +69,19 @@ export default defineEventHandler(async (event) => {
       outcome: body.outcome,
       note: body.note || null,
       next_followup_on: body.next_followup_on ?? null,
-      actor_id: (user as any).id,
+      actor_id: actorId,
       operator,
     })
     .select('id, called_at')
     .single()
-  if (error || !row) throw createError({ statusCode: 500, statusMessage: 'Enregistrement impossible.' })
+  if (error || !row) {
+    console.error('[followups.post] insertion b2b_admin_followups échouée:', error)
+    throw createError({ statusCode: 500, statusMessage: 'Enregistrement impossible.' })
+  }
 
   try {
     await supabase.from('audit_logs').insert({
-      actor_id: (user as any).id,
+      actor_id: actorId,
       action: 'b2b_admin_followup',
       target_table: 'b2b_requests',
       target_id: id,

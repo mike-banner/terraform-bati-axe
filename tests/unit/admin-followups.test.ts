@@ -131,6 +131,18 @@ describe('POST note d\'appel', () => {
     expect(fu.row).toMatchObject({ request_id: REQ, pro_id: PRO, lot_id: LOT, party: 'artisan', note: 'à rappeler', actor_id: 'adm-1', operator: 'Mike' })
     expect(audit).toMatchObject({ table: 'audit_logs', row: { action: 'b2b_admin_followup', target_table: 'b2b_requests', target_id: REQ } })
   })
+  it('JWT sans `id` (seulement `sub`, cas réel GoTrue) → actor_id = sub, jamais undefined', async () => {
+    state.user = { sub: 'adm-sub-1', app_metadata: { role: 'admin' } }
+    await call()
+    const [fu, audit] = state.inserts
+    expect(fu.row.actor_id).toBe('adm-sub-1')
+    expect(audit.row.actor_id).toBe('adm-sub-1')
+  })
+  it('utilisateur sans identifiant résolvable → 401, aucune écriture', async () => {
+    state.user = { app_metadata: { role: 'admin' } }
+    await expect(call()).rejects.toMatchObject({ statusCode: 401 })
+    expect(state.inserts).toEqual([])
+  })
   it('échec d\'insertion → 500', async () => {
     state.cfg.insertFails = true
     await expect(call()).rejects.toMatchObject({ statusCode: 500 })
