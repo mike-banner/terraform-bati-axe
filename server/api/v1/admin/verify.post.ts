@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
 import { sendEmail } from '../../../utils/email'
 import { renderEmail } from '../../../utils/emailLayout'
+import { notifyProOpenTenders } from '../../../utils/notifyB2bPros'
 import { ISO_DATE } from '../../../utils/rgeUpload'
 
 const verifySchema = z.object({
@@ -122,6 +123,8 @@ export default defineEventHandler(async (event) => {
           .from('professionals')
           .update({ is_verified: true })
           .eq('id', pro_id)
+        // Pro désormais vérifié : il reçoit les appels d'offres déjà diffusés qui lui correspondent.
+        await notifyProOpenTenders(supabase, pro_id, { siteUrl: (useRuntimeConfig(event).public?.siteUrl as string) || 'https://bati-axe.pages.dev', event })
       }
     } else if (!isRge) {
       // If rejected, remove verified state (un refus RGE/URSSAF ne dé-vérifie pas le pro)

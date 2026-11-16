@@ -10,6 +10,9 @@ const createErrorMock = vi.fn((opts: { statusCode: number; statusMessage: string
 vi.stubGlobal('defineEventHandler', (fn: Function) => fn)
 vi.stubGlobal('createError', createErrorMock)
 vi.stubGlobal('readBody', vi.fn())
+vi.stubGlobal('useRuntimeConfig', () => ({ public: { siteUrl: 'https://bati-axe.test' } }))
+// Rattrapage des appels d'offres diffusés (dépend de #imports, hors runtime Nitro) : neutralisé ici.
+vi.mock('../server/utils/notifyB2bPros', () => ({ notifyProOpenTenders: vi.fn().mockResolvedValue({ sent: 0 }) }))
 
 // --- Mocks #supabase/server ---
 const mockServerSupabaseUser = vi.fn()

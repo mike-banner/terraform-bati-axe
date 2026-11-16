@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
+import { notifyProOpenTenders } from '../../../../utils/notifyB2bPros'
 import { ISO_DATE, validateFutureExpiry, validateRgeUpload, validateIssuedOn } from '../../../../utils/rgeUpload'
 
 const schema = z.object({
@@ -120,6 +121,7 @@ export default defineEventHandler(async (event) => {
 
     if (hasKbis && hasDecennale) {
       await supabase.from('professionals').update({ is_verified: true }).eq('id', uid)
+      await notifyProOpenTenders(supabase, uid, { siteUrl: (useRuntimeConfig(event).public?.siteUrl as string) || 'https://bati-axe.pages.dev', event })
     }
   }
 

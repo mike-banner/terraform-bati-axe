@@ -1,3 +1,4 @@
+import { ACTIVE_TENDER_STATUSES } from './b2bDiffusion'
 import { sendEmail } from './email'
 import { renderEmail } from './emailLayout'
 
@@ -168,5 +169,161 @@ export async function notifyMatchedB2bPros(
   } catch (err) {
     console.error('[Phase8] notifyMatchedB2bPros erreur globale:', err)
     return { sent: 0, skipped: 0, failed: 0 }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Audience d'un lot (écran admin) et rattrapage automatique des pros qui entrent
+// dans le gabarit d'un appel d'offres déjà diffusé (nouveau pro, nouveau métier,
+// nouvelle zone, vérification validée).
+// ---------------------------------------------------------------------------
+
+export type AudienceState = 'notified' | 'pending' | 'capped' | 'excluded'
+export type AudienceReason = 'non_verifie' | 'alertes_desactivees' | 'plafond_quotidien'
+
+export interface AudienceRow {
+  pro_id: string
+  company_name: string | null
+  email: string | null
+  state: AudienceState
+  reason?: AudienceReason
+  sent_at?: string | null
+}
+
+/** Classe un pro vis-à-vis d'un lot : pure, testable. */
+export function classifyAudience(opts: {
+  pro: { verified: boolean, alerts: boolean }
+  notifiedAt: string | null
+  dailyCount: number
+  maxPerDay: number
+}): { state: AudienceState, reason?: AudienceReason } {
+  if (opts.notifiedAt) return { state: 'notified' }
+  if (!opts.pro.verified) return { state: 'excluded', reason: 'non_verifie' }
+  if (!opts.pro.alerts) return { state: 'excluded', reason: 'alertes_desactivees' }
+  if (opts.dailyCount >= opts.maxPerDay) return { state: 'capped', reason: 'plafond_quotidien' }
+  return { state: 'pending' }
+}
+
+/**
+ * Pros dont le profil correspond au gabarit du lot (zone active + catégorie), avec leur état.
+ * Réservé à l'admin : expose nom et e-mail.
+ */
+export async function listLotAudience(
+  supabase: any,
+  lot: { id: string, category: string, zone_id: string },
+  maxPerDay: number,
+): Promise<AudienceRow[]> {
+  const { data: zoneRows } = await supabase
+    .from('pro_zones').select('pro_id').eq('zone_id', lot.zone_id).eq('status', 'active')
+  const ids = [...new Set((zoneRows ?? []).map((z: any) => z.pro_id))] as string[]
+  if (ids.length === 0) return []
+
+  const { data: pros } = await supabase
+    .from('professionals')
+    .select('id, email, company_name, is_verified, b2b_alerts_email')
+    .in('id', ids)
+    .contains('categories', [lot.category])
+  if (!pros?.length) return []
+
+  const { data: notified } = await supabase
+    .from('b2b_tender_notifications').select('pro_id, sent_at').eq('lot_id', lot.id)
+  const sentAt = new Map<string, string>((notified ?? []).map((n: any) => [n.pro_id, n.sent_at]))
+
+  const startOfDay = new Date()
+  startOfDay.setHours(0, 0, 0, 0)
+  const { data: todayRows } = await supabase
+    .from('b2b_tender_notifications').select('pro_id')
+    .in('pro_id', pros.map((p: any) => p.id)).gte('sent_at', startOfDay.toISOString())
+  const daily: Record<string, number> = {}
+  for (const r of todayRows ?? []) daily[r.pro_id] = (daily[r.pro_id] ?? 0) + 1
+
+  return pros.map((p: any) => ({
+    pro_id: p.id,
+    company_name: p.company_name ?? null,
+    email: p.email ?? null,
+    sent_at: sentAt.get(p.id) ?? null,
+    ...classifyAudience({
+      pro: { verified: p.is_verified === true, alerts: p.b2b_alerts_email === true },
+      notifiedAt: sentAt.get(p.id) ?? null,
+      dailyCount: daily[p.id] ?? 0,
+      maxPerDay,
+    }),
+  }))
+}
+
+/**
+ * Rattrapage : envoie à un pro les appels d'offres déjà diffusés (dossier actif, lot ouvert)
+ * qui correspondent à son profil actuel et dont il n'a pas encore été notifié.
+ * Idempotent (b2b_tender_notifications), plafond quotidien respecté, jamais bloquant.
+ */
+export async function notifyProOpenTenders(
+  supabase: any,
+  proId: string,
+  opts: { siteUrl: string, maxPerDay?: number, event?: { context?: Record<string, any> } },
+): Promise<{ sent: number }> {
+  try {
+    const maxPerDay = opts.maxPerDay ?? 5
+    const { data: pro } = await supabase
+      .from('professionals')
+      .select('id, email, categories, is_verified, b2b_alerts_email')
+      .eq('id', proId).maybeSingle()
+    if (!pro?.email || pro.is_verified !== true || pro.b2b_alerts_email !== true) return { sent: 0 }
+    const categories: string[] = pro.categories ?? []
+    if (categories.length === 0) return { sent: 0 }
+
+    const { data: zoneRows } = await supabase
+      .from('pro_zones').select('zone_id').eq('pro_id', proId).eq('status', 'active')
+    const zoneIds = (zoneRows ?? []).map((z: any) => z.zone_id)
+    if (zoneIds.length === 0) return { sent: 0 }
+
+    // Un dossier est « diffusé » quand l'admin a cliqué Diffuser (trace d'audit).
+    const { data: logs } = await supabase
+      .from('audit_logs').select('target_id')
+      .eq('action', 'b2b_tender_diffused').order('created_at', { ascending: false }).limit(500)
+    const requestIds = [...new Set((logs ?? []).map((l: any) => l.target_id).filter(Boolean))] as string[]
+    if (requestIds.length === 0) return { sent: 0 }
+
+    const { data: requests } = await supabase
+      .from('b2b_requests').select('id, project_postal_code, budget_range')
+      .in('id', requestIds).in('status', [...ACTIVE_TENDER_STATUSES])
+    if (!requests?.length) return { sent: 0 }
+    const byId = new Map<string, any>(requests.map((r: any) => [r.id, r]))
+
+    const { data: lots } = await supabase
+      .from('b2b_tender_lots').select('id, request_id, category, zone_id')
+      .in('request_id', [...byId.keys()]).eq('status', 'open')
+      .in('zone_id', zoneIds).in('category', categories)
+    if (!lots?.length) return { sent: 0 }
+
+    const { data: already } = await supabase
+      .from('b2b_tender_notifications').select('lot_id').eq('pro_id', proId).in('lot_id', lots.map((l: any) => l.id))
+    const done = new Set((already ?? []).map((a: any) => a.lot_id))
+
+    const startOfDay = new Date()
+    startOfDay.setHours(0, 0, 0, 0)
+    const { count } = await supabase
+      .from('b2b_tender_notifications').select('id', { count: 'exact', head: true })
+      .eq('pro_id', proId).gte('sent_at', startOfDay.toISOString())
+    let room = maxPerDay - (count ?? 0)
+
+    let sent = 0
+    for (const lot of lots) {
+      if (room <= 0) break
+      if (done.has(lot.id)) continue
+      const req = byId.get(lot.request_id)
+      const { subject, html } = renderTenderEmail({
+        lotCategory: lot.category, lotId: lot.id, requestRef: String(req.id).slice(0, 8).toUpperCase(),
+        postalCode: req.project_postal_code, budgetRange: req.budget_range, siteUrl: opts.siteUrl,
+      })
+      const res = await sendEmail({ to: pro.email, sender: 'notifications', subject, html, event: opts.event })
+      if (!res?.success) continue
+      await supabase.from('b2b_tender_notifications').insert({ pro_id: proId, lot_id: lot.id, channel: 'email' }).maybeSingle()
+      sent++
+      room--
+    }
+    return { sent }
+  } catch (err) {
+    console.error('[notifyProOpenTenders] erreur:', err)
+    return { sent: 0 }
   }
 }

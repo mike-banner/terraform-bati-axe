@@ -12,6 +12,7 @@
 import { z } from 'zod'
 import Stripe from 'stripe'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
+import { notifyProOpenTenders } from '../../../../utils/notifyB2bPros'
 
 const bodySchema = z.object({
   zone_id: z.string().uuid(),
@@ -164,6 +165,11 @@ export default defineEventHandler(async (event) => {
       console.error('[subscribe] pro_zones upsert failed', insertErr.message)
       throw createError({ statusCode: 500, statusMessage: 'Erreur d\'enregistrement.' })
     }
+  }
+
+  if (existingSubscriptionId) {
+    // Nouvelle zone : appels d'offres déjà diffusés sur cette zone, à rattraper.
+    await notifyProOpenTenders(supabase, user.id, { siteUrl: (useRuntimeConfig(event).public?.siteUrl as string) || 'https://bati-axe.pages.dev', event })
   }
 
   return {

@@ -2,6 +2,7 @@ import { useRuntimeConfig } from '#imports'
 import { sendEmail } from './email'
 import { renderEmail } from './emailLayout'
 import { calculateZonePrice } from './zoneMatcher'
+import { notifyProOpenTenders } from './notifyB2bPros'
 
 export async function handleStripeEvent(event: any, supabase: any, stripe: any): Promise<void> {
   switch (event.type) {
@@ -27,6 +28,11 @@ export async function handleStripeEvent(event: any, supabase: any, stripe: any):
             { pro_id: proId, zone_id: zoneId, billing, price_cents: priceCents, stripe_subscription_id: subscriptionId, status: 'active' },
             { onConflict: 'pro_id,zone_id' },
           )
+
+        // Première zone active : appels d'offres déjà diffusés sur cette zone, à rattraper.
+        await notifyProOpenTenders(supabase, proId, {
+          siteUrl: (useRuntimeConfig().public?.siteUrl as string) || 'https://bati-axe.pages.dev',
+        })
 
         const zoneName = await resolveZoneName(supabase, zoneId)
         await sendBillingEmail(supabase, proId, {

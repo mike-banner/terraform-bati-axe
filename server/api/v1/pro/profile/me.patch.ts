@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { sendEmail } from '../../../../utils/email'
 import { shouldInviteToRge, buildRgeInviteEmail } from '../../../../utils/rgeInvite'
+import { notifyProOpenTenders } from '../../../../utils/notifyB2bPros'
 import { PROFESSIONAL_CATEGORIES, categoriesError } from '../../../../../app/utils/workTypeMatrix'
 import { missingDocuments, REQUIRED_DOC_LABELS } from '../../../../../app/utils/subcontractingGate'
 
@@ -103,6 +104,11 @@ export default defineEventHandler(async (event) => {
     } catch (err) {
       console.error('[rgeInvite] échec envoi e-mail:', err)
     }
+  }
+
+  // Nouveau métier : le pro reçoit les appels d'offres déjà diffusés qui correspondent à son nouveau profil.
+  if (parsed.data.categories !== undefined) {
+    await notifyProOpenTenders(db, user.id, { siteUrl: (useRuntimeConfig(event).public?.siteUrl as string) || 'https://bati-axe.pages.dev', event })
   }
 
   const { data: pro } = await db

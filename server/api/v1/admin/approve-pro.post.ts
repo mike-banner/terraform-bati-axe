@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { serverSupabaseUser, serverSupabaseServiceRole } from '#supabase/server'
+import { notifyProOpenTenders } from '../../../utils/notifyB2bPros'
 
 const schema = z.object({
   pro_id: z.string().uuid(),
@@ -54,6 +55,7 @@ export default defineEventHandler(async (event) => {
       .from('professionals')
       .update({ is_verified: true, decennal_status: 'valid', labels: newLabels })
       .eq('id', pro_id)
+    await notifyProOpenTenders(supabase, pro_id, { siteUrl: (useRuntimeConfig(event).public?.siteUrl as string) || 'https://bati-axe.pages.dev', event })
   } else {
     await supabase
       .from('professionals')

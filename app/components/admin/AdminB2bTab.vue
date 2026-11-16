@@ -143,11 +143,53 @@ async function diffuse(r: B2bRequest) {
       + (res.notifications_skipped ? `, ${res.notifications_skipped} ignoré(s) (plafond quotidien ou déjà notifiés)` : '')
       + (res.notifications_failed ? `, ${res.notifications_failed} échec(s) d'envoi` : '')
     await fetchRequests()
+    await loadAudience(r)
   } catch (err: any) {
     // Affiché sous le bouton : errorMessage en haut de l'onglet est hors de vue.
     diffuseError[r.id] = err.data?.statusMessage || err.message || 'Erreur de diffusion aux artisans.'
   } finally {
     diffusingId.value = null
+  }
+}
+
+// Audience de la diffusion : qui a reçu l'appel d'offres, qui peut encore le recevoir.
+interface AudienceRow { pro_id: string; company_name: string | null; email: string | null; state: 'notified' | 'pending' | 'capped' | 'excluded'; reason?: string; sent_at?: string | null }
+interface AudienceLot { lot_id: string; category: string; status: string; zone_resolved: boolean; audience: AudienceRow[]; totals: Record<string, number> }
+const audience = reactive<Record<string, { diffused: boolean; lots: AudienceLot[] }>>({})
+const audienceLoading = ref<string | null>(null)
+const audienceError = reactive<Record<string, string>>({})
+const CATEGORY_FR: Record<string, string> = {
+  maconnerie: 'Maçonnerie & Gros Œuvre', toiture: 'Charpente & Toiture', electricite: 'Électricité',
+  plomberie: 'Plomberie & Chauffage', peinture: 'Peinture & Finitions', isolation: 'Isolation & Cloisons',
+}
+const AUDIENCE_LABEL: Record<string, string> = {
+  notified: 'Notifié', pending: 'À notifier', capped: 'Plafond du jour atteint',
+}
+const REASON_LABEL: Record<string, string> = {
+  non_verifie: 'Non vérifié', alertes_desactivees: 'Alertes désactivées',
+}
+function audienceBadge(a: AudienceRow): string {
+  if (a.state === 'excluded') return REASON_LABEL[a.reason || ''] || 'Exclu'
+  return AUDIENCE_LABEL[a.state] || a.state
+}
+function audienceColor(a: AudienceRow): string {
+  if (a.state === 'notified') return 'text-emerald-500'
+  if (a.state === 'pending') return 'text-sky-400'
+  if (a.state === 'capped') return 'text-amber-500'
+  return 'text-slate-400'
+}
+function pendingCount(id: string): number {
+  return (audience[id]?.lots ?? []).reduce((n, l) => n + (l.totals.pending ?? 0) + (l.totals.capped ?? 0), 0)
+}
+async function loadAudience(r: B2bRequest) {
+  audienceLoading.value = r.id
+  delete audienceError[r.id]
+  try {
+    audience[r.id] = await $fetch(`/api/v1/admin/b2b-requests/${r.id}/notifications`)
+  } catch (err: any) {
+    audienceError[r.id] = err.data?.statusMessage || err.message || 'Impossible de charger la liste des artisans.'
+  } finally {
+    audienceLoading.value = null
   }
 }
 
@@ -731,6 +773,54 @@ function pipelineLabel(status: string): string {
               <p v-if="diffuseResult[r.id]" class="mt-1.5 text-[11px] text-emerald-500">
                 {{ diffuseResult[r.id] }}
               </p>
+
+              <!-- Artisans notifiés : qui a reçu l'appel d'offres, qui peut encore le recevoir -->
+              <div class="mt-3 border-t border-slate-700/50 pt-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <p class="text-sm font-medium text-slate-300">Artisans notifiés</p>
+                  <div class="flex gap-2">
+                    <button
+                      @click="loadAudience(r)"
+                      :disabled="audienceLoading === r.id"
+                      class="inline-flex items-center h-8 px-3 text-xs font-medium rounded-sm border border-slate-600 text-slate-300 hover:bg-slate-700/40 transition-colors disabled:opacity-40"
+                    >
+                      {{ audience[r.id] ? 'Actualiser' : 'Voir la liste' }}
+                    </button>
+                    <button
+                      v-if="audience[r.id] && pendingCount(r.id) > 0"
+                      @click="diffuse(r)"
+                      :disabled="diffusingId === r.id || !canDiffuseDraft(r)"
+                      class="inline-flex items-center h-8 px-3 text-xs font-medium rounded-sm bg-safety text-white hover:bg-safety/90 transition-colors disabled:opacity-40"
+                    >
+                      Relancer les non-reçus ({{ pendingCount(r.id) }})
+                    </button>
+                  </div>
+                </div>
+                <p v-if="audienceError[r.id]" class="mt-1.5 text-sm text-red-500" role="alert">{{ audienceError[r.id] }}</p>
+                <template v-if="audience[r.id]">
+                  <p v-if="!audience[r.id].diffused" class="mt-2 text-[11px] text-amber-500">
+                    Dossier pas encore diffusé : aperçu des artisans qui recevront l'appel d'offres.
+                  </p>
+                  <div v-for="lot in audience[r.id].lots" :key="lot.lot_id" class="mt-2">
+                    <p class="text-xs font-semibold text-slate-300">
+                      {{ CATEGORY_FR[lot.category] || lot.category }}
+                      <span class="font-normal text-slate-400">
+                        — {{ lot.totals.notified }} notifié(s), {{ lot.totals.pending }} à notifier<template v-if="lot.totals.capped">, {{ lot.totals.capped }} plafond atteint</template><template v-if="lot.totals.excluded">, {{ lot.totals.excluded }} exclu(s)</template>
+                      </span>
+                    </p>
+                    <p v-if="!lot.zone_resolved" class="text-[11px] text-amber-500">Zone non résolue (code postal sans zone active).</p>
+                    <p v-else-if="lot.audience.length === 0" class="text-[11px] text-slate-400">Aucun artisan avec cette zone active et ce métier.</p>
+                    <ul v-else class="mt-1 divide-y divide-slate-700/40 text-xs">
+                      <li v-for="a in lot.audience" :key="a.pro_id" class="flex flex-wrap items-center justify-between gap-2 py-1">
+                        <span class="text-slate-300">{{ a.company_name || '—' }} <span class="text-slate-500">{{ a.email }}</span></span>
+                        <span :class="audienceColor(a)">
+                          {{ audienceBadge(a) }}<template v-if="a.sent_at"> · {{ new Date(a.sent_at).toLocaleString('fr-FR') }}</template>
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </template>
+              </div>
             </div>
 
           </div>
