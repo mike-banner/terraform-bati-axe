@@ -347,7 +347,11 @@ export default defineEventHandler(async (event) => {
 
     // 9bis. Email d'onboarding pro (REQ-07, flag off par défaut)
     // Idempotent : on n'envoie qu'une seule fois par pro, même en cas de re-claim.
-    if (useRuntimeConfig().onboardingEmails) {
+    // Le flag est lu aussi dans l'environnement Cloudflare : runtimeConfig est figé à la valeur du build.
+    const cfEnv = (event.context as any)?.cloudflare?.env ?? {}
+    const onboardingOn = useRuntimeConfig().onboardingEmails
+      || String(cfEnv.NUXT_ONBOARDING_EMAILS ?? process.env.NUXT_ONBOARDING_EMAILS ?? '') === 'true'
+    if (onboardingOn) {
       const { data: proRow } = await supabase
         .from('professionals')
         .select('onboarding_email_sent_at')
