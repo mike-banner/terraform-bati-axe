@@ -18,6 +18,18 @@ defineEmits<{
   (e: 'file-select', event: Event, proId: string, docType: DocType): void
   (e: 'upload-doc', proId: string, docType: DocType): void
 }>()
+// Relance d'un artisan au dossier incomplet (e-mail listant ses pièces manquantes).
+const remindState = reactive<Record<string, { loading: boolean, message: string, ok: boolean }>>({})
+async function remind(proId: string) {
+  remindState[proId] = { loading: true, message: '', ok: false }
+  try {
+    await $fetch(`/api/v1/admin/pros/${proId}/remind-documents`, { method: 'POST' })
+    remindState[proId] = { loading: false, message: 'Relance envoyée.', ok: true }
+  } catch (err: any) {
+    remindState[proId] = { loading: false, message: err.data?.statusMessage || err.message || 'Envoi impossible.', ok: false }
+  }
+}
+
 const toValidate = computed(() => props.professionals.filter(needsValidation))
 const awaiting = computed(() => props.professionals.filter(isAwaitingDocuments))
 </script>
@@ -73,6 +85,18 @@ const awaiting = computed(() => props.professionals.filter(isAwaitingDocuments))
             >
               {{ DOC_LABELS[m.type] }} {{ m.rejected ? 'refusé' : 'manquant' }}
             </span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span v-if="remindState[pro.id]?.message" class="text-[11px]" :class="remindState[pro.id]?.ok ? 'text-emerald-500' : 'text-red-500'">
+              {{ remindState[pro.id]?.message }}
+            </span>
+            <button
+              @click="remind(pro.id)"
+              :disabled="remindState[pro.id]?.loading || remindState[pro.id]?.ok"
+              class="h-8 px-3 text-xs font-medium rounded-sm border border-border text-foreground hover:bg-muted transition-colors disabled:opacity-40"
+            >
+              Relancer l'artisan
+            </button>
           </div>
         </li>
       </ul>
