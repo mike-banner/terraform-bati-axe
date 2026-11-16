@@ -31,6 +31,9 @@ export async function sendEmail(options: {
   html: string
   sender?: EmailSender
   replyTo?: string
+  // Requête H3 : sur Cloudflare Pages, les variables du dashboard ne sont lisibles que via
+  // event.context.cloudflare.env (même schéma que les endpoints R2). Sans elle : repli sur globalThis.__env__.
+  event?: { context?: Record<string, any> }
 }) {
   // DEV : on mocke l'e-mail (pas de quota consommé, pas de clé requise).
   // Bascule opt-in EMAIL_LIVE=true → envoi réel même en dev (vérification manuelle).
@@ -48,7 +51,9 @@ export async function sendEmail(options: {
 
   // PROD : envoi réel via Resend.
   const config = useRuntimeConfig()
-  const apiKey = config.resendApiKey || process.env.RESEND_API_KEY
+  const cfEnv: Record<string, any> = options.event?.context?.cloudflare?.env ?? (globalThis as any).__env__ ?? {}
+  const apiKey = config.resendApiKey || cfEnv.NUXT_RESEND_API_KEY || cfEnv.RESEND_API_KEY
+    || process.env.NUXT_RESEND_API_KEY || process.env.RESEND_API_KEY
   // Expéditeur configurable (06.3 : no-reply / notifications / contact).
   const from = resolveSender(options.sender, config as any)
 

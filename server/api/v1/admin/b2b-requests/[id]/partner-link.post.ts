@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
   // Sans ce test, l'admin voyait « envoyé » alors que rien n'était parti.
   let sent: { success?: boolean, error?: unknown } | undefined
   try {
-    sent = await sendEmail({ to: req.contact_email, sender: 'no-reply', subject, html })
+    sent = await sendEmail({ to: req.contact_email, sender: 'no-reply', subject, html, event })
   } catch (err) {
     console.error('[partner-link] envoi e-mail en exception:', id, err)
     throw createError({ statusCode: 502, statusMessage: 'Envoi impossible.' })
