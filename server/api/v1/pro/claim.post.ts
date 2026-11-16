@@ -351,7 +351,7 @@ export default defineEventHandler(async (event) => {
     const cfEnv = (event.context as any)?.cloudflare?.env ?? {}
     const onboardingOn = useRuntimeConfig().onboardingEmails
       || String(cfEnv.NUXT_ONBOARDING_EMAILS ?? process.env.NUXT_ONBOARDING_EMAILS ?? '') === 'true'
-    let diag: any = { on: !!onboardingOn, cfKeys: Object.keys(cfEnv).filter(k => k.includes('ONBOARD')), cfVal: String(cfEnv.NUXT_ONBOARDING_EMAILS ?? '').slice(0, 5) } // DIAG-TEMP
+    let diag: any = { on: !!onboardingOn, cfKeys: Object.keys(cfEnv).filter(k => k.includes('ONBOARD')), cfVal: String(cfEnv.NUXT_ONBOARDING_EMAILS ?? '').slice(0, 5), lens: Object.fromEntries(['NUXT_ADMIN_OPERATORS','NUXT_EMAIL_FROM','NUXT_RESEND_API_KEY','NUXT_ONBOARDING_EMAILS','NUXT_PUBLIC_SITE_URL'].map(k => [k.replace('NUXT_',''), String(cfEnv[k] ?? '').length])) } // DIAG-TEMP
     if (onboardingOn) {
       const { data: proRow } = await supabase
         .from('professionals')
