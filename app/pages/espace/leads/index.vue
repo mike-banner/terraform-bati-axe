@@ -276,10 +276,10 @@ async function copyToClipboard(text: string) {
   <div class="flex flex-col w-full max-w-[1440px] px-6 py-3 md:px-10 md:py-8">
 
     <!-- Onglets Chantiers particuliers / Appels d'offres (D-01) -->
-    <div class="flex items-center gap-2 mb-3">
+    <div class="flex flex-wrap items-center gap-2 mb-3">
       <button
         type="button"
-        class="h-11 px-4 text-sm font-semibold rounded-full transition-colors"
+        class="h-11 px-4 text-sm font-semibold rounded-full whitespace-nowrap transition-colors"
         :class="activeTab === 'leads' ? 'bg-foreground text-background' : 'border border-border text-muted-foreground'"
         @click="selectTab('leads')"
       >
@@ -287,7 +287,7 @@ async function copyToClipboard(text: string) {
       </button>
       <button
         type="button"
-        class="h-11 px-4 text-sm font-semibold rounded-full transition-colors"
+        class="h-11 px-4 text-sm font-semibold rounded-full whitespace-nowrap transition-colors"
         :class="activeTab === 'tenders' ? 'bg-foreground text-background' : 'border border-border text-muted-foreground'"
         @click="selectTab('tenders')"
       >
@@ -295,7 +295,7 @@ async function copyToClipboard(text: string) {
       </button>
       <button
         type="button"
-        class="h-11 px-4 text-sm font-semibold rounded-full transition-colors"
+        class="h-11 px-4 text-sm font-semibold rounded-full whitespace-nowrap transition-colors"
         :class="activeTab === 'projets' ? 'bg-foreground text-background' : 'border border-border text-muted-foreground'"
         data-testid="tab-projets"
         @click="selectTab('projets')"
