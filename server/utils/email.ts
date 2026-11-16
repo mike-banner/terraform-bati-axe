@@ -60,7 +60,14 @@ export async function sendEmail(options: {
   if (!apiKey) {
     console.warn('⚠️ Missing RESEND_API_KEY. Falling back to console.log')
     console.log(`[EMAIL FALLBACK] To: ${options.to} | Subj: ${options.subject}`)
-    return { success: false, error: 'Missing API Key' }
+    // Diagnostic (noms uniquement, jamais de valeurs) pour savoir ce que le runtime voit réellement.
+    const source = options.event?.context?.cloudflare?.env ? 'requête' : ((globalThis as any).__env__ ? 'globalThis' : 'aucune')
+    const names = Object.keys(cfEnv).filter(k => /^NUXT_|RESEND/.test(k)).sort()
+    const cfgKeys = Object.keys(config).filter(k => /resend/i.test(k))
+    return {
+      success: false,
+      error: `Missing API Key [env Cloudflare: ${source}, ${Object.keys(cfEnv).length} variables, NUXT_/RESEND: ${names.join(',') || 'aucune'}; config: ${cfgKeys.join(',') || 'aucune'}]`,
+    }
   }
 
   try {
