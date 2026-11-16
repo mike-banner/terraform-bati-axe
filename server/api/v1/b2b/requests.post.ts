@@ -3,7 +3,8 @@ import { sendEmail } from '../../../utils/email'
 import { b2bRequestSchema, buildTenderLots } from '../../../utils/b2bTender'
 import { escapeHtml as esc } from '../../../utils/contracts'
 import { QUALIFICATION_LABELS } from '../../../../app/utils/qualifications'
-import { findSignedFramework, issuePartnerToken, renderPartnerLinkEmail } from '../../../utils/signature'
+import { findSignedFramework, getClientMeta, issuePartnerToken, renderPartnerLinkEmail } from '../../../utils/signature'
+import { checkB2bRequestQuota } from '../../../utils/b2bRequestQuota'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -19,7 +20,14 @@ export default defineEventHandler(async (event) => {
 
   const data = parsed.data
   const supabase = await serverSupabaseServiceRole(event) as any
-  const ip = getRequestHeader(event, 'x-forwarded-for')?.split(',')[0]?.trim() || null
+  // cf-connecting-ip d'abord (posé par Cloudflare, non falsifiable) ; x-forwarded-for est contrôlé par le client.
+  const ip = getClientMeta(event).ip
+
+  // Anti mail-bombing : chaque dossier envoie 2 e-mails à l'adresse saisie, sans qu'on la vérifie.
+  const verdict = await checkB2bRequestQuota(supabase, { email: data.contact_email, ip })
+  if (verdict !== 'ok') {
+    throw createError({ statusCode: 429, statusMessage: 'Trop de demandes. Réessayez dans une heure ou contactez-nous.' })
+  }
 
   // Insert request
   const { data: request, error } = await supabase
