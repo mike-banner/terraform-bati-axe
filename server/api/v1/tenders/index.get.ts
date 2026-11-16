@@ -135,6 +135,9 @@ export default defineEventHandler(async (event) => {
       return {
         ...masked,
         engagement: revealed ? buildEngagement(amendment, submissions, validations) : null,
+        // Suivi « Mes projets » : le pro s'est positionné (claim) ; l'avenant est signé ou reste à signer.
+        positioned: Boolean(claim),
+        avenant_signed: Boolean(amendment?.id),
       }
     })
 

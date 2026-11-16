@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { QUALIFICATION_LABELS } from '~/utils/qualifications'
-import { ENGAGEMENT_STATUS_LABELS_PRO, NOT_AWARDED_REASON_LABELS, REASON_MIN, REASON_MAX } from '~/utils/b2bCommissionRules'
+import { ENGAGEMENT_STATUS_LABELS_PRO, NOT_AWARDED_REASON_LABELS } from '~/utils/b2bCommissionRules'
 
 const CALENDRIER_LABELS: Record<string, string> = {
   urgent: 'Urgent',
@@ -28,8 +28,6 @@ const emit = defineEmits<{
 
 const formatEur = (cents: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(cents / 100)
 // D-03 : le pro ne saisit aucun montant ; il confirme ou conteste celui que le partenaire a déposé.
-const contesting = ref(false)
-const contestReason = ref('')
 const statusLabel = computed(() => {
   const e = props.tender.engagement
   if (!e) return ''
@@ -239,62 +237,11 @@ async function copyToClipboard(text: string) {
         Le partenaire vous a retenu. Établissez votre devis directement avec lui ; il le déposera ici une fois signé par son client.
       </p>
 
-      <!-- Devis déposé par le partenaire : confirmer en un clic ou contester -->
-      <div v-if="tender.engagement.open_submission?.status === 'pending'" data-testid="quote-to-confirm" class="space-y-2 border border-border rounded-sm p-3">
-        <p class="text-sm">
-          Devis déposé par le partenaire : <strong>{{ formatEur(tender.engagement.open_submission.amount_ht_cents) }} HT</strong>
-          <template v-if="tender.engagement.open_submission.planned_due_dates?.length">
-            — versements prévus le {{ tender.engagement.open_submission.planned_due_dates.map((d: string) => new Date(d + 'T12:00:00Z').toLocaleDateString('fr-FR', { timeZone: 'UTC' })).join(' / ') }}
-          </template>
-        </p>
-        <a :href="tender.engagement.open_submission.file_url" target="_blank" rel="noopener" class="text-xs underline underline-offset-2">Voir le devis (PDF)</a>
-        <p class="text-xs text-muted-foreground">
-          En confirmant, vous déclarez le montant HT du devis signé (article 5 de votre avenant). La commission est calculée par BÂTI-AXE.
-        </p>
-        <div v-if="!contesting" class="flex flex-wrap gap-2">
-          <button
-            type="button"
-            class="h-10 px-4 rounded-full bg-foreground text-background text-xs font-semibold hover:opacity-80"
-            @click="emit('confirmQuote', { engagementId: tender.engagement.id, submissionId: tender.engagement.open_submission.id })"
-          >
-            Confirmer le montant
-          </button>
-          <button type="button" class="h-10 px-4 rounded-full border border-border text-xs font-semibold hover:bg-muted" @click="contesting = true">
-            Contester
-          </button>
-        </div>
-        <form
-          v-else
-          class="space-y-2"
-          @submit.prevent="emit('contestQuote', { engagementId: tender.engagement.id, submissionId: tender.engagement.open_submission.id, reason: contestReason.trim() }); contesting = false; contestReason = ''"
-        >
-          <textarea
-            :id="`contest-reason-${tender.engagement.id}`"
-            v-model="contestReason"
-            aria-label="Motif de la contestation"
-            :minlength="REASON_MIN"
-            :maxlength="REASON_MAX"
-            required
-            rows="3"
-            class="w-full px-3 py-2 border border-border rounded-sm text-sm"
-          />
-          <div class="flex gap-2">
-            <button
-              type="submit"
-              :disabled="contestReason.trim().length < REASON_MIN"
-              class="h-10 px-4 rounded-full bg-foreground text-background text-xs font-semibold hover:opacity-80 disabled:opacity-40"
-            >
-              Envoyer la contestation
-            </button>
-            <button type="button" class="h-10 px-4 rounded-full border border-border text-xs font-semibold hover:bg-muted" @click="contesting = false">
-              Annuler
-            </button>
-          </div>
-        </form>
-      </div>
-      <p v-else-if="tender.engagement.open_submission?.status === 'contested'" class="text-xs text-muted-foreground">
-        Montant contesté — BÂTI-AXE arbitre.
-      </p>
+      <EspaceQuoteDecision
+        :engagement="tender.engagement"
+        @confirm-quote="emit('confirmQuote', $event)"
+        @contest-quote="emit('contestQuote', $event)"
+      />
 
       <p v-if="tender.engagement.confirmed_amount_cents != null" class="text-xs text-muted-foreground">
         Montant confirmé : {{ formatEur(tender.engagement.confirmed_amount_cents) }} HT
