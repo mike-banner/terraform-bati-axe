@@ -52,7 +52,7 @@ resource "cloudflare_pages_project" "this" {
       compatibility_date  = "2024-06-26"
       env_vars = {
         for k, v in var.env_vars : k => {
-          type  = startswith(k, "NUXT_PUBLIC_") ? "plain_text" : "secret_text"
+          type  = (startswith(k, "NUXT_PUBLIC_") || contains(["NUXT_EMAIL_FROM", "NUXT_ONBOARDING_EMAILS", "NUXT_ADMIN_OPERATORS"], k)) ? "plain_text" : "secret_text"
           value = v
         }
       }
@@ -62,7 +62,7 @@ resource "cloudflare_pages_project" "this" {
       compatibility_date  = "2024-06-26"
       env_vars = {
         for k, v in var.env_vars : k => {
-          type  = startswith(k, "NUXT_PUBLIC_") ? "plain_text" : "secret_text"
+          type  = (startswith(k, "NUXT_PUBLIC_") || contains(["NUXT_EMAIL_FROM", "NUXT_ONBOARDING_EMAILS", "NUXT_ADMIN_OPERATORS"], k)) ? "plain_text" : "secret_text"
           value = v
         }
       }
