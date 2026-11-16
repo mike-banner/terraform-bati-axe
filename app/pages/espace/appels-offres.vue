@@ -3,7 +3,8 @@ definePageMeta({ layout: 'dynamic', pageTitle: 'Appels d\'offres' })
 useHead({ title: 'Appels d\'offres — BÂTI-AXE' })
 useRequireAuth()
 
-const t = await useProTenders()
+const t = useProTenders()
+await t.ready
 
 const formatDate = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
 </script>

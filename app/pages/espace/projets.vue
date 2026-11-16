@@ -8,7 +8,8 @@ useRequireAuth()
 const route = useRoute()
 const requestFetch = useRequestFetch()
 
-const t = await useProTenders()
+const t = useProTenders()
+await t.ready
 const { data: leadsData } = await useAsyncData('pro-projects-leads', () =>
   requestFetch<{ leads: any[] }>('/api/v1/leads').catch(() => ({ leads: [] })))
 const { updateLeadStatus } = useLeadStatus()

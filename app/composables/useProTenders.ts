@@ -9,14 +9,19 @@ export type SignFlow = {
   codeSent: boolean
 }
 
-export async function useProTenders() {
+// Synchrone : les composables Nuxt (useState, watch…) doivent s'exécuter avant tout await.
+// Les pages attendent `t.ready` pour que le SSR embarque les données.
+export function useProTenders() {
   const requestFetch = useRequestFetch()
 
   // useRequestFetch transmet le cookie d'auth au SSR (sinon 401 au rechargement).
-  const { data: tendersData, pending, error, refresh: refreshTenders } = await useAsyncData('pro-tenders', () =>
+  const tendersReq = useAsyncData('pro-tenders', () =>
     requestFetch<{ tenders: any[]; zones: any[]; canClaim: boolean; frameworkSigned: boolean }>('/api/v1/tenders'))
-  const { data: contractsData, refresh: refreshContracts } = await useAsyncData('pro-contracts', () =>
+  const contractsReq = useAsyncData('pro-contracts', () =>
     requestFetch<{ engagements: any[] }>('/api/v1/engagements/pro').catch(() => ({ engagements: [] })))
+  const { data: tendersData, pending, error, refresh: refreshTenders } = tendersReq
+  const { data: contractsData, refresh: refreshContracts } = contractsReq
+  const ready = Promise.all([tendersReq, contractsReq]).then(() => undefined)
 
   const tenders = computed(() => tendersData.value?.tenders || [])
   const contracts = computed(() => contractsData.value?.engagements || [])
@@ -147,7 +152,7 @@ export async function useProTenders() {
   }
 
   return reactive({
-    tenders, openTenders, projects, projectsCount, contracts, pending, error, refreshTenders,
+    ready, tenders, openTenders, projects, projectsCount, contracts, pending, error, refreshTenders,
     canClaim, frameworkSigned, frameworkContract,
     claimTarget, reportTarget, claimSubmitting, reportSubmitting, message,
     signFlow, signSubmitting, signError,
