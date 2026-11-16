@@ -32,6 +32,22 @@ export interface Professional {
 export const isPendingPro = (p: Professional) =>
   !p.is_verified || !!p.verifications?.some(v => v.status === 'pending')
 
+const hasApproved = (p: Professional, t: DocType) => !!p.verifications?.some(v => v.document_type === t && v.status === 'approved')
+
+/** « À valider » : un document attend une décision, ou KBIS + décennale sont approuvés mais le pro n'est pas encore approuvé. */
+export const needsValidation = (p: Professional) =>
+  !!p.verifications?.some(v => v.status === 'pending')
+  || (!p.is_verified && hasApproved(p, 'kbis') && hasApproved(p, 'decennale'))
+
+/** Pièces obligatoires (KBIS, décennale) sans justificatif approuvé ni en attente : « refusé » si seul un refus existe. */
+export const missingDocuments = (p: Professional): { type: DocType, rejected: boolean }[] =>
+  (['kbis', 'decennale'] as DocType[])
+    .filter(t => !hasApproved(p, t) && !p.verifications?.some(v => v.document_type === t && v.status === 'pending'))
+    .map(t => ({ type: t, rejected: !!p.verifications?.some(v => v.document_type === t && v.status === 'rejected') }))
+
+/** « Documents manquants » : pro non approuvé, rien à valider, il reste des pièces à recevoir. */
+export const isAwaitingDocuments = (p: Professional) => !p.is_verified && !needsValidation(p)
+
 export interface Project {
   id: string
   customer_name: string

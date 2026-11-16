@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Professional, Project, Realisation, Overview, DocType } from '~/types/admin'
-import { isPendingPro } from '~/types/admin'
+import { needsValidation } from '~/types/admin'
 
 definePageMeta({ layout: 'admin' })
 
@@ -31,7 +31,8 @@ const uploadState = reactive<Record<string, { file: File | null, status: 'idle' 
 
 // ─── Access ───────────────────────────────────────────────────────────────────
 const isAdmin = computed(() => (user.value as any)?.app_metadata?.role === 'admin')
-const pendingCount = computed(() => professionals.value.filter(isPendingPro).length)
+// Le badge du menu ne compte que ce qui demande une décision (« À valider »), pas les pros sans documents.
+const pendingCount = computed(() => professionals.value.filter(needsValidation).length)
 
 // ─── Data fetching ────────────────────────────────────────────────────────────
 // `silent` : rafraîchissement automatique en arrière-plan (pas de spinner, erreurs ignorées).
