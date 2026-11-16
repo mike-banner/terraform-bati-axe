@@ -62,9 +62,11 @@ async function submitForgot() {
   isLoading.value = true
   // Réponse volontairement neutre : ne jamais adapter le message au résultat,
   // sinon l'UI révèle quelles adresses ont un compte (énumération).
-  await supabase.auth.resetPasswordForEmail(forgotEmail.value.trim(), {
-    redirectTo: `${window.location.origin}/pro/reinitialiser-mot-de-passe`,
-  })
+  // Le mail part de BÂTI-AXE (Resend), pas de Supabase.
+  await $fetch('/api/v1/auth/forgot-password', {
+    method: 'POST',
+    body: { email: forgotEmail.value.trim() },
+  }).catch(() => {})
   isLoading.value = false
   forgotSent.value = true
   forgotCooldown.value = 60
@@ -404,9 +406,14 @@ const handleRegisterCompany = async () => {
     const zodErrors = err.data?.data
     if (zodErrors) {
       const messages = Object.values(zodErrors).filter(v => v && (v as any)._errors).map(v => (v as any)._errors.join(', '))
-      globalError.value = messages.length > 0 ? messages.join(' | ') : err.message
+      globalError.value = messages.length > 0 ? messages.join(' | ') : (err.data?.statusMessage || err.statusMessage || err.message)
     } else {
-      globalError.value = err.message
+      // Message métier renvoyé par le serveur (SIRET déjà pris, entreprise fermée…) plutôt que le texte HTTP générique
+      const status = err.statusCode || err.status
+      globalError.value = err.data?.statusMessage || err.statusMessage
+        || (status && status >= 500
+          ? 'Le serveur a rencontré un problème pendant l\'enregistrement. Vérifiez votre SIRET et votre code postal, puis réessayez ; si cela persiste, contactez-nous.'
+          : err.message)
     }
   } finally {
     isLoading.value = false
