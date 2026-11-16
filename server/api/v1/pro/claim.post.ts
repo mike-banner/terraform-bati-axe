@@ -158,12 +158,14 @@ export default defineEventHandler(async (event) => {
     }
 
     // 3. Find active zone based on postal code
-    const { data: matchedZone, error: zoneError } = await supabase
+    // Un code postal peut figurer dans plusieurs zones actives (ville + pack d'agglomération) :
+    // .maybeSingle() plantait alors en 500. On prend toutes les zones et on privilégie la ville.
+    const { data: matchedZones, error: zoneError } = await supabase
       .from('zones')
-      .select('id, name')
+      .select('id, name, type')
       .eq('is_active', true)
       .contains('postal_codes', [data.postal_code])
-      .maybeSingle()
+    const matchedZone = (matchedZones ?? []).find((z: any) => z.type === 'city') ?? (matchedZones ?? [])[0] ?? null
 
     if (zoneError) {
       log('Zone error: ' + JSON.stringify(zoneError))
