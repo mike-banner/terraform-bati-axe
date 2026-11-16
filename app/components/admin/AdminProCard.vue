@@ -32,6 +32,13 @@ function needsReview(doc?: { status?: string; reviewed_at?: string | null; creat
   return d < limit
 }
 
+// Badge « Nouveau document » : au moins un justificatif déposé dans les dernières 48 h (même approuvé automatiquement).
+const NEW_DOC_MS = 48 * 3_600_000
+const newDocCount = computed(() => {
+  const limit = Date.now() - NEW_DOC_MS
+  return (props.pro.verifications ?? []).filter(v => new Date(v.created_at).getTime() >= limit).length
+})
+
 function getDocStatus(docType: DocType) {
   return props.pro.verifications?.find(v => v.document_type === docType)
 }
@@ -74,6 +81,12 @@ function uploadKey(proId: string, docType: string) {
           >
             <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             En attente
+          </span>
+          <span
+            v-if="newDocCount > 0"
+            class="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full border border-sky-400/50 text-sky-300 bg-sky-500/15"
+          >
+            Nouveau document<template v-if="newDocCount > 1"> ({{ newDocCount }})</template>
           </span>
           <span v-if="pro.rge_status === 'valid'" class="inline-flex items-center text-[11px] font-semibold px-2.5 py-0.5 rounded-full border border-emerald-400/40 text-emerald-300 bg-emerald-500/15">RGE</span>
           <!-- Category -->
