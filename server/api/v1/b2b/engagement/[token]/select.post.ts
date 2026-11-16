@@ -87,7 +87,7 @@ export default defineEventHandler(async (event) => {
   const label = CATEGORY_LABELS[lot.category] ?? lot.category
   const ref = String(req.id).slice(0, 8).toUpperCase()
   const siteUrl = (useRuntimeConfig(event).public?.siteUrl as string) || 'https://bati-axe.com'
-  const cta = { label: 'Ouvrir mes appels d\'offres', href: `${siteUrl}/espace/leads?tab=ao` }
+  const cta = { label: 'Ouvrir mes appels d\'offres', href: `${siteUrl}/espace/appels-offres` }
 
   const proIds = [selectedProId, ...notAwardedRows.map(r => r.pro_id)].filter(Boolean) as string[]
   let companyOf = new Map<string, { email: string | null; company_name: string | null }>()

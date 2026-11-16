@@ -66,7 +66,7 @@ export function renderTenderEmail(opts: {
     preheader: `Un appel d'offres ${label} qualifié par BÂTI-AXE correspond à vos catégories.`,
     intro: undefined,
     bodyHtml: badgeHtml + detailsHtml,
-    cta: { label: 'Voir l\'appel d\'offres', href: `${opts.siteUrl}/espace/leads?src=email` },
+    cta: { label: 'Voir l\'appel d\'offres', href: `${opts.siteUrl}/espace/appels-offres` },
     footerNote: 'Cet appel d\'offres a été qualifié manuellement par l\'équipe BÂTI-AXE avant diffusion. Vous pouvez désactiver les alertes appels d\'offres partenaires depuis votre espace.',
   })
 

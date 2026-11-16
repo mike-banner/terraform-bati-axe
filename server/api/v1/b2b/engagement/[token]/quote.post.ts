@@ -139,7 +139,7 @@ export default defineEventHandler(async (event) => {
         html: renderEmail({
           title: 'Devis déposé : confirmez le montant',
           intro: `Le partenaire du dossier réf. ${escapeHtml(ref)} a déposé le devis signé (${escapeHtml(formatEurCents(cents))} HT). Vérifiez-le et confirmez le montant en un clic, ou contestez-le.`,
-          cta: { label: 'Confirmer le montant', href: `${siteUrl}/espace/leads?tab=ao` },
+          cta: { label: 'Confirmer le montant', href: `${siteUrl}/espace/appels-offres` },
         }),
       })
     }

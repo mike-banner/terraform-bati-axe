@@ -31,3 +31,15 @@ export function splitProjects<T extends ProProject>(tenders: T[]): { pending: T[
   const phase = (p: ProjectPhase) => mine.filter(t => projectPhase(t) === p).sort(byRecent)
   return { pending: phase('pending'), won: phase('won'), lost: phase('lost') }
 }
+
+// Chantiers particuliers : un lead entre dans « Projets en cours » dès que le pro l'a travaillé
+// (contacté, gagné). « Nouveau » reste dans Leads ; « perdu » va dans « Non retenus ».
+export type LeadPhase = 'available' | 'active' | 'closed'
+
+export function leadPhase(lead: { status?: string; db_status?: string | null }): LeadPhase {
+  if (lead.status === 'claimed') return 'available'
+  const s = lead.db_status
+  if (s === 'contacted' || s === 'won') return 'active'
+  if (s === 'lost') return 'closed'
+  return 'available'
+}

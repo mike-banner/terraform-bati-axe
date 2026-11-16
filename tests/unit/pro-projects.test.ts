@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { splitProjects, isOpenTender, projectPhase } from '../../app/utils/proProjects'
+import { splitProjects, isOpenTender, projectPhase, leadPhase } from '../../app/utils/proProjects'
 
 const t = (lot_id: string, positioned: boolean, status: string | null, created_at = '2026-01-01') =>
   ({ lot_id, positioned, engagement: status ? { status } : null, created_at })
@@ -37,5 +37,18 @@ describe('splitProjects', () => {
   it('trie du plus récent au plus ancien', () => {
     const r = splitProjects([t('old', true, 'selected', '2026-01-01'), t('new', true, 'selected', '2026-03-01')])
     expect(r.won.map(x => x.lot_id)).toEqual(['new', 'old'])
+  })
+})
+
+describe('leadPhase (chantiers particuliers)', () => {
+  it('nouveau reste dans Leads, contacté et gagné passent en cours, perdu est rangé', () => {
+    expect(leadPhase({ status: 'unlocked', db_status: 'new' })).toBe('available')
+    expect(leadPhase({ status: 'unlocked', db_status: 'contacted' })).toBe('active')
+    expect(leadPhase({ status: 'unlocked', db_status: 'won' })).toBe('active')
+    expect(leadPhase({ status: 'unlocked', db_status: 'lost' })).toBe('closed')
+  })
+  it('un lead masqué ou attribué à un autre pro reste dans Leads', () => {
+    expect(leadPhase({ status: 'locked' })).toBe('available')
+    expect(leadPhase({ status: 'claimed' })).toBe('available')
   })
 })

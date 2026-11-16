@@ -1,8 +1,8 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'dynamic', pageTitle: 'Mes leads' })
+definePageMeta({ layout: 'dynamic', pageTitle: 'Leads particuliers' })
 import { ref, computed, onMounted } from 'vue'
 
-useHead({ title: 'Mes leads — BÂTI-AXE' })
+useHead({ title: 'Leads particuliers — BÂTI-AXE' })
 
 useRequireAuth()
 
@@ -21,13 +21,12 @@ const requestFetch = useRequestFetch()
 
 const route = useRoute()
 
-// Onglets « Chantiers particuliers » / « Appels d'offres » (D-01). ?tab=ao ou
-// ?src=email (liens des emails de diffusion Phase 8) ouvrent directement l'onglet AO.
-// ?tab=projets&projet=<lot_id> ouvre « Mes projets » (liste ou fiche) ; le retour navigateur ferme la fiche.
-const activeTab = ref<'leads' | 'tenders' | 'projets'>(
-  route.query.tab === 'projets' ? 'projets'
-    : route.query.tab === 'ao' || route.query.src === 'email' ? 'tenders' : 'leads'
-)
+// Anciens liens (e-mails de diffusion, signets) : les appels d'offres et les projets ont leurs propres pages.
+if (route.query.tab === 'projets') {
+  await navigateTo({ path: '/espace/projets', query: route.query.projet ? { vue: 'ao', projet: String(route.query.projet) } : { vue: 'ao' } }, { replace: true })
+} else if (route.query.tab === 'ao' || route.query.src === 'email') {
+  await navigateTo('/espace/appels-offres', { replace: true })
+}
 
 const { data: leadsData, pending, error, refresh } = await useAsyncData('pro-leads', () =>
   requestFetch<{ leads: any[], isPremium: boolean }>('/api/v1/leads')
@@ -37,155 +36,8 @@ const { data: profile } = await useAsyncData('pro-profile-leads', () =>
   requestFetch<{ profile: any }>('/api/v1/pro/profile/me').then(r => r.profile).catch(() => null)
 )
 
-// ─── Appels d'offres partenaires (D-01 à D-10) ─────────────────────────────────
-const { data: tendersData, pending: tendersPending, error: tendersError, refresh: refreshTenders } =
-  await useAsyncData('pro-tenders', () =>
-    requestFetch<{ tenders: any[]; zones: any[]; canClaim: boolean; frameworkSigned: boolean }>('/api/v1/tenders'))
-const { data: contractsData, refresh: refreshContracts } = await useAsyncData('pro-contracts', () =>
-  requestFetch<{ engagements: any[] }>('/api/v1/engagements/pro').catch(() => ({ engagements: [] })))
-const contracts = computed(() => contractsData.value?.engagements || [])
-const tenders = computed(() => tendersData.value?.tenders || [])
-const canClaimTenders = computed(() => tendersData.value?.canClaim ?? false)
-const frameworkSigned = computed(() => tendersData.value?.frameworkSigned ?? false)
-
-// ─── Mes projets : appels d'offres où le pro est positionné (avenant signé / à signer) ───
-const frameworkContract = computed(() => contracts.value.find((c: any) => c.type === 'framework_pro') ?? null)
-// Appels d'offres gagnés ou perdus : ils quittent la vue « Appels d'offres » pour « Mes projets ».
-const openTenders = computed(() => tenders.value.filter(isOpenTender))
-const projects = computed(() => splitProjects(tenders.value))
-const projectsCount = computed(() => projects.value.pending.length + projects.value.won.length + projects.value.lost.length)
-const openProjectId = computed(() => (activeTab.value === 'projets' && typeof route.query.projet === 'string' ? route.query.projet : null))
-const openProject = computed(() => tenders.value.find((t: any) => t.positioned && t.lot_id === openProjectId.value) ?? null)
-
-function showProjects(lotId?: string) {
-  activeTab.value = 'projets'
-  navigateTo({ query: { tab: 'projets', ...(lotId ? { projet: lotId } : {}) } })
-}
-function selectTab(tab: 'leads' | 'tenders' | 'projets') {
-  activeTab.value = tab
-  if (tab === 'projets') return showProjects()
-  navigateTo({ query: tab === 'tenders' ? { tab: 'ao' } : {} })
-}
-
-const claimTarget = ref<any | null>(null)
-const reportTarget = ref<any | null>(null)
-const claimSubmitting = ref(false)
-const reportSubmitting = ref(false)
-const tenderMessage = ref<string | null>(null)
-
-// ─── Signature convention cadre / avenant (05.21) ───────────────────────────────
-const signFlow = ref<null | { kind: 'framework' | 'amendment'; lotId?: string; title: string; html: string; emailHint: string; codeSent: boolean }>(null)
-const signSubmitting = ref(false)
-const signError = ref<string | null>(null)
-
-async function startFramework() {
-  try {
-    const res: any = await $fetch('/api/v1/engagements/pro/framework', { method: 'POST', body: { preview: true } })
-    if (res.status === 'ALREADY_SIGNED') return await refreshTenders()
-    signError.value = null
-    signFlow.value = { kind: 'framework', title: 'Convention cadre BÂTI-AXE', html: res.contract.html, emailHint: res.email_hint, codeSent: false }
-  } catch (err: any) {
-    tenderMessage.value = err?.data?.statusMessage || 'Impossible de démarrer la signature.'
-  }
-}
-
-watch(() => [route.query.tab, route.query.projet], () => {
-  if (route.query.tab === 'projets') activeTab.value = 'projets'
-})
-
-// Avenant non signé (positionnement ancien) : ouvre directement la signature, sans repasser par la modale « Je suis intéressé ».
-async function startAmendment(lotId: string) {
-  try {
-    const res: any = await $fetch(`/api/v1/tenders/${lotId}/claim`, { method: 'POST', body: { preview: true } })
-    if (res.status === 'AMENDMENT_REQUIRED') {
-      signError.value = null
-      signFlow.value = { kind: 'amendment', lotId, title: 'Avenant de mise en relation', html: res.contract.html, emailHint: res.email_hint, codeSent: false }
-      return
-    }
-    await refreshTenders()
-  } catch (err: any) {
-    tenderMessage.value = err?.data?.data?.code === 'FRAMEWORK_REQUIRED'
-      ? 'Signez d\'abord la convention cadre BÂTI-AXE.'
-      : err?.data?.statusMessage || 'Impossible de démarrer la signature.'
-  }
-}
-
-async function confirmClaim() {
-  if (!claimTarget.value) return
-  claimSubmitting.value = true
-  try {
-    const res: any = await $fetch(`/api/v1/tenders/${claimTarget.value.lot_id}/claim`, { method: 'POST', body: { preview: true } })
-    if (res.status === 'AMENDMENT_REQUIRED') {
-      signError.value = null
-      signFlow.value = { kind: 'amendment', lotId: claimTarget.value.lot_id, title: 'Avenant de mise en relation', html: res.contract.html, emailHint: res.email_hint, codeSent: false }
-      claimTarget.value = null
-      return
-    }
-    claimTarget.value = null
-    await refreshTenders()
-    tenderMessage.value = 'Vous êtes positionné. Les coordonnées du partenaire sont maintenant visibles.'
-  } catch (err: any) {
-    claimTarget.value = null
-    tenderMessage.value = err?.data?.data?.code === 'FRAMEWORK_REQUIRED'
-      ? 'Signez d\'abord la convention cadre BÂTI-AXE.'
-      : err?.data?.statusMessage || "Impossible de vous positionner sur cet appel d'offres."
-  } finally {
-    claimSubmitting.value = false
-  }
-}
-
-async function signWithCode(code?: string) {
-  const flow = signFlow.value
-  if (!flow) return
-  signSubmitting.value = true
-  signError.value = null
-  const url = flow.kind === 'framework' ? '/api/v1/engagements/pro/framework' : `/api/v1/tenders/${flow.lotId}/claim`
-  try {
-    await $fetch(url, { method: 'POST', body: code ? { code } : {} })
-    if (!code) { flow.codeSent = true; return } // envoi / renvoi de code à la demande du pro
-    signFlow.value = null
-    await Promise.all([refreshTenders(), refreshContracts()])
-    tenderMessage.value = flow.kind === 'framework'
-      ? 'Convention signée. Vous pouvez vous positionner sur les appels d\'offres.'
-      : 'Avenant signé. Les coordonnées du partenaire sont maintenant visibles.'
-  } catch (err: any) {
-    signError.value = err?.data?.statusMessage || 'Signature impossible.'
-  } finally {
-    signSubmitting.value = false
-  }
-}
-const resendCode = () => signWithCode()
-
-// 05.23 : le pro confirme ou conteste le devis déposé par le partenaire (aucun montant saisi).
-async function postQuoteDecision(engagementId: string, body: Record<string, string>, okMessage: string) {
-  try {
-    await $fetch(`/api/v1/engagements/${engagementId}/confirm-quote`, { method: 'POST', body })
-    await refreshTenders()
-    tenderMessage.value = okMessage
-  } catch (err: any) {
-    tenderMessage.value = err?.data?.statusMessage || 'Décision impossible.'
-  }
-}
-const confirmQuote = ({ engagementId, submissionId }: { engagementId: string; submissionId: string }) =>
-  postQuoteDecision(engagementId, { decision: 'confirm', submission_id: submissionId }, 'Montant confirmé.')
-const contestQuote = ({ engagementId, submissionId, reason }: { engagementId: string; submissionId: string; reason: string }) =>
-  postQuoteDecision(engagementId, { decision: 'contest', submission_id: submissionId, reason }, 'Contestation transmise : BÂTI-AXE arbitre.')
-
-async function submitReport(payload: { reason: string; details: string }) {
-  if (!reportTarget.value) return
-  reportSubmitting.value = true
-  try {
-    await $fetch(`/api/v1/tenders/${reportTarget.value.lot_id}/report`, { method: 'POST', body: payload })
-    reportTarget.value = null
-    tenderMessage.value = "Signalement transmis à l'équipe BÂTI-AXE."
-  } catch (err: any) {
-    tenderMessage.value = err?.data?.statusMessage || 'Impossible d\'envoyer le signalement.'
-  } finally {
-    reportSubmitting.value = false
-  }
-}
-
-const leads = computed(() => leadsData.value?.leads || [])
+// Seuls les leads à traiter restent ici : contactés, gagnés et perdus sont dans « Projets en cours ».
+const leads = computed(() => (leadsData.value?.leads || []).filter((l: any) => leadPhase(l) === 'available'))
 const isPremium = computed(() => leadsData.value?.isPremium ?? false)
 const freeLeadsUsed = computed(() => profile.value?.free_leads_used ?? 0)
 const freeRemaining = computed(() => Math.max(0, 3 - freeLeadsUsed.value))
@@ -254,18 +106,12 @@ async function logCheckoutStarted() {
   } catch { /* silent */ }
 }
 
+const { updateLeadStatus: saveLeadStatus } = useLeadStatus()
+const statusMessage = ref<string | null>(null)
 async function updateLeadStatus(lead: any, newStatus: string) {
-  const oldStatus = lead.db_status
-  lead.db_status = newStatus
-  try {
-    await $fetch(`/api/v1/leads/${lead.id}/status`, {
-      method: 'PATCH',
-      body: { status: newStatus }
-    })
-  } catch (err) {
-    lead.db_status = oldStatus
-    alert("Impossible de mettre à jour le statut du lead.")
-  }
+  const ok = await saveLeadStatus(lead, newStatus)
+  if (!ok) statusMessage.value = 'Impossible de mettre à jour le statut du lead.'
+  else if (newStatus !== 'new') statusMessage.value = 'Chantier déplacé dans Projets en cours.'
 }
 
 async function copyToClipboard(text: string) {
@@ -278,73 +124,14 @@ async function copyToClipboard(text: string) {
 <template>
   <div class="flex flex-col w-full max-w-[1440px] px-6 py-3 md:px-10 md:py-8">
 
-    <!-- Convention cadre : une ligne, en tête de page. Alerte tant qu'elle n'est pas signée, verte ensuite avec le lien du document. -->
-    <div
-      v-if="!frameworkSigned"
-      data-testid="framework-banner"
-      role="alert"
-      class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-2 mb-4 border border-red-500/50 bg-red-500/10 rounded-lg text-sm text-foreground"
-    >
-      <span><strong>Convention cadre BÂTI-AXE à signer</strong> pour vous positionner sur les appels d'offres.</span>
-      <button type="button" class="font-semibold underline underline-offset-4 hover:opacity-70" @click="startFramework">Lire et signer</button>
-    </div>
-    <div
-      v-else
-      data-testid="framework-signed-banner"
-      class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-2 mb-4 border border-emerald-500/50 bg-emerald-500/10 rounded-lg text-sm text-foreground"
-    >
-      <span><strong>Convention cadre BÂTI-AXE signée</strong><template v-if="frameworkContract"> le {{ new Date(frameworkContract.signed_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) }}</template>.</span>
-      <a
-        v-if="frameworkContract"
-        :href="`/api/v1/engagements/${frameworkContract.id}/document`"
-        target="_blank"
-        rel="noopener"
-        class="font-semibold underline underline-offset-4 hover:opacity-70"
-      >Voir la convention</a>
-    </div>
+    <p v-if="statusMessage" role="status" class="flex items-start gap-3 p-4 border border-foreground/30 rounded-lg mb-4 text-sm text-foreground">
+      <span class="flex-1">
+        {{ statusMessage }}
+        <NuxtLink v-if="statusMessage.includes('Projets en cours')" to="/espace/projets" class="font-semibold underline underline-offset-4 hover:opacity-70">Ouvrir</NuxtLink>
+      </span>
+      <button type="button" aria-label="Fermer le message" class="text-xs text-muted-foreground hover:text-foreground" @click="statusMessage = null">✕</button>
+    </p>
 
-    <!-- Onglets Chantiers particuliers / Appels d'offres (D-01) -->
-    <div class="flex flex-wrap items-center gap-2 mb-3">
-      <button
-        type="button"
-        class="h-11 px-4 text-sm font-semibold rounded-full whitespace-nowrap transition-colors"
-        :class="activeTab === 'leads' ? 'bg-foreground text-background' : 'border border-border text-muted-foreground'"
-        @click="selectTab('leads')"
-      >
-        Chantiers particuliers ({{ leads.length }})
-      </button>
-      <button
-        type="button"
-        class="h-11 px-4 text-sm font-semibold rounded-full whitespace-nowrap transition-colors"
-        :class="activeTab === 'tenders' ? 'bg-foreground text-background' : 'border border-border text-muted-foreground'"
-        @click="selectTab('tenders')"
-      >
-        Appels d'offres ({{ openTenders.length }})
-      </button>
-      <button
-        type="button"
-        class="h-11 px-4 text-sm font-semibold rounded-full whitespace-nowrap transition-colors"
-        :class="activeTab === 'projets' ? 'bg-foreground text-background' : 'border border-border text-muted-foreground'"
-        data-testid="tab-projets"
-        @click="selectTab('projets')"
-      >
-        Mes projets ({{ projectsCount }})
-      </button>
-    </div>
-
-    <!-- TEND-15 — explication du périmètre de l'abonnement -->
-    <div v-if="activeTab !== 'projets'" class="p-3 border border-border rounded-sm bg-muted/40 text-xs text-muted-foreground mb-4">
-      Votre abonnement de zone couvre désormais deux flux : les chantiers déposés par des
-      particuliers et les appels d'offres de nos partenaires professionnels (syndics,
-      architectes, bureaux d'études).
-    </div>
-
-    <div v-if="tenderMessage && activeTab !== 'leads'" role="status" class="flex items-start gap-3 p-4 border border-foreground/30 rounded-lg mb-4">
-      <p class="text-sm text-foreground flex-1">{{ tenderMessage }}</p>
-      <button type="button" aria-label="Fermer le message" class="text-xs text-muted-foreground hover:text-foreground transition-colors" @click="tenderMessage = null">✕</button>
-    </div>
-
-    <template v-if="activeTab === 'leads'">
 
     <!-- Blocker: documents non vérifiés (decennal_status !== 'valid') -->
     <div v-if="profile && !canUnlockLeads" class="relative overflow-hidden rounded-lg border-2 border-red-400 bg-gradient-to-r from-red-50 via-red-50 to-red-100 p-5 sm:p-6 mb-4 shadow-md">
@@ -770,106 +557,6 @@ async function copyToClipboard(text: string) {
     </div>
 
     </div><!-- /v-else leads -->
-
-    </template><!-- /v-if activeTab === 'leads' -->
-
-    <!-- ── Onglet Mes projets : fiche dans le même espace ── -->
-    <template v-else-if="activeTab === 'projets'">
-      <div v-if="tendersPending" class="space-y-3">
-        <div v-for="i in 3" :key="i" class="h-14 border-b border-border bg-muted animate-pulse" />
-      </div>
-      <div v-else-if="tendersError" class="p-4 border border-border rounded-lg">
-        <p class="text-sm font-semibold text-foreground mb-1">Impossible de charger vos projets</p>
-        <button type="button" class="text-xs font-semibold underline underline-offset-2 hover:opacity-70 transition-opacity" @click="() => refreshTenders()">Réessayer</button>
-      </div>
-      <EspaceProjectSheet
-        v-else-if="openProject"
-        :project="openProject"
-        @back="showProjects()"
-        @sign-avenant="startAmendment"
-        @confirm-quote="confirmQuote"
-        @contest-quote="contestQuote"
-      />
-      <div v-else-if="openProjectId" class="py-12 max-w-prose">
-        <p class="text-sm font-semibold text-foreground mb-1">Projet introuvable</p>
-        <p class="text-sm text-muted-foreground mb-3">Il n'est plus dans votre liste, ou vous ne vous y êtes pas positionné.</p>
-        <button type="button" class="text-sm font-semibold underline underline-offset-4 hover:opacity-70" @click="showProjects()">Retour à Mes projets</button>
-      </div>
-      <div v-else-if="!projectsCount" class="py-12 max-w-prose" data-testid="projects-empty">
-        <p class="text-sm font-semibold text-foreground mb-1">Aucun projet pour l'instant</p>
-        <p class="text-sm text-muted-foreground mb-3">Les appels d'offres sur lesquels vous vous positionnez apparaissent ici, avec leur avenant.</p>
-        <button type="button" class="text-sm font-semibold underline underline-offset-4 hover:opacity-70" @click="selectTab('tenders')">Voir les appels d'offres</button>
-      </div>
-      <EspaceProjectList v-else :pending="projects.pending" :won="projects.won" :lost="projects.lost" @open="showProjects" />
-    </template>
-
-    <!-- ── Onglet Appels d'offres : convention cadre et tous les projets ── -->
-    <template v-else>
-
-      <!-- Skeleton loading -->
-      <div v-if="tendersPending" class="space-y-3">
-        <div v-for="i in 3" :key="i" class="border border-border rounded-lg h-[160px] bg-muted animate-pulse" />
-      </div>
-
-      <!-- Error -->
-      <div v-else-if="tendersError" class="p-4 border border-border rounded-lg">
-        <p class="text-sm font-semibold text-foreground mb-1">Impossible de charger les appels d'offres</p>
-        <p class="text-xs text-muted-foreground mb-3">Réessayez dans quelques instants.</p>
-        <button type="button" class="text-xs font-semibold underline underline-offset-2 hover:opacity-70 transition-opacity" @click="() => refreshTenders()">
-          Réessayer
-        </button>
-      </div>
-
-      <!-- Empty state -->
-      <div v-else-if="!openTenders.length" class="py-16 text-center">
-        <p class="text-sm font-semibold text-foreground mb-1">Aucun appel d'offres partenaire pour l'instant</p>
-        <p class="text-xs text-muted-foreground">Les AO de vos corps de métier, dans vos zones abonnées, apparaîtront ici.</p>
-      </div>
-
-      <!-- Tender grid -->
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        <EspaceTenderCard
-          v-for="t in openTenders"
-          :key="t.lot_id"
-          :tender="t"
-          :can-claim="canClaimTenders && frameworkSigned"
-          :framework-signed="frameworkSigned"
-          :claiming="claimSubmitting"
-          @claim="claimTarget = tenders.find(x => x.lot_id === $event)"
-          @report="reportTarget = tenders.find(x => x.lot_id === $event)"
-          @confirm-quote="confirmQuote"
-          @contest-quote="contestQuote"
-        />
-      </div>
-
-    </template>
-
-    <EspaceTenderClaimModal
-      v-if="claimTarget"
-      :tender="claimTarget"
-      :submitting="claimSubmitting"
-      @confirm="confirmClaim"
-      @cancel="claimTarget = null"
-    />
-    <EspaceEngagementSignModal
-      v-if="signFlow"
-      :title="signFlow.title"
-      :contract-html="signFlow.html"
-      :email-hint="signFlow.emailHint"
-      :code-sent="signFlow.codeSent"
-      :submitting="signSubmitting"
-      :error="signError"
-      @sign="signWithCode"
-      @resend="resendCode"
-      @cancel="signFlow = null"
-    />
-    <EspaceTenderReportModal
-      v-if="reportTarget"
-      :tender="reportTarget"
-      :submitting="reportSubmitting"
-      @submit="submitReport"
-      @cancel="reportTarget = null"
-    />
 
   </div>
 </template>

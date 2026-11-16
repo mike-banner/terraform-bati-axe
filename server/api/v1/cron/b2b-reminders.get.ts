@@ -240,7 +240,7 @@ export default defineEventHandler(async (event) => {
                 html: renderEmail({
                   title: 'Chantier non obtenu',
                   intro: `Le partenaire n'a retenu aucun artisan dans le délai prévu pour le lot ${escapeHtml(lotLabel)} (dossier réf. ${escapeHtml(ref)}) : le lot est clos.`,
-                  cta: { label: 'Voir mes chantiers', href: `${siteUrl}/espace/leads?tab=ao` },
+                  cta: { label: 'Voir mes chantiers', href: `${siteUrl}/espace/appels-offres` },
                 }),
               })
             } catch (err) { console.error('[05.23] Échec e-mail pro (lot expiré)', err) }
@@ -258,7 +258,7 @@ export default defineEventHandler(async (event) => {
           html: renderEmail({
             title: 'Confirmez le montant du devis déposé',
             intro: `Un devis a été déposé pour le dossier réf. ${escapeHtml(ref)}. Confirmez son montant HT, ou contestez-le s'il est inexact.`,
-            cta: { label: 'Voir le devis', href: `${siteUrl}/espace/leads?tab=ao` },
+            cta: { label: 'Voir le devis', href: `${siteUrl}/espace/appels-offres` },
           }),
         })
       } else if (a.kind === 'confirm_admin') {

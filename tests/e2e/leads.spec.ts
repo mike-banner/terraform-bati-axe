@@ -489,7 +489,12 @@ async function setupAo(page: Page, state: { tenders: any[]; frameworkSigned: boo
 
 async function openAoTab(page: Page) {
   await gotoLeads(page)
-  await page.getByRole('button', { name: /Appels d'offres/ }).click()
+  // Les appels d'offres ont leur propre page (entrée « Appels d'offres » du menu).
+  await page.evaluate(() => {
+    const app = (document.querySelector('#__nuxt') as any).__vue_app__
+    return app.config.globalProperties.$router.push('/espace/appels-offres')
+  })
+  await page.waitForURL('**/espace/appels-offres')
 }
 
 test.describe('Appels d\'offres — verrou juridique (05.21)', () => {
