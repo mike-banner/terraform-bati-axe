@@ -4,6 +4,9 @@ import crypto from 'node:crypto'
 import { notifyAdmin, adminDetailsTable } from '../../../utils/notifyAdmin'
 import { PROFESSIONAL_CATEGORIES, categoriesError } from '../../../../app/utils/workTypeMatrix'
 import { isEgbNaf } from '../../../utils/siretLookup'
+import { escapeHtml } from '../../../utils/contracts'
+import { renderEmail } from '../../../utils/emailLayout'
+import { sendEmail } from '../../../utils/email'
 
 const log = (msg: string) => {
   console.log(`[claim.post] ${new Date().toISOString()} - ${msg}`)
@@ -354,24 +357,15 @@ export default defineEventHandler(async (event) => {
         await sendEmail({
           to: user.email!,
           subject: 'Bienvenue sur BÂTI-AXE — votre profil est en cours de vérification',
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 560px; margin: 0 auto; color: #0F172A;">
-              <h2 style="margin-bottom: 8px;">Bienvenue sur BÂTI-AXE, ${data.full_name.split(' ')[0]} 👋</h2>
-              <p style="line-height: 1.6; color: #475569;">
-                Votre profil <strong>${data.company_name}</strong> est bien créé. Il sera activé dès
-                que votre Kbis et votre décennale seront validés.
-              </p>
-              <p style="line-height: 1.6; color: #475569;">
-                Une fois validé, votre profil public sera visible des particuliers porteurs de projets
-                de votre zone, et vous pourrez accéder aux leads.<br/>
-                Suivez l'avancement depuis votre tableau de bord :
-              </p>
-              <p style="margin: 24px 0;">
-                <a href="${siteUrl}/espace/dashboard" style="background: #EA580C; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;">Accéder à mon espace</a>
-              </p>
-              <p style="color: #94A3B8; font-size: 13px;">BÂTI-AXE — Artisans certifiés, projets sécurisés.</p>
-            </div>
-          `
+          sender: 'no-reply',
+          event,
+          html: renderEmail({
+            title: `Bienvenue sur BÂTI-AXE, ${escapeHtml(data.full_name.split(' ')[0] ?? '')}`,
+            preheader: 'Votre profil est créé, il sera activé dès validation de vos documents.',
+            intro: `Votre profil <strong>${escapeHtml(data.company_name)}</strong> est bien créé. Il sera activé dès que votre Kbis et votre décennale seront validés.`,
+            bodyHtml: '<p style="margin:0;font-size:14px;line-height:1.6;color:#334155;">Une fois validé, votre profil public sera visible des particuliers porteurs de projets de votre zone, et vous pourrez accéder aux chantiers. Suivez l\'avancement depuis votre tableau de bord.</p>',
+            cta: { label: 'Accéder à mon espace', href: `${siteUrl}/espace/dashboard` },
+          })
         })
         await supabase
           .from('professionals')
