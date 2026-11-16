@@ -351,6 +351,7 @@ export default defineEventHandler(async (event) => {
     const cfEnv = (event.context as any)?.cloudflare?.env ?? {}
     const onboardingOn = useRuntimeConfig().onboardingEmails
       || String(cfEnv.NUXT_ONBOARDING_EMAILS ?? process.env.NUXT_ONBOARDING_EMAILS ?? '') === 'true'
+    let diag: any = { on: !!onboardingOn, cfKeys: Object.keys(cfEnv).filter(k => k.includes('ONBOARD')), cfVal: String(cfEnv.NUXT_ONBOARDING_EMAILS ?? '').slice(0, 5) } // DIAG-TEMP
     if (onboardingOn) {
       const { data: proRow } = await supabase
         .from('professionals')
@@ -360,7 +361,7 @@ export default defineEventHandler(async (event) => {
 
       if (!proRow?.onboarding_email_sent_at) {
         const siteUrl = useRuntimeConfig().public.siteUrl || 'https://bati-axe.com'
-        await sendEmail({
+        const mailRes = await sendEmail({
           to: user.email!,
           subject: 'Bienvenue sur BÂTI-AXE — votre profil est en cours de vérification',
           sender: 'no-reply',
@@ -377,12 +378,14 @@ export default defineEventHandler(async (event) => {
           .from('professionals')
           .update({ onboarding_email_sent_at: new Date().toISOString() })
           .eq('id', userId)
+        diag = { ...diag, sent: !!(mailRes as any)?.success, err: String((mailRes as any)?.error ?? '').slice(0, 80), stamped: !!proRow?.onboarding_email_sent_at } // DIAG-TEMP
         log('Onboarding email sent + stamped')
       }
     }
 
     return {
       status: 'SUCCESS',
+      _diag: diag, // DIAG-TEMP
       professionalId: userId,
       slug: canonicalSlug
     }
