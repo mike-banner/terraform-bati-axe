@@ -28,9 +28,9 @@ export interface Professional {
   verifications?: Verification[]
 }
 
-/** Dossier à traiter : pro non vérifié, ou pro vérifié ayant déposé un RGE en attente. */
+/** Dossier à traiter : pro non vérifié, ou pro vérifié ayant un document (RGE, URSSAF, KBIS, décennale) en attente. */
 export const isPendingPro = (p: Professional) =>
-  !p.is_verified || !!p.verifications?.some(v => v.document_type === 'rge' && v.status === 'pending')
+  !p.is_verified || !!p.verifications?.some(v => v.status === 'pending')
 
 export interface Project {
   id: string

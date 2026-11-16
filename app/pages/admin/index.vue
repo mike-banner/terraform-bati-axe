@@ -34,9 +34,10 @@ const isAdmin = computed(() => (user.value as any)?.app_metadata?.role === 'admi
 const pendingCount = computed(() => professionals.value.filter(isPendingPro).length)
 
 // ─── Data fetching ────────────────────────────────────────────────────────────
-async function fetchAll() {
-  isLoading.value = true
-  errorMessage.value = null
+// `silent` : rafraîchissement automatique en arrière-plan (pas de spinner, erreurs ignorées).
+async function fetchAll(silent = false) {
+  if (!silent) isLoading.value = true
+  if (!silent) errorMessage.value = null
   try {
     const [queueRes, projectsRes, realisationsRes, overviewRes] = await Promise.allSettled([
       $fetch('/api/v1/admin/queue'),
@@ -49,13 +50,30 @@ async function fetchAll() {
     if (realisationsRes.status === 'fulfilled') realisations.value = (realisationsRes.value as any)?.realisations || []
     if (overviewRes.status === 'fulfilled') overview.value = overviewRes.value as Overview
   } catch (err: any) {
-    errorMessage.value = err.message || 'Erreur de chargement.'
+    if (!silent) errorMessage.value = err.message || 'Erreur de chargement.'
   } finally {
-    isLoading.value = false
+    if (!silent) isLoading.value = false
   }
 }
 
-onMounted(() => { if (isAdmin.value) fetchAll() })
+// Les dépôts de documents des artisans arrivent pendant que la console est ouverte : on recharge
+// toutes les 30 s (onglet visible, aucune action admin en cours) et au retour sur l'onglet.
+const REFRESH_MS = 30_000
+let refreshTimer: ReturnType<typeof setInterval> | null = null
+function silentRefresh() {
+  if (document.hidden || actionLoading.value || isLoading.value) return
+  fetchAll(true)
+}
+onMounted(() => {
+  if (!isAdmin.value) return
+  fetchAll()
+  refreshTimer = setInterval(silentRefresh, REFRESH_MS)
+  document.addEventListener('visibilitychange', silentRefresh)
+})
+onBeforeUnmount(() => {
+  if (refreshTimer) clearInterval(refreshTimer)
+  document.removeEventListener('visibilitychange', silentRefresh)
+})
 
 // ─── Document viewing ─────────────────────────────────────────────────────────
 async function viewDocument(fileKey: string) {
