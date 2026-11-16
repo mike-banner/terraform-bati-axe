@@ -257,9 +257,6 @@ async function copyToClipboard(text: string) {
           <template v-if="i.validated_at"> — exigible</template>
         </p>
       </div>
-      <a :href="`/api/v1/engagements/${tender.engagement.id}/document`" target="_blank" rel="noopener" class="text-xs underline underline-offset-2 text-muted-foreground hover:text-foreground">
-        Voir l'avenant signé
-      </a>
     </div>
 
     <!-- Pied de carte -->

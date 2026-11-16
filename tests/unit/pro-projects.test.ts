@@ -1,24 +1,41 @@
 import { describe, it, expect } from 'vitest'
-import { splitProjects } from '../../app/utils/proProjects'
+import { splitProjects, isOpenTender, projectPhase } from '../../app/utils/proProjects'
 
-const t = (lot_id: string, positioned: boolean, avenant_signed: boolean, created_at: string) => ({ lot_id, positioned, avenant_signed, created_at })
+const t = (lot_id: string, positioned: boolean, status: string | null, created_at = '2026-01-01') =>
+  ({ lot_id, positioned, engagement: status ? { status } : null, created_at })
+
+describe('projectPhase', () => {
+  it('demande faite, partenaire pas encore décidé = en attente', () => {
+    expect(projectPhase(t('a', true, 'signed'))).toBe('pending')
+    expect(projectPhase(t('a', true, null))).toBe('pending')
+  })
+  it('retenu par le partenaire = validé', () => {
+    for (const s of ['selected', 'quote_submitted', 'contested', 'quote_confirmed', 'invoiced']) expect(projectPhase(t('a', true, s))).toBe('won')
+  })
+  it('non retenu ou commission annulée = perdu', () => {
+    expect(projectPhase(t('a', true, 'not_awarded'))).toBe('lost')
+    expect(projectPhase(t('a', true, 'commission_cancelled'))).toBe('lost')
+  })
+})
+
+describe("isOpenTender (vue Appels d'offres)", () => {
+  it('garde les AO ouverts et les demandes en attente, retire gagnés et perdus', () => {
+    expect(isOpenTender(t('a', false, null))).toBe(true)
+    expect(isOpenTender(t('a', true, 'signed'))).toBe(true)
+    expect(isOpenTender(t('a', true, 'selected'))).toBe(false)
+    expect(isOpenTender(t('a', true, 'not_awarded'))).toBe(false)
+  })
+})
 
 describe('splitProjects', () => {
-  it('ignore les appels d\'offres où le pro n\'est pas positionné', () => {
-    const r = splitProjects([t('a', false, false, '2026-01-01'), t('b', true, true, '2026-01-02')])
-    expect(r.signed.map(x => x.lot_id)).toEqual(['b'])
-    expect(r.unsigned).toEqual([])
-  })
-  it('sépare avenant signé et avenant à signer', () => {
-    const r = splitProjects([t('a', true, false, '2026-01-01'), t('b', true, true, '2026-01-02')])
-    expect(r.signed.map(x => x.lot_id)).toEqual(['b'])
-    expect(r.unsigned.map(x => x.lot_id)).toEqual(['a'])
+  it('ignore les AO non positionnés et classe par phase', () => {
+    const r = splitProjects([t('x', false, null), t('p', true, 'signed'), t('w', true, 'selected'), t('l', true, 'not_awarded')])
+    expect(r.pending.map(x => x.lot_id)).toEqual(['p'])
+    expect(r.won.map(x => x.lot_id)).toEqual(['w'])
+    expect(r.lost.map(x => x.lot_id)).toEqual(['l'])
   })
   it('trie du plus récent au plus ancien', () => {
-    const r = splitProjects([t('old', true, true, '2026-01-01'), t('new', true, true, '2026-03-01'), t('mid', true, true, '2026-02-01')])
-    expect(r.signed.map(x => x.lot_id)).toEqual(['new', 'mid', 'old'])
-  })
-  it('liste vide', () => {
-    expect(splitProjects([])).toEqual({ signed: [], unsigned: [] })
+    const r = splitProjects([t('old', true, 'selected', '2026-01-01'), t('new', true, 'selected', '2026-03-01')])
+    expect(r.won.map(x => x.lot_id)).toEqual(['new', 'old'])
   })
 })

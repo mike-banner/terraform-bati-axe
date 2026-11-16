@@ -1,32 +1,36 @@
 <script setup lang="ts">
 import { CATEGORY_LABELS } from '~~/server/utils/categoryLabels'
 
-// « Mes projets » : liste des appels d'offres où le pro s'est positionné, séparés selon l'avenant.
+// « Mes projets » : appels d'offres où le pro s'est positionné, classés selon la réponse du partenaire.
 // Présentationnel : un clic sur une ligne demande l'ouverture de la fiche, la page orchestre.
-defineProps<{
-  signed: any[]
-  unsigned: any[]
+const props = defineProps<{
+  pending: any[]
+  won: any[]
+  lost: any[]
 }>()
 
 defineEmits<{ open: [lotId: string] }>()
+
+const groups = computed(() => [
+  { key: 'pending', title: 'En attente du partenaire', rows: props.pending, always: true,
+    empty: 'Aucune demande en attente.', hint: 'Votre demande est transmise : le partenaire ne l\'a pas encore validée.' },
+  { key: 'won', title: 'Validés par le partenaire', rows: props.won, always: true,
+    empty: 'Aucun projet validé pour l\'instant.', hint: null },
+  { key: 'lost', title: 'Non retenus', rows: props.lost, always: false, empty: '', hint: null },
+].filter(g => g.always || g.rows.length))
 
 const formatDate = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
 </script>
 
 <template>
   <div data-testid="project-list" class="space-y-8">
-    <section v-for="group in [
-      { key: 'unsigned', title: 'Avenant à signer', rows: unsigned, hint: 'Vous vous êtes positionné, mais les coordonnées du partenaire restent masquées tant que l\'avenant n\'est pas signé.' },
-      { key: 'signed', title: 'Avenant signé', rows: signed, hint: null },
-    ]" :key="group.key" :data-testid="`projects-${group.key}`">
-      <div class="flex items-baseline justify-between gap-4 mb-1">
-        <h2 class="text-base font-semibold text-foreground">{{ group.title }} <span class="text-muted-foreground font-normal tabular-nums">({{ group.rows.length }})</span></h2>
-      </div>
+    <section v-for="group in groups" :key="group.key" :data-testid="`projects-${group.key}`">
+      <h2 class="text-base font-semibold text-foreground mb-1">
+        {{ group.title }} <span class="text-muted-foreground font-normal tabular-nums">({{ group.rows.length }})</span>
+      </h2>
       <p v-if="group.hint && group.rows.length" class="text-sm text-muted-foreground mb-2 max-w-prose">{{ group.hint }}</p>
 
-      <p v-if="!group.rows.length" class="py-4 text-sm text-muted-foreground border-t border-border">
-        {{ group.key === 'signed' ? 'Aucun avenant signé pour l\'instant.' : 'Aucun avenant en attente de signature.' }}
-      </p>
+      <p v-if="!group.rows.length" class="py-4 text-sm text-muted-foreground border-t border-border">{{ group.empty }}</p>
 
       <ul v-else class="border-t border-border divide-y divide-border">
         <li v-for="p in group.rows" :key="p.lot_id">
@@ -43,10 +47,10 @@ const formatDate = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { 
               <span class="block text-xs text-muted-foreground truncate">
                 <template v-if="p.department">{{ p.department }}</template>
                 <template v-if="p.zone_name"> · {{ p.zone_name }}</template>
-                <template v-if="p.engagement?.signed_at"> · signé le {{ formatDate(p.engagement.signed_at) }}</template>
+                <template v-if="p.engagement?.signed_at"> · demande du {{ formatDate(p.engagement.signed_at) }}</template>
               </span>
             </span>
-            <span v-if="group.key === 'signed' && p.engagement?.status === 'quote_submitted'" class="shrink-0 text-xs font-semibold text-foreground">
+            <span v-if="p.engagement?.status === 'quote_submitted'" class="shrink-0 text-xs font-semibold text-foreground">
               Devis à confirmer
             </span>
             <svg class="w-4 h-4 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">

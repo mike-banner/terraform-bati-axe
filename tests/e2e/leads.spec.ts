@@ -513,12 +513,12 @@ test.describe('Appels d\'offres — verrou juridique (05.21)', () => {
     await expect(box).toContainText('Sous 3 mois')
   })
 
-  test('« Mes contrats » liste la convention avec le lien vers le document', async ({ page }) => {
+  test('bandeau convention signée : une ligne en tête avec le lien du document', async ({ page }) => {
     await setupAo(page, { tenders: [LOCKED_LOT], frameworkSigned: true })
     await openAoTab(page)
-    const box = page.locator('[data-testid="my-contracts"]')
-    await expect(box).toContainText('Convention cadre BÂTI-AXE', { timeout: 10_000 })
-    await expect(box.getByRole('link', { name: /Voir/ })).toHaveAttribute('href', '/api/v1/engagements/eng-0/document')
+    const banner = page.getByTestId('framework-signed-banner')
+    await expect(banner).toContainText('Convention cadre BÂTI-AXE signée', { timeout: 10_000 })
+    await expect(banner.getByRole('link', { name: 'Voir la convention' })).toHaveAttribute('href', '/api/v1/engagements/eng-0/document')
   })
 
   test('signature de l\'avenant puis coordonnées visibles', async ({ page }) => {

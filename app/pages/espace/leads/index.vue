@@ -49,8 +49,11 @@ const canClaimTenders = computed(() => tendersData.value?.canClaim ?? false)
 const frameworkSigned = computed(() => tendersData.value?.frameworkSigned ?? false)
 
 // ─── Mes projets : appels d'offres où le pro est positionné (avenant signé / à signer) ───
+const frameworkContract = computed(() => contracts.value.find((c: any) => c.type === 'framework_pro') ?? null)
+// Appels d'offres gagnés ou perdus : ils quittent la vue « Appels d'offres » pour « Mes projets ».
+const openTenders = computed(() => tenders.value.filter(isOpenTender))
 const projects = computed(() => splitProjects(tenders.value))
-const projectsCount = computed(() => projects.value.signed.length + projects.value.unsigned.length)
+const projectsCount = computed(() => projects.value.pending.length + projects.value.won.length + projects.value.lost.length)
 const openProjectId = computed(() => (activeTab.value === 'projets' && typeof route.query.projet === 'string' ? route.query.projet : null))
 const openProject = computed(() => tenders.value.find((t: any) => t.positioned && t.lot_id === openProjectId.value) ?? null)
 
@@ -275,6 +278,31 @@ async function copyToClipboard(text: string) {
 <template>
   <div class="flex flex-col w-full max-w-[1440px] px-6 py-3 md:px-10 md:py-8">
 
+    <!-- Convention cadre : une ligne, en tête de page. Alerte tant qu'elle n'est pas signée, verte ensuite avec le lien du document. -->
+    <div
+      v-if="!frameworkSigned"
+      data-testid="framework-banner"
+      role="alert"
+      class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-2 mb-4 border border-red-500/50 bg-red-500/10 rounded-lg text-sm text-foreground"
+    >
+      <span><strong>Convention cadre BÂTI-AXE à signer</strong> pour vous positionner sur les appels d'offres.</span>
+      <button type="button" class="font-semibold underline underline-offset-4 hover:opacity-70" @click="startFramework">Lire et signer</button>
+    </div>
+    <div
+      v-else
+      data-testid="framework-signed-banner"
+      class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-2 mb-4 border border-emerald-500/50 bg-emerald-500/10 rounded-lg text-sm text-foreground"
+    >
+      <span><strong>Convention cadre BÂTI-AXE signée</strong><template v-if="frameworkContract"> le {{ new Date(frameworkContract.signed_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) }}</template>.</span>
+      <a
+        v-if="frameworkContract"
+        :href="`/api/v1/engagements/${frameworkContract.id}/document`"
+        target="_blank"
+        rel="noopener"
+        class="font-semibold underline underline-offset-4 hover:opacity-70"
+      >Voir la convention</a>
+    </div>
+
     <!-- Onglets Chantiers particuliers / Appels d'offres (D-01) -->
     <div class="flex flex-wrap items-center gap-2 mb-3">
       <button
@@ -291,7 +319,7 @@ async function copyToClipboard(text: string) {
         :class="activeTab === 'tenders' ? 'bg-foreground text-background' : 'border border-border text-muted-foreground'"
         @click="selectTab('tenders')"
       >
-        Appels d'offres ({{ tenders.length }})
+        Appels d'offres ({{ openTenders.length }})
       </button>
       <button
         type="button"
@@ -772,28 +800,11 @@ async function copyToClipboard(text: string) {
         <p class="text-sm text-muted-foreground mb-3">Les appels d'offres sur lesquels vous vous positionnez apparaissent ici, avec leur avenant.</p>
         <button type="button" class="text-sm font-semibold underline underline-offset-4 hover:opacity-70" @click="selectTab('tenders')">Voir les appels d'offres</button>
       </div>
-      <EspaceProjectList v-else :signed="projects.signed" :unsigned="projects.unsigned" @open="showProjects" />
+      <EspaceProjectList v-else :pending="projects.pending" :won="projects.won" :lost="projects.lost" @open="showProjects" />
     </template>
 
     <!-- ── Onglet Appels d'offres : convention cadre et tous les projets ── -->
     <template v-else>
-
-      <div v-if="!frameworkSigned" data-testid="framework-banner" class="flex flex-wrap items-center gap-3 p-4 border border-red-500/50 bg-red-500/10 rounded-lg mb-4">
-        <p class="text-sm text-foreground flex-1">
-          Pour vous positionner sur les appels d'offres partenaires, signez une fois la convention cadre BÂTI-AXE (commission de succès, non-contournement 24 mois).
-        </p>
-        <button type="button" class="h-10 px-4 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-80" @click="startFramework">
-          Lire et signer la convention
-        </button>
-      </div>
-
-      <div v-else data-testid="framework-signed-banner" class="flex items-center gap-3 p-4 border border-emerald-500/50 bg-emerald-500/10 rounded-lg mb-4">
-        <p class="text-sm text-foreground flex-1">
-          <strong>Convention cadre BÂTI-AXE signée.</strong> Vous pouvez vous positionner sur les appels d'offres partenaires.
-        </p>
-      </div>
-
-      <EspaceMyContracts :contracts="contracts" />
 
       <!-- Skeleton loading -->
       <div v-if="tendersPending" class="space-y-3">
@@ -810,7 +821,7 @@ async function copyToClipboard(text: string) {
       </div>
 
       <!-- Empty state -->
-      <div v-else-if="!tenders.length" class="py-16 text-center">
+      <div v-else-if="!openTenders.length" class="py-16 text-center">
         <p class="text-sm font-semibold text-foreground mb-1">Aucun appel d'offres partenaire pour l'instant</p>
         <p class="text-xs text-muted-foreground">Les AO de vos corps de métier, dans vos zones abonnées, apparaîtront ici.</p>
       </div>
@@ -818,7 +829,7 @@ async function copyToClipboard(text: string) {
       <!-- Tender grid -->
       <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         <EspaceTenderCard
-          v-for="t in tenders"
+          v-for="t in openTenders"
           :key="t.lot_id"
           :tender="t"
           :can-claim="canClaimTenders && frameworkSigned"
