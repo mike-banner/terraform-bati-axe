@@ -351,7 +351,6 @@ export default defineEventHandler(async (event) => {
     const cfEnv = (event.context as any)?.cloudflare?.env ?? {}
     const onboardingOn = useRuntimeConfig().onboardingEmails
       || (cfEnv.NUXT_ONBOARDING_EMAILS || process.env.NUXT_ONBOARDING_EMAILS || '') === 'true'
-    let diag: any = { on: !!onboardingOn, cfKeys: Object.keys(cfEnv).filter(k => k.includes('ONBOARD')), cfVal: String(cfEnv.NUXT_ONBOARDING_EMAILS ?? '').slice(0, 5), penv: Object.fromEntries(['NUXT_EMAIL_FROM','NUXT_RESEND_API_KEY','NUXT_ONBOARDING_EMAILS'].map(k => [k.replace('NUXT_',''), String(process.env[k] ?? '').length])), rcfg: { resend: String((useRuntimeConfig() as any).resendApiKey ?? '').length, onb: String(useRuntimeConfig().onboardingEmails) }, lens: Object.fromEntries(['NUXT_ADMIN_OPERATORS','NUXT_EMAIL_FROM','NUXT_RESEND_API_KEY','NUXT_ONBOARDING_EMAILS','NUXT_PUBLIC_SITE_URL'].map(k => [k.replace('NUXT_',''), String(cfEnv[k] ?? '').length])) } // DIAG-TEMP
     if (onboardingOn) {
       const { data: proRow } = await supabase
         .from('professionals')
@@ -378,14 +377,12 @@ export default defineEventHandler(async (event) => {
           .from('professionals')
           .update({ onboarding_email_sent_at: new Date().toISOString() })
           .eq('id', userId)
-        diag = { ...diag, sent: !!(mailRes as any)?.success, err: String((mailRes as any)?.error ?? '').slice(0, 80), stamped: !!proRow?.onboarding_email_sent_at } // DIAG-TEMP
         log('Onboarding email sent + stamped')
       }
     }
 
     return {
       status: 'SUCCESS',
-      _diag: diag, // DIAG-TEMP
       professionalId: userId,
       slug: canonicalSlug
     }
