@@ -4,6 +4,7 @@ import { sendEmail } from '../../../utils/email'
 import { renderEmail } from '../../../utils/emailLayout'
 import { notifyAdmin, adminDetailsTable } from '../../../utils/notifyAdmin'
 import { escapeHtml } from '../../../utils/contracts'
+import { notifyLotClosedPros } from '../../../utils/notifyLotClosed'
 import { issuePartnerToken, renderPartnerLinkEmail } from '../../../utils/signature'
 import { readB2bFlowConfig } from '../../../utils/b2bCommissionPlan'
 import { installmentCount, installmentLabels, PARTNER_REMINDER_DAYS } from '../../../../app/utils/b2bCommissionRules'
@@ -246,6 +247,7 @@ export default defineEventHandler(async (event) => {
             } catch (err) { console.error('[05.23] Échec e-mail pro (lot expiré)', err) }
           }
         }
+        await notifyLotClosedPros(supabase, { lotId: String(a.lot_id), label: lotLabel, ref, reason: 'expired', siteUrl })
         adminRows.push([`Lot expiré · dossier ${ref}`, `${escapeHtml(lotLabel)} : aucun artisan retenu en ${delays.choiceExpiryDays} j, ${(lost || []).length} avenant(s) clos`])
       } else if (a.kind === 'quote_stale') {
         adminRows.push([`Sans devis · dossier ${ref}`, `${escapeHtml(lotLabel)} : artisan retenu sans devis déposé depuis ${delays.quoteStaleDays} j`])

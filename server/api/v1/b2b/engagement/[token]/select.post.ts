@@ -7,6 +7,7 @@ import { renderEmail } from '../../../../../utils/emailLayout'
 import { notifyAdmin, adminDetailsTable } from '../../../../../utils/notifyAdmin'
 import { escapeHtml } from '../../../../../utils/contracts'
 import { CATEGORY_LABELS } from '../../../../../utils/categoryLabels'
+import { notifyLotClosedPros } from '../../../../../utils/notifyLotClosed'
 import { PARTNER_SHARE_BPS } from '../../../../../../app/utils/b2bCommissionRules'
 
 const bodySchema = z.discriminatedUnion('outcome', [
@@ -120,6 +121,8 @@ export default defineEventHandler(async (event) => {
     ? `Le partenaire a retenu une autre entreprise pour le lot ${escapeHtml(label)} du dossier réf. ${ref}.`
     : `Le partenaire a retenu une entreprise hors plateforme pour le lot ${escapeHtml(label)} du dossier réf. ${ref}.`
   for (const r of notAwardedRows) await mail(r.pro_id, 'Chantier non obtenu', 'Chantier non obtenu', lostIntro)
+  // Artisans avertis de l'appel d'offres mais sans avenant signé : simple information de clôture.
+  await notifyLotClosedPros(supabase, { lotId: body.lot_id, label, ref, reason: body.outcome === 'select' ? 'awarded' : 'outside_platform', siteUrl })
 
   const company = selectedProId ? (companyOf.get(selectedProId)?.company_name ?? 'artisan') : null
   await notifyAdmin({
