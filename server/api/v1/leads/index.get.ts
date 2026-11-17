@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
   // Projets qualifiés ; le filtre par recouvrement (05.19) est appliqué ci-dessous
   const { data: projects, error: projectsError } = await supabase
     .from('projects')
-    .select('id, category, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code, qualify_score, qualify_budget, qualify_phone, qualify_description, qualify_returning, created_at, status, selected_items')
+    .select('id, category, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code, qualify_score, qualify_budget, qualify_phone, qualify_description, qualify_returning, created_at, status, selected_items, calculator_data')
     .eq('status', 'qualified')
     .order('created_at', { ascending: false })
 

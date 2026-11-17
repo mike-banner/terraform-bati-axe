@@ -8,7 +8,19 @@ function previewFields(proj: any) {
   const works = (Array.isArray(proj.selected_items) ? proj.selected_items : [])
     .map((k: string) => COMPATIBILITY_MATRIX[k]?.label)
     .filter(Boolean)
-  return { department: departmentLabel(proj.postal_code), works }
+  return { department: departmentLabel(proj.postal_code), works, surface_range: surfaceRange(proj.calculator_data?.surface_m2) }
+}
+
+// Surface en tranche (jamais la valeur exacte).
+function surfaceRange(m2: unknown): string | null {
+  const n = Number(m2)
+  if (!Number.isFinite(n) || n <= 0) return null
+  if (n < 30) return 'moins de 30 m²'
+  if (n < 50) return '30 à 50 m²'
+  if (n < 80) return '50 à 80 m²'
+  if (n < 120) return '80 à 120 m²'
+  if (n < 200) return '120 à 200 m²'
+  return 'plus de 200 m²'
 }
 
 export function maskLead(lead: any, isPremium: boolean, now: Date, isFreeGranted: boolean = false): Record<string, any> {

@@ -35,6 +35,15 @@ describe('maskLead', () => {
     const result = maskLead({ ...baseLead, projects: { ...baseLead.projects, postal_code: 'xx', selected_items: null } }, false, now)
     expect(result.department).toBeNull()
     expect(result.works).toEqual([])
+    expect(result.surface_range).toBeNull()
+  })
+
+  it('lead flouté : surface en tranche, jamais la valeur exacte', () => {
+    const r = (m2: number) => maskLead({ ...baseLead, projects: { ...baseLead.projects, calculator_data: { surface_m2: m2 } } }, false, now)
+    expect(r(25).surface_range).toBe('moins de 30 m²')
+    expect(r(63).surface_range).toBe('50 à 80 m²')
+    expect(r(250).surface_range).toBe('plus de 200 m²')
+    expect(JSON.stringify(r(63))).not.toMatch(/63/)
   })
 
   it('BASIC + unlocked_at IS NULL + not claimed → locked with masked fields (D-05)', () => {

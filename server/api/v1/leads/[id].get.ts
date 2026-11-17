@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
   // 1. Check if project exists
   const { data: project, error: projectError } = await supabase
     .from('projects')
-    .select('id, category, selected_items, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code, created_at, qualify_score, qualify_budget, qualify_phone, qualify_description, qualify_returning')
+    .select('id, category, selected_items, calculator_data, budget_range, timeline_range, description, customer_name, customer_email, customer_phone, postal_code, created_at, qualify_score, qualify_budget, qualify_phone, qualify_description, qualify_returning')
     .eq('id', id)
     .single()
 
