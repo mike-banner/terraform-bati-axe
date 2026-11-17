@@ -116,13 +116,22 @@ const docStatus = (doc: any) => {
   return { label: 'En attente', cls: 'text-amber-700 border-amber-300 bg-amber-50' }
 }
 
+// Un justificatif déjà validé et loin de son échéance n'a pas à être redéposé : le formulaire
+// n'apparaît que s'il manque, est rejeté ou expiré (ou sur « Renouveler »).
+const docNeedsUpload = (doc: any) => {
+  if (!doc || doc.status === 'rejected') return true
+  if (doc.status !== 'approved') return false
+  const label = docStatus(doc).label
+  return label.startsWith('Expir')
+}
+
 // ─── Upload inline ─────────────────────────────────────────────────────────────
 const uploads = reactive({
   kbis:      { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '', issuedOn: '', replacing: false },
   decennale: { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '',
     policyNumber: '', expirationDate: '' },
-  rge:       { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '', expirationDate: '' },
-  urssaf:    { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '', expirationDate: '' },
+  rge:       { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '', expirationDate: '', replacing: false },
+  urssaf:    { file: null as File | null, status: 'idle' as 'idle'|'uploading'|'success'|'error', error: '', expirationDate: '', replacing: false },
 })
 
 // Attribut min du champ date RGE : demain (le serveur exige une date strictement future)
@@ -541,7 +550,7 @@ const showRge = computed(() =>
             <span class="text-muted-foreground">Statut :</span>
             <span :class="docStatus(rge).cls" class="px-2 py-0.5 border rounded-full font-semibold" data-testid="rge-status">{{ rgeLabel }}</span>
           </p>
-          <div v-if="rge?.status !== 'pending' && uploads.rge.status !== 'success'" class="space-y-3">
+          <div v-if="rge?.status !== 'pending' && uploads.rge.status !== 'success' && (docNeedsUpload(rge) || uploads.rge.replacing || pro?.rge_status !== 'valid')" class="space-y-3">
             <div>
               <label class="block text-xs text-muted-foreground mb-1">Date de fin de validité de la qualification <span class="text-red-500">*</span></label>
               <input
@@ -569,6 +578,10 @@ const showRge = computed(() =>
               </button>
             </div>
           </div>
+          <p v-else-if="rge?.status === 'approved' && uploads.rge.status !== 'success'" class="text-xs flex items-center gap-3 flex-wrap">
+            <span v-if="docPeriod(rge)" class="text-foreground">{{ docPeriod(rge)!.prefix }}<span class="font-bold">{{ docPeriod(rge)!.date1 }}</span>{{ docPeriod(rge)!.middle }}<span v-if="docPeriod(rge)!.date2" class="font-bold">{{ docPeriod(rge)!.date2 }}</span></span>
+            <button type="button" class="text-muted-foreground hover:text-foreground underline underline-offset-2" @click="uploads.rge.replacing = true">Renouveler</button>
+          </p>
           <p v-if="uploads.rge.status === 'error'" class="text-xs text-red-600 mt-1">{{ uploads.rge.error }}</p>
           <p v-if="uploads.rge.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ Attestation RGE envoyée — validation par notre équipe dans les meilleurs délais</p>
         </div>
@@ -587,7 +600,7 @@ const showRge = computed(() =>
             <span class="text-muted-foreground">Statut :</span>
             <span :class="docStatus(urssaf).cls" class="px-2 py-0.5 border rounded-full font-semibold" data-testid="urssaf-status">{{ docStatus(urssaf).label }}</span>
           </p>
-          <div v-if="urssaf?.status !== 'pending' && uploads.urssaf.status !== 'success'" class="space-y-3">
+          <div v-if="urssaf?.status !== 'pending' && uploads.urssaf.status !== 'success' && (docNeedsUpload(urssaf) || uploads.urssaf.replacing)" class="space-y-3">
             <div>
               <label class="block text-xs text-muted-foreground mb-1">Date de fin de validité <span class="text-red-500">*</span></label>
               <input
@@ -615,6 +628,10 @@ const showRge = computed(() =>
               </button>
             </div>
           </div>
+          <p v-else-if="urssaf?.status === 'approved' && uploads.urssaf.status !== 'success'" class="text-xs flex items-center gap-3 flex-wrap">
+            <span v-if="docPeriod(urssaf)" class="text-foreground">{{ docPeriod(urssaf)!.prefix }}<span class="font-bold">{{ docPeriod(urssaf)!.date1 }}</span>{{ docPeriod(urssaf)!.middle }}<span v-if="docPeriod(urssaf)!.date2" class="font-bold">{{ docPeriod(urssaf)!.date2 }}</span></span>
+            <button type="button" class="text-muted-foreground hover:text-foreground underline underline-offset-2" @click="uploads.urssaf.replacing = true">Renouveler</button>
+          </p>
           <p v-if="uploads.urssaf.status === 'error'" class="text-xs text-red-600 mt-1">{{ uploads.urssaf.error }}</p>
           <p v-if="uploads.urssaf.status === 'success'" class="text-xs text-foreground font-semibold mt-1">✓ Attestation URSSAF envoyée — validation par notre équipe dans les meilleurs délais</p>
         </div>
