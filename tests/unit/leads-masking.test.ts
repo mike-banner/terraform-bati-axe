@@ -21,6 +21,22 @@ const baseLead = {
 const now = new Date('2026-06-05T10:00:00.000Z')
 
 describe('maskLead', () => {
+  it('lead flouté : expose le département et les postes (listes fermées), jamais le texte libre ni le code postal', () => {
+    const lead = { ...baseLead, projects: { ...baseLead.projects, postal_code: '69003', selected_items: ['maconnerie', 'electricite', 'inconnu'], description: 'Appelez-moi au 06 12 34 56 78, 12 rue des Lilas' } }
+    const result = maskLead(lead, false, now)
+    expect(result.status).toBe('locked')
+    expect(result.department).toBe('69 — Rhône')
+    expect(result.works).toEqual(['Terrassement / Maçonnerie', 'Électricité'])
+    expect(result.postal_code).toBe('***')
+    expect(JSON.stringify(result)).not.toMatch(/Lilas|06 12|Dupont|69003/)
+  })
+
+  it('lead flouté sans postes ni code postal valide : champs vides, pas d erreur', () => {
+    const result = maskLead({ ...baseLead, projects: { ...baseLead.projects, postal_code: 'xx', selected_items: null } }, false, now)
+    expect(result.department).toBeNull()
+    expect(result.works).toEqual([])
+  })
+
   it('BASIC + unlocked_at IS NULL + not claimed → locked with masked fields (D-05)', () => {
     const result = maskLead({ ...baseLead, status: 'new', unlocked_at: null }, false, now)
     expect(result.status).toBe('locked')

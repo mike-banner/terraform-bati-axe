@@ -333,6 +333,14 @@ async function copyToClipboard(text: string) {
             </span>
           </div>
           <div class="px-5 py-3 space-y-2">
+            <div v-if="lead.department" class="flex items-center gap-2 text-sm" data-testid="lead-department">
+              <span class="text-muted-foreground">Département</span>
+              <span class="text-foreground font-semibold">{{ lead.department }}</span>
+            </div>
+            <div v-if="lead.works?.length" class="flex items-start gap-2 text-sm" data-testid="lead-works">
+              <span class="text-muted-foreground shrink-0">Travaux</span>
+              <span class="text-foreground font-semibold">{{ lead.works.slice(0, 4).join(', ') }}<template v-if="lead.works.length > 4"> + {{ lead.works.length - 4 }} autres</template></span>
+            </div>
             <div class="flex items-center gap-2 text-sm">
               <span class="text-muted-foreground">Budget</span>
               <span class="text-foreground font-semibold">{{ lead.budget_range }}</span>

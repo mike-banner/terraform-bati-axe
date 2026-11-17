@@ -1,3 +1,16 @@
+import { departmentLabel } from '../../app/utils/departments'
+import { COMPATIBILITY_MATRIX } from '../../app/utils/workTypeMatrix'
+
+// Aperçu d'un lead flouté : uniquement des données issues de listes fermées (département déduit du
+// code postal, postes cochés dans le tunnel). Jamais de texte libre : le particulier peut y écrire
+// un nom, un téléphone ou une adresse (ADR-004).
+function previewFields(proj: any) {
+  const works = (Array.isArray(proj.selected_items) ? proj.selected_items : [])
+    .map((k: string) => COMPATIBILITY_MATRIX[k]?.label)
+    .filter(Boolean)
+  return { department: departmentLabel(proj.postal_code), works }
+}
+
 export function maskLead(lead: any, isPremium: boolean, now: Date, isFreeGranted: boolean = false): Record<string, any> {
   const proj = lead.projects || {}
 
@@ -27,6 +40,7 @@ export function maskLead(lead: any, isPremium: boolean, now: Date, isFreeGranted
       category: proj.category,
       budget_range: proj.budget_range,
       timeline_range: proj.timeline_range,
+      ...previewFields(proj),
       customer_name: '*** *** ***',
       customer_phone: '*** *** ***',
       customer_email: 'contact@***.fr',
