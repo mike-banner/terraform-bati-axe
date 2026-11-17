@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { CATEGORY_LABELS } from '~~/server/utils/categoryLabels'
+import { NOT_AWARDED_REASON_LABELS } from '~/utils/b2bCommissionRules'
 
-// Appels d'offres remportés (liste) et non retenus (repliés, simple historique).
+// Appels d'offres remportés (liste) et journal des offres perdues (toujours visible, avec le motif).
 // Présentationnel : un clic sur une ligne demande l'ouverture de la fiche, la page orchestre.
 defineProps<{
   won: any[]
@@ -47,24 +48,29 @@ const formatDate = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { 
       </ul>
     </section>
 
-    <details v-if="lost.length" data-testid="projects-lost" class="group/lost">
-      <summary class="cursor-pointer text-sm font-semibold text-foreground py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground rounded-sm">
-        Non retenus <span class="font-normal text-muted-foreground tabular-nums">({{ lost.length }})</span>
-      </summary>
-      <ul class="border-t border-b border-border divide-y divide-border">
+    <section data-testid="projects-lost">
+      <h2 class="text-sm font-semibold text-foreground mb-2">
+        Offres perdues <span class="font-normal text-muted-foreground tabular-nums">({{ lost.length }})</span>
+      </h2>
+      <p v-if="!lost.length" class="py-4 text-sm text-muted-foreground border-t border-border max-w-prose">Aucune offre perdue pour l'instant.</p>
+      <ul v-else class="border-t border-b border-border divide-y divide-border">
         <li v-for="p in lost" :key="p.lot_id">
-          <button type="button" class="w-full flex items-start gap-3 py-3 px-1 text-left rounded-sm hover:bg-muted/50 transition-colors" @click="$emit('open', p.lot_id)">
-            <span class="mt-0.5 size-1.5 shrink-0 rounded-full bg-foreground" aria-hidden="true" />
-            <span class="min-w-0">
-            <span class="block text-sm text-foreground truncate">
-              {{ (CATEGORY_LABELS as Record<string, string>)[p.category] ?? p.category }}
-              <span class="text-muted-foreground tabular-nums"> · réf. {{ p.request_ref }}</span>
-            </span>
-            <span class="block text-xs text-muted-foreground truncate">{{ p.engagement?.status === 'commission_cancelled' ? 'Commission annulée' : 'Non retenu par le partenaire' }}</span>
+          <button type="button" class="w-full flex items-start gap-3 py-3 px-1 text-left rounded-sm hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground transition-colors" @click="$emit('open', p.lot_id)">
+            <span class="mt-1.5 size-1.5 shrink-0 rounded-full bg-muted-foreground" aria-hidden="true" />
+            <span class="min-w-0 flex-1">
+              <span class="block text-sm text-foreground truncate">
+                {{ (CATEGORY_LABELS as Record<string, string>)[p.category] ?? p.category }}
+                <span class="text-muted-foreground tabular-nums"> · réf. {{ p.request_ref }}</span>
+              </span>
+              <span class="block text-xs text-muted-foreground truncate first-letter:uppercase">
+                {{ p.engagement?.status === 'commission_cancelled' ? 'Commission annulée' : (NOT_AWARDED_REASON_LABELS[p.engagement?.not_awarded_reason] ?? 'Non retenu par le partenaire') }}
+                <template v-if="p.department"> · {{ p.department }}</template>
+                <template v-if="p.engagement?.signed_at"> · avenant signé le {{ formatDate(p.engagement.signed_at) }}</template>
+              </span>
             </span>
           </button>
         </li>
       </ul>
-    </details>
+    </section>
   </div>
 </template>
