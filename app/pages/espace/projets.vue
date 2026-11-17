@@ -76,8 +76,9 @@ const tabClass = (on: boolean) => on ? 'bg-foreground text-background' : 'border
         <NuxtLink to="/espace/leads" class="text-sm font-semibold underline underline-offset-4 hover:opacity-70">Voir les leads</NuxtLink>
       </div>
 
-      <ul v-else data-testid="particuliers-list" class="border-t border-border divide-y divide-border">
-        <li v-for="lead in activeLeads" :key="lead.id" class="flex flex-wrap items-center gap-x-4 gap-y-2 py-3 px-1">
+      <ul v-else data-testid="particuliers-list" class="border-t border-b border-border divide-y divide-border">
+        <li v-for="lead in activeLeads" :key="lead.id" class="flex flex-wrap items-center gap-x-3 gap-y-2 py-3 px-1">
+          <span class="mt-0.5 size-1.5 shrink-0 rounded-full bg-foreground" aria-hidden="true" />
           <NuxtLink :to="`/espace/leads/${lead.id}`" class="flex-1 min-w-[12rem] rounded-sm hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground">
             <span class="block text-sm font-semibold text-foreground truncate">
               {{ (CATEGORY_LABELS as Record<string, string>)[lead.category] ?? lead.category }}
@@ -104,9 +105,10 @@ const tabClass = (on: boolean) => on ? 'bg-foreground text-background' : 'border
         <summary class="cursor-pointer text-sm font-semibold text-foreground py-2 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground">
           Non retenus <span class="font-normal text-muted-foreground tabular-nums">({{ closedLeads.length }})</span>
         </summary>
-        <ul class="border-t border-border divide-y divide-border">
-          <li v-for="lead in closedLeads" :key="lead.id" class="flex flex-wrap items-center justify-between gap-3 py-3 px-1">
-            <span class="text-sm text-foreground">
+        <ul class="border-t border-b border-border divide-y divide-border">
+          <li v-for="lead in closedLeads" :key="lead.id" class="flex flex-wrap items-center gap-x-3 gap-y-2 py-3 px-1">
+            <span class="mt-0.5 size-1.5 shrink-0 rounded-full bg-foreground" aria-hidden="true" />
+            <span class="flex-1 text-sm text-foreground">
               {{ (CATEGORY_LABELS as Record<string, string>)[lead.category] ?? lead.category }}
               <span v-if="lead.customer_name" class="text-muted-foreground"> · {{ lead.customer_name }}</span>
             </span>
