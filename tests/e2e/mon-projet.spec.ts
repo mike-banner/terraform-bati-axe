@@ -67,14 +67,14 @@ test.describe('Page projet — état vide (pas de messages)', () => {
     await expect(page.getByText('RGPD conforme')).toBeVisible()
   })
 
-  test('affiche l\'état "en cours de validation" avec les 3 garanties', async ({ page }) => {
+  test('affiche l\'état "projet en ligne" avec les 3 garanties', async ({ page }) => {
     await page.goto(`/mon-projet/${TOKEN}`)
 
     // Message principal d'attente
-    await expect(page.getByText(/en cours de validation/i)).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText(/Votre projet est en ligne/i)).toBeVisible({ timeout: 10_000 })
 
     // Les 3 garanties listées dans l'état vide
-    await expect(page.getByText('Décennale vérifiée')).toBeVisible()
+    await expect(page.getByText('Décennale exigée')).toBeVisible()
     await expect(page.getByText('Vos coordonnées masquées')).toBeVisible()
   })
 })
@@ -128,10 +128,10 @@ test.describe('Page projet — état avec messages', () => {
     await expect(page.getByText(/réponse rapide/)).toBeVisible()
   })
 
-  test('l\'état vide "en cours de validation" n\'est PAS affiché quand il y a des messages', async ({ page }) => {
+  test('l\'état vide "projet en ligne" n\'est PAS affiché quand il y a des messages', async ({ page }) => {
     await page.goto(`/mon-projet/${TOKEN}`)
 
-    await expect(page.getByText(/en cours de validation/i)).not.toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText(/Votre projet est en ligne/i)).not.toBeVisible({ timeout: 10_000 })
   })
 
   test('affiche le champ de réponse pour chaque thread', async ({ page }) => {
