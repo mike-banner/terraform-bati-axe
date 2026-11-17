@@ -45,7 +45,7 @@ const formatDate = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { 
 
     <p class="text-sm text-muted-foreground mb-4 max-w-prose">
       Appels d'offres de nos partenaires professionnels (syndics, architectes, bureaux d'études) dans vos zones abonnées.
-      Ceux que vous avez remportés sont dans <NuxtLink to="/espace/projets?vue=ao" class="underline underline-offset-4 hover:opacity-70">Projets en cours</NuxtLink>.
+      Une fois positionné, le dossier passe dans <NuxtLink to="/espace/projets?vue=attente" class="underline underline-offset-4 hover:opacity-70">Projets en cours</NuxtLink> avec ses pièces jointes.
     </p>
 
     <div class="flex flex-wrap items-center gap-2 mb-5" role="tablist" aria-label="Appels d'offres">

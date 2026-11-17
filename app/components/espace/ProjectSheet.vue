@@ -27,6 +27,9 @@ const formatMonth = (ymd: string) => new Date(`${ymd}T12:00:00Z`).toLocaleDateSt
 const formatDay = (ymd: string) => new Date(`${ymd}T12:00:00Z`).toLocaleDateString('fr-FR', { timeZone: 'UTC' })
 
 const signed = computed(() => Boolean(props.project.avenant_signed))
+
+const formatSize = (bytes: number) => bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1).replace('.', ',')} Mo` : `${Math.max(1, Math.round(bytes / 1024))} Ko`
+const attachmentUrl = (index: number) => `/api/v1/tenders/${props.project.lot_id}/files/${index}`
 const eng = computed(() => props.project.engagement)
 
 const statusLabel = computed(() => {
@@ -132,6 +135,26 @@ const facts = computed(() => {
         </ul>
       </div>
     </section>
+
+    <!-- Pièces du partenaire (plans, CCTP…) : uniquement avenant signé, retirées si l'offre est perdue (le serveur filtre) -->
+    <section v-if="project.attachments?.length" class="py-5 border-t border-border" data-testid="project-attachments">
+      <h3 class="text-base font-semibold text-foreground mb-3">Pièces jointes du partenaire</h3>
+      <ul class="border-t border-b border-border divide-y divide-border">
+        <li v-for="a in project.attachments" :key="a.index" class="flex items-center gap-3 py-3 px-1">
+          <span class="size-1.5 shrink-0 rounded-full bg-foreground" aria-hidden="true" />
+          <span class="flex-1 min-w-0 text-sm text-foreground truncate">{{ a.name }}</span>
+          <span class="shrink-0 text-xs text-muted-foreground tabular-nums">{{ formatSize(a.size) }}</span>
+          <a
+            :href="attachmentUrl(a.index)" target="_blank" rel="noopener"
+            class="shrink-0 text-sm font-semibold underline underline-offset-4 hover:opacity-70 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+            :aria-label="`${a.viewable ? 'Ouvrir' : 'Télécharger'} ${a.name}`"
+          >{{ a.viewable ? 'Ouvrir' : 'Télécharger' }}</a>
+        </li>
+      </ul>
+    </section>
+    <p v-else-if="!signed" class="py-5 border-t border-border text-sm text-muted-foreground max-w-prose" data-testid="project-attachments-locked">
+      Les pièces jointes du partenaire (plans, CCTP) sont consultables après la signature de l'avenant.
+    </p>
 
     <!-- Contact partenaire : uniquement avenant signé (le serveur masque sinon) -->
     <section v-if="signed" class="py-5 border-t border-border" data-testid="project-contact">

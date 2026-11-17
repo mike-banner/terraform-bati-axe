@@ -5,6 +5,7 @@ import { CATEGORY_LABELS } from '~~/server/utils/categoryLabels'
 // Présentationnel : un clic sur une ligne demande l'ouverture de la fiche, la page orchestre.
 defineProps<{
   won: any[]
+  empty?: string
 }>()
 
 defineEmits<{ open: [lotId: string] }>()
@@ -16,7 +17,7 @@ const formatDate = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { 
   <div data-testid="project-list" class="space-y-8">
     <section data-testid="projects-won">
       <p v-if="!won.length" class="py-4 text-sm text-muted-foreground border-t border-border max-w-prose">
-        Aucun appel d'offres remporté pour l'instant. Quand un partenaire vous retient, le projet apparaît ici.
+        {{ empty ?? "Aucun appel d'offres remporté pour l'instant. Quand un partenaire vous retient, le projet apparaît ici." }}
       </p>
       <ul v-else class="border-t border-b border-border divide-y divide-border">
         <li v-for="p in won" :key="p.lot_id">

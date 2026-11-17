@@ -15,6 +15,7 @@ export function buildQuoteKey(engagementId: string): string {
 export async function signB2bObjectUrl(
   event: any, key: string, method: 'PUT' | 'GET' | 'HEAD', expiresSec = 300,
   upload?: { contentType: string; contentLength: number },
+  read?: { contentType: string; disposition: string },
 ): Promise<string> {
   const config = useRuntimeConfig(event) as any
   const env = event.context.cloudflare?.env || {}
@@ -31,8 +32,8 @@ export async function signB2bObjectUrl(
   url.searchParams.set('X-Amz-Expires', String(expiresSec))
   // Lecture : on force un PDF servi en pièce jointe, quel que soit le type enregistré sur l'objet.
   if (method === 'GET') {
-    url.searchParams.set('response-content-type', 'application/pdf')
-    url.searchParams.set('response-content-disposition', 'attachment; filename="devis.pdf"')
+    url.searchParams.set('response-content-type', read?.contentType ?? 'application/pdf')
+    url.searchParams.set('response-content-disposition', read?.disposition ?? 'attachment; filename="devis.pdf"')
   }
   if (method === 'PUT' && upload) {
     return (await aws.sign(url, {

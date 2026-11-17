@@ -14,9 +14,12 @@ const { data: leadsData } = await useAsyncData('pro-projects-leads', () =>
   requestFetch<{ leads: any[] }>('/api/v1/leads').catch(() => ({ leads: [] })))
 const { updateLeadStatus } = useLeadStatus()
 
-// Deux sous-onglets : ?vue=particuliers (défaut) ou ?vue=ao ; ?projet=<lot_id> ouvre la fiche d'un appel d'offres gagné.
-const view = computed<'particuliers' | 'ao'>(() => (route.query.vue === 'ao' ? 'ao' : 'particuliers'))
-const openProjectId = computed(() => (view.value === 'ao' && typeof route.query.projet === 'string' ? route.query.projet : null))
+// Trois sous-onglets : ?vue=particuliers (défaut), ?vue=attente (partenaire pas encore décidé) ou ?vue=ao (gagnés) ;
+// ?projet=<lot_id> ouvre la fiche d'un appel d'offres où le pro est positionné.
+type View = 'particuliers' | 'attente' | 'ao'
+const view = computed<View>(() => (route.query.vue === 'ao' ? 'ao' : route.query.vue === 'attente' ? 'attente' : 'particuliers'))
+const isTenderView = computed(() => view.value !== 'particuliers')
+const openProjectId = computed(() => (isTenderView.value && typeof route.query.projet === 'string' ? route.query.projet : null))
 const openProject = computed(() => t.tenders.find((x: any) => x.positioned && x.lot_id === openProjectId.value) ?? null)
 
 const goTo = (query: Record<string, string>) => navigateTo({ query })
@@ -28,6 +31,7 @@ const activeLeads = computed(() => leadsList.value.filter((l: any) => leadPhase(
 const closedLeads = computed(() => leadsList.value.filter((l: any) => leadPhase(l) === 'closed'))
 const leadsCount = computed(() => activeLeads.value.length)
 const wonCount = computed(() => t.projects.won.length)
+const pendingCount = computed(() => t.projects.pending.length)
 
 const statusMessage = ref<string | null>(null)
 async function changeStatus(lead: any, value: string) {
@@ -50,6 +54,14 @@ const tabClass = (on: boolean) => on ? 'bg-foreground text-background' : 'border
         @click="goTo({ vue: 'particuliers' })"
       >
         Chantiers particuliers ({{ leadsCount }})
+      </button>
+      <button
+        type="button" role="tab" :aria-selected="view === 'attente'" data-testid="tab-ao-attente"
+        class="h-11 px-4 text-sm font-semibold rounded-full whitespace-nowrap transition-colors"
+        :class="tabClass(view === 'attente')"
+        @click="goTo({ vue: 'attente' })"
+      >
+        Appels d'offres en attente ({{ pendingCount }})
       </button>
       <button
         type="button" role="tab" :aria-selected="view === 'ao'" data-testid="tab-ao-gagnes"
@@ -130,7 +142,7 @@ const tabClass = (on: boolean) => on ? 'bg-foreground text-background' : 'border
       <EspaceProjectSheet
         v-else-if="openProject"
         :project="openProject"
-        @back="goTo({ vue: 'ao' })"
+        @back="goTo({ vue: view })"
         @sign-avenant="t.startAmendment"
         @confirm-quote="t.confirmQuote"
         @contest-quote="t.contestQuote"
@@ -138,8 +150,14 @@ const tabClass = (on: boolean) => on ? 'bg-foreground text-background' : 'border
       <div v-else-if="openProjectId" class="py-12 max-w-prose">
         <p class="text-sm font-semibold text-foreground mb-1">Projet introuvable</p>
         <p class="text-sm text-muted-foreground mb-3">Il n'est plus dans votre liste, ou vous ne vous y êtes pas positionné.</p>
-        <button type="button" class="text-sm font-semibold underline underline-offset-4 hover:opacity-70" @click="goTo({ vue: 'ao' })">Retour aux projets</button>
+        <button type="button" class="text-sm font-semibold underline underline-offset-4 hover:opacity-70" @click="goTo({ vue: view })">Retour aux projets</button>
       </div>
+      <EspaceProjectList
+        v-else-if="view === 'attente'"
+        :won="t.projects.pending"
+        empty="Aucun appel d'offres en attente. Quand vous vous positionnez, le dossier apparaît ici jusqu'au choix du partenaire."
+        @open="goTo({ vue: 'attente', projet: $event })"
+      />
       <EspaceProjectList v-else :won="t.projects.won" @open="goTo({ vue: 'ao', projet: $event })" />
     </template>
 

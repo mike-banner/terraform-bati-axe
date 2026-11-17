@@ -1,5 +1,6 @@
 import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
 import { maskTender, isTenderRevealed } from '../../../utils/maskTender'
+import { canReadAttachments, listAttachments } from '../../../utils/tenderAttachments'
 import { findSignedFramework } from '../../../utils/signature'
 import { computeCommissionPlan } from '../../../utils/b2bCommissionPlan'
 import { installmentLabels } from '../../../../app/utils/b2bCommissionRules'
@@ -73,7 +74,7 @@ export default defineEventHandler(async (event) => {
 
   const { data: lots, error: lotsError } = await supabase
     .from('b2b_tender_lots')
-    .select('id, category, status, created_at, zone_id, request_id, description, b2b_requests(id, nb_logements, surface_m2, calendrier_souhaite, description, project_location, project_postal_code, budget_range, decision_status, qualifications_requises, planning_start, planning_end, contact_name, contact_company, contact_phone, contact_email)')
+    .select('id, category, status, created_at, zone_id, request_id, description, b2b_requests(id, files, nb_logements, surface_m2, calendrier_souhaite, description, project_location, project_postal_code, budget_range, decision_status, qualifications_requises, planning_start, planning_end, contact_name, contact_company, contact_phone, contact_email)')
     .in('zone_id', zoneIds)
     .in('category', pro.categories)
     .order('created_at', { ascending: false })
@@ -137,6 +138,8 @@ export default defineEventHandler(async (event) => {
         engagement: revealed ? buildEngagement(amendment, submissions, validations) : null,
         // Suivi « Mes projets » : le pro s'est positionné (claim) ; l'avenant est signé ou reste à signer.
         positioned: Boolean(claim),
+        // Pièces du partenaire (plans, CCTP) : nom/taille seulement, téléchargement via /api/v1/tenders/:id/files/:n.
+        attachments: canReadAttachments(claim, amendment) ? listAttachments(lot.b2b_requests?.files) : [],
         avenant_signed: Boolean(amendment?.id),
       }
     })

@@ -89,7 +89,7 @@ export function useProTenders() {
       }
       claimTarget.value = null
       await refreshTenders()
-      message.value = 'Vous êtes positionné. Les coordonnées du partenaire sont maintenant visibles.'
+      message.value = 'Vous êtes positionné. Retrouvez le dossier et ses pièces jointes dans Projets en cours, onglet « en attente ».'
     } catch (err: any) {
       claimTarget.value = null
       message.value = err?.data?.data?.code === 'FRAMEWORK_REQUIRED'
@@ -113,7 +113,7 @@ export function useProTenders() {
       await Promise.all([refreshTenders(), refreshContracts()])
       message.value = flow.kind === 'framework'
         ? 'Convention signée. Vous pouvez vous positionner sur les appels d\'offres.'
-        : 'Avenant signé. Les coordonnées du partenaire sont maintenant visibles.'
+        : 'Avenant signé. Le dossier, ses pièces jointes et les coordonnées du partenaire sont dans Projets en cours.'
     } catch (err: any) {
       signError.value = err?.data?.statusMessage || 'Signature impossible.'
     } finally {

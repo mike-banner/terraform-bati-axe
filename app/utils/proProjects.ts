@@ -20,9 +20,10 @@ export function projectPhase(t: ProProject): ProjectPhase {
   return LOST_STATUSES.has(status) ? 'lost' : 'won'
 }
 
-// L'onglet « Appels d'offres » ne garde que ce qui est encore ouvert ou en attente du partenaire.
+// « Appels d'offres » ne garde que le choix : dès que le pro s'est positionné, le dossier passe
+// dans « Projets en cours » (en attente, gagné) ou dans les offres perdues.
 export function isOpenTender(t: ProProject): boolean {
-  return !t.positioned || projectPhase(t) === 'pending'
+  return !t.positioned
 }
 
 export function splitProjects<T extends ProProject>(tenders: T[]): { pending: T[]; won: T[]; lost: T[] } {

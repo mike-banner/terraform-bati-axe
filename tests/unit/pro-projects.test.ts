@@ -19,9 +19,9 @@ describe('projectPhase', () => {
 })
 
 describe("isOpenTender (vue Appels d'offres)", () => {
-  it('garde les AO ouverts et les demandes en attente, retire gagnés et perdus', () => {
+  it('ne garde que les AO sans positionnement du pro : le reste passe dans Projets en cours', () => {
     expect(isOpenTender(t('a', false, null))).toBe(true)
-    expect(isOpenTender(t('a', true, 'signed'))).toBe(true)
+    expect(isOpenTender(t('a', true, 'signed'))).toBe(false)
     expect(isOpenTender(t('a', true, 'selected'))).toBe(false)
     expect(isOpenTender(t('a', true, 'not_awarded'))).toBe(false)
   })
