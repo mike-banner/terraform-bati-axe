@@ -664,7 +664,7 @@ const showRge = computed(() =>
               <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform" :class="capacity.available ? 'translate-x-6' : 'translate-x-1'" />
             </button>
           </div>
-          <ul class="mt-3 space-y-1" data-testid="required-docs">
+          <ul v-if="!subcontractingEligible" class="mt-3 space-y-1" data-testid="required-docs">
             <li v-for="d in requiredDocs" :key="d.type" class="text-xs flex items-center gap-2" :class="d.ok ? 'text-emerald-800' : 'text-muted-foreground'">
               <span aria-hidden="true">{{ d.ok ? '✓' : '○' }}</span>{{ d.label }}
             </li>
