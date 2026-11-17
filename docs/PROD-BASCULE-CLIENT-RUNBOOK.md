@@ -61,9 +61,16 @@ projet Pages + variables d'environnement, buckets R2 + CORS (module `r2_storage`
 ### 4.2 Variables Pages à vérifier après apply
 `NUXT_SUPABASE_SECRET_KEY` (**clé service_role ; absente de l'ancien projet prod `bati-axe-production`, qui n'avait que `SUPABASE_SERVICE_ROLE_KEY`, non lue à l'exécution**), `SUPABASE_URL`, `SUPABASE_KEY`, `NUXT_PUBLIC_SUPABASE_URL`, `NUXT_PUBLIC_SUPABASE_KEY`, `DATABASE_URL`, `NUXT_R2_*` (compte, clés, 3 buckets + `NUXT_R2_BUCKET_NAME`), `NUXT_RESEND_API_KEY`, `NUXT_EMAIL_FROM`, `NUXT_ONBOARDING_EMAILS`, `NUXT_TURNSTILE_SECRET_KEY`, `NUXT_PUBLIC_SITE_URL` (= `https://bati-axe.com`), `NUXT_STRIPE_*` (en dernier). Lister (sans valeurs) : `npx wrangler pages secret list --project-name <projet>`.
 
-### 4.3 Variables MANQUANTES dans Terraform (à ajouter avant la prod)
-- **`NUXT_ADMIN_EMAIL`** : absent de `modules/platform/main.tf` (`env_vars`). Sans elle, les alertes admin (nouvelle inscription, SIRET non confirmé) sont ignorées sans erreur. À ajouter (variable + secret GitHub).
-- **`NUXT_CRON_SECRET`**, **`NUXT_PUBLIC_TURNSTILE_SITE_KEY`**, variables e-mail par expéditeur (`NUXT_EMAIL_FROM_NO_REPLY`, `_NOTIFICATIONS`, `_CONTACT`) : **[À VÉRIFIER]** présentes dans `nuxt.config.ts`, absentes de `env_vars`.
+### 4.3 Variables ajoutées à Terraform (2026-11-17)
+Désormais gérées par `modules/platform` (variables optionnelles : **vides = non posées**, une valeur vide n'écrase jamais un réglage existant) :
+- **`NUXT_CRON_SECRET`** ← secret GitHub `CRON_SECRET` (`PROD_CRON_SECRET` en prod). Doit être identique à celui des workflows `cron-*.yml`.
+- **`NUXT_ADMIN_EMAIL`** ← secret `ADMIN_EMAIL` (`PROD_ADMIN_EMAIL`). Sans elle, les alertes admin sont ignorées sans erreur.
+- **`NUXT_PUBLIC_TURNSTILE_SITE_KEY`** ← secret `TURNSTILE_SITE_KEY` (prod uniquement ; vide en dev).
+- **`NUXT_ADMIN_OPERATORS`** : désormais aussi câblé pour staging et prod (secret `ADMIN_OPERATORS`).
+
+**Volontairement absentes** (le code a une valeur par défaut) : `NUXT_EMAIL_FROM_NO_REPLY` / `_NOTIFICATIONS` / `_CONTACT` (défaut `@bati-axe.com`, repli sur `NUXT_EMAIL_FROM`) et les seuils `NUXT_B2B_*` (délais d'alerte, plafonds). À ne poser que pour s'écarter du défaut.
+
+Validé par `terraform validate` (dev, staging, prod). **Aucun `plan` n'a été lancé contre le compte du client** : à faire avant toute bascule.
 - Règle projet : toute nouvelle variable est documentée dans `.env.example` immédiatement.
 
 ## 5. Tâches planifiées GitHub (inactives aujourd'hui)

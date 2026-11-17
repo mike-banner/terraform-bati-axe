@@ -68,6 +68,10 @@ jobs:
       # Opérateurs admin : liste du champ « Qui agit ? » (noms séparés par des virgules ; Herman = super admin)
       TF_VAR_admin_operators: "Herman"
 
+      # Crons et alertes (secrets GitHub optionnels : vides = variables non posées, rien n'est écrasé)
+      TF_VAR_cron_secret: ${{ secrets.CRON_SECRET }}
+      TF_VAR_admin_email: ${{ secrets.ADMIN_EMAIL }}
+
       # Turnstile désactivé en Dev
       TF_VAR_turnstile_secret_key: ""
       TF_VAR_site_url: https://bati-axe-dev-dev.pages.dev

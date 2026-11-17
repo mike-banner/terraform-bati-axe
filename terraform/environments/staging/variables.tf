@@ -186,3 +186,28 @@ variable "environment_domains" {
     production = "bati-axe.com"
   }
 }
+
+variable "cron_secret" {
+  description = "Secret partagé des crons HTTP (le même que le secret GitHub CRON_SECRET). Vide = variable non posée."
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "admin_email" {
+  description = "Adresse qui reçoit les alertes admin (inscriptions, SIRET non confirmé). Vide = variable non posée."
+  type        = string
+  default     = ""
+}
+
+variable "turnstile_site_key" {
+  description = "Clé publique Cloudflare Turnstile (côté navigateur). Vide = variable non posée."
+  type        = string
+  default     = ""
+}
+
+variable "admin_operators" {
+  description = "Opérateurs admin (« Qui agit ? »), séparés par des virgules"
+  type        = string
+  default     = ""
+}

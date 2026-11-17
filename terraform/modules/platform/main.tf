@@ -57,7 +57,7 @@ module "cloudflare_pages" {
   # Domaine personnalisé selon le workspace (lookup retourne "" si clé absente → pas de domaine)
   custom_domain = lookup(var.environment_domains, var.environment, "")
 
-  env_vars = {
+  env_vars = merge({
     DATABASE_URL                 = var.create_supabase ? module.supabase_project[0].database_url : var.existing_database_url
     SUPABASE_URL                 = var.supabase_url
     NUXT_PUBLIC_SUPABASE_URL     = var.supabase_url
@@ -82,5 +82,10 @@ module "cloudflare_pages" {
     NUXT_ADMIN_OPERATORS         = var.admin_operators
     NUXT_TURNSTILE_SECRET_KEY    = var.turnstile_secret_key
     NUXT_PUBLIC_SITE_URL         = var.site_url
-  }
+    },
+    # Posées seulement si renseignées : une valeur vide ne doit pas écraser un réglage fait ailleurs.
+    var.cron_secret != "" ? { NUXT_CRON_SECRET = var.cron_secret } : {},
+    var.admin_email != "" ? { NUXT_ADMIN_EMAIL = var.admin_email } : {},
+    var.turnstile_site_key != "" ? { NUXT_PUBLIC_TURNSTILE_SITE_KEY = var.turnstile_site_key } : {},
+  )
 }

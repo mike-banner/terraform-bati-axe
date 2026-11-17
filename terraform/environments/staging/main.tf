@@ -33,6 +33,10 @@ module "platform" {
   email_from                 = var.email_from
   onboarding_emails          = var.onboarding_emails
   turnstile_secret_key       = var.turnstile_secret_key
+  cron_secret                = var.cron_secret
+  admin_email                = var.admin_email
+  turnstile_site_key         = var.turnstile_site_key
+  admin_operators            = var.admin_operators
   site_url                   = var.site_url
   supabase_region            = var.supabase_region
   environment_domains        = var.environment_domains
