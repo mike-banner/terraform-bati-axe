@@ -21,6 +21,8 @@ export interface Professional {
   email: string
   phone: string
   category: string | null
+  categories?: string[] | null
+  professional_type?: 'specialiste' | 'entreprise_generale' | null
   canonical_slug?: string
   is_verified: boolean
   decennal_status: 'pending' | 'valid' | 'expired' | 'none'
@@ -88,6 +90,27 @@ export const CATEGORY_LABELS: Record<string, string> = {
   peinture: 'Peinture & Finitions',
   isolation: 'Isolation & Cloisons',
 }
+
+/** Métiers d'un pro (vocabulaire `professionals.categories`) — plus large que CATEGORY_LABELS (lots B2B). */
+export const PRO_CATEGORY_LABELS: Record<string, string> = {
+  ...CATEGORY_LABELS,
+  maconnerie: 'Maçonnerie & Gros Œuvre',
+  toiture: 'Toiture',
+  peinture: 'Peinture',
+  isolation: 'Isolation',
+  carrelage: 'Carrelage',
+  menuiserie: 'Menuiserie',
+  renovation_energetique: 'Rénovation énergétique',
+}
+export const EGB_FILTER = 'entreprise_generale'
+
+/** Métiers d'un pro : `categories[]`, à défaut l'ancienne colonne `category`. */
+export const proCategories = (p: Pick<Professional, 'category' | 'categories'>): string[] =>
+  p.categories?.length ? p.categories : (p.category ? [p.category] : [])
+
+/** Un pro correspond au filtre : un métier précis, ou « Entreprise générale » (type EGB). */
+export const proMatchesCategory = (p: Professional, filter: string): boolean =>
+  !filter || (filter === EGB_FILTER ? p.professional_type === 'entreprise_generale' : proCategories(p).includes(filter))
 
 export const STATUS_LABELS: Record<string, string> = {
   pending: 'En attente',

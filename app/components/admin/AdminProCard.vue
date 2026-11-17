@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Professional, DocType } from '~/types/admin'
-import { CATEGORY_LABELS, STATUS_LABELS, DOC_LABELS, missingDocuments } from '~/types/admin'
+import { PRO_CATEGORY_LABELS, proCategories, STATUS_LABELS, DOC_LABELS, missingDocuments } from '~/types/admin'
 
 const props = defineProps<{
   pro: Professional
@@ -105,8 +105,9 @@ function uploadKey(proId: string, docType: string) {
           </span>
           <span v-if="pro.rge_status === 'valid'" class="inline-flex items-center text-[11px] font-semibold px-2.5 py-0.5 rounded-full border border-emerald-400/40 text-emerald-300 bg-emerald-500/15">RGE</span>
           <!-- Category -->
-          <span v-if="pro.category" class="text-[11px] px-2 py-0.5 rounded-full border border-border text-muted-foreground bg-muted/30">
-            {{ CATEGORY_LABELS[pro.category] ?? pro.category }}
+          <span v-if="pro.professional_type === 'entreprise_generale'" class="text-[11px] font-semibold px-2 py-0.5 rounded-full border border-border text-foreground bg-muted/30">Entreprise générale</span>
+          <span v-for="cat in proCategories(pro)" :key="cat" class="text-[11px] px-2 py-0.5 rounded-full border border-border text-muted-foreground bg-muted/30">
+            {{ PRO_CATEGORY_LABELS[cat] ?? cat }}
           </span>
         </div>
         <div class="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-muted-foreground">

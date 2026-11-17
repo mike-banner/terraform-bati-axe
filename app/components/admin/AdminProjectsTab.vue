@@ -12,7 +12,8 @@ const sortKey = ref<'date' | 'age' | 'leads' | 'budget'>('date')
 const sortAsc = ref(false)
 const currentPage = ref(1)
 const perPage = 20
-const expandedProjectId = ref<string | null>(null)
+// Un clic sur un projet ouvre sa fiche (avancement et artisans), qui se relit toute seule.
+const openProjectId = ref<string | null>(null)
 
 type SortKey = typeof sortKey.value
 
@@ -97,10 +98,6 @@ const pageNumbers = computed(() => {
 
 const criticalCount = computed(() => filtered.value.filter(p => leadAge(p.created_at).days >= 3).length)
 
-function toggleExpand(id: string) {
-  expandedProjectId.value = expandedProjectId.value === id ? null : id
-}
-
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime()
   const mins = Math.floor(diff / 60000)
@@ -112,6 +109,9 @@ function timeAgo(dateStr: string): string {
 </script>
 
 <template>
+  <AdminProjectDetail v-if="openProjectId" :project-id="openProjectId" @back="openProjectId = null" />
+
+  <template v-else>
   <!-- Filters bar -->
   <div class="flex items-center gap-3 flex-wrap">
     <div class="relative flex-1 min-w-[200px] max-w-md">
@@ -168,9 +168,13 @@ function timeAgo(dateStr: string): string {
           class="bg-card border rounded-sm overflow-hidden transition-all cursor-pointer"
           :class="[
             leadAge(project.created_at).days >= 3 ? 'border-destructive/30' : 'border-border',
-            expandedProjectId === project.id ? 'ring-1 ring-safety/20' : ''
+            'hover:border-foreground/30 focus-visible:outline-2 focus-visible:outline-foreground'
           ]"
-          @click="toggleExpand(project.id)"
+          role="button" tabindex="0" data-testid="admin-project-row"
+          :aria-label="`Ouvrir le projet de ${project.customer_name}`"
+          @click="openProjectId = project.id"
+          @keydown.enter.prevent="openProjectId = project.id"
+          @keydown.space.prevent="openProjectId = project.id"
         >
           <!-- Collapsed row -->
           <div class="flex items-center gap-4 px-5 py-3.5">
@@ -208,56 +212,9 @@ function timeAgo(dateStr: string): string {
               <span>{{ timeAgo(project.created_at) }}</span>
             </div>
 
-            <!-- Expand arrow -->
-            <svg class="w-4 h-4 text-muted-foreground shrink-0 transition-transform" :class="expandedProjectId === project.id ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+            <svg class="w-4 h-4 text-muted-foreground shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
             </svg>
-          </div>
-
-          <!-- Expanded detail -->
-          <div v-if="expandedProjectId === project.id" class="border-t border-border px-5 py-4 space-y-3 bg-muted/20">
-            <!-- Customer info -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div>
-                <p class="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">Demandeur</p>
-                <p class="text-sm font-medium text-foreground">{{ project.customer_name }}</p>
-              </div>
-              <div>
-                <p class="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">Email</p>
-                <a :href="`mailto:${project.customer_email}`" class="text-sm text-safety hover:underline" @click.stop>{{ project.customer_email }}</a>
-              </div>
-              <div>
-                <p class="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">Téléphone</p>
-                <a :href="`tel:${project.customer_phone}`" class="text-sm text-foreground hover:text-safety transition-colors" @click.stop>{{ project.customer_phone }}</a>
-              </div>
-            </div>
-
-            <!-- Project details -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div v-if="project.postal_code">
-                <p class="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">Code postal</p>
-                <p class="text-sm text-foreground">{{ project.postal_code }}</p>
-              </div>
-              <div v-if="project.budget_range">
-                <p class="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">Budget</p>
-                <p class="text-sm text-foreground">{{ project.budget_range }}</p>
-              </div>
-              <div v-if="project.timeline_range">
-                <p class="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">Délai</p>
-                <p class="text-sm text-foreground">{{ project.timeline_range }}</p>
-              </div>
-            </div>
-
-            <!-- Description -->
-            <div v-if="project.description">
-              <p class="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">Description</p>
-              <p class="text-sm text-foreground leading-relaxed">{{ project.description }}</p>
-            </div>
-
-            <!-- Date -->
-            <p class="text-xs text-muted-foreground">
-              Reçu le {{ new Date(project.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) }}
-            </p>
           </div>
         </div>
       </div>
@@ -296,5 +253,6 @@ function timeAgo(dateStr: string): string {
         </div>
       </div>
     </template>
+  </template>
   </template>
 </template>

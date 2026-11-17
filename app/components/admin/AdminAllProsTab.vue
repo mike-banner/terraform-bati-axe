@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Professional, DocType } from '~/types/admin'
-import { CATEGORY_LABELS } from '~/types/admin'
+import { PRO_CATEGORY_LABELS, EGB_FILTER, proCategories, proMatchesCategory } from '~/types/admin'
 
 const props = defineProps<{
   professionals: Professional[]
@@ -24,9 +24,16 @@ const categoryFilter = ref('')
 const currentPage = ref(1)
 const perPage = 20
 
-const availableCategories = computed(() => {
-  const cats = new Set(props.professionals.map(p => p.category).filter(Boolean))
-  return [...cats] as string[]
+// Un pro peut avoir plusieurs métiers : le filtre compte chaque métier, plus « Entreprise générale » (type EGB).
+const categoryOptions = computed(() => {
+  const counts = new Map<string, number>()
+  for (const p of props.professionals) for (const c of proCategories(p)) counts.set(c, (counts.get(c) ?? 0) + 1)
+  const options = [...counts.entries()]
+    .map(([value, count]) => ({ value, count, label: PRO_CATEGORY_LABELS[value] ?? value }))
+    .sort((a, b) => a.label.localeCompare(b.label, 'fr'))
+  const egb = props.professionals.filter(p => p.professional_type === 'entreprise_generale').length
+  if (egb) options.push({ value: EGB_FILTER, count: egb, label: 'Entreprise générale' })
+  return options
 })
 
 const filtered = computed(() => {
@@ -34,7 +41,7 @@ const filtered = computed(() => {
 
   // Category filter
   if (categoryFilter.value) {
-    list = list.filter(p => p.category === categoryFilter.value)
+    list = list.filter(p => proMatchesCategory(p, categoryFilter.value))
   }
 
   // Search filter (name, company, email, siret)
@@ -102,11 +109,13 @@ const pageNumbers = computed(() => {
     <!-- Category -->
     <select
       v-model="categoryFilter"
+      data-testid="admin-pros-category-filter"
+      aria-label="Filtrer par catégorie"
       class="h-9 px-3 pr-8 border border-border rounded-sm text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer"
     >
       <option value="">Toutes catégories</option>
-      <option v-for="cat in availableCategories" :key="cat" :value="cat">
-        {{ CATEGORY_LABELS[cat] ?? cat }}
+      <option v-for="opt in categoryOptions" :key="opt.value" :value="opt.value">
+        {{ opt.label }} ({{ opt.count }})
       </option>
     </select>
 
