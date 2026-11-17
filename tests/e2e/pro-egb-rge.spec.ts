@@ -131,7 +131,7 @@ test.describe('Admin — entreprises générales', () => {
     await page.waitForFunction(() => !!(document.querySelector('#__nuxt') as any)?.__vue_app__)
     await page.evaluate(() => (document.querySelector('#__nuxt') as any).__vue_app__.config.globalProperties.$router.push('/admin'))
     // Mobile : la barre latérale est repliée derrière le bouton de l'en-tête
-    const onglet = page.getByRole('button', { name: /Entreprises générales/ }).first()
+    const onglet = page.getByRole('button', { name: /EGB à approuver/ }).first()
     if ((page.viewportSize()?.width ?? 1280) < 1024) await page.locator('header button').first().click()
     await onglet.click()
 

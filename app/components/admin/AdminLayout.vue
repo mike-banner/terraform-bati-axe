@@ -34,7 +34,7 @@ const navItems = computed(() => [
   },
   {
     key: 'pending',
-    label: 'En attente',
+    label: 'Pros à valider',
     icon: 'clock',
     badge: props.pendingCount && props.pendingCount > 0 ? props.pendingCount : null,
   },
@@ -46,7 +46,7 @@ const navItems = computed(() => [
   },
   {
     key: 'egb',
-    label: 'Entreprises générales',
+    label: 'EGB à approuver',
     icon: 'shield',
     badge: null,
   },

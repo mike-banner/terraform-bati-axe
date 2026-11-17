@@ -58,6 +58,20 @@ const contactPhone = ref('')
 const contactEmail = ref('')
 const consentAccepted = ref(false)
 
+// Venu de « Mes dossiers » : reprend les coordonnées déjà connues (le consentement reste à donner à chaque dossier).
+onMounted(() => {
+  try {
+    const raw = sessionStorage.getItem('b2b-prefill')
+    if (!raw) return
+    sessionStorage.removeItem('b2b-prefill')
+    const c = JSON.parse(raw)
+    if (typeof c.name === 'string') contactName.value = c.name.slice(0, 100)
+    if (typeof c.company === 'string') contactCompany.value = c.company.slice(0, 200)
+    if (typeof c.phone === 'string') contactPhone.value = c.phone.slice(0, 20)
+    if (typeof c.email === 'string') contactEmail.value = c.email.slice(0, 254)
+  } catch { /* données absentes ou illisibles : formulaire vide */ }
+})
+
 const contactLabels = computed(() => CONTACT_LABELS[(apporteurType.value || 'autre') as keyof typeof CONTACT_LABELS])
 const contactNameOk = computed(() => PERSON_NAME_REGEX.test(contactName.value.trim()))
 const contactCompanyOk = computed(() => !contactCompany.value.trim() || COMPANY_NAME_REGEX.test(contactCompany.value.trim()))
@@ -231,6 +245,9 @@ async function submitRequest() {
       <NuxtLink to="/partenaires" class="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors py-2 -my-2">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M12 19l-7-7 7-7"/></svg>
         Retour à la page Partenaires
+      </NuxtLink>
+      <NuxtLink to="/b2b/mes-dossiers" class="ml-4 text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground" data-testid="lien-mes-dossiers">
+        Déjà un dossier ? Mes dossiers
       </NuxtLink>
     </div>
     <div v-if="!submitSuccess" class="max-w-2xl mx-auto px-6 py-12">
