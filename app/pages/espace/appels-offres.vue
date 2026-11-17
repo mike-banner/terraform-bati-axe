@@ -6,6 +6,12 @@ useRequireAuth()
 const t = useProTenders()
 await t.ready
 
+const route = useRoute()
+// Sous-onglets : ?vue=en-cours (défaut) ou ?vue=perdues
+const view = computed<'en-cours' | 'perdues'>(() => (route.query.vue === 'perdues' ? 'perdues' : 'en-cours'))
+const goTo = (vue: 'en-cours' | 'perdues') => navigateTo({ query: vue === 'perdues' ? { vue } : {} })
+const tabClass = (on: boolean) => on ? 'bg-foreground text-background' : 'border border-border text-muted-foreground hover:text-foreground'
+
 const formatDate = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
 </script>
 
@@ -39,8 +45,27 @@ const formatDate = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { 
 
     <p class="text-sm text-muted-foreground mb-4 max-w-prose">
       Appels d'offres de nos partenaires professionnels (syndics, architectes, bureaux d'études) dans vos zones abonnées.
-      Ceux que vous avez remportés ou perdus sont dans <NuxtLink to="/espace/projets" class="underline underline-offset-4 hover:opacity-70">Projets en cours</NuxtLink>.
+      Ceux que vous avez remportés sont dans <NuxtLink to="/espace/projets?vue=ao" class="underline underline-offset-4 hover:opacity-70">Projets en cours</NuxtLink>.
     </p>
+
+    <div class="flex flex-wrap items-center gap-2 mb-5" role="tablist" aria-label="Appels d'offres">
+      <button
+        type="button" role="tab" :aria-selected="view === 'en-cours'" data-testid="tab-ao-en-cours"
+        class="h-11 px-4 text-sm font-semibold rounded-full whitespace-nowrap transition-colors"
+        :class="tabClass(view === 'en-cours')"
+        @click="goTo('en-cours')"
+      >
+        En cours ({{ t.openTenders.length }})
+      </button>
+      <button
+        type="button" role="tab" :aria-selected="view === 'perdues'" data-testid="tab-ao-perdues"
+        class="h-11 px-4 text-sm font-semibold rounded-full whitespace-nowrap transition-colors"
+        :class="tabClass(view === 'perdues')"
+        @click="goTo('perdues')"
+      >
+        Perdues ({{ t.projects.lost.length }})
+      </button>
+    </div>
 
     <div v-if="t.message" role="status" class="flex items-start gap-3 p-4 border border-foreground/30 rounded-lg mb-4">
       <p class="text-sm text-foreground flex-1">{{ t.message }}</p>
@@ -60,6 +85,9 @@ const formatDate = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { 
         Réessayer
       </button>
     </div>
+
+    <!-- Perdues : journal en liste -->
+    <EspaceTenderLostList v-else-if="view === 'perdues'" :lost="t.projects.lost" @open="navigateTo({ path: '/espace/projets', query: { vue: 'ao', projet: $event } })" />
 
     <!-- Empty state -->
     <div v-else-if="!t.openTenders.length" class="py-16 text-center">

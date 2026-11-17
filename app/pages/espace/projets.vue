@@ -140,7 +140,7 @@ const tabClass = (on: boolean) => on ? 'bg-foreground text-background' : 'border
         <p class="text-sm text-muted-foreground mb-3">Il n'est plus dans votre liste, ou vous ne vous y êtes pas positionné.</p>
         <button type="button" class="text-sm font-semibold underline underline-offset-4 hover:opacity-70" @click="goTo({ vue: 'ao' })">Retour aux projets</button>
       </div>
-      <EspaceProjectList v-else :won="t.projects.won" :lost="t.projects.lost" @open="goTo({ vue: 'ao', projet: $event })" />
+      <EspaceProjectList v-else :won="t.projects.won" @open="goTo({ vue: 'ao', projet: $event })" />
     </template>
 
     <EspaceTenderDialogs :t="t" />
